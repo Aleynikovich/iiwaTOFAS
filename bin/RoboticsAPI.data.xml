@@ -931,7 +931,7 @@
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="17.64448912333996" cogY="11.31147424235794" cogZ="87.91762326859212" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="4.207947468891694"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-22.597943344430433" cogY="-58.296554295571" cogZ="78.75686071217353" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.122511008263128"/>
         </toolTemplate>
         <toolTemplate class="" defaultMotionFrameRef="/gripper2flange" name="GimaticGripperV">
             <frames>
@@ -941,7 +941,7 @@
                     <measurementRotation method="ABCWorld6D" timestamp="1356995442266"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-21.858750642857075" cogY="-54.62486456248389" cogZ="79.57532888244523" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.49435374530215"/>
         </toolTemplate>
         <toolTemplate class="" name="TrackerTool">
             <frames>
@@ -1003,10 +1003,10 @@
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </workpieceTemplate>
         <toolTemplate class="" name="GimaticCircMagnet">
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-16.682703136966186" cogY="-64.53579237902936" cogZ="55.50233796614493" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.428565115040336"/>
         </toolTemplate>
         <toolTemplate class="" name="GimaticGripperR">
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-26.124652478763302" cogY="-58.85550589882337" cogZ="68.90749189107193" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.2657827107113295"/>
         </toolTemplate>
         <toolTemplate class="" name="GimaticVac1">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
@@ -1018,7 +1018,7 @@
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
         <toolTemplate class="" name="ToolTemplate">
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-14.473441866704244" cogY="-44.73514646068471" cogZ="108.7895199799053" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="8.055824150836983"/>
         </toolTemplate>
         <workpieceTemplate class="" name="BoxM">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
