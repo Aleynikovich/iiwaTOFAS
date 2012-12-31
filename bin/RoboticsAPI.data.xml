@@ -1655,7 +1655,7 @@
                 </redundancyData>
             </frame>
             <frame id="_e0d33dc6-9ee6-477f-a841-3f9493dd45f5" name="PlaceAxis1_2">
-               <transformation a="1.6196939230770273" b="-0.014071108311332991" c="-3.1193631347817754" x="40.38968383097557" y="64.03609712394905" z="-56.36876457478215"/>
+                <transformation a="1.6196939230770273" b="-0.014071108311332991" c="-3.1193631347817754" x="40.38968383097557" y="64.03609712394905" z="-56.36876457478215"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1765453036441"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
@@ -1687,7 +1687,7 @@
                 </redundancyData>
             </frame>
             <frame id="_0cacf51e-df6d-44ea-b53c-a8b117581d83" name="PlaceAxis2_2">
-                                <transformation a="-1.5196803695385248" b="-0.010643778535015247" c="3.1255936517731993" x="-27.338787492089132" y="-49.236178345873896" z="-58.042185096278246"/>
+                <transformation a="-1.5196803695385248" b="-0.010643778535015247" c="3.1255936517731993" x="-27.338787492089132" y="-49.236178345873896" z="-58.042185096278246"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1765453114936"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
