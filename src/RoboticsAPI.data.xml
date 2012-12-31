@@ -860,9 +860,9 @@
                 </redundancyData>
             </frame>
             <frame id="_25e2c8d1-36cc-4a0d-9fbf-f36b80f70c15" name="AfterGripp">
-                <transformation a="0.3004950873014231" b="0.022665396963097613" c="1.64132676848131" x="-380.26887375515844" y="-562.353687409279" z="231.9475974364427"/>
+                <transformation a="0.300545632390025" b="0.022233438500134643" c="1.6419940230490149" x="-380.3439183994143" y="-646.9456269572379" z="233.431786496578"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1356997165469"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1356997837597"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
@@ -871,14 +871,14 @@
                     <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="77" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.5010724874760594" valueType="java.lang.Double"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.5011255775557449" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
             </frame>
             <frame id="_815fe95d-0ffd-4071-a5fb-673de56239fa" name="AfterGripp2">
-                <transformation a="0.30046801620771796" b="0.022595088640746268" c="1.6413750338974706" x="-380.25239840769103" y="-469.19462689839867" z="357.94924533002745"/>
+                <transformation a="0.3003548790983015" b="0.022518558839785367" c="1.6416374191194971" x="-380.34844115757335" y="-560.262070108485" z="233.68585099545948"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1356997176529"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1356997843833"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
@@ -887,7 +887,7 @@
                     <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="77" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.5011188064418288" valueType="java.lang.Double"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.5011540400579373" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
             </frame>
