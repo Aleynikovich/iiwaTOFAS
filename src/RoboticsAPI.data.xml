@@ -1042,7 +1042,9 @@
         <toolTemplate class="" name="Vac3">
             <frames>
                 <frame id="_0c6e1b0e-4fe1-477e-975b-b6824f57759c" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <transformation a="2.7177206158078135" b="0.0027652162211643156" c="0.016441404517443352" x="-11.819090665220825" y="8.236128112642243" z="451.182881852388"/>
+                    <measurementTranslation calculationError="6.796015401444549" method="XYZ4Point" timestamp="1357000736510"/>
+                    <measurementRotation method="ABC2Point" timestamp="1357001173447"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
