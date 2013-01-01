@@ -1011,7 +1011,8 @@
         <toolTemplate class="" name="GimaticVac1">
             <frames>
                 <frame id="_d94fded7-f74f-40a1-baa2-cb7016ae7ccd" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
+                    <transformation a="2.702039107059084" b="-0.06581555328082456" c="0.0019544585721823168" x="0.0" y="0.0" z="450.0"/>
+                    <measurementRotation method="ABC2Point" timestamp="1357012550744"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
