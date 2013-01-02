@@ -691,7 +691,7 @@
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="20.915341449322568" cogY="26.34215741082029" cogZ="11.171597797478464" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.8297194102548855"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="17.64448912333996" cogY="11.31147424235794" cogZ="87.91762326859212" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="4.207947468891694"/>
         </toolTemplate>
         <toolTemplate class="" name="sphere">
             <frames>
