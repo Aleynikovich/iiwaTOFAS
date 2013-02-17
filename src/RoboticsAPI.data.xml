@@ -1065,8 +1065,8 @@
         <toolTemplate class="" name="sphere">
             <frames>
                 <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="sphere2flange">
-                    <transformation a="0.0" b="0.0" c="0.0" x="-0.6574368428418028" y="1.1575471163889264" z="62.61982094997072"/>
-                    <measurementTranslation calculationError="1.8960160750620145" method="XYZ4Point" timestamp="1540805626836"/>
+                    <transformation a="0.0" b="0.0" c="0.0" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
+                    <measurementTranslation calculationError="12.370181947472895" method="XYZ4Point" timestamp="1361072220163"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
