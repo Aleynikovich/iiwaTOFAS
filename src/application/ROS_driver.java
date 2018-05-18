@@ -124,6 +124,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 		System.out.println("Initializing tcp server... ");
 		
 		int port = getApplicationData().getProcessData("port").getValue();
+		System.out.println("my port is:"+port);
 		
 		try {
 			
