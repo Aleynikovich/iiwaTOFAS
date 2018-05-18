@@ -111,7 +111,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 	
 	public void initialize() {
 		controller = (SunriseController) getContext().getDefaultController();
-		robot = (LBR) getRobot(controller, "LBR_iiwa_7_R800_1");
+		robot = (LBR) getRobot(controller, "LBR_iiwa_14_R820_1");
 		tool = createFromTemplate("Tool");
 		tool.attachTo(robot.getFlange()); // Attach the tool
 	}
