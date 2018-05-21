@@ -732,7 +732,7 @@ public class test_smartServo extends RoboticsAPIApplication
             pT = cT;
             long deltaT;
             
-            for (_steps = 3; _steps < 4; _steps = _steps + 1) //NUM_RUNS
+            for (_steps = 100; _steps < 101; _steps = _steps + 1) //NUM_RUNS
             {
                 // Timing - draw one step
                 OneTimeStep aStep = timing.newTimeStep();
