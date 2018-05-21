@@ -250,8 +250,8 @@ public class ROS_driver extends RoboticsAPIApplication {
 					Double.parseDouble(parameters[13]));
 
 			if (!simulation){
-				//System.out.println("Received:"+counter);
-				//counter = counter +1;
+				System.out.println("Received:"+counter);
+				counter = counter +1;
 				smartMotion.setDestination(jointPosition, jointSpeed);
 			} else {
 				simulation_joints = jointPosition;
