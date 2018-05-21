@@ -816,7 +816,7 @@ public class test_smartServo extends RoboticsAPIApplication
                 _theSmartServoRuntime.setDestination(destination);
                 
 
-                while(nPosition.equals(cPosition))
+                while(nPosition.isNearlyEqual(cPosition))
                 {
     				pT = _theSmartServoRuntime.updateWithRealtimeSystem();
     				nPosition = new JointPosition(
