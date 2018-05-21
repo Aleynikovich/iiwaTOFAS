@@ -83,6 +83,8 @@ public class ROS_driver extends RoboticsAPIApplication {
 	
 	private IMotionContainer motionContainer = null;
 	private Tool tool;
+	
+	private int counter = 0;
 
 	ServerSocket serverSocket = null;
 	Socket clientSocket = null;
@@ -247,7 +249,9 @@ public class ROS_driver extends RoboticsAPIApplication {
 					Double.parseDouble(parameters[12]),
 					Double.parseDouble(parameters[13]));
 
-			if (!simulation){ 
+			if (!simulation){
+				System.out.println("Received:"+counter);
+				counter = counter +1;
 				smartMotion.setDestination(jointPosition, jointSpeed);
 			} else {
 				simulation_joints = jointPosition;
