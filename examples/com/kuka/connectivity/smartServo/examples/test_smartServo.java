@@ -803,15 +803,19 @@ public class test_smartServo extends RoboticsAPIApplication
 				pT = cT;
 				getLogger().info("delta Time : " +deltaT );
 
-				cT = _theSmartServoRuntime.updateWithRealtimeSystem();
+				//cT = _theSmartServoRuntime.updateWithRealtimeSystem();
                 JointPosition cPosition = new JointPosition(
                         _lbr.getCurrentJointPosition());
                 
                 JointPosition nPosition = new JointPosition(
                         _lbr.getCurrentJointPosition());
-				
+
+                ThreadUtil.milliSleep(3000);
+
+                cT = _theSmartServoRuntime.updateWithRealtimeSystem();
                 _theSmartServoRuntime.setDestination(destination);
                 
+
                 while(nPosition.equals(cPosition))
                 {
     				pT = _theSmartServoRuntime.updateWithRealtimeSystem();
