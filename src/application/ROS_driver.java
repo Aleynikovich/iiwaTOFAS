@@ -225,8 +225,9 @@ public class ROS_driver extends RoboticsAPIApplication {
 		
 		if (lastRobotMode != RobotMode.smart){
 			if (motionContainer != null) motionContainer.cancel();
-			smartServo.overrideJointAcceleration(10.0);
-			
+			//smartServo.overrideJointAcceleration(10.0);
+			smartServo.setJointAccelerationRel(1.0);
+			smartServo.setJointVelocityRel(1.0);
 			motionContainer = robot.moveAsync(smartServo);
 			smartMotion = smartServo.getRuntime();
 		}
@@ -252,7 +253,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 					Double.parseDouble(parameters[13]));
 
 			if (!simulation){
-				//smartMotion.setMinimumTrajectoryExecutionTime(20e-3);
+				smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
 				smartMotion.setDestination(jointPosition);//, jointSpeed);
 			} else {
 				simulation_joints = jointPosition;
