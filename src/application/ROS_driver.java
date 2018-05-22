@@ -298,7 +298,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 					Double.parseDouble(parameters[13]));
 	
 			if (!simulation){
-				directServo.setJointVelocityRel(jointSpeed.get());
+				//directServo.setJointVelocityRel(jointSpeed.get());
 				directMotion.setDestination(jointPosition);
 			} else {
 				simulation_joints = jointPosition;
