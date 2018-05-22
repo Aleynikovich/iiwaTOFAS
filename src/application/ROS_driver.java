@@ -253,8 +253,8 @@ public class ROS_driver extends RoboticsAPIApplication {
 					Double.parseDouble(parameters[13]));
 
 			if (!simulation){
-				smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
-				smartMotion.setDestination(jointPosition, jointSpeed);
+				smartMotion.setMinimumTrajectoryExecutionTime(10e-3);
+				smartMotion.setDestination(jointPosition);//, jointSpeed);
 			} else {
 				simulation_joints = jointPosition;
 			}
