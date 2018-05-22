@@ -227,7 +227,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 			if (motionContainer != null) motionContainer.cancel();
 			//smartServo.overrideJointAcceleration(10.0);
 			//smartServo.setJointAccelerationRel(1.0);
-			//smartServo.setJointVelocityRel(1.0);
+			smartServo.setJointVelocityRel(1.0);
 			motionContainer = robot.moveAsync(smartServo);
 			smartMotion = smartServo.getRuntime();
 		}
