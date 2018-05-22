@@ -6,7 +6,7 @@
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="/flange_2_tool" name="Tool">
             <frames>
-                <frame name="flange_2_tool">
+                <frame id="_3efdc958-1e96-4392-a5fb-b9066c762d91" name="flange_2_tool">
                     <transformation a="0.0" b="1.5708" c="0.0" x="150.0" y="0.0" z="40.0"/>
                     <additionalInformation>
                         <info key="Comment" type="java.lang.String" value="Transformation from flange to tool point"/>
