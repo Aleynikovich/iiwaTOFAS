@@ -688,7 +688,6 @@ public class ROS_driver extends RoboticsAPIApplication {
  		} else if (command.compareToIgnoreCase("get cartesian force") == 0){
  			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
  			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
- 			System.out.println("THE FORCES ARE X:" + force.getX() + ", Y :" + force.getY() + ", Z :" + force.getZ());
  			return force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
  		// ------------------------------------------------------------------------------
 		// 	Joints publishing
