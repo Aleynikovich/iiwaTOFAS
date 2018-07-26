@@ -337,7 +337,7 @@
             <additionalInformation>
                 <info key="Comment" type="java.lang.String" value="tool"/>
             </additionalInformation>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="8.905652825493744" cogY="12.246701733151015" cogZ="116.43023839370578" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.4594274179465683"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="1.2181104959272346" cogY="2.220297849325206" cogZ="44.86656380649533" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.0281915117251175"/>
         </toolTemplate>
     </objectTemplates>
     <processDataContainer>
