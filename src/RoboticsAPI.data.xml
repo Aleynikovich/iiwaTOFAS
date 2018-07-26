@@ -327,17 +327,17 @@
         <toolTemplate class="" defaultMotionFrameRef="/flange_2_tool" name="Tool">
             <frames>
                 <frame id="_f9d50d68-07d5-460b-8ec3-921bb142a26f" name="flange_2_tool">
-                    <transformation a="0.0" b="1.5708" c="0.0" x="-1.449402207113051" y="2.8984275589683715" z="207.9132359315831"/>
+                    <transformation a="0.0" b="1.5708" c="0.0" x="-0.11073421372857294" y="4.160542940322696" z="263.45913901548624"/>
                     <additionalInformation>
                         <info key="Comment" type="java.lang.String" value="Transformation from flange to tool point"/>
                     </additionalInformation>
-                    <measurementTranslation calculationError="1.587087672268622" method="XYZ4Point" timestamp="1531722898855"/>
+                    <measurementTranslation calculationError="1.8342751013430865" method="XYZ4Point" timestamp="1532426353823"/>
                 </frame>
             </frames>
             <additionalInformation>
                 <info key="Comment" type="java.lang.String" value="tool"/>
             </additionalInformation>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="8.88676650622645" cogY="10.894707665864749" cogZ="38.55590996076415" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.0778211385786918"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="8.905652825493744" cogY="12.246701733151015" cogZ="116.43023839370578" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.4594274179465683"/>
         </toolTemplate>
     </objectTemplates>
     <processDataContainer>
