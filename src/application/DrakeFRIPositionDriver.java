@@ -33,7 +33,7 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
         // **********************************************************************
         // *** change next line to the FRIClient's IP address                 ***
         // **********************************************************************
-        _clientName = "192.170.10.200";
+        _clientName = "192.170.10.2";
         _clientPort = 30200;
     }
 
