@@ -29,7 +29,7 @@ public class LBRJointSineOverlay extends RoboticsAPIApplication
         // **********************************************************************
         // *** change next line to the FRIClient's IP address                 ***
         // **********************************************************************
-        _clientName = "192.170.10.2";
+        _clientName = "192.170.10.100";
     }
 
     @Override
