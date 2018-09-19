@@ -64,7 +64,7 @@ public class AleronTest extends RoboticsAPIApplication {
 		// initialize your application here
 		overlap=0.06*1000;
 		overlapt=0;
-		roll_scan = createFromTemplate("RollScan");
+		roll_scan = createFromTemplate("Tool");
 		//roll_scan.changeFramePosition(roll_scan.getFrame("Gripper"), XyzAbcTransformation.ofRad(gripper_tool_xyz[0]*1000, 
 	    //gripper_tool_xyz[1]*1000, gripper_tool_xyz[2]*1000, gripper_tool_rpy[2], gripper_tool_rpy[1], gripper_tool_rpy[0]));
 		roll_scan.attachTo(lbr.getFlange());
