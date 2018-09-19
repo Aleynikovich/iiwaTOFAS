@@ -335,16 +335,10 @@
                     <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
                 </redundancy>
             </redundancyData>
-            <frame id="_a2129e84-4866-40a7-8b9d-ca78c9c8fb8e" name="aleron">
-                <transformation a="-0.0020" b="0.0010" c="3.1" x="65.2" y="5.5" z="259.4"/>
-                <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1537361715692"/>
-                </additionalInformation>
-            </frame>
             <frame id="_c4b16a13-9aab-4f76-b460-8d7a71f62837" name="Aprox">
-                <transformation a="0.03" b="-0.01" c="3.1" x="68.5" y="1.5" z="137.4"/>
+                <transformation a="-1.57" b="-0.01" c="3.1" x="68.5" y="1.5" z="137.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1537355874989"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1537364125234"/>
                 </additionalInformation>
                 <redundancyData>
                     <redundancy transformationProviderName="legacy" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
@@ -357,7 +351,7 @@
             <frame id="_fe8e3c9b-7218-4457-96c1-1645bb0847b4" name="Aprox1">
                 <transformation a="-1.6" b="-0.01" c="3.1" x="82.7" y="320.7" z="551.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1537363970464"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1537363970468"/>
                 </additionalInformation>
                 <redundancyData>
                     <redundancy transformationProviderName="legacy" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
@@ -366,6 +360,12 @@
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
                     </redundancy>
                 </redundancyData>
+            </frame>
+            <frame id="_a2129e84-4866-40a7-8b9d-ca78c9c8fb8e" name="aleron">
+                <transformation a="-0.0019999999999999953" b="0.0010000000000000013" c="3.1" x="65.2" y="5.5" z="259.4"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1537361715692"/>
+                </additionalInformation>
             </frame>
         </frame>
         <frame id="_900839aa-019c-459f-a78f-bae4759ef10b" name="robot_base">
