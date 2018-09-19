@@ -268,12 +268,13 @@ public class AleronTest extends RoboticsAPIApplication {
 	
 		
 		//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
+		rec.enable();
+		rec.startRecording();
+
 		roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 		roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
-		rec.enable();
 		roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 		
-		rec.startRecording();
 
 		roll_scan.getFrame("flange_2_tool").move(lin(down_fr).setCartVelocity(velocidad));
 		down_fr.setZ(0.0333*1000);
@@ -332,13 +333,14 @@ private void Force_XN(double distancia, String nfichero, double velocidad ){
  	/*up_fr.setAlphaRad(0.0); up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
+	rec.enable();
+	rec.startRecording();
+
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
-	rec.enable();
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 	
-	rec.startRecording();
 
 	roll_scan.getFrame("flange_2_tool").move(lin(down_fr).setCartVelocity(velocidad));
 	down_fr.setZ(-distancia*1000);
@@ -529,13 +531,13 @@ private void Force_XNT(double distancia, String nfichero, double velocidad ){
  	up_fr.setAlphaRad(Math.PI/2); up_fr.setBetaRad(-0.047123); up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 
+	rec.enable();
+	rec.startRecording();
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
-	rec.enable();
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 	
-	rec.startRecording();
 	
 	roll_scan.getFrame("flange_2_tool").move(lin(down_fr).setCartVelocity(velocidad));
 	down_fr.setZ(-distancia*1000);
@@ -674,13 +676,14 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
  	/*up_fr.setAlphaRad(0.0); up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
+	rec.enable();
+	rec.startRecording();
+
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
-	rec.enable();
 	roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 	
-	rec.startRecording();
 
 	roll_scan.getFrame("flange_2_tool").move(lin(down_fr).setCartVelocity(velocidad));
 	down_fr.setZ(0.0*1000);
