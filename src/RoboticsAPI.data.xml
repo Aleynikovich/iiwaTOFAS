@@ -338,7 +338,7 @@
             <frame id="_c4b16a13-9aab-4f76-b460-8d7a71f62837" name="Aprox">
                 <transformation a="-1.57" b="-0.01" c="3.1" x="68.5" y="1.5" z="137.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1537364125234"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1537364125239"/>
                 </additionalInformation>
                 <redundancyData>
                     <redundancy transformationProviderName="legacy" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
@@ -362,9 +362,9 @@
                 </redundancyData>
             </frame>
             <frame id="_a2129e84-4866-40a7-8b9d-ca78c9c8fb8e" name="aleron">
-                <transformation a="-0.0019999999999999953" b="0.0010000000000000013" c="3.1" x="65.2" y="5.5" z="259.4"/>
+                <transformation a="-1.6" b="0.0010000000000000013" c="3.1" x="65.2" y="5.5" z="259.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1537361715692"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1537364627336"/>
                 </additionalInformation>
             </frame>
         </frame>

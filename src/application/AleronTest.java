@@ -257,13 +257,13 @@ public class AleronTest extends RoboticsAPIApplication {
 	 	//downFrame
 		down_fr = new Frame(getFrame("/aleron"));
 		down_fr.setX(150); down_fr.setY(-11); down_fr.setZ(40); 
-	 	down_fr.setAlphaRad(1.6); down_fr.setBetaRad(0.0); down_fr.setGammaRad(0.0);
+	 	//down_fr.setAlphaRad(1.6); down_fr.setBetaRad(0.0); down_fr.setGammaRad(0.0);
 		down_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
 		//upFrame
 		up_fr = new Frame(getFrame("/aleron"));
 		up_fr.setX(0.400*1000); up_fr.setY(0.074*1000); up_fr.setZ(0.0333*1000); 
-	 	up_fr.setAlphaRad(1.6); up_fr.setBetaRad(0.0); up_fr.setGammaRad(0.0);
+	 	//up_fr.setAlphaRad(1.6); up_fr.setBetaRad(0.0); up_fr.setGammaRad(0.0);
 		up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 		
@@ -667,13 +667,13 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
  	//downFrame
 	down_fr = new Frame(getFrame("/aleron"));
 	down_fr.setX(0.0685*1000); down_fr.setY(1.5); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
- 	/*down_fr.setAlphaRad(0.0); down_fr.setBetaRad(0.0);*/ down_fr.setGammaRad(Math.PI);
+ 	up_fr.setAlphaRad(-Math.PI/2);/* up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//upFrame
 	up_fr = new Frame(getFrame("/aleron"));
 	up_fr.setX(0.0685*1000); up_fr.setY(0.400*1000); up_fr.setZ(0.0*1000); 
- 	/*up_fr.setAlphaRad(0.0); up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
+ 	up_fr.setAlphaRad(-Math.PI/2);/* up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	rec.enable();
