@@ -364,7 +364,7 @@
             <frame id="_a2129e84-4866-40a7-8b9d-ca78c9c8fb8e" name="aleron">
                 <transformation a="-1.6" b="0.0010000000000000013" c="3.1" x="65.2" y="5.5" z="259.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1537364627336"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1537364627340"/>
                 </additionalInformation>
             </frame>
         </frame>
@@ -392,11 +392,10 @@
         <toolTemplate class="" defaultMotionFrameRef="/flange_2_tool" name="Tool">
             <frames>
                 <frame id="_f9d50d68-07d5-460b-8ec3-921bb142a26f" name="flange_2_tool">
-                    <transformation a="0.0" b="0.0" c="0.0" x="-0.5685902465325279" y="-0.3008472544565028" z="207.94334094675668"/>
+                    <transformation a="0.0" b="0.0" c="0.0" x="-0.5685902465325279" y="-0.3008472544565028" z="307.9"/>
                     <additionalInformation>
                         <info key="Comment" type="java.lang.String" value="Transformation from flange to tool point"/>
                     </additionalInformation>
-                    <measurementTranslation calculationError="0.9662315270013396" method="XYZ4Point" timestamp="1537349639913"/>
                 </frame>
             </frames>
             <additionalInformation>
