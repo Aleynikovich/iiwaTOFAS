@@ -90,7 +90,7 @@ public class ForceTest extends RoboticsAPIApplication {
 
 		JointPosition joints = lbr.getCurrentJointPosition();
 		
-		joints.set(0, 3.1);
+		joints.set(0, 160*Math.PI/180);
 		
 		switch (getApplicationUI().displayModalDialog(
 				ApplicationDialogType.QUESTION,"Which movement type do I perform? ", 
@@ -100,7 +100,7 @@ public class ForceTest extends RoboticsAPIApplication {
 				
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));
 		
-					joints.set(0, -3.1);
+					joints.set(0, -160*Math.PI/180);
 		
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));
 		
