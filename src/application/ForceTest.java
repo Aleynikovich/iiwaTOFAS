@@ -91,6 +91,13 @@ public class ForceTest extends RoboticsAPIApplication {
 		JointPosition joints = lbr.getCurrentJointPosition();
 		
 		joints.set(0, 160*Math.PI/180);
+		joints.set(1, -49.35*Math.PI/180);
+		joints.set(2, 0*Math.PI/180);
+		joints.set(3, -22.28*Math.PI/180);
+		joints.set(4, 0.0*Math.PI/180);
+		joints.set(5, -51.79*Math.PI/180);
+		joints.set(6, 0.0*Math.PI/180);
+
 		
 		switch (getApplicationUI().displayModalDialog(
 				ApplicationDialogType.QUESTION,"Which movement type do I perform? ", 
@@ -117,15 +124,15 @@ public class ForceTest extends RoboticsAPIApplication {
 					impedanceControlMode.parametrize(CartDOF.Z).setStiffness(stiffnessZ).setDamping(0.7);
 					impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
 						
-				    lbr.move(ptp(joints).setJointVelocityRel(0.25).setMode(impedanceControlMode));
+				    lbr.move(ptp(joints).setJointVelocityRel(1.0).setMode(impedanceControlMode));
 				    
 				    joints.set(0, -Math.PI);
 					
-					lbr.move(ptp(joints).setJointVelocityRel(0.25).setMode(impedanceControlMode));
+					lbr.move(ptp(joints).setJointVelocityRel(1.0).setMode(impedanceControlMode));
 		
 					joints.set(0, 0);
 		
-					lbr.move(ptp(joints).setJointVelocityRel(0.25).setMode(impedanceControlMode));
+					lbr.move(ptp(joints).setJointVelocityRel(1.0).setMode(impedanceControlMode));
 		}
 		rec.stopRecording();
 
