@@ -78,6 +78,7 @@ public class ForceTest extends RoboticsAPIApplication {
 	public void run() {
 		// your application execution starts here
 		
+		rec = new DataRecorder();
 	 	rec.setFileName("force_monitoring_test.log");
 		rec.addCartesianForce(roll_scan.getFrame("flange_2_tool"),roll_scan.getFrame("flange_2_tool"));
 		rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("flange_2_tool"), getApplicationData().getFrame("/robot_base"));
