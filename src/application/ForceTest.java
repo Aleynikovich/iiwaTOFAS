@@ -114,6 +114,8 @@ public class ForceTest extends RoboticsAPIApplication {
 					joints.set(0, 0);
 		
 					lbr.move(ptp(joints).setJointVelocityRel(1.0));
+					
+					break;
 
 				case 1:
 				
@@ -129,10 +131,13 @@ public class ForceTest extends RoboticsAPIApplication {
 				    joints.set(0, -Math.PI);
 					
 					lbr.move(ptp(joints).setJointVelocityRel(1.0).setMode(impedanceControlMode));
+			
 		
 					joints.set(0, 0);
 		
 					lbr.move(ptp(joints).setJointVelocityRel(1.0).setMode(impedanceControlMode));
+					
+					break;
 		}
 		rec.stopRecording();
 
