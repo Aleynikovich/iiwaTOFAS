@@ -178,12 +178,13 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    		 }
 	    	  }
 	    	  
-	    	 System.out.println(x.size());
 	    	 
-	    	 // for(int j=0; j<x.size(); j++)
-	    	   // System.out.println(x.get(j));
 	     }
       
+	     System.out.println(x.size());
+    	 
+    	 for(int j=0; j<x.size(); j++)
+    		 System.out.println(x.get(j));
 	     br.close();
       } 
       catch (FileNotFoundException e) {
