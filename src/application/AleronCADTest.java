@@ -124,6 +124,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    	  
 	    	 for(int i=0; i<data.length; i++)
 	    	 {
+		    	 System.out.println(data[i]);
+
 	    		 if(data[i].contains("X="))
 	    		 {
 	    			 val_str= data[i].split("X=");
