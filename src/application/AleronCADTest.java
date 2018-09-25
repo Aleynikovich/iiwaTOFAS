@@ -168,24 +168,24 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    		 {
 	    			 val_str= data[i].split("AN3=");
 	    			 val = Double.parseDouble(val_str[0]);
-	    			 a.add(val);
+	    			 a_n.add(val);
 	    		 }
 	    		 else if(data[i].contains("BN3="))
 	    		 {
 	    			 val_str= data[i].split("BN3=");
 	    			 val = Double.parseDouble(val_str[0]);
-	    			 b.add(val);
+	    			 b_n.add(val);
 	    		 }
 	    		 else if(data[i].contains("CN3="))
 	    		 {
 	    			 val_str= data[i].split("CN3=");
 	    			 val = Double.parseDouble(val_str[0]);
-	    			 c.add(val);
+	    			 c_n.add(val);
 	    		 }
 	    	  }
 	    	  
-	    	  for(int j=0; j<x.size(); j++)
-	    	    	System.out.print(x.get(j));
+	    	  //for(int j=0; j<x.size(); j++)
+	    	    //	System.out.print(x.get(j));
 	     }
       
 	     br.close();
