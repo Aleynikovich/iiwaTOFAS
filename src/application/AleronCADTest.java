@@ -119,9 +119,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	     {
 	    	 
 	    	 String data[] = str.split(" ");
-	    	  
-	    	 System.out.println(data.length);
-	    	  
+	    	  	    	  
 	    	 for(int i=0; i<data.length; i++)
 	    	 {
 		    	 System.out.println(data[i]);
@@ -129,10 +127,12 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    		 if(data[i].contains("X="))
 	    		 {
 	    			 val_str= data[i].split("X=");
-	    			 val = Double.parseDouble(val_str[0]);
-	    			 x.add(val);
+	    	    	 System.out.println(val_str.length);
+
+	    			 //val = Double.parseDouble(val_str[0]);
+	    			 //x.add(val);
 	    		 }
-	    		 else if(data[i].contains("Y="))
+	    		 /*else if(data[i].contains("Y="))
 	    		 {
 	    			 val_str= data[i].split("Y=");
 	    			 val = Double.parseDouble(val_str[0]);
@@ -179,7 +179,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    			 val_str= data[i].split("CN3=");
 	    			 val = Double.parseDouble(val_str[0]);
 	    			 c_n.add(val);
-	    		 }
+	    		 }*/
 	    	  }
 	    	  
 	    	  //for(int j=0; j<x.size(); j++)
