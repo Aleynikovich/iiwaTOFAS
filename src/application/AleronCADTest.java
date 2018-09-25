@@ -109,13 +109,15 @@ public class AleronCADTest extends RoboticsAPIApplication {
       String val_str[];
       Double val;
       
-      try {
+      try 
+      {
 		f = new FileReader(file);
 		
 		 BufferedReader br = new BufferedReader(f);
 		 
 		 System.out.print("PIPO1");
-	     while((str = br.readLine())!=null) {
+	     while((str = br.readLine())!=null) 
+	     {
 	    	 
 			 System.out.print("PIPO2");
 
@@ -181,6 +183,9 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    			 c.add(val);
 	    		 }
 	    	  }
+	    	  
+	    	  for(int j=0; j<x.size(); j++)
+	    	    	System.out.print(x.get(j));
 	     }
       
 	     br.close();
@@ -195,8 +200,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	}
      
     	  
-    for(int j=0; j<x.size(); j++)
-    	System.out.print(x.get(j));
+   
 	}
 
 	@Override
