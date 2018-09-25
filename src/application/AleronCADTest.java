@@ -115,19 +115,16 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		
 		 BufferedReader br = new BufferedReader(f);
 		 
-		 System.out.println("PIPO1");
 	     while((str = br.readLine())!=null) 
 	     {
 	    	 
-			 System.out.println("PIPO2");
-
-	    	 //System.out.print(str);
-	    	  String data[] = str.split(" ");
+	    	 System.out.print(str);
+	    	 String data[] = str.split(" ");
 	    	  
 	    	 // System.out.print(data.length);
 	    	  
-	    	  for(int i=0; i<data.length; i++)
-	    	  {
+	    	 for(int i=0; i<data.length; i++)
+	    	 {
 	    		 if(data[i].contains("X="))
 	    		 {
 	    			 val_str= data[i].split("X=");
