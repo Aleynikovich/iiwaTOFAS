@@ -114,6 +114,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		
 		 BufferedReader br = new BufferedReader(f);
 	     while((str = br.readLine())!=null) {
+	    	 
+	    	 System.out.print(str);
 	    	  String data[] = str.split(" ");
 	    	  
 	    	  System.out.print(data.length);
