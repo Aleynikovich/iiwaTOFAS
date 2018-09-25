@@ -129,7 +129,9 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    			 val_str= data[i].split("X=");
 	    	    	 System.out.println(val_str.length);
 
-	    			 //val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
+	    	    	 System.out.println(val);
+
 	    			 //x.add(val);
 	    		 }
 	    		 /*else if(data[i].contains("Y="))
