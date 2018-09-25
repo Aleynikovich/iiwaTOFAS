@@ -409,6 +409,14 @@
             </additionalInformation>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="1.3646789103734396" cogY="2.6776448120286007" cogZ="42.80808256231917" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.0662878527706026"/>
         </toolTemplate>
+        <toolTemplate class="" name="RollScan">
+            <frames>
+                <frame id="_ae1a755a-b6e9-4a08-9715-89b782013835" name="roll_tcp">
+                    <transformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
+                </frame>
+            </frames>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-10.2" cogY="2.1" cogZ="120.4" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.9"/>
+        </toolTemplate>
     </objectTemplates>
     <processDataContainer>
         <processData dataType="java.lang.Integer" defaultValue="30000" displayName="Port" id="port" value="30000"/>
