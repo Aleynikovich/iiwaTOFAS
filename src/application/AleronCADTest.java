@@ -103,7 +103,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	 	//LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.09), 2, 24);
 	
 	  String str;
-	  String file = "C:\\Users\\Usuario\\Downloads\\CADTraj\\Plana_Sin.MPF";
+	  String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
       FileReader f;
       
       String val_str[];
