@@ -15,9 +15,6 @@ import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
 import com.kuka.roboticsAPI.motionModel.PositionHold;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.PositionControlMode;
 
-import com.kuka.roboticsAPI.geometricModel.Tool;
-
-
 /**
  * Creates a FRI Session.
  */
@@ -25,8 +22,6 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
 {
     private Controller _lbrController;
     private LBR _lbr;
-    private Tool _tool;
-    
     private String _clientName;
     private int _clientPort;
 
@@ -35,9 +30,6 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
     {
         _lbrController = (Controller) getContext().getControllers().toArray()[0];
         _lbr = (LBR) _lbrController.getDevices().toArray()[0];
-        
-		_tool = createFromTemplate("Tool");
-		_tool.attachTo(_lbr.getFlange()); // Attach the tool
         // **********************************************************************
         // *** change next line to the FRIClient's IP address                 ***
         // **********************************************************************
@@ -85,7 +77,6 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
     {
         // configure and start FRI session
         FRIConfiguration friConfiguration = FRIConfiguration.createRemoteConfiguration(_lbr, _clientName);
-    	//FRIConfiguration friConfiguration = FRIConfiguration.createRemoteConfiguration(_tool, _clientName);
         friConfiguration.setSendPeriodMilliSec(5);
         friConfiguration.setPortOnRemote(_clientPort);
         while (true) {
