@@ -122,70 +122,64 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	    	  	    	  
 	    	 for(int i=0; i<data.length; i++)
 	    	 {
-		    	 System.out.println(data[i]);
-
 	    		 if(data[i].contains("X="))
 	    		 {
 	    			 val_str= data[i].split("X=");
-	    	    	 System.out.println(val_str.length);
-
 	    			 val = Double.parseDouble(val_str[1]);
-	    	    	 System.out.println(val);
-
-	    			 //x.add(val);
+	    			 x.add(val);
 	    		 }
-	    		 /*else if(data[i].contains("Y="))
+	    		 else if(data[i].contains("Y="))
 	    		 {
 	    			 val_str= data[i].split("Y=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 y.add(val);
 	    		 }
 	    		 else if(data[i].contains("Z="))
 	    		 {
 	    			 val_str= data[i].split("Z=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 z.add(val);
 	    		 }
 	    		 else if(data[i].contains("A3="))
 	    		 {
 	    			 val_str= data[i].split("A3=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 a.add(val);
 	    		 }
 	    		 else if(data[i].contains("B3="))
 	    		 {
 	    			 val_str= data[i].split("B3=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 b.add(val);
 	    		 }
 	    		 else if(data[i].contains("C3="))
 	    		 {
 	    			 val_str= data[i].split("C3=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 c.add(val);
 	    		 }
 	    		 else if(data[i].contains("AN3="))
 	    		 {
 	    			 val_str= data[i].split("AN3=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 a_n.add(val);
 	    		 }
 	    		 else if(data[i].contains("BN3="))
 	    		 {
 	    			 val_str= data[i].split("BN3=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 b_n.add(val);
 	    		 }
 	    		 else if(data[i].contains("CN3="))
 	    		 {
 	    			 val_str= data[i].split("CN3=");
-	    			 val = Double.parseDouble(val_str[0]);
+	    			 val = Double.parseDouble(val_str[1]);
 	    			 c_n.add(val);
-	    		 }*/
+	    		 }
 	    	  }
 	    	  
-	    	  //for(int j=0; j<x.size(); j++)
-	    	    //	System.out.print(x.get(j));
+	    	  for(int j=0; j<x.size(); j++)
+	    	    System.out.print(x.get(j));
 	     }
       
 	     br.close();
