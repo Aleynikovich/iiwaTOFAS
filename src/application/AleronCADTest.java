@@ -295,7 +295,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
 		
 
-	 	//LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
+	 	LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
 		
 	 	rec.setFileName(nfichero);
 		rec.addCartesianForce(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
@@ -316,7 +316,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
 			
 			new_point = point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
-			
+			new_point.setRedundancyInformation(lbr, redundancyInfo);
 			System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
 				" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
