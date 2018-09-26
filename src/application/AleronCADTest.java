@@ -313,7 +313,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		for(int i=0; i<x.size();i++)
 		{
 			fr.setX(x.get(i)); fr.setY(y.get(i)); fr.setZ(z.get(i));
-			fr.setAlphaRad(a.get(i)); fr.setBetaRad(b.get(i)); fr.setGammaRad(c.get(i));
+			fr.setAlphaRad(-Math.PI/2); fr.setBetaRad(0.0); fr.setGammaRad(Math.PI);
 			
 			roll_scan.getFrame("roll_tcp").move(lin(fr).setCartVelocity(25).setMode(impedanceControlMode));
 	
