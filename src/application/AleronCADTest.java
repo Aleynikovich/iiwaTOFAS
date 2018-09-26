@@ -288,7 +288,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		impedanceControlMode= CartesianSineImpedanceControlMode.createDesiredForce(CartDOF.Z, force, stiffnessZ);
 	
 		impedanceControlMode.setMaxCartesianVelocity(1000.0,1000.0,1000.0,Math.toRadians(60),Math.toRadians(60),Math.toRadians(60));
-		impedanceControlMode.setSpringPosition(roll_scan.getFrame("gripper"));
+		impedanceControlMode.setSpringPosition(roll_scan.getFrame("roll_tcp"));
 		impedanceControlMode.parametrize(CartDOF.X).setStiffness(stiffnessX).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.Y).setStiffness(stiffnessY).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.Z).setStiffness(stiffnessZ).setDamping(0.7);
