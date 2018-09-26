@@ -328,6 +328,9 @@ public class AleronCADTest extends RoboticsAPIApplication {
 				//" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
 			roll_scan.getFrame("roll_tcp").move(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode));
+			
+			ForceSensorData current_force = lbr.getExternalForceTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
+			System.out.println("Contact Z force: " + current_force.getForce().getZ());
 
 		}
 		
