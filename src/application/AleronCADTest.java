@@ -294,10 +294,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		impedanceControlMode.parametrize(CartDOF.Z).setStiffness(stiffnessZ).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
 		
-
-	 	LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
-		
-	 	rec.setFileName(nfichero);
+		rec.setFileName(nfichero);
 		rec.addCartesianForce(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
 		rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("roll_tcp"), getApplicationData().getFrame("/robot_base"));
 	 	
@@ -310,30 +307,27 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		
 	 	Frame point = new Frame(getFrame("/aleron"));
 		Frame new_point;
+		LBRE1Redundancy redundancyInfo;
 		for(int i=0; i<x.size();i++)
 		{
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
-			
-			//point.setAlphaRad(-Math.PI/2); point.setBetaRad(0.0); point.setGammaRad(Math.PI);
+					
+			if(point.getX() > 444)
+			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
+			else
+			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 88);
 
-			System.out.println("x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
-					" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-			
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			
 			point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
 			//new_point.setRedundancyInformation(lbr, redundancyInfo);
 			
-			System.out.println("x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
-					" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-			
-			
+				
 			//System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
 				//" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
 			roll_scan.getFrame("roll_tcp").move(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode));
-			//roll_scan.getFrame("roll_tcp").move(ptp(point).setJointVelocityRel(0.25).setMode(impedanceControlMode));
 
 		}
 		
