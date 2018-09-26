@@ -317,10 +317,10 @@ public class AleronCADTest extends RoboticsAPIApplication {
 			point.setAlphaRad(-Math.PI/2); point.setBetaRad(0.0); point.setGammaRad(Math.PI);
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			
-			new_point = point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
-			new_point.setRedundancyInformation(lbr, redundancyInfo);
-			System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
-				" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
+			//new_point = point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
+			//new_point.setRedundancyInformation(lbr, redundancyInfo);
+			//System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
+				//" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
 			//roll1_scan.getFrame("roll_tcp").move(lin(new_point).setCartVelocity(velocidad).setMode(impedanceControlMode));
 			roll_scan.getFrame("roll_tcp").move(ptp(point).setJointVelocityRel(0.25).setMode(impedanceControlMode));
