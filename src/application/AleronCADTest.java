@@ -138,19 +138,19 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		    		 {
 		    			 val_str= data[i].split("A3=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 a.add(val);
+		    			 a.add(val*Math.PI/180);
 		    		 }
 		    		 else if(data[i].contains("B3="))
 		    		 {
 		    			 val_str= data[i].split("B3=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 b.add(val);
+		    			 b.add(val*Math.PI/180);
 		    		 }
 		    		 else if(data[i].contains("C3="))
 		    		 {
 		    			 val_str= data[i].split("C3=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 c.add(val);
+		    			 c.add(val*Math.PI/180);
 		    		 }
 		    		 else if(data[i].contains("AN3="))
 		    		 {
@@ -314,6 +314,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		{
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
+			
 			//point.setAlphaRad(-Math.PI/2); point.setBetaRad(0.0); point.setGammaRad(Math.PI);
 
 			System.out.println("x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
