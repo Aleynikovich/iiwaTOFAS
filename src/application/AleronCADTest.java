@@ -308,17 +308,19 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 		
-	 	Frame fr = new Frame(getFrame("/aleron"));
-		
+	 	Frame point = new Frame(getFrame("/aleron"));
+		Frame new_point;
 		for(int i=0; i<x.size();i++)
 		{
-			fr.setX(x.get(i)); fr.setY(y.get(i)); fr.setZ(z.get(i));
-			fr.setAlphaRad(-Math.PI/2); fr.setBetaRad(0.0); fr.setGammaRad(Math.PI);
+			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
+			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
 			
-			System.out.println("x: " + fr.getX() + " y: " + fr.getY() + " z: " + fr.getZ() + 
-				" A: " + fr.getAlphaRad() + " B: " + fr.getBetaRad() + " C: " + fr.getGammaRad());
+			new_point = point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
+			
+			System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
+				" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
-			roll_scan.getFrame("roll_tcp").move(lin(fr).setCartVelocity(25).setMode(impedanceControlMode));
+			//roll_scan.getFrame("roll_tcp").move(lin(fr).setCartVelocity(25).setMode(impedanceControlMode));
 		}
 		
 		rec.stopRecording();
