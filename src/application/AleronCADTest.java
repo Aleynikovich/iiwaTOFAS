@@ -314,7 +314,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		{
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
-			point.setAlphaRad(-Math.PI/2); point.setBetaRad(0.0); point.setGammaRad(Math.PI);
+//			point.setAlphaRad(-Math.PI/2); point.setBetaRad(0.0); point.setGammaRad(Math.PI);
+
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			
 			new_point = point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
