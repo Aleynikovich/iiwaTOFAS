@@ -74,8 +74,6 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	ArrayList<Double> b_n = new ArrayList<Double>();
 	ArrayList<Double> c_n = new ArrayList<Double>();
 
-	MotionBatch batch;
-
 	DataRecorder rec;
 	@Override
 	public void initialize() {
@@ -309,11 +307,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 		
 	 	Frame point = new Frame(getFrame("/aleron"));
-		Frame new_point;
 		LBRE1Redundancy redundancyInfo;
 		
-		batch = new MotionBatch();
-
 		for(int i=0; i<x.size();i++)
 		{
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
@@ -328,18 +323,19 @@ public class AleronCADTest extends RoboticsAPIApplication {
 			
 			point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -90, 0, 180));
 			//new_point.setRedundancyInformation(lbr, redundancyInfo);
-			
-			batch.getMotions().add(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode));
-
-		}    
 				
 			//System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
 				//" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
-		roll_scan.getFrame("roll_tcp").move(batch);
-			
+			if(i<x.size()-1)
+				roll_scan.getFrame("roll_tcp").moveAsync(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(2.5));
+			else
+				roll_scan.getFrame("roll_tcp").moveAsync(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+
 			//ForceSensorData current_force = lbr.getExternalForceTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
 			//System.out.println("Contact Z force: " + current_force.getForce().getZ());
+
+		}
 		
 		rec.stopRecording();
 	}
