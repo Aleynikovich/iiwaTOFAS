@@ -12,6 +12,9 @@ import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.math.XyzAbcTransformation;
+import com.kuka.roboticsAPI.motionModel.IMotion;
+import com.kuka.roboticsAPI.motionModel.MotionBatch;
+import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import com.kuka.roboticsAPI.motionModel.Spline;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianImpedanceControlMode;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianSineImpedanceControlMode;
@@ -58,6 +61,7 @@ public class AleronTest extends RoboticsAPIApplication {
 	
 	double select_velocity;
 	double overlap, overlapt;
+	
 	DataRecorder rec;
 	@Override
 	public void initialize() {
@@ -233,7 +237,8 @@ public class AleronTest extends RoboticsAPIApplication {
 						getLogger().info("App Terminated\n"+"***END***");
 						exit = true;
 						break;
-			}
+			} 
+			
 		} while (!exit);
 			
 	}
