@@ -698,6 +698,23 @@ public class ROS_driver extends RoboticsAPIApplication {
  			String result = String.valueOf(j[0]);
  			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
  			return result;
+ 			
+ 		// -----------------------------------------------------------------------------
+ 		//  Robot's FULL STATE
+ 		// ----------------------------------------------------------------------------
+ 		} else if (command.compareToIgnoreCase("get full state") == 0){
+ 			double j[] = robot.getCurrentJointPosition().get();
+ 			if (simulation && simulation_joints != null) j = simulation_joints.get();
+ 			String result = String.valueOf(j[0]);
+ 			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
+ 			
+ 			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
+ 			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
+ 			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
+ 			
+ 			
+ 			
+ 			return result;	
  		// ------------------------------------------------------------------------------
 		// 	Joints torque publishing
 		// ------------------------------------------------------------------------------
