@@ -323,9 +323,9 @@
             </redundancyData>
         </frame>
         <frame id="_a38beda4-b294-4dae-8733-19364600ee25" name="aleron">
-            <transformation a="-1.6" b="-0.3" c="1.5" x="817.03" y="1127.7" z="75.8"/>
+            <transformation a="-1.6" b="0.0" c="1.5" x="817.03" y="1127.7" z="75.8"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1538398839278"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1538399627848"/>
                 <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <redundancyData>
