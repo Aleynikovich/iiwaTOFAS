@@ -321,7 +321,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			
-			point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -72.67, 0.0, 177.5));
+			point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -72.73, 0.56, 179.45));
 			//new_point.setRedundancyInformation(lbr, redundancyInfo);
 				
 			//System.out.println("x: " + new_point.getX() + " y: " + new_point.getY() + " z: " + new_point.getZ() + 
