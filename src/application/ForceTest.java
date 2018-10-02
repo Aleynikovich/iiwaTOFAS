@@ -86,7 +86,7 @@ public class ForceTest extends RoboticsAPIApplication {
 		rec.enable();
 		rec.startRecording();
 		
-		roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("flange_2_tool").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(1.0));
 
 		JointPosition joints = lbr.getCurrentJointPosition();
 		
