@@ -105,15 +105,15 @@ public class ForceTest extends RoboticsAPIApplication {
 
 				case 0:
 				
-					lbr.move(ptp(joints).setJointVelocityRel(0.2));
+					lbr.move(ptp(joints).setJointVelocityRel(1.0));
 		
 					joints.set(0, -160*Math.PI/180);
 		
-					lbr.move(ptp(joints).setJointVelocityRel(0.2));
+					lbr.move(ptp(joints).setJointVelocityRel(1.0));
 		
 					joints.set(0, 0);
 		
-					lbr.move(ptp(joints).setJointVelocityRel(0.2));
+					lbr.move(ptp(joints).setJointVelocityRel(1.0));
 					
 					break;
 
