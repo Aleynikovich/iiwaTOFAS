@@ -316,8 +316,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 					case 5:
 						//de aqui hasta el doble asterisco comentado
 						Spline mySpline= new Spline(
-								spl(getApplicationData().getFrame("/aleron2/Aprox1")),
-								spl(getApplicationData().getFrame("/aleron2/Aprox")))
+								spl(getApplicationData().getFrame("/aleron/Aprox1")),
+								spl(getApplicationData().getFrame("/aleron/Aprox")))
 								
 								;
 
@@ -343,8 +343,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 					case 6:
 						
 						Spline mySpline= new Spline(
-								spl(getApplicationData().getFrame("/aleron2/Aprox1")),
-								spl(getApplicationData().getFrame("/aleron2/Aprox")))
+								spl(getApplicationData().getFrame("/aleron/Aprox1")),
+								spl(getApplicationData().getFrame("/aleron/Aprox")))
 								
 								;
 
@@ -414,18 +414,18 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox1")).setJointVelocityRel(0.25));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 	
 	MotionBatch right;
 	right  = new MotionBatch(
-			ptp(getFrame("/aleron2/Aprox1")).setJointVelocityRel(0.25).setBlendingCart(80),
-			ptp(getFrame("/aleron2/Aprox")).setJointVelocityRel(0.25)
+			ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25).setBlendingCart(80),
+			ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25)
 			);
 	motion = roll_scan.getFrame("Gripper").move(right);
 	
 
 	rec.enable();
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox")).setJointVelocityRel(0.25));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 	
 	rec.startRecording();
     
@@ -481,17 +481,17 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 	MotionBatch right_side;
 	right_side  = new MotionBatch(
-			ptp(getFrame("/aleron2/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron2/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron2/aproxrig")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron2/AproxRight")).setJointVelocityRel(0.2)
+			ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron/aproxrig")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.2)
 		);
 	motion = roll_scan.getFrame("Gripper").move(right_side);
 
 /*
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox_Ret")).setJointVelocityRel(0.1).setBlendingCart(80));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.1).setBlendingCart(80));
 
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/P_LR")).setJointVelocityRel(0.1));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.1));
 */
 }
 	
@@ -527,13 +527,13 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	MotionBatch left;
 	left  = new MotionBatch(
 			ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80),
-			ptp(getFrame("/aleron2/AproxRight")).setJointVelocityRel(0.25)
+			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25)
 			);
 	motion = roll_scan.getFrame("Gripper").move(left);
 	
 */
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80));
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/AproxRight")).setJointVelocityRel(0.25));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25));
 	//rec.enable();
 	
 	//rec.startRecording();
@@ -591,7 +591,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	getLogger().info("****************************");
 	getLogger().info("      Moving SafePos");
 	getLogger().info("****************************");
-	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron2/AproxRightSalida")).setCartVelocity(25));
+	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/AproxRightSalida")).setCartVelocity(25));
 
 	//roll_scan.getFrame("Gripper").move(linRel(-overlapt,460,0).setCartVelocity(25));
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
@@ -621,9 +621,9 @@ private void Force_XNT(double distancia, String nfichero, double velocidad ){
 
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox1")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 	rec.enable();
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 	
 	rec.startRecording();
 	
@@ -671,10 +671,10 @@ private void Force_XNT(double distancia, String nfichero, double velocidad ){
 	roll_scan.getFrame("Gripper").move(lin(up_fr).setCartVelocity(velocidad).setMode(impedanceControlMode));
 
 	
-	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron2/P1")).setCartVelocity(50));
-	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron2/P2")).setCartVelocity(50).setMode(impedanceControlMode));
-	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron2/P3")).setCartVelocity(50).setMode(impedanceControlMode));
-	//.getFrame("Gripper").move(lin(getFrame("/aleron2/P4")).setCartVelocity(50).setMode(impedanceControlMode));
+	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/P1")).setCartVelocity(50));
+	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/P2")).setCartVelocity(50).setMode(impedanceControlMode));
+	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/P3")).setCartVelocity(50).setMode(impedanceControlMode));
+	//.getFrame("Gripper").move(lin(getFrame("/aleron/P4")).setCartVelocity(50).setMode(impedanceControlMode));
 	rec.stopRecording();
 	roll_scan.getFrame("Gripper").move(linRel(0,0,-200).setCartVelocity(100));
 	//gripper.getFrame("/TCP2").move(linRel(100, 0, -200));
@@ -766,9 +766,9 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox1")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 	rec.enable();
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 	
 	rec.startRecording();
 
@@ -820,12 +820,12 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
 */
 	MotionBatch right_side;
 	right_side  = new MotionBatch(
-			ptp(getFrame("/aleron2/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron2/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron2/AproxRight")).setJointVelocityRel(0.2)
+			ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.2)
 		);
 	motion = roll_scan.getFrame("Gripper").move(right_side);
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(50));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(50));
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 
 	//gripper.getFrame("/TCP2").move(linRel(100, 0, -200));
@@ -863,13 +863,13 @@ private void Force_XNDR(double distancia, String nfichero, double velocidad ){
 	MotionBatch left;
 	left  = new MotionBatch(
 			ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80),
-			ptp(getFrame("/aleron2/AproxRight")).setJointVelocityRel(0.25)
+			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25)
 			);
 	motion = roll_scan.getFrame("Gripper").move(left);
 	
 */
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron2/AproxRight")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25));
 	//rec.enable();
 	
 	//rec.startRecording();
@@ -927,7 +927,7 @@ private void Force_XNDR(double distancia, String nfichero, double velocidad ){
 	getLogger().info("****************************");
 	getLogger().info("      Moving SafePos");
 	getLogger().info("****************************");
-	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron2/AproxRightSalida")).setCartVelocity(25));
+	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/AproxRightSalida")).setCartVelocity(25));
 
 	//roll_scan.getFrame("Gripper").move(linRel(-overlapt,460,0).setCartVelocity(25));
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
