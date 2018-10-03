@@ -303,8 +303,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		rec.startRecording();
 	
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron2/Aprox1")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron2/Aprox")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 		
 	 	Frame point = new Frame(getFrame("/aleron2"));
 		LBRE1Redundancy redundancyInfo;
