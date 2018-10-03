@@ -60,7 +60,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
     
 	private static final int stiffnessZ = 300;
 	private static final int stiffnessY = 5000;
-	private static final int stiffnessX = 5000;
+	private static final int stiffnessX = 1000;
 	
 	double select_velocity;
 	
