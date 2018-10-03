@@ -59,7 +59,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
     CartesianImpedanceControlMode impedanceControlMode;
     
 	private static final int stiffnessZ = 300;
-	private static final int stiffnessY = 500;
+	private static final int stiffnessY = 5000;
 	private static final int stiffnessX = 5000;
 	
 	double select_velocity;
@@ -294,6 +294,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		impedanceControlMode.parametrize(CartDOF.Y).setStiffness(stiffnessY).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.Z).setStiffness(stiffnessZ).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
+		impedanceControlMode.parametrize(CartDOF.B).setStiffness(50).setDamping(0.7);
+
 		
 		rec.setFileName(nfichero);
 		rec.addCartesianForce(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
