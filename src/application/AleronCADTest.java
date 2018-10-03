@@ -198,7 +198,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		do {
 			rec = new DataRecorder();
 			rec.setTimeout(2L, TimeUnit.MINUTES);
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 			switch (getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 					"10N", "15N", "20N", "24N", "END DO NOTHING")) {
