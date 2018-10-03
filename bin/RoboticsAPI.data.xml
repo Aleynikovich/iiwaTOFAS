@@ -419,9 +419,9 @@
                 <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <frame id="_45b99e3a-092a-48df-819b-47ba5e4336c0" name="aleron">
-                <transformation a="0.02785543401972421" b="0.03572601242789977" c="2.5429995921639375" x="726.9485575735673" y="494.0029448734423" z="552.8277154069964"/>
+                <transformation a="-0.0020" b="0.0010" c="3.1" x="65.2" y="5.5" z="259.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1538547137326"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1538543177126"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RollScan/Gripper" tool="RollScan" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
                     </info>
@@ -435,9 +435,9 @@
                 </redundancyData>
             </frame>
             <frame id="_24d1a339-0c28-4efb-bc20-2effc9d4723d" name="Aprox">
-                <transformation a="0.02785543694517376" b="0.035725942013977594" c="2.5429997099489143" x="726.9485772645678" y="494.00298575718716" z="552.827689615855"/>
+                <transformation a="0.02785543694517376" b="-0.01" c="3.1" x="68.5" y="1.5" z="137.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1538547161509"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1538543228951"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RollScan/Gripper" tool="RollScan" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
                     </info>
@@ -451,9 +451,9 @@
                 </redundancyData>
             </frame>
             <frame id="_a614a746-b3b7-48f4-9ab0-e2364bbe3c07" name="Aprox1">
-                <transformation a="0.027855438128151173" b="0.03572594344416219" c="2.5429996501333116" x="726.94857622069" y="494.0029708170115" z="552.8276697535198"/>
+                <transformation a="0.027855438128151173" b="-0.01" c="3.1" x="82.7" y="320.7" z="551.4"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1538547166844"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1538543259460"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RollScan/Gripper" tool="RollScan" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
                     </info>
