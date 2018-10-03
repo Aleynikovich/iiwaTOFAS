@@ -504,7 +504,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	//impedanceControlMode.parametrize(CartDOF.Z).setStiffness(Force).setDamping(0.7);
 	//impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
 	
- 	LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 1, 82);
+ 	LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.1), 1, 82);
 	
  //	rec.setFileName(nfichero);
 //	rec.addCartesianForce(roll_scan.getFrame("Gripper"),roll_scan.getFrame("Gripper"));
