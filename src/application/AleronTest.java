@@ -483,6 +483,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	right_side  = new MotionBatch(
 			ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
 			ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron/aproxrig")).setJointVelocityRel(0.2).setBlendingCart(30),
 			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.2)
 		);
 	motion = roll_scan.getFrame("Gripper").move(right_side);
