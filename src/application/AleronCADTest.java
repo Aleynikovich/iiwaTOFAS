@@ -59,7 +59,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
     CartesianImpedanceControlMode impedanceControlMode;
     
 	private static final int stiffnessZ = 300;
-	private static final int stiffnessY = 1000;
+	private static final int stiffnessY = 500;
 	private static final int stiffnessX = 5000;
 	
 	double select_velocity;
