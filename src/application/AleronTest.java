@@ -183,7 +183,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.03333,fname,select_velocity);
 							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.03333,fname,select_velocity);
+							roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+							//Force_XNR(0.03333,fname,select_velocity);
 												}
 						else if (forces==1){
 							getLogger().info("Selected 10ND and " + select_velocity + "mm/s");
