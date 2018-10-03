@@ -511,7 +511,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 //	rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("Gripper"), getApplicationData().getFrame("/robot_base"));
  	//downFrame
 	down_fr = new Frame(getFrame("/aleron"));
-	down_fr.setX(0.80247*1000); down_fr.setY(2); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
+	down_fr.setX(0.80247*1000); down_fr.setY(1.6); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
  	down_fr.setAlphaRad(Math.toRadians(-180)); /*down_fr.setBetaRad(0.0);*/ down_fr.setGammaRad(Math.toRadians(180));
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
@@ -533,7 +533,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	
 */
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25));
 	//rec.enable();
 	
 	//rec.startRecording();
