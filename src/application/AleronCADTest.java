@@ -294,7 +294,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		impedanceControlMode.parametrize(CartDOF.Y).setStiffness(stiffnessY).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.Z).setStiffness(stiffnessZ).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
-		impedanceControlMode.parametrize(CartDOF.B).setStiffness(50).setDamping(0.7);
+		impedanceControlMode.parametrize(CartDOF.A).setStiffness(50).setDamping(0.7);
 
 		
 		rec.setFileName(nfichero);
