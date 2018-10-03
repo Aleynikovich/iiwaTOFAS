@@ -212,8 +212,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.03,fname,select_velocity);
 							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.03,fname,select_velocity);
-							Force_XNDR(0.03,fname,select_velocity);
+							//Force_XNR(0.03,fname,select_velocity);
+							//Force_XNDR(0.03,fname,select_velocity);
 
 
 
@@ -242,7 +242,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.067,fname,select_velocity);
 							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.067,fname,select_velocity);
+							//Force_XNR(0.067,fname,select_velocity);
 
 						}
 						else if (forces==1){
@@ -270,7 +270,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.048,fname,select_velocity);
 							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.048,fname,select_velocity);
+							//Force_XNR(0.048,fname,select_velocity);
 
 						}
 						else if (forces==1){
@@ -299,7 +299,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.11666,fname,select_velocity);
 							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.11666,fname,select_velocity);
+							//Force_XNR(0.11666,fname,select_velocity);
 
 						}
 						else if (forces==1){
@@ -369,7 +369,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.1,fname,select_velocity);
 							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.1,fname,select_velocity);
+							//Force_XNR(0.1,fname,select_velocity);
 
 						}
 						else if (forces==1){
