@@ -198,7 +198,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		do {
 			rec = new DataRecorder();
 			rec.setTimeout(2L, TimeUnit.MINUTES);
-			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 			switch (getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 					"10N", "15N", "20N", "24N", "END DO NOTHING")) {
@@ -306,7 +306,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 		
-	 	Frame point = new Frame(getFrame("/aleron2"));
+	 	Frame point = new Frame(getFrame("/aleron"));
 		LBRE1Redundancy redundancyInfo;
 		
 		for(int i=0; i<x.size();i++)
