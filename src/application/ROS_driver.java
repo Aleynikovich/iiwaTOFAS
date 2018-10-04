@@ -312,6 +312,75 @@ public class ROS_driver extends RoboticsAPIApplication {
 		} catch (Exception e){
 			return "error";
 		}
+		
+		} else if (command.compareToIgnoreCase("direct and state") == 0){ 
+				
+				if (directServo == null) directServo = new DirectServo(robot.getCurrentJointPosition());
+				
+				if (lastRobotMode != RobotMode.direct){
+					if (motionContainer != null) motionContainer.cancel();
+					motionContainer = robot.moveAsync(directServo);
+					directMotion = directServo.getRuntime();
+				}
+				
+				try {
+				
+					JointPosition jointPosition = new JointPosition(
+							Double.parseDouble(parameters[0]), 
+							Double.parseDouble(parameters[1]),
+							Double.parseDouble(parameters[2]),
+							Double.parseDouble(parameters[3]),
+							Double.parseDouble(parameters[4]),
+							Double.parseDouble(parameters[5]),
+							Double.parseDouble(parameters[6]));
+					
+					JointPosition jointSpeed = new JointPosition(
+							Double.parseDouble(parameters[7]), 
+							Double.parseDouble(parameters[8]),
+							Double.parseDouble(parameters[9]),
+							Double.parseDouble(parameters[10]),
+							Double.parseDouble(parameters[11]),
+							Double.parseDouble(parameters[12]),
+							Double.parseDouble(parameters[13]));
+			
+					if (!simulation){
+						//directServo.setJointVelocityRel(jointSpeed.get());
+						directMotion.setMinimumTrajectoryExecutionTime(40e-3);
+						directMotion.setDestination(jointPosition);
+					} else {
+						simulation_joints = jointPosition;
+					}
+					
+					lastRobotMode = RobotMode.direct;
+					
+					//STATE
+					
+		 			double j[] = robot.getCurrentJointPosition().get();
+		 			if (simulation && simulation_joints != null) j = simulation_joints.get();
+		 			String result = String.valueOf(j[0]);
+		 			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
+		 			
+		 			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
+		 			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
+		 			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
+		 				
+		 			return result;	
+					
+			
+				} catch (Exception e){
+		 			double j[] = robot.getCurrentJointPosition().get();
+		 			if (simulation && simulation_joints != null) j = simulation_joints.get();
+		 			String result = String.valueOf(j[0]);
+		 			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
+		 			
+		 			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
+		 			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
+		 			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
+		 				
+		 			return result;
+				}
+		
+		
 
 // --------------------------------------------------------------------------------------
 // Smart / Direct Mode (frames)
