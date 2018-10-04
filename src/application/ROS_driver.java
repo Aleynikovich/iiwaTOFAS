@@ -299,7 +299,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 	
 			if (!simulation){
 				directServo.setJointVelocityRel(jointSpeed.get());
-				directMotion.setMinimumTrajectoryExecutionTime(20e-3);
+				directMotion.setMinimumTrajectoryExecutionTime(40e-3);
 				directMotion.setDestination(jointPosition);
 			} else {
 				simulation_joints = jointPosition;
@@ -344,8 +344,8 @@ public class ROS_driver extends RoboticsAPIApplication {
 							Double.parseDouble(parameters[13]));
 			
 					if (!simulation){
-						//directServo.setJointVelocityRel(jointSpeed.get());
-						directMotion.setMinimumTrajectoryExecutionTime(40e-3);
+						directServo.setJointVelocityRel(jointSpeed.get());
+						directMotion.setMinimumTrajectoryExecutionTime(20e-3);
 						directMotion.setDestination(jointPosition);
 					} else {
 						simulation_joints = jointPosition;
