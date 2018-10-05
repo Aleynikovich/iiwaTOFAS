@@ -163,7 +163,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 		do {
 			rec = new DataRecorder();
 			rec.setTimeout(60L, TimeUnit.SECONDS);
-			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
 			switch (getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 					"10N", "15N", "20N", "24N", "35N", "100N (no usar metodo DESIRED)", "END DO NOTHING")) {
@@ -413,7 +413,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 	
 	MotionBatch right;
@@ -593,7 +593,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/AproxRightSalida")).setCartVelocity(25));
 
 	//roll_scan.getFrame("Gripper").move(linRel(-overlapt,460,0).setCartVelocity(25));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
 
 	//gripper.getFrame("/TCP2").move(linRel(100, 0, -200));
 }
@@ -764,7 +764,7 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
 	rec.enable();
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
@@ -929,7 +929,7 @@ private void Force_XNDR(double distancia, String nfichero, double velocidad ){
 	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/AproxRightSalida")).setCartVelocity(25));
 
 	//roll_scan.getFrame("Gripper").move(linRel(-overlapt,460,0).setCartVelocity(25));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
 
 	//gripper.getFrame("/TCP2").move(linRel(100, 0, -200));
 }

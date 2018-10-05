@@ -392,10 +392,10 @@
                     </redundancy>
                 </redundancyData>
             </frame>
-            <frame id="_72e359e6-5dfb-45bf-9ecd-4e990423c11a" name="P1">
+            <frame id="_72e359e6-5dfb-45bf-9ecd-4e990423c11a" name="SafePos_Java">
                 <transformation a="-1.5623581304536163" b="-0.025206979549862014" c="-2.241356755239351" x="273.67427771084925" y="-48.83653994523135" z="673.6085765186509"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1538722836879"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1538725961640"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RollScan/Gripper" tool="RollScan" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
                     </info>
