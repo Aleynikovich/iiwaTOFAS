@@ -409,6 +409,12 @@
                 </redundancy>
             </redundancyData>
         </frame>
+        <frame id="_4255cc81-661c-4759-a948-41a62746c42a" name="aleron_java">
+            <transformation a="-1.6" b="-2.0E-4" c="1.5" x="811.2" y="662.7" z="141.8"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1538725730563"/>
+            </additionalInformation>
+        </frame>
     </world>
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="/flange_2_tool" name="Tool">
