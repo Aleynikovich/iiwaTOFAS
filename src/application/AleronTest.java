@@ -114,14 +114,14 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 		LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.09), 2, 24);
 	 	//Up measurement point frame
-	 	up_fr = new Frame(getFrame("/aleron"));
+	 	up_fr = new Frame(getFrame("/aleron_java"));
 		up_fr.setX(0.400*1000); up_fr.setY(0.074*1000); up_fr.setZ(0.0333*1000); 
 	 	//up_fr.setAlphaRad(0.0); up_fr.setBetaRad(0.0); up_fr.setGammaRad(0.0);
 	 	up_fr.setAlphaRad(1.6); up_fr.setBetaRad(0.0); up_fr.setGammaRad(0.0);
 		up_fr.setRedundancyInformation(lbr, redundancyInfo);
 
 	 	//downFrame
-		down_fr = new Frame(getFrame("/aleron"));
+		down_fr = new Frame(getFrame("/aleron_java"));
 		down_fr.setX(0.0); down_fr.setY(0.074*1000); down_fr.setZ(-3.0); 
 	 	down_fr.setAlphaRad(1.6); down_fr.setBetaRad(0.0); down_fr.setGammaRad(0.0);
 		down_fr.setRedundancyInformation(lbr, redundancyInfo);
@@ -182,14 +182,14 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							getLogger().info("Selected 10N and " + select_velocity + "mm/s");
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.03333,fname,select_velocity);
-							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.03333,fname,select_velocity);
+							getLogger().info("Going to Home Position");
+							//Force_XNR(0.03333,fname,select_velocity);
 												}
 						else if (forces==1){
 							getLogger().info("Selected 10ND and " + select_velocity + "mm/s");
 							fname="measured_force_10ND_stiffZ_1000_"+select_velocity+"mm_S.log";
 							Force_XND(0.03333,fname,select_velocity);
-							Force_XNDR(0.03333,fname,select_velocity);
+							//Force_XNDR(0.03333,fname,select_velocity);
 
 
 						}	
@@ -210,9 +210,9 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							fname="measured_force_15N_stiffZ_300_"+select_velocity+"mm_S.log";
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.03,fname,select_velocity);
-							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.03,fname,select_velocity);
-							Force_XNDR(0.03,fname,select_velocity);
+							getLogger().info("Going to Home Position");
+							//Force_XNR(0.03,fname,select_velocity);
+							//Force_XNDR(0.03,fname,select_velocity);
 
 
 
@@ -220,7 +220,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 						else if (forces==1){
 							getLogger().info("Selected 15ND and " + select_velocity + "mm/s");
 							fname="measured_force_15ND_stiffZ_300_"+select_velocity+"mm_S.log";
-							Force_XND(0.03,fname,select_velocity);
+							//Force_XND(0.03,fname,select_velocity);
 
 						}	
 						mediaFIO.setLEDBlue(false);
@@ -240,15 +240,15 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							fname="measured_force_20N_stiffZ_300_"+select_velocity+"mm_S.log";
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.067,fname,select_velocity);
-							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.067,fname,select_velocity);
+							getLogger().info("Going to Home Position");
+							//Force_XNR(0.067,fname,select_velocity);
 
 						}
 						else if (forces==1){
 							getLogger().info("Selected 20ND and " + select_velocity + "mm/s");
 							fname="measured_force_20ND_stiffZ_300_"+select_velocity+"mm_S.log";
 							Force_XND(0.067,fname,select_velocity);
-							Force_XNDR(0.067,fname,select_velocity);
+							//Force_XNDR(0.067,fname,select_velocity);
 
 						}	
 						mediaFIO.setLEDBlue(false);
@@ -268,15 +268,15 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							fname="measured_force_24N_stiffZ_1000_"+select_velocity+"mm_S.log";
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.048,fname,select_velocity);
-							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.048,fname,select_velocity);
+							getLogger().info("Going to Home Position");
+							//Force_XNR(0.048,fname,select_velocity);
 
 						}
 						else if (forces==1){
 							getLogger().info("Selected 24ND and mm/s: " + select_velocity + "mm/s");
 							fname="measured_force_24ND_stiffZ_300_"+select_velocity+"mm_S.log";
 							Force_XND(0.048,fname,select_velocity);
-							Force_XNDR(0.048,fname,select_velocity);
+							//Force_XNDR(0.048,fname,select_velocity);
 
 
 						}				
@@ -297,15 +297,15 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							fname="measured_force_30N_stiffZ_300_"+select_velocity+"mm_S.log";
 							getLogger().info("Moving left part of the aleron");
 							Force_XNL(0.11666,fname,select_velocity);
-							getLogger().info("Moving right part of the aleron");
-							Force_XNR(0.11666,fname,select_velocity);
+							getLogger().info("Going to Home Position");
+							//Force_XNR(0.11666,fname,select_velocity);
 
 						}
 						else if (forces==1){
 							getLogger().info("Selected 35ND and mm/s: " + select_velocity + "mm/s");
 							fname="measured_force_35D_stiffZ_300_"+select_velocity+"mm_S.log";
 							Force_XND(0.11666,fname,select_velocity);
-							Force_XNDR(0.11666,fname,select_velocity);
+							//Force_XNDR(0.11666,fname,select_velocity);
 
 
 						}				
@@ -316,8 +316,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 					case 5:
 						//de aqui hasta el doble asterisco comentado
 						Spline mySpline= new Spline(
-								spl(getApplicationData().getFrame("/aleron/Aprox1")),
-								spl(getApplicationData().getFrame("/aleron/Aprox")))
+								spl(getApplicationData().getFrame("/aleron_java/Aprox1")),
+								spl(getApplicationData().getFrame("/aleron_java/Aprox")))
 								
 								;
 
@@ -343,8 +343,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 					case 6:
 						
 						Spline mySpline= new Spline(
-								spl(getApplicationData().getFrame("/aleron/Aprox1")),
-								spl(getApplicationData().getFrame("/aleron/Aprox")))
+								spl(getApplicationData().getFrame("/aleron_java/Aprox1")),
+								spl(getApplicationData().getFrame("/aleron_java/Aprox")))
 								
 								;
 
@@ -401,31 +401,31 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	rec.addCartesianForce(roll_scan.getFrame("Gripper"),roll_scan.getFrame("Gripper"));
 	rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("Gripper"), getApplicationData().getFrame("/robot_base"));
  	//downFrame
-	down_fr = new Frame(getFrame("/aleron"));
+	down_fr = new Frame(getFrame("/aleron_java"));
 	down_fr.setX(0.0685*1000); down_fr.setY(1.5); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
  	/*down_fr.setAlphaRad(0.0); down_fr.setBetaRad(0.0);*/ down_fr.setGammaRad(Math.PI);
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//upFrame
-	up_fr = new Frame(getFrame("/aleron"));
+	up_fr = new Frame(getFrame("/aleron_java"));
 	up_fr.setX(0.0685*1000); up_fr.setY(0.400*1000); up_fr.setZ(-distancia*1000); 
  	/*up_fr.setAlphaRad(0.0); up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox1")).setJointVelocityRel(0.25));
 	
 	MotionBatch right;
 	right  = new MotionBatch(
-			ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25).setBlendingCart(80),
-			ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25)
+			ptp(getFrame("/aleron_java/Aprox1")).setJointVelocityRel(0.25).setBlendingCart(80),
+			ptp(getFrame("/aleron_java/Aprox")).setJointVelocityRel(0.25)
 			);
 	motion = roll_scan.getFrame("Gripper").move(right);
 	
 
 	rec.enable();
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox")).setJointVelocityRel(0.25));
 	
 	rec.startRecording();
     
@@ -481,16 +481,16 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 	MotionBatch right_side;
 	right_side  = new MotionBatch(
-			ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.2)
+			ptp(getFrame("/aleron_java/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron_java/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron_java/AproxRight")).setJointVelocityRel(0.2)
 		);
 	motion = roll_scan.getFrame("Gripper").move(right_side);
 
 /*
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.1).setBlendingCart(80));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox_Ret")).setJointVelocityRel(0.1).setBlendingCart(80));
 
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.1));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/P_LR")).setJointVelocityRel(0.1));
 */
 }
 	
@@ -509,13 +509,13 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 //	rec.addCartesianForce(roll_scan.getFrame("Gripper"),roll_scan.getFrame("Gripper"));
 //	rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("Gripper"), getApplicationData().getFrame("/robot_base"));
  	//downFrame
-	down_fr = new Frame(getFrame("/aleron"));
+	down_fr = new Frame(getFrame("/aleron_java"));
 	down_fr.setX(0.8055*1000); down_fr.setY(2); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
  	down_fr.setAlphaRad(Math.toRadians(-180)); /*down_fr.setBetaRad(0.0);*/ down_fr.setGammaRad(Math.toRadians(180));
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//upFrame
-	up_fr = new Frame(getFrame("/aleron"));
+	up_fr = new Frame(getFrame("/aleron_java"));
 	up_fr.setX(0.8055*1000); up_fr.setY(0.400*1000); up_fr.setZ(-distancia*1000); 
  	up_fr.setAlphaRad(Math.toRadians(-180)); /*up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.toRadians(180));
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
@@ -526,13 +526,13 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	MotionBatch left;
 	left  = new MotionBatch(
 			ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80),
-			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25)
+			ptp(getFrame("/aleron_java/AproxRight")).setJointVelocityRel(0.25)
 			);
 	motion = roll_scan.getFrame("Gripper").move(left);
 	
 */
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/AproxRight")).setJointVelocityRel(0.25));
 	//rec.enable();
 	
 	//rec.startRecording();
@@ -590,7 +590,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	getLogger().info("****************************");
 	getLogger().info("      Moving SafePos");
 	getLogger().info("****************************");
-	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/AproxRightSalida")).setCartVelocity(25));
+	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron_java/AproxRightSalida")).setCartVelocity(25));
 
 	//roll_scan.getFrame("Gripper").move(linRel(-overlapt,460,0).setCartVelocity(25));
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
@@ -607,22 +607,22 @@ private void Force_XNT(double distancia, String nfichero, double velocidad ){
 	rec.addCartesianForce(roll_scan.getFrame("Gripper"),roll_scan.getFrame("Gripper"));
 	rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("Gripper"), getApplicationData().getFrame("/robot_base"));
  	//downFrame
-	down_fr = new Frame(getFrame("/aleron"));
+	down_fr = new Frame(getFrame("/aleron_java"));
 	down_fr.setX(0.151*1000); down_fr.setY(-6.5); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
  	down_fr.setAlphaRad(Math.PI/2); down_fr.setBetaRad(-0.047123); down_fr.setGammaRad(Math.PI);
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//upFrame
-	up_fr = new Frame(getFrame("/aleron"));
+	up_fr = new Frame(getFrame("/aleron_java"));
 	up_fr.setX(0.350*1000); up_fr.setY(-6.5); up_fr.setZ(-distancia*1000); 
  	up_fr.setAlphaRad(Math.PI/2); up_fr.setBetaRad(-0.047123); up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox1")).setJointVelocityRel(0.25));
 	rec.enable();
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox")).setJointVelocityRel(0.25));
 	
 	rec.startRecording();
 	
@@ -670,10 +670,10 @@ private void Force_XNT(double distancia, String nfichero, double velocidad ){
 	roll_scan.getFrame("Gripper").move(lin(up_fr).setCartVelocity(velocidad).setMode(impedanceControlMode));
 
 	
-	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/P1")).setCartVelocity(50));
-	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/P2")).setCartVelocity(50).setMode(impedanceControlMode));
-	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/P3")).setCartVelocity(50).setMode(impedanceControlMode));
-	//.getFrame("Gripper").move(lin(getFrame("/aleron/P4")).setCartVelocity(50).setMode(impedanceControlMode));
+	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron_java/P1")).setCartVelocity(50));
+	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron_java/P2")).setCartVelocity(50).setMode(impedanceControlMode));
+	//roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron_java/P3")).setCartVelocity(50).setMode(impedanceControlMode));
+	//.getFrame("Gripper").move(lin(getFrame("/aleron_java/P4")).setCartVelocity(50).setMode(impedanceControlMode));
 	rec.stopRecording();
 	roll_scan.getFrame("Gripper").move(linRel(0,0,-200).setCartVelocity(100));
 	//gripper.getFrame("/TCP2").move(linRel(100, 0, -200));
@@ -752,22 +752,22 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
 	rec.addCartesianForce(roll_scan.getFrame("Gripper"),roll_scan.getFrame("Gripper"));
 	rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("Gripper"), getApplicationData().getFrame("/robot_base"));
  	//downFrame
-	down_fr = new Frame(getFrame("/aleron"));
+	down_fr = new Frame(getFrame("/aleron_java"));
 	down_fr.setX(0.0685*1000); down_fr.setY(1.5); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
  	/*down_fr.setAlphaRad(0.0); down_fr.setBetaRad(0.0);*/ down_fr.setGammaRad(Math.PI);
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//upFrame
-	up_fr = new Frame(getFrame("/aleron"));
+	up_fr = new Frame(getFrame("/aleron_java"));
 	up_fr.setX(0.0685*1000); up_fr.setY(0.400*1000); up_fr.setZ(0.0*1000); 
  	/*up_fr.setAlphaRad(0.0); up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.PI);
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//int optionforce = getApplicationUI().displayModalDialog(ApplicationDialogType.QUESTION, "How many Force do I have to do?", "10N", "15N", "20N", "24N", "END DO NOTHING");
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox1")).setJointVelocityRel(0.25));
 	rec.enable();
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox")).setJointVelocityRel(0.25));
 	
 	rec.startRecording();
 
@@ -819,12 +819,12 @@ private void Force_XND(double distancia, String nfichero, double velocidad ){
 */
 	MotionBatch right_side;
 	right_side  = new MotionBatch(
-			ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
-			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.2)
+			ptp(getFrame("/aleron_java/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron_java/P_LR")).setJointVelocityRel(0.2).setBlendingCart(30),
+			ptp(getFrame("/aleron_java/AproxRight")).setJointVelocityRel(0.2)
 		);
 	motion = roll_scan.getFrame("Gripper").move(right_side);
-	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(50));
+	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/Aprox_Ret")).setJointVelocityRel(0.2).setBlendingCart(50));
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 
 	//gripper.getFrame("/TCP2").move(linRel(100, 0, -200));
@@ -845,13 +845,13 @@ private void Force_XNDR(double distancia, String nfichero, double velocidad ){
 //	rec.addCartesianForce(roll_scan.getFrame("Gripper"),roll_scan.getFrame("Gripper"));
 //	rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("Gripper"), getApplicationData().getFrame("/robot_base"));
  	//downFrame
-	down_fr = new Frame(getFrame("/aleron"));
+	down_fr = new Frame(getFrame("/aleron_java"));
 	down_fr.setX(0.8055*1000); down_fr.setY(2); down_fr.setZ(distancia*1000); //3.0 o 0.0333*1000 para 10N = 300K*0.0333
  	down_fr.setAlphaRad(Math.toRadians(-180)); /*down_fr.setBetaRad(0.0);*/ down_fr.setGammaRad(Math.toRadians(180));
 	down_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
 	//upFrame
-	up_fr = new Frame(getFrame("/aleron"));
+	up_fr = new Frame(getFrame("/aleron_java"));
 	up_fr.setX(0.8055*1000); up_fr.setY(0.400*1000); up_fr.setZ(0.0*1000); 
  	up_fr.setAlphaRad(Math.toRadians(-180)); /*up_fr.setBetaRad(0.0)*/ up_fr.setGammaRad(Math.toRadians(180));
 	up_fr.setRedundancyInformation(lbr, redundancyInfo);
@@ -862,13 +862,13 @@ private void Force_XNDR(double distancia, String nfichero, double velocidad ){
 	MotionBatch left;
 	left  = new MotionBatch(
 			ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80),
-			ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25)
+			ptp(getFrame("/aleron_java/AproxRight")).setJointVelocityRel(0.25)
 			);
 	motion = roll_scan.getFrame("Gripper").move(left);
 	
 */
 	//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/AproxRW")).setJointVelocityRel(0.25).setBlendingCart(80));
-	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron/AproxRight")).setJointVelocityRel(0.25));
+	roll_scan.getFrame("Gripper").move(ptp(getFrame("/aleron_java/AproxRight")).setJointVelocityRel(0.25));
 	//rec.enable();
 	
 	//rec.startRecording();
@@ -926,7 +926,7 @@ private void Force_XNDR(double distancia, String nfichero, double velocidad ){
 	getLogger().info("****************************");
 	getLogger().info("      Moving SafePos");
 	getLogger().info("****************************");
-	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron/AproxRightSalida")).setCartVelocity(25));
+	roll_scan.getFrame("Gripper").move(lin(getFrame("/aleron_java/AproxRightSalida")).setCartVelocity(25));
 
 	//roll_scan.getFrame("Gripper").move(linRel(-overlapt,460,0).setCartVelocity(25));
 	roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos_Java")).setJointVelocityRel(0.25));
