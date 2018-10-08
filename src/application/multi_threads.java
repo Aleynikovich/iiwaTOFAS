@@ -189,7 +189,7 @@ public class multi_threads extends RoboticsAPIApplication {
     public void dispose()
     {
         server_.close();
-        server_.running = false;
+        //server_.running = false;
         super.dispose();
     }
 	@Override
