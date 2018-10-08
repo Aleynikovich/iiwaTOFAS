@@ -83,7 +83,7 @@ class EchoServer extends Thread {
             try {
 				socket.send(packet);
 			} catch (IOException e) {
-	            System.out.println(e.toString());
+	            System.out.println("here");
 			}
         }
         socket.close();
