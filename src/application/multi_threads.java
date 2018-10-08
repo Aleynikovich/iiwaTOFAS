@@ -199,12 +199,12 @@ public class multi_threads extends RoboticsAPIApplication {
 	@Override
 	public void run() {
 		// your application execution starts here
-	      RunnableDemo R1 = new RunnableDemo( "Thread-1");
-	      R1.start();
-	      
-	      RunnableDemo R2 = new RunnableDemo( "Thread-2");
-	      R2.start();
-	      
+//	      RunnableDemo R1 = new RunnableDemo( "Thread-1");
+//	      R1.start();
+//	      
+//	      RunnableDemo R2 = new RunnableDemo( "Thread-2");
+//	      R2.start();
+//	      
 //	      while(true)
 //		      {
 //		    	  String echo = client.sendEcho("hello server");
