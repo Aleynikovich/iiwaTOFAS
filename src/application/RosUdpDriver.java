@@ -1,10 +1,16 @@
 package application;
 
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
+
+import com.kuka.roboticsAPI.controllerModel.Controller;
+import com.kuka.roboticsAPI.controllerModel.sunrise.SunriseController;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 
 /**
@@ -27,8 +33,10 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
  */
 public class RosUdpDriver extends RoboticsAPIApplication {
 	@Inject
-	private LBR robot_;
-	
+	private LBR robot;
+	private Controller controller;
+	private Tool tool;
+
 	private IMotionContainer motionContainer = null;
 
 	
@@ -40,13 +48,17 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 
 	@Override
 	public void initialize() {
-		// initialize your application here
+		controller = (SunriseController) getContext().getDefaultController();
+		robot = (LBR) getRobot(controller, "LBR_iiwa_14_R820_1");
+		tool = createFromTemplate("Tool");
+		tool.attachTo(robot.getFlange()); // Attach the tool
 	}
 	
 	
 	@Override
 	public void dispose(){
 		System.out.println("Stoping motion... ");
+		if (motionContainer != null) motionContainer.cancel();
 		System.out.println("Closing the sockets... ");
 //		try { clientSocket.close(); } catch (Exception e) { }
 //		try { serverSocket.close(); } catch (Exception e) { }
@@ -61,7 +73,19 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		try{
 			
 			while(true)
-			{}
+			{
+				// ------------------ Connection acceptance -------------------
+//				System.out.println("Waiting for incoming connection...");
+//				
+//				while(true){
+//					
+//				}
+//				
+//				// Prepare robot for a new connection
+//				if (motionContainer != null) motionContainer.cancel(); // Stop the robot
+//				Thread.sleep(1000); // Wait 1 second before retry
+//				
+			}
 		} catch (Exception e){
 			// Stop button clicked in the control pad or critical error
 			// Sockets are close in the dispose function
