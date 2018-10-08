@@ -59,7 +59,7 @@ class EchoServer extends Thread {
     public void run() {
 
         while (!Thread.interrupted()) {
-    		System.out.println("in thread");
+    		
 
 //            DatagramPacket packet 
 //              = new DatagramPacket(buf, buf.length);
