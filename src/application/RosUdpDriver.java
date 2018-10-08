@@ -43,7 +43,7 @@ class EchoServer extends Thread {
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
-    private volatile boolean flag = true;
+    private volatile boolean flag = false;
      
     //This method will set flag as false
      
@@ -65,14 +65,16 @@ class EchoServer extends Thread {
     @Override
     public void run() {
 
-        while (!Thread.interrupted()) {
-            DatagramPacket packet 
-              = new DatagramPacket(buf, buf.length);
-            try {
-				socket.receive(packet);
-			} catch (IOException e) {
-				System.out.println(e.toString());
-			}
+        while (flag) {
+    		System.out.println("in thread");
+
+//            DatagramPacket packet 
+//              = new DatagramPacket(buf, buf.length);
+//            try {
+//				socket.receive(packet);
+//			} catch (IOException e) {
+//				System.out.println(e.toString());
+//			}
              
 //            InetAddress address = packet.getAddress();
 //            int port = packet.getPort();
