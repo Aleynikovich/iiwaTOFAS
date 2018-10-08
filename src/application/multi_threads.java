@@ -44,7 +44,7 @@ class EchoServer extends Thread {
  
     public EchoServer() {
         try {
-			socket = new DatagramSocket(30201);
+			socket = new DatagramSocket(30202);
 		} catch (SocketException e) {
             System.out.println(e.toString());
 
