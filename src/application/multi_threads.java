@@ -172,12 +172,12 @@ public class multi_threads extends RoboticsAPIApplication {
 	public void initialize() {
 		// initialize your application here
 		new EchoServer().start();
-		try {
-			client = new EchoClient();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			client = new EchoClient();
+//		} catch (SocketException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 
