@@ -74,7 +74,8 @@ class EchoServer extends Thread {
             packet = new DatagramPacket(buf, buf.length, address, port);
             String received 
               = new String(packet.getData(), 0, packet.getLength());
-             
+            System.out.println(" Running server 3 ");
+
             if (received.equals("end")) {
                 running = false;
                 continue;
@@ -82,8 +83,7 @@ class EchoServer extends Thread {
             try {
 				socket.send(packet);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	            System.out.println(e.toString());
 			}
         }
         socket.close();
@@ -187,11 +187,11 @@ public class multi_threads extends RoboticsAPIApplication {
 	@Override
 	public void run() {
 		// your application execution starts here
-	      RunnableDemo R1 = new RunnableDemo( "Thread-1");
-	      R1.start();
-	      
-	      RunnableDemo R2 = new RunnableDemo( "Thread-2");
-	      R2.start();
+//	      RunnableDemo R1 = new RunnableDemo( "Thread-1");
+//	      R1.start();
+//	      
+//	      RunnableDemo R2 = new RunnableDemo( "Thread-2");
+//	      R2.start();
 	      
 //	      while(true)
 //		      {
