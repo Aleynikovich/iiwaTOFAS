@@ -58,7 +58,7 @@ class EchoServer extends Thread {
         running = true;
  
         while (running) {
-        	
+			
 			DatagramPacket packet 
 			  = new DatagramPacket(buf, buf.length);
 			
@@ -75,7 +75,7 @@ class EchoServer extends Thread {
 				    running = false;
 				    continue;
 				}
-	
+
 				try {
 					socket.send(packet);
 				} catch (IOException e) {
@@ -86,7 +86,7 @@ class EchoServer extends Thread {
 			    //System.out.println(" fail2 ");
 
 			}
-        }
+		}
         	
         socket.close();
     }
@@ -193,8 +193,8 @@ public class multi_threads extends RoboticsAPIApplication {
     @Override
     public void dispose()
     {
-        server_.close();
-        //server_.running = false;
+        //server_.close();
+        server_.running = false;
         super.dispose();
     }
 	@Override
