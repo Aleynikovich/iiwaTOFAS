@@ -105,9 +105,6 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	
 	
 	public void main(String[] args) {
-
-		server_ = new EchoServer();
-		server_.start();
 		
 		RosUdpDriver app = new RosUdpDriver();
 		app.runApplication();
@@ -147,6 +144,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("my port is:"+port);
 		
 		try{
+			server_ = new EchoServer();
+			server_.start();
+			
 			exit=false;
 			do {
 				switch (getApplicationUI().displayModalDialog(
