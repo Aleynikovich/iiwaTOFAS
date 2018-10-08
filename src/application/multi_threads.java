@@ -190,13 +190,13 @@ public class multi_threads extends RoboticsAPIApplication {
 	      RunnableDemo R2 = new RunnableDemo( "Thread-2");
 	      R2.start();
 	      
-	      while(true)
-		      {
-		    	  String echo = client.sendEcho("hello server");
-		          //assertEquals("hello server", echo);
-		          echo = client.sendEcho("server is working");
-		          //assertFalse(echo.equals("hello server"));
-		      }
+//	      while(true)
+//		      {
+//		    	  String echo = client.sendEcho("hello server");
+//		          //assertEquals("hello server", echo);
+//		          echo = client.sendEcho("server is working");
+//		          //assertFalse(echo.equals("hello server"));
+//		      }
 	      
 	      }
 	}
