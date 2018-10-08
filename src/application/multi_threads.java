@@ -36,52 +36,55 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import java.io.*;
 import java.net.*;
 
-class UDPServer
-{
-   public static void main(String args[]) throws Exception
-      {
-         DatagramSocket serverSocket = new DatagramSocket(9876);
-            byte[] receiveData = new byte[1024];
-            byte[] sendData = new byte[1024];
-            while(true)
-               {
-                  DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                  serverSocket.receive(receivePacket);
-                  String sentence = new String( receivePacket.getData());
-                  System.out.println("RECEIVED: " + sentence);
-                  InetAddress IPAddress = receivePacket.getAddress();
-                  int port = receivePacket.getPort();
-                  String capitalizedSentence = sentence.toUpperCase();
-                  sendData = capitalizedSentence.getBytes();
-                  DatagramPacket sendPacket =
-                  new DatagramPacket(sendData, sendData.length, IPAddress, port);
-                  serverSocket.send(sendPacket);
-               }
-      }
+class EchoServer extends Thread {
+	 
+    private DatagramSocket socket;
+    private boolean running;
+    private byte[] buf = new byte[256];
+ 
+    public EchoServer() {
+        try {
+			socket = new DatagramSocket(4445);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+ 
+    public void run() {
+        running = true;
+ 
+        while (running) {
+            DatagramPacket packet 
+              = new DatagramPacket(buf, buf.length);
+            try {
+				socket.receive(packet);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+             
+            InetAddress address = packet.getAddress();
+            int port = packet.getPort();
+            packet = new DatagramPacket(buf, buf.length, address, port);
+            String received 
+              = new String(packet.getData(), 0, packet.getLength());
+             
+            if (received.equals("end")) {
+                running = false;
+                continue;
+            }
+            try {
+				socket.send(packet);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        socket.close();
+    }
 }
 
-
-class UDPClient
-{
-   public static void main(String args[]) throws Exception
-   {
-      BufferedReader inFromUser =
-         new BufferedReader(new InputStreamReader(System.in));
-      DatagramSocket clientSocket = new DatagramSocket();
-      InetAddress IPAddress = InetAddress.getByName("localhost");
-      byte[] sendData = new byte[1024];
-      byte[] receiveData = new byte[1024];
-      String sentence = inFromUser.readLine();
-      sendData = sentence.getBytes();
-      DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
-      clientSocket.send(sendPacket);
-      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-      clientSocket.receive(receivePacket);
-      String modifiedSentence = new String(receivePacket.getData());
-      System.out.println("FROM SERVER:" + modifiedSentence);
-      clientSocket.close();
-   }
-}
 
 class RunnableDemo implements Runnable {
 	   private Thread t;
@@ -122,6 +125,7 @@ public class multi_threads extends RoboticsAPIApplication {
 	@Override
 	public void initialize() {
 		// initialize your application here
+		new EchoServer().start();
 	}
 
 	@Override
