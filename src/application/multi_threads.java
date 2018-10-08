@@ -80,10 +80,10 @@ class EchoServer extends Thread {
 			  = new String(packet.getData(), 0, packet.getLength());
 			System.out.println(" Running server 3 ");
 
-			if (received.equals("end")) {
-			    running = false;
-			    continue;
-			}
+//			if (received.equals("end")) {
+//			    running = false;
+//			    continue;
+//			}
 			System.out.println(" Running server 4 ");
 
 			try {
