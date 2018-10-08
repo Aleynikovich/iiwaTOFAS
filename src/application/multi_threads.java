@@ -57,31 +57,22 @@ class EchoServer extends Thread {
  
         while (running) {
         	
-        	System.out.println(" Running server ");
-
 			DatagramPacket packet 
 			  = new DatagramPacket(buf, buf.length);
-			System.out.println(" Running server 2 ");
-
+			
 			try {
-				socket.receive(packet);
-
-				System.out.println(" Running server 3 ");
-	
+				socket.receive(packet);	
 				 
 				InetAddress address = packet.getAddress();
 				int port = packet.getPort();
 				packet = new DatagramPacket(buf, buf.length, address, port);
 				String received 
 				  = new String(packet.getData(), 0, packet.getLength());
-				
-				System.out.println(" Running server 4 ");
-	
+					
 				if (received.equals("end")) {
 				    running = false;
 				    continue;
 				}
-				System.out.println(" Running server 5 ");
 	
 				try {
 					socket.send(packet);
@@ -90,7 +81,7 @@ class EchoServer extends Thread {
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-			    System.out.println(" fail2 ");
+			    //System.out.println(" fail2 ");
 
 			}
         }
