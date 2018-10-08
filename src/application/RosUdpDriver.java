@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 
 /**
  * Implementation of a robot application.
@@ -26,7 +27,10 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
  */
 public class RosUdpDriver extends RoboticsAPIApplication {
 	@Inject
-	private LBR lBR_iiwa_14_R820_1;
+	private LBR robot_;
+	
+	private IMotionContainer motionContainer = null;
+
 	
 	
 	public static void main(String[] args) {
@@ -63,8 +67,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			// Sockets are close in the dispose function
 			// Some events like a broken connection could reach this Exception Handler,
 			// but I considered better to start again the program than don't stop the robot
-//			if (motionContainer != null) motionContainer.cancel();
-//			e.printStackTrace(); // Trace in red in the pad
+			if (motionContainer != null) motionContainer.cancel();
+			e.printStackTrace(); // Trace in red in the pad
 			
 		}
 	
