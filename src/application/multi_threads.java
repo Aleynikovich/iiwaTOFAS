@@ -65,31 +65,33 @@ class EchoServer extends Thread {
 
 			try {
 				socket.receive(packet);
+
+				System.out.println(" Running server 3 ");
+	
+				 
+				InetAddress address = packet.getAddress();
+				int port = packet.getPort();
+				packet = new DatagramPacket(buf, buf.length, address, port);
+				String received 
+				  = new String(packet.getData(), 0, packet.getLength());
+				
+				System.out.println(" Running server 4 ");
+	
+				if (received.equals("end")) {
+				    running = false;
+				    continue;
+				}
+				System.out.println(" Running server 5 ");
+	
+				try {
+					socket.send(packet);
+				} catch (IOException e) {
+				    System.out.println("here");
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 			    System.out.println(" fail2 ");
 
-			}
-			System.out.println(" Running server 3 ");
-
-			 
-			InetAddress address = packet.getAddress();
-			int port = packet.getPort();
-			packet = new DatagramPacket(buf, buf.length, address, port);
-			String received 
-			  = new String(packet.getData(), 0, packet.getLength());
-			System.out.println(" Running server 3 ");
-
-//			if (received.equals("end")) {
-//			    running = false;
-//			    continue;
-//			}
-			System.out.println(" Running server 4 ");
-
-			try {
-				socket.send(packet);
-			} catch (IOException e) {
-			    System.out.println("here");
 			}
         }
         	
