@@ -40,7 +40,7 @@ import java.net.*;
 class EchoServer extends Thread {
 	 
     public DatagramSocket socket;
-    private boolean running;
+    public boolean running;
     private byte[] buf = new byte[256];
  
     public EchoServer() {
@@ -189,6 +189,7 @@ public class multi_threads extends RoboticsAPIApplication {
     public void dispose()
     {
         server_.close();
+        server_.running = false;
         super.dispose();
     }
 	@Override
