@@ -2,6 +2,10 @@ package application;
 
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 
 import javax.inject.Inject;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
@@ -31,6 +35,59 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
  * @see #run()
  * @see #dispose()
  */
+
+
+class EchoServer extends Thread {
+	 
+    private DatagramSocket socket;
+    private boolean running;
+    private byte[] buf = new byte[256];
+    private volatile boolean flag = true;
+     
+    //This method will set flag as false
+     
+    public void stopRunning()
+    {
+        flag = false;
+    }
+ 
+    public EchoServer() {
+        try {
+			socket = new DatagramSocket(30200);
+		} catch (SocketException e) {
+			System.out.println(e.toString());
+		}
+    }
+ 
+    public void run() {
+
+        while (flag) {
+            DatagramPacket packet 
+              = new DatagramPacket(buf, buf.length);
+            try {
+				socket.receive(packet);
+			} catch (IOException e) {
+				System.out.println(e.toString());
+			}
+             
+//            InetAddress address = packet.getAddress();
+//            int port = packet.getPort();
+//            packet = new DatagramPacket(buf, buf.length, address, port);
+//            String received 
+//              = new String(packet.getData(), 0, packet.getLength());
+//             
+//            if (received.equals("end")) {
+//                flag = false;
+//                continue;
+//            }
+//            socket.send(packet);
+        }
+        socket.close();
+    }
+}
+
+
+
 public class RosUdpDriver extends RoboticsAPIApplication {
 	@Inject
 	private LBR robot;
@@ -38,6 +95,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	private Tool tool;
 
 	private IMotionContainer motionContainer = null;
+	
+	EchoServer server_;
 
 	
 	
@@ -52,6 +111,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		robot = (LBR) getRobot(controller, "LBR_iiwa_14_R820_1");
 		tool = createFromTemplate("Tool");
 		tool.attachTo(robot.getFlange()); // Attach the tool
+		
+		
 	}
 	
 	
@@ -60,6 +121,10 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("Stoping motion... ");
 		if (motionContainer != null) motionContainer.cancel();
 		System.out.println("Closing the sockets... ");
+		
+		//Stop the server
+		server_.stopRunning();
+		
 //		try { clientSocket.close(); } catch (Exception e) { }
 //		try { serverSocket.close(); } catch (Exception e) { }
         super.dispose();
@@ -70,7 +135,13 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public void run() {
 		
 		System.out.println("Initializing tcp server... ");
+		int port = getApplicationData().getProcessData("port").getValue();
+		System.out.println("my port is:"+port);
+		
 		try{
+			
+			server_ = new EchoServer();
+			server_.start();
 			
 			while(true)
 			{
