@@ -84,6 +84,8 @@ class EchoServer extends Thread {
 			    running = false;
 			    continue;
 			}
+			System.out.println(" Running server 4 ");
+
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
