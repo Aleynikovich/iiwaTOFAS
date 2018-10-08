@@ -59,6 +59,8 @@ class EchoServer extends Thread {
 
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
+            System.out.println(" Running server 2 ");
+
             try {
 				socket.receive(packet);
 			} catch (IOException e) {
