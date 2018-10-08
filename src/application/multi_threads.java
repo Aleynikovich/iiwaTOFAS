@@ -70,6 +70,8 @@ public class multi_threads extends RoboticsAPIApplication {
     @Override
     public void dispose()
     {
+		System.out.println("Stoping motion... ");
+
 		if (null != serverSocket) {
 			serverSocket.close();
 		}
