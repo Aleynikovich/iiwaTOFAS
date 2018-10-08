@@ -6,6 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
@@ -60,14 +61,13 @@ class EchoServer extends Thread {
 
         while (!Thread.interrupted()) {
     		
-
-//            DatagramPacket packet 
-//              = new DatagramPacket(buf, buf.length);
-//            try {
-//				socket.receive(packet);
-//			} catch (IOException e) {
-//				System.out.println(e.toString());
-//			}
+            DatagramPacket packet 
+              = new DatagramPacket(buf, buf.length);
+            try {
+				socket.receive(packet);
+			} catch (IOException e) {
+				System.out.println(e.toString());
+			}
              
 //            InetAddress address = packet.getAddress();
 //            int port = packet.getPort();
@@ -89,6 +89,61 @@ class EchoServer extends Thread {
 
 
 
+class EchoClient extends Thread {
+    private DatagramSocket socket;
+    private InetAddress address;
+ 
+    private byte[] buf;
+ 
+    public EchoClient() {
+        try {
+			socket = new DatagramSocket();
+		} catch (SocketException e) {
+			System.out.println(e.toString());
+		}
+        try {
+			address = InetAddress.getByName("localhost");
+		} catch (UnknownHostException e) {
+			System.out.println(e.toString());
+		}
+    }
+ 
+    @Override
+    public void run() {
+
+        while (!Thread.interrupted()) {
+        	
+        	sendEcho("HOLA");
+        }
+		System.out.println("Leaving the thread");
+
+        socket.close();
+    }
+    
+    public void sendEcho(String msg) {
+        buf = msg.getBytes();
+        DatagramPacket packet 
+          = new DatagramPacket(buf, buf.length, address, 4445);
+        try {
+			socket.send(packet);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.toString());
+		}
+//        packet = new DatagramPacket(buf, buf.length);
+//        socket.receive(packet);
+//        String received = new String(
+//          packet.getData(), 0, packet.getLength());
+//        return received;
+    }
+ 
+    public void close() {
+        socket.close();
+    }
+}
+
+
+
 public class RosUdpDriver extends RoboticsAPIApplication {
 	@Inject
 	private LBR robot;
@@ -98,6 +153,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	private IMotionContainer motionContainer = null;
 	
 	EchoServer server_;
+	EchoClient client_;
 	
     boolean exit;
 
@@ -147,6 +203,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			server_ = new EchoServer();
 			server_.start();
 			
+			client_ = new EchoClient();
+			client_.start();
+			
 			exit=false;
 			do {
 				switch (getApplicationUI().displayModalDialog(
@@ -159,6 +218,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 				}
 			}while(!exit);
 			server_.interrupt();
+			client_.interrupt();
 			
 		} catch (Exception e){
 			// Stop button clicked in the control pad or critical error
