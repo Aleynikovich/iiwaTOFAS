@@ -47,7 +47,7 @@ public class multi_threads extends RoboticsAPIApplication {
 	public void run() {
  
 		try {
-			serverSocket = new DatagramSocket(30200);
+			serverSocket = new DatagramSocket(30202);
  
 			byte[] receiveData = new byte[1024];
 			while (!Thread.currentThread().isInterrupted()) {
