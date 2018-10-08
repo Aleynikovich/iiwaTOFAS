@@ -43,6 +43,7 @@ import java.net.*;
 public class multi_threads extends RoboticsAPIApplication {
 	private volatile DatagramSocket serverSocket;
  
+	@Override
 	public void run() {
  
 		try {
@@ -66,7 +67,9 @@ public class multi_threads extends RoboticsAPIApplication {
 		}
 	}
  
-	public synchronized void stop() {
+    @Override
+    public void dispose()
+    {
 		if (null != serverSocket) {
 			serverSocket.close();
 		}
