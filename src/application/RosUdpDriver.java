@@ -43,7 +43,7 @@ class EchoServer extends Thread {
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
-    private volatile boolean flag = true;
+    private volatile boolean flag = false;
      
     //This method will set flag as false
      
