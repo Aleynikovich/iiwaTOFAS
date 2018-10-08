@@ -55,6 +55,8 @@ class EchoServer extends Thread {
         running = true;
  
         while (running) {
+            System.out.println(" Running server ");
+
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
             try {
@@ -81,6 +83,49 @@ class EchoServer extends Thread {
 				e.printStackTrace();
 			}
         }
+        socket.close();
+    }
+}
+
+class EchoClient {
+    private DatagramSocket socket;
+    private InetAddress address;
+ 
+    private byte[] buf;
+ 
+    public EchoClient() throws SocketException {
+        socket = new DatagramSocket();
+        try {
+			address = InetAddress.getByName("localhost");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+ 
+    public String sendEcho(String msg) {
+        buf = msg.getBytes();
+        DatagramPacket packet 
+          = new DatagramPacket(buf, buf.length, address, 4445);
+        try {
+			socket.send(packet);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        packet = new DatagramPacket(buf, buf.length);
+        try {
+			socket.receive(packet);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        String received = new String(
+          packet.getData(), 0, packet.getLength());
+        return received;
+    }
+ 
+    public void close() {
         socket.close();
     }
 }
@@ -121,11 +166,19 @@ class RunnableDemo implements Runnable {
 public class multi_threads extends RoboticsAPIApplication {
 	@Inject
 	private LBR lBR_iiwa_14_R820_1;
+	EchoClient client;
 
 	@Override
 	public void initialize() {
 		// initialize your application here
 		new EchoServer().start();
+		try {
+			client = new EchoClient();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
@@ -136,5 +189,14 @@ public class multi_threads extends RoboticsAPIApplication {
 	      
 	      RunnableDemo R2 = new RunnableDemo( "Thread-2");
 	      R2.start();
+	      
+	      while(true)
+		      {
+		    	  String echo = client.sendEcho("hello server");
+		          //assertEquals("hello server", echo);
+		          echo = client.sendEcho("server is working");
+		          //assertFalse(echo.equals("hello server"));
+		      }
+	      
+	      }
 	}
-}
