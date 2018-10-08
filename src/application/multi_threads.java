@@ -39,7 +39,7 @@ import java.net.*;
 
 class EchoServer extends Thread {
 	 
-    private DatagramSocket socket;
+    public DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
  
