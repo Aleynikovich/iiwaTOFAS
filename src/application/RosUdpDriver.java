@@ -41,10 +41,10 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 
 	
 	
-	public static void main(String[] args) {
-		RosUdpDriver app = new RosUdpDriver();
-		app.runApplication();
-	}
+//	public static void main(String[] args) {
+//		RosUdpDriver app = new RosUdpDriver();
+//		app.runApplication();
+//	}
 
 	@Override
 	public void initialize() {
