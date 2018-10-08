@@ -65,7 +65,7 @@ class EchoServer extends Thread {
     @Override
     public void run() {
 
-        while (flag) {
+        while (!Thread.interrupted()) {
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
             try {
@@ -133,7 +133,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public void dispose(){
 		System.out.println("Stoping motion... ");
 		//Stop the server
-		server_.stopRunning();
+		//server_.stopRunning();
 		
 		if (motionContainer != null) motionContainer.cancel();
 		System.out.println("Closing the sockets... ");
@@ -163,6 +163,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 							break;
 				}
 			}while(!exit);
+			server_.interrupt();
 			
 		} catch (Exception e){
 			// Stop button clicked in the control pad or critical error
