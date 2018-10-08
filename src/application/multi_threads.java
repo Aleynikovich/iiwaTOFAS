@@ -47,7 +47,8 @@ class EchoServer extends Thread {
 			socket = new DatagramSocket(4445);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+            System.out.println(" fail ");
+
 		}
     }
  
@@ -65,7 +66,8 @@ class EchoServer extends Thread {
 				socket.receive(packet);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+	            System.out.println(" fail2 ");
+
 			}
              
             InetAddress address = packet.getAddress();
