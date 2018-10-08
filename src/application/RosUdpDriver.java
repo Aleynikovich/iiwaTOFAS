@@ -50,7 +50,7 @@ class EchoServer extends Thread {
  
     public EchoServer() {
         try {
-			socket = new DatagramSocket(30200);
+			socket = new DatagramSocket(30201);
 		} catch (SocketException e) {
 			System.out.println(e.toString());
 		}
@@ -103,11 +103,15 @@ class EchoClient extends Thread {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
 			System.out.println(e.toString());
+			System.out.println("errore");
+
 		}
         try {
 			address = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
 			System.out.println(e.toString());
+			System.out.println("errore2");
+
 		}
     }
     
@@ -123,7 +127,7 @@ class EchoClient extends Thread {
         	
         	sendEcho("HOLA");
         }
-		System.out.println("Leaving the thread");
+		System.out.println("Leaving the thread client");
 
         socket.close();
     }
@@ -131,7 +135,7 @@ class EchoClient extends Thread {
     public void sendEcho(String msg) {
         buf = msg.getBytes();
         DatagramPacket packet 
-          = new DatagramPacket(buf, buf.length, address, 4445);
+          = new DatagramPacket(buf, buf.length, address, 30201);
         try {
 			socket.send(packet);
 		} catch (IOException e) {
