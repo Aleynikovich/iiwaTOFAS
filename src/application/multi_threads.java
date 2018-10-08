@@ -68,6 +68,8 @@ class EchoServer extends Thread {
 	            System.out.println(" fail2 ");
 
 			}
+            System.out.println(" Running server 3 ");
+
              
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
