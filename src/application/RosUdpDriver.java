@@ -46,6 +46,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("Closing the sockets... ");
 //		try { clientSocket.close(); } catch (Exception e) { }
 //		try { serverSocket.close(); } catch (Exception e) { }
+        super.dispose();
+
 	}
 
 	@Override
@@ -61,6 +63,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			// Sockets are close in the dispose function
 			// Some events like a broken connection could reach this Exception Handler,
 			// but I considered better to start again the program than don't stop the robot
+//			if (motionContainer != null) motionContainer.cancel();
+//			e.printStackTrace(); // Trace in red in the pad
 			
 		}
 	
