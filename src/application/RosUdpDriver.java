@@ -16,6 +16,7 @@ import com.kuka.roboticsAPI.controllerModel.sunrise.SunriseController;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 /**
  * Implementation of a robot application.
@@ -99,6 +100,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	private IMotionContainer motionContainer = null;
 	
 	EchoServer server_;
+	
+    boolean exit;
+
 
 	
 	
@@ -125,12 +129,12 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	@Override
 	public void dispose(){
 		System.out.println("Stoping motion... ");
-		if (motionContainer != null) motionContainer.cancel();
-		System.out.println("Closing the sockets... ");
-		
 		//Stop the server
 		server_.stopRunning();
 		
+		if (motionContainer != null) motionContainer.cancel();
+		System.out.println("Closing the sockets... ");
+
 //		try { clientSocket.close(); } catch (Exception e) { }
 //		try { serverSocket.close(); } catch (Exception e) { }
         super.dispose();
@@ -145,21 +149,18 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("my port is:"+port);
 		
 		try{
-
-			while(true)
-			{
-				// ------------------ Connection acceptance -------------------
-//				System.out.println("Waiting for incoming connection...");
-//				
-//				while(true){
-//					
-//				}
-//				
-//				// Prepare robot for a new connection
-//				if (motionContainer != null) motionContainer.cancel(); // Stop the robot
-//				Thread.sleep(1000); // Wait 1 second before retry
-//				
-			}
+			exit=false;
+			do {
+				switch (getApplicationUI().displayModalDialog(
+						ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
+						"END DO NOTHING")) {
+						case 0:
+							getLogger().info("App Terminated\n"+"***END***");
+							exit = true;
+							break;
+				}
+			}while(!exit);
+			
 		} catch (Exception e){
 			// Stop button clicked in the control pad or critical error
 			// Sockets are close in the dispose function
