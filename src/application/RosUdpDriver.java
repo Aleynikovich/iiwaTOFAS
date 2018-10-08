@@ -82,6 +82,8 @@ class EchoServer extends Thread {
 //            }
 //            socket.send(packet);
         }
+		System.out.println("Leaving the thread");
+
         socket.close();
     }
 }
@@ -100,10 +102,14 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 
 	
 	
-//	public static void main(String[] args) {
-//		RosUdpDriver app = new RosUdpDriver();
-//		app.runApplication();
-//	}
+	public void main(String[] args) {
+
+		server_ = new EchoServer();
+		server_.start();
+		
+		RosUdpDriver app = new RosUdpDriver();
+		app.runApplication();
+	}
 
 	@Override
 	public void initialize() {
@@ -139,10 +145,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("my port is:"+port);
 		
 		try{
-			
-			server_ = new EchoServer();
-			server_.start();
-			
+
 			while(true)
 			{
 				// ------------------ Connection acceptance -------------------
