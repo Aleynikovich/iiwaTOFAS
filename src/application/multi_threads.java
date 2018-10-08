@@ -9,6 +9,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import javax.inject.Inject;
+
+import com.kuka.connectivity.directServo.examples.DirectServoSampleSimpleCartesian;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -171,6 +173,9 @@ class RunnableDemo implements Runnable {
 	   }
 	}
 
+
+
+
 public class multi_threads extends RoboticsAPIApplication {
 	@Inject
 	private LBR lBR_iiwa_14_R820_1;
@@ -210,4 +215,13 @@ public class multi_threads extends RoboticsAPIApplication {
 //		      }
 	      
 	      }
+    /**
+     * Main routine, which starts the application
+     */
+    public static void main(String[] args)
+    {
+    	multi_threads app = new multi_threads();
+
+        app.runApplication();
+    }
 	}
