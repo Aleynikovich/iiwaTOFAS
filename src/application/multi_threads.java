@@ -58,9 +58,11 @@ public class multi_threads extends RoboticsAPIApplication {
 			}
  
 		} catch (SocketException e) {
-			// DO EXCEPTION HANDLING
+			System.out.println("Socket Exception... ");
+
 		} catch (IOException e) {
-			// DO EXCEPTION HANDLING
+			System.out.println("Error Exception... ");
+
 		} finally {
 			if (null != serverSocket)
 				serverSocket.close();
