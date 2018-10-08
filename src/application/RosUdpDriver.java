@@ -50,6 +50,8 @@ class EchoServer extends Thread {
     public void stopRunning()
     {
         flag = false;
+		System.out.println("stopping running");
+
     }
  
     public EchoServer() {
