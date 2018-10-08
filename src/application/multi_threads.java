@@ -36,6 +36,7 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import java.io.*;
 import java.net.*;
 
+
 class EchoServer extends Thread {
 	 
     private DatagramSocket socket;
@@ -55,42 +56,49 @@ class EchoServer extends Thread {
         running = true;
  
         while (running) {
-            System.out.println(" Running server ");
+        	
+        	System.out.println(" Running server ");
 
-            DatagramPacket packet 
-              = new DatagramPacket(buf, buf.length);
-            System.out.println(" Running server 2 ");
+			DatagramPacket packet 
+			  = new DatagramPacket(buf, buf.length);
+			System.out.println(" Running server 2 ");
 
-            try {
+			try {
 				socket.receive(packet);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-	            System.out.println(" fail2 ");
+			    System.out.println(" fail2 ");
 
 			}
-            System.out.println(" Running server 3 ");
+			System.out.println(" Running server 3 ");
 
-             
-            InetAddress address = packet.getAddress();
-            int port = packet.getPort();
-            packet = new DatagramPacket(buf, buf.length, address, port);
-            String received 
-              = new String(packet.getData(), 0, packet.getLength());
-            System.out.println(" Running server 3 ");
+			 
+			InetAddress address = packet.getAddress();
+			int port = packet.getPort();
+			packet = new DatagramPacket(buf, buf.length, address, port);
+			String received 
+			  = new String(packet.getData(), 0, packet.getLength());
+			System.out.println(" Running server 3 ");
 
-            if (received.equals("end")) {
-                running = false;
-                continue;
-            }
-            try {
+			if (received.equals("end")) {
+			    running = false;
+			    continue;
+			}
+			try {
 				socket.send(packet);
 			} catch (IOException e) {
-	            System.out.println("here");
+			    System.out.println("here");
 			}
         }
+        	
         socket.close();
     }
+    public void close() {
+        socket.close();
+    }
+
 }
+
 
 class EchoClient {
     private DatagramSocket socket;
@@ -172,20 +180,22 @@ public class multi_threads extends RoboticsAPIApplication {
 	@Inject
 	private LBR lBR_iiwa_14_R820_1;
 	EchoClient client;
+	EchoServer server_;
 
 	@Override
 	public void initialize() {
 		// initialize your application here
-		new EchoServer().start();
-//		try {
-//			client = new EchoClient();
-//		} catch (SocketException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		server_ = new EchoServer();
+		server_.start();
 		
 	}
 
+    @Override
+    public void dispose()
+    {
+        server_.close();
+        super.dispose();
+    }
 	@Override
 	public void run() {
 		// your application execution starts here
