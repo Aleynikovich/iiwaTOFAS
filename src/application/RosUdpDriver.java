@@ -5,18 +5,29 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import javax.inject.Inject;
+
+import application.ROS_driver.RobotMode;
+
+import com.kuka.connectivity.motionModel.directServo.DirectServo;
+import com.kuka.connectivity.motionModel.directServo.IDirectServoRuntime;
+import com.kuka.connectivity.motionModel.smartServo.ISmartServoRuntime;
+import com.kuka.connectivity.motionModel.smartServo.SmartServo;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.controllerModel.sunrise.SunriseController;
+import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.geometricModel.math.Vector;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
@@ -38,6 +49,29 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
  * @see #run()
  * @see #dispose()
  */
+
+
+/////////////// ECHO SERVER VARIATIONS
+
+//String received 
+//= new String(packet.getData(), 0, packet.getLength());            
+//if (received.equals("close")) {
+//		flag = false;
+//		System.out.println("Say Client, I am closing");
+//						
+//		InetAddress address = packet.getAddress();
+//		int port = packet.getPort();
+//		String msg = "close";
+//      buf = msg.getBytes();
+//      DatagramPacket new_packet 
+//        = new DatagramPacket(buf, buf.length, address, port);
+//      try {
+//			socket.send(new_packet);
+//		} catch (IOException e) {
+//			System.out.println(e.toString());
+//		} 
+//  continue;
+//}
 
 
 class EchoServer extends Thread {
@@ -84,25 +118,7 @@ class EchoServer extends Thread {
 				}
              
 
-//            String received 
-//              = new String(packet.getData(), 0, packet.getLength());            
-//            if (received.equals("close")) {
-//					flag = false;
-//					System.out.println("Say Client, I am closing");
-//									
-//					InetAddress address = packet.getAddress();
-//					int port = packet.getPort();
-//					String msg = "close";
-//			        buf = msg.getBytes();
-//			        DatagramPacket new_packet 
-//			          = new DatagramPacket(buf, buf.length, address, port);
-//			        try {
-//						socket.send(new_packet);
-//					} catch (IOException e) {
-//						System.out.println(e.toString());
-//					} 
-//                continue;
-//            }
+
         }
 		System.out.println("Leaving the thread server");
 
@@ -195,12 +211,47 @@ class EchoClient extends Thread {
 			}
         }
     }
+    
+    
+    String get_state(){
+    	
+    	
+		//STATE
+		
+//			double j[] = robot.getCurrentJointPosition().get();
+//			if (simulation && simulation_joints != null) j = simulation_joints.get();
+//			String result = String.valueOf(j[0]);
+//			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
+//			
+//			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
+//			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
+//			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
+//				
+//			return result;	
+//		
+//
+//	} catch (Exception e){
+//			double j[] = robot.getCurrentJointPosition().get();
+//			if (simulation && simulation_joints != null) j = simulation_joints.get();
+//			String result = String.valueOf(j[0]);
+//			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
+//			
+//			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
+//			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
+//			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
+//			
+    	String result = "true";
+    	return result;
+    }
+    
     @Override
     public void run() {
 
         while (flag) {
         	
-        	sendEcho("HOLA");
+        	String robot_state = get_state();
+        	
+        	sendEcho(robot_state);
         }
         
         //closeServer();
@@ -246,10 +297,24 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	EchoClient client_;
 	
     boolean exit;
-
-
+    
+    public enum RobotMode {unknown, normal, impedance, smart, direct} // robot behaviour differs between modes
 	
+	RobotMode lastRobotMode = RobotMode.unknown; // Stores current robot move
 	
+	private int counter = 0;
+
+	ServerSocket serverSocket = null;
+	Socket clientSocket = null;
+	
+	SmartServo smartServo = null;
+	ISmartServoRuntime smartMotion = null;
+	
+	DirectServo directServo = null;
+	IDirectServoRuntime directMotion = null;
+	
+	JointPosition simulation_joints = null;
+
 	public void main(String[] args) {
 		
 		RosUdpDriver app = new RosUdpDriver();
