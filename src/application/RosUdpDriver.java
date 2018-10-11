@@ -109,7 +109,7 @@ class EchoServer extends Thread {
 		if (processedLine.length == 1){
 			command = processedLine[0].trim();
 		} else if (processedLine.length == 2){
-			System.out.println("aqui");
+			//System.out.println("aqui");
 			command = processedLine[0].trim();
 			parameters = processedLine[1].trim().split("\\s+");
 		}
@@ -197,6 +197,7 @@ class EchoServer extends Thread {
         		//System.out.println("received");
 
             	String[] commands = parseDatagram(packet);
+            	System.out.println(commands.length);
             	setRobotCommand(commands);  	
             }
              
