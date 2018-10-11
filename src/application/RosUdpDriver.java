@@ -160,7 +160,7 @@ class EchoServer extends Thread {
 			}
 			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.direct;
 	    } catch(Exception e) {
-			System.out.println(e.toString());
+			//System.out.println(e.toString());
 	    }
 	}
     @Override
