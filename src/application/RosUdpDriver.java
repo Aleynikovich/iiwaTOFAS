@@ -216,35 +216,21 @@ class EchoClient extends Thread {
     }
     
     
-    String get_state(){
+    public String get_state(){
     	
     	
 		//STATE
+    	String result = "";
+    	
+		double j[] = RosUdpDriver.robot.getCurrentJointPosition().get();
+
+		for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
 		
-//			double j[] = robot.getCurrentJointPosition().get();
-//			if (simulation && simulation_joints != null) j = simulation_joints.get();
-//			String result = String.valueOf(j[0]);
-//			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
-//			
-//			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
-//			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
-//			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
-//				
-//			return result;	
-//		
-//
-//	} catch (Exception e){
-//			double j[] = robot.getCurrentJointPosition().get();
-//			if (simulation && simulation_joints != null) j = simulation_joints.get();
-//			String result = String.valueOf(j[0]);
-//			for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
-//			
-//			Vector force = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getForce();
-//			Vector torque = robot.getExternalForceTorque(tool.getDefaultMotionFrame()).getTorque();
-//			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
-//			
-    	String result = "true";
-    	return result;
+		Vector force = RosUdpDriver.robot.getExternalForceTorque(RosUdpDriver.tool.getDefaultMotionFrame()).getForce();
+		Vector torque = RosUdpDriver.robot.getExternalForceTorque(RosUdpDriver.tool.getDefaultMotionFrame()).getTorque();
+		result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
+			
+		return result;	
     }
     
     @Override
@@ -290,9 +276,9 @@ class EchoClient extends Thread {
 
 public class RosUdpDriver extends RoboticsAPIApplication {
 	@Inject
-	private LBR robot;
+	public static LBR robot;
 	private Controller controller;
-	private Tool tool;
+	public static Tool tool;
 
 	private IMotionContainer motionContainer = null;
 	
