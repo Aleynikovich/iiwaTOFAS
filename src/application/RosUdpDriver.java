@@ -162,7 +162,7 @@ class EchoServer extends Thread {
 	    } catch(Exception e) {
 			//System.out.println(e.toString());
 	    }
-		if(flag = false)
+		if(flag == false)
 		{
 			System.out.println("HERE, should go out");
 		}
