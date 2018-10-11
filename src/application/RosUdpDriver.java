@@ -6,6 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import javax.inject.Inject;
@@ -74,16 +75,26 @@ class EchoServer extends Thread {
 				System.out.println(e.toString());
 			}
              
-//            InetAddress address = packet.getAddress();
-//            int port = packet.getPort();
-//            packet = new DatagramPacket(buf, buf.length, address, port);
+
             String received 
               = new String(packet.getData(), 0, packet.getLength());            
             if (received.equals("close")) {
-                flag = false;
+					flag = false;
+					System.out.println("Say Client, I am closing");
+									
+					InetAddress address = packet.getAddress();
+					int port = packet.getPort();
+					String msg = "close";
+			        buf = msg.getBytes();
+			        DatagramPacket new_packet 
+			          = new DatagramPacket(buf, buf.length, address, port);
+			        try {
+						socket.send(new_packet);
+					} catch (IOException e) {
+						System.out.println(e.toString());
+					} 
                 continue;
             }
-//            socket.send(packet);
         }
 		System.out.println("Leaving the thread server");
 
@@ -126,14 +137,9 @@ class EchoClient extends Thread {
     	
     }
  
-    @Override
-    public void run() {
-
-        while (flag) {
-        	
-        	sendEcho("HOLA");
-        }
-		System.out.println("Commanding the closure of the thread server");
+    public void closeServer(){
+        
+        System.out.println("Commanding the closure of the thread server");
 		try {
 			address = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e1) {
@@ -142,13 +148,54 @@ class EchoClient extends Thread {
 		String msg = "close";
         buf = msg.getBytes();
         DatagramPacket packet 
-          = new DatagramPacket(buf, buf.length, address, 30203);
+          = new DatagramPacket(buf, buf.length, address, 30201);
+        
+        DatagramPacket received_packet 
+        	= new DatagramPacket(buf, buf.length);
+
         try {
-			socket.send(packet);
-		} catch (IOException e) {
-			System.out.println(e.toString());
-			System.out.println("Unable to send command of closing");
-		}
+			socket.setSoTimeout(1000);
+		} catch (SocketException e1) {
+			e1.printStackTrace();
+		}   // set the timeout in millisecounds.
+
+        Boolean received_yes = true;
+        while(true){        // recieve data until timeout
+
+        	try {
+				socket.send(packet);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+        	received_yes = true;
+			try {
+				socket.receive(received_packet);
+				
+			} catch (IOException e) {
+				received_yes = false;
+				e.printStackTrace();
+			}
+			if(received_yes)
+			{
+	        	String received 
+	        	= new String(received_packet.getData(), 0, received_packet.getLength());
+	        	if(received_packet.equals("close")){
+	        		break;
+	        	}
+			}
+        }
+    }
+    @Override
+    public void run() {
+
+        while (flag) {
+        	
+        	sendEcho("HOLA");
+        }
+        
+        closeServer();
 
 		System.out.println("Leaving the thread client");
 
@@ -158,7 +205,7 @@ class EchoClient extends Thread {
     public void sendEcho(String msg) {
         buf = msg.getBytes();
         DatagramPacket packet 
-          = new DatagramPacket(buf, buf.length, address, 30202);
+          = new DatagramPacket(buf, buf.length, address, 30200);
         try {
 			socket.send(packet);
 		} catch (IOException e) {
