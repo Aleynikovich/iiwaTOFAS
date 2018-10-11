@@ -181,7 +181,7 @@ class EchoServer extends Thread {
             try {
 				socket.receive(packet);
 			} catch (SocketTimeoutException e) {
-				System.out.println(e.toString());
+				//System.out.println(e.toString());
 				received_packet = false;
 			} catch (IOException e) {
 				System.out.println(e.toString());
@@ -189,8 +189,10 @@ class EchoServer extends Thread {
 			}
             
             if(received_packet){
-            	String[] commands = parseDatagram(packet);
-            	setRobotCommand(commands);  	
+        		System.out.println("received");
+
+            	//String[] commands = parseDatagram(packet);
+            	//setRobotCommand(commands);  	
             }
              
         }
