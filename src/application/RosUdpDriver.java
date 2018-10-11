@@ -97,6 +97,72 @@ class EchoServer extends Thread {
     	flag = false;
     }
  
+    public String[] parseDatagram(DatagramPacket packet)
+    {
+    	String command = "";
+		String[] parameters = new String[0];
+		String line
+    		= new String(packet.getData(), 0, packet.getLength());
+    	
+		String[] processedLine = line.split(":");
+		
+		if (processedLine.length == 1){
+			command = processedLine[0].trim();
+		} else if (processedLine.length == 2){
+			command = processedLine[0].trim();
+			parameters = processedLine[1].trim().split("\\s+");
+		}
+		
+    	return parameters;
+    }
+    
+    void setRobotCommand(String[] parameters)
+    {
+    	if (RosUdpDriver.directServo == null) RosUdpDriver.directServo = new DirectServo(RosUdpDriver.robot.getCurrentJointPosition());
+		
+		if (RosUdpDriver.lastRobotMode != RosUdpDriver.RobotMode.direct){
+			if (RosUdpDriver.motionContainer != null) RosUdpDriver.motionContainer.cancel();
+			RosUdpDriver.motionContainer = RosUdpDriver.robot.moveAsync(RosUdpDriver.directServo);
+			RosUdpDriver.directMotion = RosUdpDriver.directServo.getRuntime();
+		}
+		
+		try {
+		
+			JointPosition jointPosition = new JointPosition(
+					Double.parseDouble(parameters[0]), 
+					Double.parseDouble(parameters[1]),
+					Double.parseDouble(parameters[2]),
+					Double.parseDouble(parameters[3]),
+					Double.parseDouble(parameters[4]),
+					Double.parseDouble(parameters[5]),
+					Double.parseDouble(parameters[6]));
+			
+			JointPosition jointSpeed = new JointPosition(
+					Double.parseDouble(parameters[7]), 
+					Double.parseDouble(parameters[8]),
+					Double.parseDouble(parameters[9]),
+					Double.parseDouble(parameters[10]),
+					Double.parseDouble(parameters[11]),
+					Double.parseDouble(parameters[12]),
+					Double.parseDouble(parameters[13]));
+	
+
+			RosUdpDriver.directServo.setJointVelocityRel(jointSpeed.get());
+			RosUdpDriver.directMotion.setMinimumTrajectoryExecutionTime(15e-3);
+			
+			try{
+				RosUdpDriver.directMotion.setDestination(jointPosition);
+			} catch(Exception e) {
+				System.out.println(e.toString());
+				
+				// Stop the server's socket and thread
+				flag = true;
+			}
+			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.direct;
+	    } catch(Exception e) {
+			System.out.println(e.toString());
+	    }
+	}
     @Override
     public void run() {
 
@@ -110,16 +176,23 @@ class EchoServer extends Thread {
     		
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
-	            try {
-					socket.receive(packet);
-				} catch (SocketTimeoutException e) {
-					System.out.println(e.toString());
-				} catch (IOException e) {
-					System.out.println(e.toString());
-				}
+            
+            boolean received_packet = true;
+            try {
+				socket.receive(packet);
+			} catch (SocketTimeoutException e) {
+				System.out.println(e.toString());
+				received_packet = false;
+			} catch (IOException e) {
+				System.out.println(e.toString());
+				received_packet = false;
+			}
+            
+            if(received_packet){
+            	String[] commands = parseDatagram(packet);
+            	setRobotCommand(commands);  	
+            }
              
-
-
         }
 		System.out.println("Leaving the thread server");
 
@@ -280,29 +353,26 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	private Controller controller;
 	public static Tool tool;
 
-	private IMotionContainer motionContainer = null;
+	public static IMotionContainer motionContainer = null;
 	
 	EchoServer server_;
 	EchoClient client_;
 	
     boolean exit;
     
-    public enum RobotMode {unknown, normal, impedance, smart, direct} // robot behaviour differs between modes
+    public static enum RobotMode {unknown, normal, impedance, smart, direct} // robot behaviour differs between modes
 	
-	RobotMode lastRobotMode = RobotMode.unknown; // Stores current robot move
+	public static RobotMode lastRobotMode = RobotMode.unknown; // Stores current robot move
 	
 	private int counter = 0;
-
-	ServerSocket serverSocket = null;
-	Socket clientSocket = null;
 	
 	SmartServo smartServo = null;
 	ISmartServoRuntime smartMotion = null;
 	
-	DirectServo directServo = null;
-	IDirectServoRuntime directMotion = null;
+	public static DirectServo directServo = null;
+	public static IDirectServoRuntime directMotion = null;
 	
-	JointPosition simulation_joints = null;
+	public static JointPosition simulation_joints = null;
 
 	public void main(String[] args) {
 		
