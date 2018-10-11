@@ -55,11 +55,16 @@ class EchoServer extends Thread {
 			System.out.println(e.toString());
 		}
     }
+    
+    public void stop_running()
+    {
+    	flag = false;
+    }
  
     @Override
     public void run() {
 
-        while (!Thread.interrupted()) {
+        while (flag) {
     		
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
@@ -230,7 +235,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 				}
 			}while(!exit);
 			client_.stop_running();
-			server_.interrupt();
+			System.out.println("Closed the client ");
+
+			server_.stop_running();
 			
 		} catch (Exception e){
 			// Stop button clicked in the control pad or critical error
