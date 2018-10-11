@@ -80,12 +80,13 @@ class EchoServer extends Thread {
     private boolean running;
     private byte[] buf = new byte[256];
     private volatile boolean flag = true;
+    private int port = 30200;
      
 
  
     public EchoServer() {
         try {
-			socket = new DatagramSocket(30203);
+			socket = new DatagramSocket(port);
 		} catch (SocketException e) {
 			System.out.println(e.toString());
 		}
@@ -131,6 +132,7 @@ class EchoServer extends Thread {
 class EchoClient extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
+    private int port = 30200;
     private volatile boolean flag = true;
 
     
@@ -264,7 +266,7 @@ class EchoClient extends Thread {
     public void sendEcho(String msg) {
         buf = msg.getBytes();
         DatagramPacket packet 
-          = new DatagramPacket(buf, buf.length, address, 30200);
+          = new DatagramPacket(buf, buf.length, address, port);
         try {
 			socket.send(packet);
 		} catch (IOException e) {
