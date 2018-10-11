@@ -188,7 +188,7 @@ class EchoServer extends Thread {
 				//System.out.println(e.toString());
 				received_packet = false;
 			} catch (IOException e) {
-				//System.out.println(e.toString());
+				System.out.println(e.toString());
 				received_packet = false;
 			}
             
@@ -196,7 +196,7 @@ class EchoServer extends Thread {
         		//System.out.println("received");
 
             	String[] commands = parseDatagram(packet);
-            	System.out.println(commands.length);
+            	//System.out.println(commands.length);
             	setRobotCommand(commands);  	
             }
              
