@@ -86,7 +86,7 @@ class EchoServer extends Thread {
 //            }
 //            socket.send(packet);
         }
-		System.out.println("Leaving the thread");
+		System.out.println("Leaving the thread server");
 
         socket.close();
     }
@@ -234,11 +234,15 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 							break;
 				}
 			}while(!exit);
+			
+			server_.stop_running();
+			System.out.println("Closed the server ");
+
 			client_.stop_running();
 			System.out.println("Closed the client ");
 
-			server_.stop_running();
-			System.out.println("Closed the server ");
+//			server_.stop_running();
+//			System.out.println("Closed the server ");
 
 			
 		} catch (Exception e){
