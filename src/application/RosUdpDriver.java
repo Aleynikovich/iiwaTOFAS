@@ -238,6 +238,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			System.out.println("Closed the client ");
 
 			server_.stop_running();
+			System.out.println("Closed the server ");
+
 			
 		} catch (Exception e){
 			// Stop button clicked in the control pad or critical error
