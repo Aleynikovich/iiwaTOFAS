@@ -153,15 +153,19 @@ class EchoServer extends Thread {
 			try{
 				RosUdpDriver.directMotion.setDestination(jointPosition);
 			} catch(Exception e) {
-				System.out.println(e.toString());
+				//System.out.println(e.toString());
 				
 				// Stop the server's socket and thread
-				flag = true;
+				stop_running();
 			}
 			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.direct;
 	    } catch(Exception e) {
 			//System.out.println(e.toString());
 	    }
+		if(flag = false)
+		{
+			System.out.println("HERE, should go out");
+		}
 	}
     @Override
     public void run() {
