@@ -155,7 +155,7 @@ class EchoServer extends Thread {
 			try{
 				RosUdpDriver.directMotion.setDestination(jointPosition);
 			} catch(Exception e) {
-				//System.out.println(e.toString());
+				System.out.println(e.toString());
 				counter +=1;
 				if(counter == 100)
 				{
