@@ -156,7 +156,7 @@ class EchoServer extends Thread {
 			} catch(Exception e) {
 				System.out.println(e.toString());
 				// Stop the server's socket and thread
-				stop_running();
+				//stop_running();
 			}
 			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.direct;
 	    } catch(Exception e) {
