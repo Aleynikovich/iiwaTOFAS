@@ -81,6 +81,7 @@ class EchoServer extends Thread {
     private byte[] buf = new byte[256];
     private volatile boolean flag = true;
     private int port = 30000;
+    private int counter = 0;
      
 
  
@@ -154,7 +155,12 @@ class EchoServer extends Thread {
 			try{
 				RosUdpDriver.directMotion.setDestination(jointPosition);
 			} catch(Exception e) {
-				System.out.println(e.toString());
+				//System.out.println(e.toString());
+				counter +=1;
+				if(counter == 100)
+				{
+					stop_running();
+				}
 				// Stop the server's socket and thread
 				//stop_running();
 			}
