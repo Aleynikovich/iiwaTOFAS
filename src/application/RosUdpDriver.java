@@ -403,7 +403,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("Stoping motion... ");
 		//Stop the server
 		//server_.stopRunning();
-		
+		if (motionContainer != null) motionContainer.cancel();
+
 		//if (motionContainer != null) motionContainer.cancel();
 		System.out.println("Closing the sockets... ");
 
