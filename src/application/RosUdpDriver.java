@@ -155,7 +155,6 @@ class EchoServer extends Thread {
 				RosUdpDriver.directMotion.setDestination(jointPosition);
 			} catch(Exception e) {
 				System.out.println(e.toString());
-				
 				// Stop the server's socket and thread
 				stop_running();
 			}
