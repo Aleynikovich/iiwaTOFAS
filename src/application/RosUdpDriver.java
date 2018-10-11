@@ -65,36 +65,44 @@ class EchoServer extends Thread {
     @Override
     public void run() {
 
+		try {
+			socket.setSoTimeout(1000);
+		} catch (SocketException e1) {
+			e1.printStackTrace();
+		}
+
         while (flag) {
     		
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
-            try {
-				socket.receive(packet);
-			} catch (IOException e) {
-				System.out.println(e.toString());
-			}
+	            try {
+					socket.receive(packet);
+				} catch (SocketTimeoutException e) {
+					System.out.println(e.toString());
+				} catch (IOException e) {
+					System.out.println(e.toString());
+				}
              
 
-            String received 
-              = new String(packet.getData(), 0, packet.getLength());            
-            if (received.equals("close")) {
-					flag = false;
-					System.out.println("Say Client, I am closing");
-									
-					InetAddress address = packet.getAddress();
-					int port = packet.getPort();
-					String msg = "close";
-			        buf = msg.getBytes();
-			        DatagramPacket new_packet 
-			          = new DatagramPacket(buf, buf.length, address, port);
-			        try {
-						socket.send(new_packet);
-					} catch (IOException e) {
-						System.out.println(e.toString());
-					} 
-                continue;
-            }
+//            String received 
+//              = new String(packet.getData(), 0, packet.getLength());            
+//            if (received.equals("close")) {
+//					flag = false;
+//					System.out.println("Say Client, I am closing");
+//									
+//					InetAddress address = packet.getAddress();
+//					int port = packet.getPort();
+//					String msg = "close";
+//			        buf = msg.getBytes();
+//			        DatagramPacket new_packet 
+//			          = new DatagramPacket(buf, buf.length, address, port);
+//			        try {
+//						socket.send(new_packet);
+//					} catch (IOException e) {
+//						System.out.println(e.toString());
+//					} 
+//                continue;
+//            }
         }
 		System.out.println("Leaving the thread server");
 
@@ -195,7 +203,7 @@ class EchoClient extends Thread {
         	sendEcho("HOLA");
         }
         
-        closeServer();
+        //closeServer();
 
 		System.out.println("Leaving the thread client");
 
@@ -303,8 +311,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			client_.stop_running();
 			System.out.println("Closed the client ");
 
-//			server_.stop_running();
-//			System.out.println("Closed the server ");
+			server_.stop_running();
+			System.out.println("Closed the server ");
 
 			
 		} catch (Exception e){
