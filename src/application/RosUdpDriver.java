@@ -50,7 +50,7 @@ class EchoServer extends Thread {
  
     public EchoServer() {
         try {
-			socket = new DatagramSocket(30200);
+			socket = new DatagramSocket(30202);
 		} catch (SocketException e) {
 			System.out.println(e.toString());
 		}
@@ -140,7 +140,7 @@ class EchoClient extends Thread {
     public void sendEcho(String msg) {
         buf = msg.getBytes();
         DatagramPacket packet 
-          = new DatagramPacket(buf, buf.length, address, 30200);
+          = new DatagramPacket(buf, buf.length, address, 30202);
         try {
 			socket.send(packet);
 		} catch (IOException e) {
