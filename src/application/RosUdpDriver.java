@@ -132,6 +132,7 @@ class EchoServer extends Thread {
 class EchoClient extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
+    private String ros_adress = "172.31.1.100";
     private int port = 30200;
     private volatile boolean flag = true;
 
@@ -148,7 +149,7 @@ class EchoClient extends Thread {
 
 		}
         try {
-			address = InetAddress.getByName("localhost");
+			address = InetAddress.getByName(ros_adress);
 		} catch (UnknownHostException e) {
 			System.out.println(e.toString());
 			System.out.println("errore2");
