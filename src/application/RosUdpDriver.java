@@ -77,13 +77,12 @@ class EchoServer extends Thread {
 //            InetAddress address = packet.getAddress();
 //            int port = packet.getPort();
 //            packet = new DatagramPacket(buf, buf.length, address, port);
-//            String received 
-//              = new String(packet.getData(), 0, packet.getLength());
-//             
-//            if (received.equals("end")) {
-//                flag = false;
-//                continue;
-//            }
+            String received 
+              = new String(packet.getData(), 0, packet.getLength());            
+            if (received.equals("close")) {
+                flag = false;
+                continue;
+            }
 //            socket.send(packet);
         }
 		System.out.println("Leaving the thread server");
@@ -123,6 +122,8 @@ class EchoClient extends Thread {
     public void stop_running()
     {
     	flag = false;
+    	
+    	
     }
  
     @Override
@@ -132,6 +133,23 @@ class EchoClient extends Thread {
         	
         	sendEcho("HOLA");
         }
+		System.out.println("Commanding the closure of the thread server");
+		try {
+			address = InetAddress.getByName("localhost");
+		} catch (UnknownHostException e1) {
+			System.out.println(e1.toString());
+		}
+		String msg = "close";
+        buf = msg.getBytes();
+        DatagramPacket packet 
+          = new DatagramPacket(buf, buf.length, address, 30202);
+        try {
+			socket.send(packet);
+		} catch (IOException e) {
+			System.out.println(e.toString());
+			System.out.println("Unable to send command of closing");
+		}
+
 		System.out.println("Leaving the thread client");
 
         socket.close();
@@ -235,9 +253,6 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 				}
 			}while(!exit);
 			
-			server_.stop_running();
-			System.out.println("Closed the server ");
-
 			client_.stop_running();
 			System.out.println("Closed the client ");
 
