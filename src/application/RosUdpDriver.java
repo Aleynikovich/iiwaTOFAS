@@ -295,10 +295,10 @@ class EchoClient extends Thread {
     	
     	
 		//STATE
-    	String result = "";
-    	
+    	    	
 		double j[] = RosUdpDriver.robot.getCurrentJointPosition().get();
-
+		
+		String result = String.valueOf(j[0]);
 		for (int i = 1; i <= 6; i++) result = result + " " + String.valueOf(j[i]);
 		
 		Vector force = RosUdpDriver.robot.getExternalForceTorque(RosUdpDriver.tool.getDefaultMotionFrame()).getForce();
