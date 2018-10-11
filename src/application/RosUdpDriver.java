@@ -189,10 +189,10 @@ class EchoServer extends Thread {
 			}
             
             if(received_packet){
-        		System.out.println("received");
+        		//System.out.println("received");
 
-            	//String[] commands = parseDatagram(packet);
-            	//setRobotCommand(commands);  	
+            	String[] commands = parseDatagram(packet);
+            	setRobotCommand(commands);  	
             }
              
         }
