@@ -208,7 +208,7 @@ class EchoClient extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
     private String ros_adress = "172.31.1.100";
-    private int port = 30200;
+    private int port = 30000;
     private volatile boolean flag = true;
 
     
