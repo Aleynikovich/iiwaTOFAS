@@ -80,7 +80,7 @@ class EchoServer extends Thread {
     private boolean running;
     private byte[] buf = new byte[256];
     private volatile boolean flag = true;
-    private int port = 30200;
+    private int port = 30000;
      
 
  
