@@ -11,6 +11,9 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.inject.Inject;
 
@@ -196,6 +199,7 @@ class EchoServer extends Thread {
 		rec.setFileName("test2.txt");
 		
 		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
+		rec.addCurrentJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
 	
 		
 		rec.enable();
@@ -446,7 +450,33 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("Initializing tcp server... ");
 		int port = getApplicationData().getProcessData("port").getValue();
 		System.out.println("my port is:"+port);
-
+		
+		// -------------------------------------------- // 
+        Logger logger = Logger.getLogger("MyLog");
+        FileHandler fh;
+         
+        try {
+             
+            // This block configure the logger with handler and formatter
+            fh = new FileHandler("C:/KRC/ROBOTER/log/DataRecorder/file_nuevo.txt");
+            logger.addHandler(fh);
+            
+            //logger.setLevel(Level.ALL);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+             
+            // the following statement is used to log any messages
+            logger.info("My first log");
+             
+        } catch (SecurityException e) {
+    		System.out.println(e.toString());
+        } catch (IOException e) {
+    		System.out.println(e.toString());
+        }
+         
+        logger.info("Hi How r u?");
+        
+        // -------------------------------------- //
 		
 		try{
 			server_ = new EchoServer();
