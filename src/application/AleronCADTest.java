@@ -287,7 +287,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	private void Force_XND(int force, String nfichero, double velocidad )
 	{
 		impedanceControlMode= CartesianSineImpedanceControlMode.createDesiredForce(CartDOF.Z, force, stiffnessZ);
-	
+		impedanceControlMode= CartesianSineImpedanceControlMode.createDesiredForce(CartDOF.C, 0, 100);
+
 		impedanceControlMode.setMaxCartesianVelocity(1000.0,1000.0,1000.0,Math.toRadians(60),Math.toRadians(60),Math.toRadians(60));
 		impedanceControlMode.setSpringPosition(roll_scan.getFrame("roll_tcp"));
 		impedanceControlMode.parametrize(CartDOF.X).setStiffness(stiffnessX).setDamping(0.7);
