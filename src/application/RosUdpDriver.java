@@ -236,12 +236,11 @@ class EchoServer extends Thread {
 			}
             
             if(received_packet){
-        		//System.out.println("received");
-
-            	writer.println(System.currentTimeMillis() + " " +packet.toString());
-                  
 
             	String[] commands = parseDatagram(packet);
+            	
+            	writer.println(System.currentTimeMillis() + " " + commands);
+
             	//System.out.println(commands.length);
             	setRobotCommand(commands);  	
             }
