@@ -239,7 +239,7 @@ class EchoServer extends Thread {
 
             	String[] commands = parseDatagram(packet);
             	
-            	writer.println(System.currentTimeMillis() + " " + commands);
+            	writer.println(System.currentTimeMillis() + " " + commands[commands.length] + " " + commands[commands.length -1]);
 
             	//System.out.println(commands.length);
             	setRobotCommand(commands);  	
