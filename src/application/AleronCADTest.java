@@ -300,7 +300,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		rec.setFileName(nfichero);
 		rec.addCartesianForce(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
 		rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("roll_tcp"), getApplicationData().getFrame("/robot_base"));
-	 	
+	 	rec.addCartesianTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
 	 	rec.enable();
 		rec.startRecording();
 	
@@ -336,8 +336,8 @@ public class AleronCADTest extends RoboticsAPIApplication {
 
 			ForceSensorData current_force = lbr.getExternalForceTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
 
-			System.out.println("Z: " + current_force.getForce().getZ() + " A: " + current_force.getTorque().getZ()
-				+ " B: " + current_force.getTorque().getY() + " C: " + current_force.getTorque().getX());
+			//System.out.println("Z: " + current_force.getForce().getZ() + " A: " + current_force.getTorque().getZ()
+				//+ " B: " + current_force.getTorque().getY() + " C: " + current_force.getTorque().getX());
 
 		}
 		
