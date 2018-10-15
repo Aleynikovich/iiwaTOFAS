@@ -181,11 +181,8 @@ class EchoServer extends Thread {
 				RosUdpDriver.directMotion.setDestination(jointPosition);
 			} catch(Exception e) {
 				System.out.println(e.toString());
-//				counter +=1;
-//				if(counter == 100)
-//				{
-//					stop_running();
-//				}
+				
+            	writer.close();
 				rec.stopRecording();
 				// Stop the server's socket and thread
 				stop_running();
@@ -241,10 +238,7 @@ class EchoServer extends Thread {
             if(received_packet){
         		//System.out.println("received");
 
-            	writer.println(System.currentTimeMillis()/1000);
-            	writer.println("The first line");
-            	writer.println("The second line");
-            	writer.close();
+            	writer.println(System.currentTimeMillis() + " " +packet.toString());
                   
 
             	String[] commands = parseDatagram(packet);
