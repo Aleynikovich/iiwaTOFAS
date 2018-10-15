@@ -1,7 +1,10 @@
 package application;
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -92,9 +95,7 @@ class EchoServer extends Thread {
 	private DataRecorder rec;
 	
 	// -------------------------------------------- // 
-    Logger logger;
-    FileHandler fh;
-     
+	PrintWriter writer;
 
      
 
@@ -106,7 +107,15 @@ class EchoServer extends Thread {
 			System.out.println(e.toString());
 		}
         
-        logger = Logger.getLogger("MyLog");
+    	try {
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_0.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void stop_running()
@@ -232,32 +241,11 @@ class EchoServer extends Thread {
             if(received_packet){
         		//System.out.println("received");
 
-                try {
-                     
-                	
-                	fh = new FileHandler("C:/KRC/ROBOTER/log/DataRecorder/testtest.txt");
-                    logger.addHandler(fh);
-                    
-                    //logger.setLevel(Level.ALL);
-                    SimpleFormatter formatter = new SimpleFormatter();
-                    fh.setFormatter(formatter);
-                     
-                    // the following statement is used to log any messages
-                    //logger.info("My first log");
-                     
-                } catch (SecurityException e) {
-            		System.out.println(e.toString());
-                } catch (IOException e) {
-            		System.out.println(e.toString());
-                }
-                 
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                
-        		logger.info(timestamp.getTimeTicks().toLong().toString());
-
-                
-                
-                // -------------------------------------- //
+            	writer.println(System.currentTimeMillis()/1000);
+            	writer.println("The first line");
+            	writer.println("The second line");
+            	writer.close();
+                  
 
             	String[] commands = parseDatagram(packet);
             	//System.out.println(commands.length);
