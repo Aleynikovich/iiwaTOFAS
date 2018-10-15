@@ -253,7 +253,7 @@ class EchoServer extends Thread {
                  
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 
-        		logger.fine(timestamp.getTimeTicks().toLong().toString());
+        		logger.info(timestamp.getTimeTicks().toLong().toString());
 
                 
                 
