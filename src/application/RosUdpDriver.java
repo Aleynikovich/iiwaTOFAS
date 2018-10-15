@@ -90,6 +90,11 @@ class EchoServer extends Thread {
     private int port = 30000;
     private int counter = 0;
 	private DataRecorder rec;
+	
+	// -------------------------------------------- // 
+    Logger logger;
+    FileHandler fh;
+     
 
      
 
@@ -100,6 +105,8 @@ class EchoServer extends Thread {
 		} catch (SocketException e) {
 			System.out.println(e.toString());
 		}
+        
+        logger = Logger.getLogger("MyLog");
     }
     
     public void stop_running()
@@ -224,6 +231,33 @@ class EchoServer extends Thread {
             
             if(received_packet){
         		//System.out.println("received");
+
+                try {
+                     
+                	
+                	fh = new FileHandler("C:/KRC/ROBOTER/log/DataRecorder/testtest.txt");
+                    logger.addHandler(fh);
+                    
+                    //logger.setLevel(Level.ALL);
+                    SimpleFormatter formatter = new SimpleFormatter();
+                    fh.setFormatter(formatter);
+                     
+                    // the following statement is used to log any messages
+                    //logger.info("My first log");
+                     
+                } catch (SecurityException e) {
+            		System.out.println(e.toString());
+                } catch (IOException e) {
+            		System.out.println(e.toString());
+                }
+                 
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                
+        		logger.fine(timestamp.getTimeTicks().toLong().toString());
+
+                
+                
+                // -------------------------------------- //
 
             	String[] commands = parseDatagram(packet);
             	//System.out.println(commands.length);
@@ -452,36 +486,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		int port = getApplicationData().getProcessData("port").getValue();
 		System.out.println("my port is:"+port);
 		
-		// -------------------------------------------- // 
-        Logger logger = Logger.getLogger("MyLog");
-        FileHandler fh;
-         
-        try {
-             
-            // This block configure the logger with handler and formatter
-            fh = new FileHandler("C:/KRC/ROBOTER/log/DataRecorder/file_nuevo22.txt");
-            logger.addHandler(fh);
-            
-            //logger.setLevel(Level.ALL);
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-             
-            // the following statement is used to log any messages
-            logger.info("My first log");
-             
-        } catch (SecurityException e) {
-    		System.out.println(e.toString());
-        } catch (IOException e) {
-    		System.out.println(e.toString());
-        }
-         
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        
-		System.out.println(timestamp.getTimeTicks().toString());
-
-        
-        
-        // -------------------------------------- //
+		
 		
 		try{
 			server_ = new EchoServer();
