@@ -36,6 +36,7 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 import com.kuka.roboticsAPI.sensorModel.DataRecorder.AngleUnit;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
+import com.sun.jmx.snmp.Timestamp;
 
 /**
  * Implementation of a robot application.
@@ -474,7 +475,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
     		System.out.println(e.toString());
         }
          
-        logger.info("Hi How r u?");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        logger.info(timestamp.toString());
         
         // -------------------------------------- //
 		
