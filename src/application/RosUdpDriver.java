@@ -459,7 +459,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
         try {
              
             // This block configure the logger with handler and formatter
-            fh = new FileHandler("C:/KRC/ROBOTER/log/DataRecorder/file_nuevo.txt");
+            fh = new FileHandler("C:/KRC/ROBOTER/log/DataRecorder/file_nuevo22.txt");
             logger.addHandler(fh);
             
             //logger.setLevel(Level.ALL);
