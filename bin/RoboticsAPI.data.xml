@@ -574,7 +574,7 @@
             <additionalInformation>
                 <info key="Comment" type="java.lang.String" value="tool"/>
             </additionalInformation>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="1.3646789103734396" cogY="2.6776448120286007" cogZ="42.80808256231917" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.0662878527706026"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-7.615689719198139" cogY="-5.2712728111134295" cogZ="116.21938518294198" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.456362096680725"/>
         </toolTemplate>
         <toolTemplate class="" name="RollScan">
             <frames>
@@ -585,7 +585,7 @@
                     <transformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-10.2" cogY="2.1" cogZ="120.4" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.9"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-6.871025725984541" cogY="-4.9041670328506655" cogZ="117.83606678477598" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.4471465387909155"/>
         </toolTemplate>
     </objectTemplates>
     <processDataContainer>
