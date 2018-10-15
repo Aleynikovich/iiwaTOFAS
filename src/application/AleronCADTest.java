@@ -287,7 +287,6 @@ public class AleronCADTest extends RoboticsAPIApplication {
 	private void Force_XND(int force, String nfichero, double velocidad )
 	{
 		impedanceControlMode= CartesianSineImpedanceControlMode.createDesiredForce(CartDOF.Z, force, stiffnessZ);
-		//impedanceControlMode= CartesianSineImpedanceControlMode.createDesiredForce(CartDOF.C, 0, 100);
 
 		impedanceControlMode.setMaxCartesianVelocity(1000.0,1000.0,1000.0,Math.toRadians(60),Math.toRadians(60),Math.toRadians(60));
 		impedanceControlMode.setSpringPosition(roll_scan.getFrame("roll_tcp"));
@@ -335,8 +334,10 @@ public class AleronCADTest extends RoboticsAPIApplication {
 			else
 				roll_scan.getFrame("roll_tcp").moveAsync(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 
-			//ForceSensorData current_force = lbr.getExternalForceTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
-			//System.out.println("Contact Z force: " + current_force.getForce().getZ());
+			ForceSensorData current_force = lbr.getExternalForceTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
+
+			System.out.println("Z: " + current_force.getForce().getZ() + " A: " + current_force.getTorque().getZ()
+				+ " B: " + current_force.getTorque().getY() + " C: " + current_force.getTorque().getX());
 
 		}
 		
