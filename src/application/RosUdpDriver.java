@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -29,6 +30,8 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.math.Vector;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.sensorModel.DataRecorder;
+import com.kuka.roboticsAPI.sensorModel.DataRecorder.AngleUnit;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 /**
@@ -82,6 +85,8 @@ class EchoServer extends Thread {
     private volatile boolean flag = true;
     private int port = 30000;
     private int counter = 0;
+	private DataRecorder rec;
+
      
 
  
@@ -156,13 +161,14 @@ class EchoServer extends Thread {
 				RosUdpDriver.directMotion.setDestination(jointPosition);
 			} catch(Exception e) {
 				System.out.println(e.toString());
-				counter +=1;
-				if(counter == 100)
-				{
-					stop_running();
-				}
+//				counter +=1;
+//				if(counter == 100)
+//				{
+//					stop_running();
+//				}
+				rec.stopRecording();
 				// Stop the server's socket and thread
-				//stop_running();
+				stop_running();
 			}
 			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.direct;
 	    } catch(Exception e) {
@@ -181,6 +187,17 @@ class EchoServer extends Thread {
 		} catch (SocketException e1) {
 			e1.printStackTrace();
 		}
+		
+		
+		rec = new DataRecorder();
+		rec.setTimeout(60L, TimeUnit.SECONDS);
+		rec.setFileName("test.txt");
+		
+		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
+	
+		
+		rec.enable();
+		rec.startRecording();
 
         while (flag) {
     		
@@ -365,6 +382,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public static LBR robot;
 	private Controller controller;
 	public static Tool tool;
+	
+
 
 	public static IMotionContainer motionContainer = null;
 	
@@ -400,7 +419,6 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		tool = createFromTemplate("Tool");
 		tool.attachTo(robot.getFlange()); // Attach the tool
 		
-		
 	}
 	
 	
@@ -426,6 +444,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		System.out.println("Initializing tcp server... ");
 		int port = getApplicationData().getProcessData("port").getValue();
 		System.out.println("my port is:"+port);
+
 		
 		try{
 			server_ = new EchoServer();
