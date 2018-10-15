@@ -476,8 +476,10 @@ public class RosUdpDriver extends RoboticsAPIApplication {
         }
          
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        
+		System.out.println(timestamp.toString());
 
-        logger.info(timestamp.toString());
+        
         
         // -------------------------------------- //
 		
