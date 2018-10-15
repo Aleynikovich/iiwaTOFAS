@@ -108,7 +108,7 @@ class EchoServer extends Thread {
 		}
         
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_2.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_0.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -210,7 +210,7 @@ class EchoServer extends Thread {
 		rec.setTimeout(-1, TimeUnit.SECONDS);
 		rec.setSampleInterval(5);
 		rec.setTimeout(60L, TimeUnit.SECONDS);
-		rec.setFileName("test2.txt");
+		rec.setFileName("test_00.txt");
 		
 		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
 		rec.addCurrentJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
@@ -239,7 +239,7 @@ class EchoServer extends Thread {
 
             	String[] commands = parseDatagram(packet);
             	
-            	writer.println(System.currentTimeMillis() + " " + commands[12] + " " + commands[13]);
+            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
 
             	//System.out.println(commands.length);
             	setRobotCommand(commands);  	
