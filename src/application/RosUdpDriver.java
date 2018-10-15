@@ -108,7 +108,7 @@ class EchoServer extends Thread {
 		}
         
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_0.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_1.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
