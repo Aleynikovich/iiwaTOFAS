@@ -190,7 +190,9 @@ class EchoServer extends Thread {
 		
 		
 		rec = new DataRecorder();
-		//rec.setTimeout(60L, TimeUnit.SECONDS);
+		rec.setTimeout(-1, TimeUnit.SECONDS);
+		rec.setSampleInterval(5);
+		rec.setTimeout(60L, TimeUnit.SECONDS);
 		rec.setFileName("test2.txt");
 		
 		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
