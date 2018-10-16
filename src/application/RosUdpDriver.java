@@ -164,7 +164,7 @@ class DirectControl extends Thread {
             }
              
         }
-		System.out.println("Leaving the thread server");
+		System.out.println("Leaving the controller server");
     }
 }
 
