@@ -65,9 +65,20 @@ import com.sun.jmx.snmp.Timestamp;
 class DirectControl extends Thread {
 
     private volatile boolean flag = true;
+	PrintWriter writer;
+
 
 	public DirectControl(){
 		RosUdpDriver.received_packet_bool = false;
+    	try {
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_12.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
     public void stop_running()
@@ -125,6 +136,7 @@ class DirectControl extends Thread {
 		if(flag == false)
 		{
 			System.out.println("HERE, should go out");
+			writer.close();
 		}
 	}
     public String[] parseDatagram(DatagramPacket packet)
@@ -154,11 +166,12 @@ class DirectControl extends Thread {
     		
             if(RosUdpDriver.received_packet_bool){
             	RosUdpDriver.received_packet_bool = false;
+            	
             	String[] commands;
                 synchronized (RosUdpDriver.lock) {
-                	commands = parseDatagram(RosUdpDriver.received_packet);
+                	commands = RosUdpDriver.received_packet;
                 }
-            	//writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
+            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
             	setRobotCommand(commands);  	
             }
              
@@ -205,7 +218,25 @@ class EchoServer extends Thread {
     	flag = false;
 
     }
-    
+    public String[] parseDatagram(DatagramPacket packet)
+    {
+    	String command = "";
+		String[] parameters = new String[0];
+		String line
+    		= new String(packet.getData(), 0, packet.getLength());
+    	
+		String[] processedLine = line.split(":");
+		
+		if (processedLine.length == 1){
+			command = processedLine[0].trim();
+		} else if (processedLine.length == 2){
+			//System.out.println("aqui");
+			command = processedLine[0].trim();
+			parameters = processedLine[1].trim().split("\\s+");
+		}
+		
+    	return parameters;
+    }
     @Override
     public void run() {
 
@@ -238,10 +269,12 @@ class EchoServer extends Thread {
             
             if(received_packet){
             	
-            	writer.println(System.currentTimeMillis());
+            	String[] commands = parseDatagram(packet);
+            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
+
 
                 synchronized (RosUdpDriver.lock) {
-                	RosUdpDriver.received_packet = packet;
+                	RosUdpDriver.received_packet = commands;
                 }
             	RosUdpDriver.received_packet_bool = true;
 
@@ -408,7 +441,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public static Tool tool;
 	
     public static boolean received_packet_bool = true;    
-    public static DatagramPacket received_packet; 
+    public static String[] received_packet; 
     
     public final static Object lock = new Object();
     
