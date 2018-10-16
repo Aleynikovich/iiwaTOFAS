@@ -694,20 +694,33 @@ class SmartControl extends Thread {
     @Override
     public void run() {
 
-        while (flag) {
-    		
-            if(RosUdpDriver.received_packet_bool){
-            	RosUdpDriver.received_packet_bool = false;
-            	
-            	String[] commands;
-                synchronized (RosUdpDriver.lock) {
-                	commands = RosUdpDriver.received_packet;
-                }
-            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
-            	setRobotCommand(commands);  	
-            }
-             
-        }
-		System.out.println("Leaving the controller server");
-    }
+			long delay = 20; // 10 ms for each loop
+	        while (flag) {
+	        	
+	            if(RosUdpDriver.received_packet_bool){
+	
+	            	RosUdpDriver.received_packet_bool = false;
+	            	String[] commands;
+	                synchronized (RosUdpDriver.lock) {
+	                	commands = RosUdpDriver.received_packet;
+	                }
+	                
+	                
+	            	long next = System.currentTimeMillis();
+	            	// -------------- CONTROL LOOP ------------ //
+	            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
+	            	setRobotCommand(commands); 
+	            	// -------------------------------------- //
+	            	
+	            	next +=delay;
+	            	long sleep = next - System.currentTimeMillis();
+				    if (sleep > 0)
+						try {
+							Thread.sleep(sleep);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+	            }
+	    }
+	}
 }
