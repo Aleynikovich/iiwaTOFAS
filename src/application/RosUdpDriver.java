@@ -249,6 +249,8 @@ class EchoServer extends Thread {
 
             
             if(received_packet){
+				System.out.println("HERE");
+
                 synchronized (RosUdpDriver.lock) {
                 	RosUdpDriver.received_packet = packet;
                 }
