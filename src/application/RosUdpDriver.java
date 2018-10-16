@@ -61,86 +61,18 @@ import com.sun.jmx.snmp.Timestamp;
  */
 
 
-/////////////// ECHO SERVER VARIATIONS
 
-//String received 
-//= new String(packet.getData(), 0, packet.getLength());            
-//if (received.equals("close")) {
-//		flag = false;
-//		System.out.println("Say Client, I am closing");
-//						
-//		InetAddress address = packet.getAddress();
-//		int port = packet.getPort();
-//		String msg = "close";
-//      buf = msg.getBytes();
-//      DatagramPacket new_packet 
-//        = new DatagramPacket(buf, buf.length, address, port);
-//      try {
-//			socket.send(new_packet);
-//		} catch (IOException e) {
-//			System.out.println(e.toString());
-//		} 
-//  continue;
-//}
+class DirectControl extends Thread {
 
-
-class EchoServer extends Thread {
-	 
-    private DatagramSocket socket;
-    private boolean running;
-    private byte[] buf = new byte[256];
     private volatile boolean flag = true;
-    private int port = 30000;
-    private int counter = 0;
-	private DataRecorder rec;
+
+	public DirectControl(){
+		RosUdpDriver.received_packet_bool = false;
+	}
 	
-	// -------------------------------------------- // 
-	PrintWriter writer;
-
-     
-
- 
-    public EchoServer() {
-        try {
-			socket = new DatagramSocket(port);
-		} catch (SocketException e) {
-			System.out.println(e.toString());
-		}
-        
-    	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_0.txt", "UTF-8");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
     public void stop_running()
     {
     	flag = false;
-    }
- 
-    public String[] parseDatagram(DatagramPacket packet)
-    {
-    	String command = "";
-		String[] parameters = new String[0];
-		String line
-    		= new String(packet.getData(), 0, packet.getLength());
-    	
-		String[] processedLine = line.split(":");
-		
-		if (processedLine.length == 1){
-			command = processedLine[0].trim();
-		} else if (processedLine.length == 2){
-			//System.out.println("aqui");
-			command = processedLine[0].trim();
-			parameters = processedLine[1].trim().split("\\s+");
-		}
-		
-    	return parameters;
     }
     
     void setRobotCommand(String[] parameters)
@@ -182,10 +114,9 @@ class EchoServer extends Thread {
 			} catch(Exception e) {
 				System.out.println(e.toString());
 				
-            	writer.close();
-				rec.stopRecording();
-				// Stop the server's socket and thread
+				RosUdpDriver.directMotion.stopMotion();
 				stop_running();
+				
 			}
 			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.direct;
 	    } catch(Exception e) {
@@ -196,6 +127,87 @@ class EchoServer extends Thread {
 			System.out.println("HERE, should go out");
 		}
 	}
+    public String[] parseDatagram(DatagramPacket packet)
+    {
+    	String command = "";
+		String[] parameters = new String[0];
+		String line
+    		= new String(packet.getData(), 0, packet.getLength());
+    	
+		String[] processedLine = line.split(":");
+		
+		if (processedLine.length == 1){
+			command = processedLine[0].trim();
+		} else if (processedLine.length == 2){
+			//System.out.println("aqui");
+			command = processedLine[0].trim();
+			parameters = processedLine[1].trim().split("\\s+");
+		}
+		
+    	return parameters;
+    }
+    
+    @Override
+    public void run() {
+
+        while (flag) {
+    		
+            if(RosUdpDriver.received_packet_bool){
+            	RosUdpDriver.received_packet_bool = false;
+            	String[] commands;
+                synchronized (RosUdpDriver.lock) {
+                	commands = parseDatagram(RosUdpDriver.received_packet);
+                }
+            	//writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
+            	//System.out.println(commands.length);
+            	setRobotCommand(commands);  	
+            }
+             
+        }
+		System.out.println("Leaving the thread server");
+    }
+}
+
+
+class EchoServer extends Thread {
+	 
+    private DatagramSocket socket;
+    private boolean running;
+    private byte[] buf = new byte[256];
+    private volatile boolean flag = true;
+    private int port = 30000;
+    private int counter = 0;
+	private DataRecorder rec;
+	
+	// -------------------------------------------- // 
+	PrintWriter writer;
+
+     
+    public EchoServer() {
+        try {
+			socket = new DatagramSocket(port);
+		} catch (SocketException e) {
+			System.out.println(e.toString());
+		}
+        
+    	try {
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_0.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public void stop_running()
+    {
+
+    	flag = false;
+
+    }
+    
     @Override
     public void run() {
 
@@ -234,20 +246,20 @@ class EchoServer extends Thread {
 				System.out.println(e.toString());
 				received_packet = false;
 			}
+
             
             if(received_packet){
+                synchronized (RosUdpDriver.lock) {
+                	RosUdpDriver.received_packet = packet;
+                }
+            	RosUdpDriver.received_packet_bool = true;
 
-            	String[] commands = parseDatagram(packet);
-            	
-            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
-
-            	//System.out.println(commands.length);
-            	setRobotCommand(commands);  	
             }
              
         }
 		System.out.println("Leaving the thread server");
-
+    	writer.close();
+		rec.stopRecording();
         socket.close();
     }
 }
@@ -404,6 +416,14 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public static LBR robot;
 	private Controller controller;
 	public static Tool tool;
+	
+    public static boolean received_packet_bool = true;    
+    public static DatagramPacket received_packet; 
+    
+    public final static Object lock = new Object();
+
+
+
 	
 
 
