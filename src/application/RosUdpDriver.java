@@ -536,6 +536,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			
 			direct_control_ = new DirectControl();
 			direct_control_.start();
+			direct_control_.setPriority(Thread.MAX_PRIORITY);
 			
 			exit=false;
 			do {
