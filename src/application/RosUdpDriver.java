@@ -217,7 +217,7 @@ class EchoServer extends Thread {
 		}
         
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_14.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_16.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -610,7 +610,7 @@ class SmartControl extends Thread {
 	public SmartControl(){
 		RosUdpDriver.received_packet_bool = false;
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_14.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_Scontrol_16.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
