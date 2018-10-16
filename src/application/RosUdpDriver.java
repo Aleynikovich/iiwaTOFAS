@@ -675,7 +675,7 @@ class SmartControl extends Thread {
             long t1 = System.currentTimeMillis();
             
             long dt = t1-t0;
-            if(dt>0.01)
+            if(dt>10)
             {
             System.out.println(dt);
             }
