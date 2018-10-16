@@ -576,3 +576,126 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	
 	}
 }
+
+class SmartControl extends Thread {
+
+    private volatile boolean flag = true;
+	PrintWriter writer;
+	
+	SmartServo smartServo = null;
+	ISmartServoRuntime smartMotion = null;
+
+
+	public SmartControl(){
+		RosUdpDriver.received_packet_bool = false;
+    	try {
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_14.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+    public void stop_running()
+    {
+    	flag = false;
+    }
+    
+    void setRobotCommand(String[] parameters)
+    {
+		if (smartServo == null) smartServo = new SmartServo(RosUdpDriver.robot.getCurrentJointPosition());
+		
+		if (RosUdpDriver.lastRobotMode != RosUdpDriver.RobotMode.smart){
+			if (RosUdpDriver.motionContainer != null) RosUdpDriver.motionContainer.cancel();
+			smartServo.overrideJointAcceleration(8.0);
+			smartServo.setJointAccelerationRel(1.0);
+			smartServo.setJointVelocityRel(1.0);
+			RosUdpDriver.motionContainer = RosUdpDriver.robot.moveAsync(smartServo);
+			smartMotion = smartServo.getRuntime();
+		}
+		
+		try {
+		
+			JointPosition jointPosition = new JointPosition(
+					Double.parseDouble(parameters[0]), 
+					Double.parseDouble(parameters[1]),
+					Double.parseDouble(parameters[2]),
+					Double.parseDouble(parameters[3]),
+					Double.parseDouble(parameters[4]),
+					Double.parseDouble(parameters[5]),
+					Double.parseDouble(parameters[6]));
+			
+			JointPosition jointSpeed = new JointPosition(
+					Double.parseDouble(parameters[7]), 
+					Double.parseDouble(parameters[8]),
+					Double.parseDouble(parameters[9]),
+					Double.parseDouble(parameters[10]),
+					Double.parseDouble(parameters[11]),
+					Double.parseDouble(parameters[12]),
+					Double.parseDouble(parameters[13]));
+
+				smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
+
+			try{
+				smartMotion.setDestination(jointPosition);//, jointSpeed);
+				
+			} catch(Exception e) {
+				System.out.println(e.toString());
+				
+				smartMotion.stopMotion();
+				stop_running();
+				
+			}
+			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.smart;
+	    } catch(Exception e) {
+			//System.out.println(e.toString());
+	    }
+		if(flag == false)
+		{
+			System.out.println("HERE, should go out");
+			writer.close();
+		}
+	}
+    public String[] parseDatagram(DatagramPacket packet)
+    {
+    	String command = "";
+		String[] parameters = new String[0];
+		String line
+    		= new String(packet.getData(), 0, packet.getLength());
+    	
+		String[] processedLine = line.split(":");
+		
+		if (processedLine.length == 1){
+			command = processedLine[0].trim();
+		} else if (processedLine.length == 2){
+			//System.out.println("aqui");
+			command = processedLine[0].trim();
+			parameters = processedLine[1].trim().split("\\s+");
+		}
+		
+    	return parameters;
+    }
+    
+    @Override
+    public void run() {
+
+        while (flag) {
+    		
+            if(RosUdpDriver.received_packet_bool){
+            	RosUdpDriver.received_packet_bool = false;
+            	
+            	String[] commands;
+                synchronized (RosUdpDriver.lock) {
+                	commands = RosUdpDriver.received_packet;
+                }
+            	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
+            	setRobotCommand(commands);  	
+            }
+             
+        }
+		System.out.println("Leaving the controller server");
+    }
+}
