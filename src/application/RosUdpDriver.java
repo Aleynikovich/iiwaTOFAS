@@ -231,6 +231,8 @@ class EchoServer extends Thread {
 		rec.enable();
 		rec.startRecording();
 
+		System.out.println("Ready to receive packetes");
+
         while (flag) {
     		
             DatagramPacket packet 
