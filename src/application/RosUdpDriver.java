@@ -546,8 +546,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			exit=false;
 			do {
 				switch (getApplicationUI().displayModalDialog(
-						ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
-						"END DO NOTHING")) {
+						ApplicationDialogType.QUESTION,"Wanna Stop?", 
+						"STOP ROBOT")) {
 						case 0:
 							getLogger().info("App Terminated\n"+"***END***");
 							exit = true;
