@@ -71,7 +71,7 @@ class DirectControl extends Thread {
 	public DirectControl(){
 		RosUdpDriver.received_packet_bool = false;
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_14.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_22.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -226,7 +226,7 @@ class EchoServer extends Thread {
 		}
         
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_20.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_22.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -279,6 +279,7 @@ class EchoServer extends Thread {
             DatagramPacket packet 
               = new DatagramPacket(buf, buf.length);
             
+            
             boolean received_packet = true;
             try {
 				socket.receive(packet);
@@ -322,9 +323,12 @@ class EchoServer extends Thread {
 class EchoClient extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
-    private String ros_adress = "172.31.1.100";
+    private String ros_adress = "172.31.1.105";
     private int port = 30000;
     private volatile boolean flag = true;
+    
+	PrintWriter writer;
+
 
     
  
