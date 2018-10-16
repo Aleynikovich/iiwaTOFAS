@@ -598,6 +598,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 
 			server_.stop_running();
 			System.out.println("Closed the server ");
+			
+			Thread.sleep(2000);
 
 			
 		} catch (Exception e){
