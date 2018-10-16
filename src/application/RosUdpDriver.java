@@ -294,6 +294,12 @@ class EchoServer extends Thread {
             	RosUdpDriver.received_packet_bool = true;
 
             }
+        	try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
              
         }
 		System.out.println("Leaving the thread server");
@@ -416,6 +422,12 @@ class EchoClient extends Thread {
         	String robot_state = get_state();
         	
         	sendEcho(robot_state);
+        	try {
+				Thread.sleep(3);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         
         //closeServer();
@@ -569,6 +581,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 							exit = true;
 							break;
 				}
+				
+				Thread.sleep(1);
 			}while(!exit);
 			
 			rec.stopRecording();
@@ -606,6 +620,7 @@ class SmartControl extends Thread {
 	
 	SmartServo smartServo = null;
 	ISmartServoRuntime smartMotion = null;
+	
 
 
 	public SmartControl(){
