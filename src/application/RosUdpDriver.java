@@ -71,7 +71,7 @@ class DirectControl extends Thread {
 	public DirectControl(){
 		RosUdpDriver.received_packet_bool = false;
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_13.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_control_14.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -202,7 +202,7 @@ class EchoServer extends Thread {
 		}
         
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_13.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_14.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
