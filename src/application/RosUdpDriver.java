@@ -709,7 +709,7 @@ class SmartControl extends Thread {
     @Override
     public void run() {
 
-			long delay = 20; // 10 ms for each loop
+			long delay = 5; // 10 ms for each loop
 	        while (flag) {
 	        	
 	            if(RosUdpDriver.received_packet_bool){
