@@ -468,8 +468,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	
 	EchoServer server_;
 	EchoClient client_;
-	DirectControl direct_control_;
-	//SmartControl  smart_control_;
+	//DirectControl direct_control_;
+	SmartControl  smart_control_;
 
 	
     boolean exit;
@@ -551,12 +551,12 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			client_ = new EchoClient();
 			client_.start();
 			
-			direct_control_ = new DirectControl();
-			direct_control_.start();
+//			direct_control_ = new DirectControl();
+//			direct_control_.start();
 //			direct_control_.setPriority(Thread.MAX_PRIORITY);
 			
-//			smart_control_ = new SmartControl();
-//			smart_control_.start();
+			smart_control_ = new SmartControl();
+			smart_control_.start();
 			
 			exit=false;
 			do {
@@ -576,7 +576,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			client_.stop_running();
 			System.out.println("Closed the client ");
 			
-			direct_control_.stop_running();
+			//direct_control_.stop_running();
+			smart_control_.stop_running();
 			System.out.println("Closed the controller ");
 
 
@@ -679,25 +680,6 @@ class SmartControl extends Thread {
 			writer.close();
 		}
 	}
-    public String[] parseDatagram(DatagramPacket packet)
-    {
-    	String command = "";
-		String[] parameters = new String[0];
-		String line
-    		= new String(packet.getData(), 0, packet.getLength());
-    	
-		String[] processedLine = line.split(":");
-		
-		if (processedLine.length == 1){
-			command = processedLine[0].trim();
-		} else if (processedLine.length == 2){
-			//System.out.println("aqui");
-			command = processedLine[0].trim();
-			parameters = processedLine[1].trim().split("\\s+");
-		}
-		
-    	return parameters;
-    }
     
     @Override
     public void run() {
