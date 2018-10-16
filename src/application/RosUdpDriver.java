@@ -431,6 +431,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	
 	EchoServer server_;
 	EchoClient client_;
+	DirectControl direct_control_;
 	
     boolean exit;
     
@@ -496,6 +497,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			client_ = new EchoClient();
 			client_.start();
 			
+			direct_control_ = new DirectControl();
+			direct_control_.start();
+			
 			exit=false;
 			do {
 				switch (getApplicationUI().displayModalDialog(
@@ -510,6 +514,10 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			
 			client_.stop_running();
 			System.out.println("Closed the client ");
+			
+			direct_control_.stop_running();
+			System.out.println("Closed the controller ");
+
 
 			server_.stop_running();
 			System.out.println("Closed the server ");
