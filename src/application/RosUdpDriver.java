@@ -117,8 +117,8 @@ class DirectControl extends Thread {
 					Double.parseDouble(parameters[13]));
 	
 
-			RosUdpDriver.directServo.setJointVelocityRel(jointSpeed.get());
-			RosUdpDriver.directMotion.setMinimumTrajectoryExecutionTime(30e-3);
+			//RosUdpDriver.directServo.setJointVelocityRel(jointSpeed.get());
+			//RosUdpDriver.directMotion.setMinimumTrajectoryExecutionTime(30e-3);
 			
 			try{
 				RosUdpDriver.directMotion.setDestination(jointPosition);
