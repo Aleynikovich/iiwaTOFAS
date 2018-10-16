@@ -162,17 +162,32 @@ class DirectControl extends Thread {
     @Override
     public void run() {
 
+    	long delay = 10; // 10 ms for each loop
         while (flag) {
-    		
+        	
             if(RosUdpDriver.received_packet_bool){
+
             	RosUdpDriver.received_packet_bool = false;
-            	
             	String[] commands;
                 synchronized (RosUdpDriver.lock) {
                 	commands = RosUdpDriver.received_packet;
                 }
+                
+                
+            	long next = System.currentTimeMillis();
+            	// -------------- CONTROL LOOP ------------ //
             	writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
-            	setRobotCommand(commands);  	
+            	setRobotCommand(commands); 
+            	// -------------------------------------- //
+            	
+            	next +=delay;
+            	long sleep = next - System.currentTimeMillis();
+			    if (sleep > 0)
+					try {
+						Thread.sleep(sleep);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
             }
              
         }
