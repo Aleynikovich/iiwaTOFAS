@@ -107,7 +107,7 @@ class DirectControl extends Thread {
 	
 
 			RosUdpDriver.directServo.setJointVelocityRel(jointSpeed.get());
-			RosUdpDriver.directMotion.setMinimumTrajectoryExecutionTime(15e-3);
+			RosUdpDriver.directMotion.setMinimumTrajectoryExecutionTime(30e-3);
 			
 			try{
 				RosUdpDriver.directMotion.setDestination(jointPosition);
@@ -159,7 +159,6 @@ class DirectControl extends Thread {
                 	commands = parseDatagram(RosUdpDriver.received_packet);
                 }
             	//writer.println(System.currentTimeMillis() + " " + commands[5] + " " + commands[6]);
-            	//System.out.println(commands.length);
             	setRobotCommand(commands);  	
             }
              
@@ -177,7 +176,6 @@ class EchoServer extends Thread {
     private volatile boolean flag = true;
     private int port = 30000;
     private int counter = 0;
-	private DataRecorder rec;
 	
 	// -------------------------------------------- // 
 	PrintWriter writer;
@@ -191,7 +189,7 @@ class EchoServer extends Thread {
 		}
         
     	try {
-			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test_0.txt", "UTF-8");
+			writer = new PrintWriter("C:/KRC/ROBOTER/log/DataRecorder/test/test1_11.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -218,18 +216,6 @@ class EchoServer extends Thread {
 		}
 		
 		
-		rec = new DataRecorder();
-		rec.setTimeout(-1, TimeUnit.SECONDS);
-		rec.setSampleInterval(5);
-		rec.setTimeout(60L, TimeUnit.SECONDS);
-		rec.setFileName("test_00.txt");
-		
-		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
-		rec.addCurrentJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
-	
-		
-		rec.enable();
-		rec.startRecording();
 
 		System.out.println("Ready to receive packetes");
 
@@ -251,6 +237,8 @@ class EchoServer extends Thread {
 
             
             if(received_packet){
+            	
+            	writer.println(System.currentTimeMillis());
 
                 synchronized (RosUdpDriver.lock) {
                 	RosUdpDriver.received_packet = packet;
@@ -262,7 +250,6 @@ class EchoServer extends Thread {
         }
 		System.out.println("Leaving the thread server");
     	writer.close();
-		rec.stopRecording();
         socket.close();
     }
 }
@@ -424,10 +411,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
     public static DatagramPacket received_packet; 
     
     public final static Object lock = new Object();
+    
+	private DataRecorder rec;
 
-
-
-	
 
 
 	public static IMotionContainer motionContainer = null;
@@ -464,6 +450,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		robot = (LBR) getRobot(controller, "LBR_iiwa_14_R820_1");
 		tool = createFromTemplate("Tool");
 		tool.attachTo(robot.getFlange()); // Attach the tool
+	
 		
 	}
 	
@@ -491,6 +478,20 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		int port = getApplicationData().getProcessData("port").getValue();
 		System.out.println("my port is:"+port);
 		
+		rec = new DataRecorder();
+		rec.setTimeout(-1, TimeUnit.SECONDS);
+		rec.setSampleInterval(5);
+		rec.setTimeout(60L, TimeUnit.SECONDS);
+		rec.setFileName("test_11.txt");
+		
+		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
+		rec.addCurrentJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
+	
+		
+		rec.enable();
+		rec.startRecording();
+
+		
 		
 		
 		try{
@@ -514,6 +515,9 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 							break;
 				}
 			}while(!exit);
+			
+			rec.stopRecording();
+
 			
 			client_.stop_running();
 			System.out.println("Closed the client ");
