@@ -347,7 +347,6 @@ public class ROS_driver extends RoboticsAPIApplication {
 						directServo.setJointVelocityRel(jointSpeed.get());
 						directMotion.setMinimumTrajectoryExecutionTime(15e-3);
 						
-			            System.out.println("here");
 
 						long t0 = System.currentTimeMillis();
 						directMotion.setDestination(jointPosition);
