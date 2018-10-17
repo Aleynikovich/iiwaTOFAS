@@ -493,7 +493,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public static IMotionContainer motionContainer = null;
 	
 	EchoServer server_;
-	//EchoClient client_;
+	EchoClient client_;
 	//DirectControl direct_control_;
 	SmartControl  smart_control_;
 
@@ -576,8 +576,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 
 			server_.start();
 			
-			//client_ = new EchoClient();
-			//client_.start();
+			client_ = new EchoClient();
+			client_.start();
 			
 /*			direct_control_ = new DirectControl();
 			direct_control_.start();
@@ -604,7 +604,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			//rec.stopRecording();
 
 			
-			//client_.stop_running();
+			client_.stop_running();
 			System.out.println("Closed the client ");
 			
 //			direct_control_.stop_running();
