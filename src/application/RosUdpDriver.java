@@ -433,7 +433,11 @@ class EchoClient extends Thread {
 
         while (flag) {
         	
-        	String robot_state = get_state();
+        	String robot_state;
+            synchronized (RosUdpDriver.lock2) {
+
+        	robot_state = get_state();
+            }
         	
         	sendEcho(robot_state);
         	try {
@@ -485,6 +489,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
     public static String[] received_packet; 
     
     public final static Object lock = new Object();
+    public final static Object lock2 = new Object();
+
     
 	private DataRecorder rec;
 
@@ -694,18 +700,24 @@ class SmartControl extends Thread {
 
 				smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
 
-            long t0 = System.currentTimeMillis();
-			try{
-				smartMotion.setDestination(jointPosition);//, jointSpeed);
-				
-			} catch(Exception e) {
-				System.out.println(e.toString());
-				
-				smartMotion.stopMotion();
-				stop_running();
-				
-			}
-            long t1 = System.currentTimeMillis();
+			long t0;
+			long t1;
+            synchronized (RosUdpDriver.lock2) {
+            	
+            
+	            t0 = System.currentTimeMillis();
+				try{
+					smartMotion.setDestination(jointPosition);//, jointSpeed);
+					
+				} catch(Exception e) {
+					System.out.println(e.toString());
+					
+					smartMotion.stopMotion();
+					stop_running();
+					
+				}
+	            t1 = System.currentTimeMillis();
+            }
             
             long dt = t1-t0;
             if(dt>10)
