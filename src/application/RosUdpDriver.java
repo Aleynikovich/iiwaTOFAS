@@ -598,7 +598,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 							break;
 				}
 				
-				Thread.sleep(1);
+				Thread.sleep(100);
 			}while(!exit);
 			
 			//rec.stopRecording();
