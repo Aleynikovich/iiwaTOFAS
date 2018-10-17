@@ -306,7 +306,7 @@ class EchoServer extends Thread {
 
             }
         	try {
-				Thread.sleep(100);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -572,6 +572,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		
 		try{
 			server_ = new EchoServer();
+			server_.setPriority(Thread.MAX_PRIORITY);
+
 			server_.start();
 			
 			//client_ = new EchoClient();
@@ -582,8 +584,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			direct_control_.setPriority(Thread.MAX_PRIORITY);
 */			
 			smart_control_ = new SmartControl();
-		    smart_control_.start();
 			smart_control_.setPriority(Thread.MAX_PRIORITY);
+		    smart_control_.start();
 			
 			exit=false;
 			do {
@@ -753,7 +755,7 @@ class SmartControl extends Thread {
 						}
 	            }
 	          try {
-				Thread.sleep(10);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
