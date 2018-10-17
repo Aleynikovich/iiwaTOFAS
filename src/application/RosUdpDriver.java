@@ -306,7 +306,7 @@ class EchoServer extends Thread {
 
             }
         	try {
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -437,7 +437,7 @@ class EchoClient extends Thread {
         	
         	sendEcho(robot_state);
         	try {
-				Thread.sleep(3);
+				Thread.sleep(30);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -755,7 +755,7 @@ class SmartControl extends Thread {
 						}
 	            }
 	          try {
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
