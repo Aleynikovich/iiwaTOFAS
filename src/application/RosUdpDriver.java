@@ -492,7 +492,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	public static IMotionContainer motionContainer = null;
 	
 	EchoServer server_;
-	EchoClient client_;
+	//EchoClient client_;
 	DirectControl direct_control_;
 	SmartControl  smart_control_;
 
