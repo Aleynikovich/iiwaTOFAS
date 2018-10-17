@@ -433,9 +433,9 @@ class EchoClient extends Thread {
 
         while (flag) {
         	
-//        	String robot_state = get_state();
+        	String robot_state = get_state();
         	
-//        	sendEcho(robot_state);
+        	sendEcho(robot_state);
         	try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
