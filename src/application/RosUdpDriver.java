@@ -553,28 +553,28 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 		int port = getApplicationData().getProcessData("port").getValue();
 		System.out.println("my port is:"+port);
 		
-		rec = new DataRecorder();
-		rec.setTimeout(-1, TimeUnit.SECONDS);
-		rec.setSampleInterval(5);
-		rec.setTimeout(60L, TimeUnit.SECONDS);
-		rec.setFileName("test_11.txt");
-		
-		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
-		rec.addCurrentJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
-	
-		
-		rec.enable();
-		rec.startRecording();
-
-		
+//		rec = new DataRecorder();
+//		rec.setTimeout(-1, TimeUnit.SECONDS);
+//		rec.setSampleInterval(5);
+//		rec.setTimeout(60L, TimeUnit.SECONDS);
+//		rec.setFileName("test_11.txt");
+//		
+//		rec.addCommandedJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
+//		rec.addCurrentJointPosition(RosUdpDriver.robot, AngleUnit.Degree);
+//	
+//		
+//		rec.enable();
+//		rec.startRecording();
+//
+//		
 		
 		
 		try{
 			server_ = new EchoServer();
 			server_.start();
 			
-			client_ = new EchoClient();
-			client_.start();
+			//client_ = new EchoClient();
+			//client_.start();
 			
 			direct_control_ = new DirectControl();
 			direct_control_.start();
@@ -598,10 +598,10 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 				Thread.sleep(1);
 			}while(!exit);
 			
-			rec.stopRecording();
+			//rec.stopRecording();
 
 			
-			client_.stop_running();
+			//client_.stop_running();
 			System.out.println("Closed the client ");
 			
 			direct_control_.stop_running();
