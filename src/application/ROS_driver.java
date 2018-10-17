@@ -379,14 +379,14 @@ public class ROS_driver extends RoboticsAPIApplication {
 					// --------- SMART --------- //
 					if (!simulation){
 						smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
-						long t0 = System.currentTimeMillis();
+						//long t0 = System.currentTimeMillis();
 						smartMotion.setDestination(jointPosition);//, jointSpeed);
-			            long t1 = System.currentTimeMillis();
-			            long dt = t1-t0;
-			            if(dt>10)
-			            {
-			            System.out.println(dt);
-			            }
+			            //long t1 = System.currentTimeMillis();
+			            //long dt = t1-t0;
+//			            if(dt>10)
+//			            {
+//			            System.out.println(dt);
+//			            }
 						
 						
 						
