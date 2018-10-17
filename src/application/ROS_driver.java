@@ -315,14 +315,27 @@ public class ROS_driver extends RoboticsAPIApplication {
 		
 		} else if (command.compareToIgnoreCase("direct and state") == 0){ 
 				
-				if (directServo == null) directServo = new DirectServo(robot.getCurrentJointPosition());
-				
-				if (lastRobotMode != RobotMode.direct){
-					if (motionContainer != null) motionContainer.cancel();
-					motionContainer = robot.moveAsync(directServo);
-					directMotion = directServo.getRuntime();
-				}
-				
+//				if (directServo == null) directServo = new DirectServo(robot.getCurrentJointPosition());
+//				
+//				if (lastRobotMode != RobotMode.direct){
+//					if (motionContainer != null) motionContainer.cancel();
+//					motionContainer = robot.moveAsync(directServo);
+//					directMotion = directServo.getRuntime();
+//				}
+			
+			// ------------------------ SMART ----------------------------- //
+			if (smartServo == null) smartServo = new SmartServo(robot.getCurrentJointPosition());
+			
+			if (lastRobotMode != RobotMode.smart){
+				if (motionContainer != null) motionContainer.cancel();
+				smartServo.overrideJointAcceleration(8.0);
+				smartServo.setJointAccelerationRel(1.0);
+				smartServo.setJointVelocityRel(1.0);
+				motionContainer = robot.moveAsync(smartServo);
+				smartMotion = smartServo.getRuntime();
+			}
+			// ----------------------------------------------------------- //
+
 				try {
 				
 					JointPosition jointPosition = new JointPosition(
@@ -343,24 +356,47 @@ public class ROS_driver extends RoboticsAPIApplication {
 							Double.parseDouble(parameters[12]),
 							Double.parseDouble(parameters[13]));
 			
+//					if (!simulation){
+//						directServo.setJointVelocityRel(jointSpeed.get());
+//						directMotion.setMinimumTrajectoryExecutionTime(15e-3);
+//						
+//
+//						long t0 = System.currentTimeMillis();
+//						directMotion.setDestination(jointPosition);
+//			            long t1 = System.currentTimeMillis();
+//			            long dt = t1-t0;
+//			            if(dt>10)
+//			            {
+//			            System.out.println(dt);
+//			            }
+//					} else {
+//						simulation_joints = jointPosition;
+//					}
+//					
+//					lastRobotMode = RobotMode.direct;
+//					
+//					
+					// --------- SMART --------- //
 					if (!simulation){
-						directServo.setJointVelocityRel(jointSpeed.get());
-						directMotion.setMinimumTrajectoryExecutionTime(15e-3);
-						
-
+						smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
 						long t0 = System.currentTimeMillis();
-						directMotion.setDestination(jointPosition);
+						smartMotion.setDestination(jointPosition);//, jointSpeed);
 			            long t1 = System.currentTimeMillis();
 			            long dt = t1-t0;
 			            if(dt>10)
 			            {
 			            System.out.println(dt);
 			            }
+						
+						
+						
 					} else {
 						simulation_joints = jointPosition;
 					}
 					
-					lastRobotMode = RobotMode.direct;
+					lastRobotMode = RobotMode.smart;
+					// ------------------------ //
+					
 					
 					//STATE
 					
@@ -387,9 +423,7 @@ public class ROS_driver extends RoboticsAPIApplication {
 		 			result = result + " " + force.getX() + " " + force.getY() + " " + force.getZ() + " " + torque.getX() + " " + torque.getY() + " " + torque.getZ();
 		 				
 		 			return result;
-				}
-		
-		
+				} 
 
 // --------------------------------------------------------------------------------------
 // Smart / Direct Mode (frames)
