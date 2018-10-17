@@ -700,12 +700,12 @@ class SmartControl extends Thread {
 
 				smartMotion.setMinimumTrajectoryExecutionTime(30e-3);
 
-			long t0;
-			long t1;
+//			long t0;
+//			long t1;
             synchronized (RosUdpDriver.lock2) {
             	
             
-	            t0 = System.currentTimeMillis();
+//	            t0 = System.currentTimeMillis();
 				try{
 					smartMotion.setDestination(jointPosition);//, jointSpeed);
 					
@@ -716,14 +716,14 @@ class SmartControl extends Thread {
 					stop_running();
 					
 				}
-	            t1 = System.currentTimeMillis();
+//	            t1 = System.currentTimeMillis();
             }
             
-            long dt = t1-t0;
-            if(dt>10)
-            {
-            System.out.println(dt);
-            }
+//            long dt = t1-t0;
+//            if(dt>10)
+//            {
+//            System.out.println(dt);
+//            }
 			
 			RosUdpDriver.lastRobotMode = RosUdpDriver.RobotMode.smart;
 	    } catch(Exception e) {
