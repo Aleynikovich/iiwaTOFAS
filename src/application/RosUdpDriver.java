@@ -266,7 +266,7 @@ class EchoServer extends Thread {
 
 		try {
 			socket.setSoTimeout(1000);
-			//socket.setReceiveBufferSize(buf.length);
+			socket.setReceiveBufferSize(buf.length);
 		} catch (SocketException e1) {
 			e1.printStackTrace();
 		}
@@ -306,7 +306,7 @@ class EchoServer extends Thread {
 
             }
         	try {
-				Thread.sleep(10);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
