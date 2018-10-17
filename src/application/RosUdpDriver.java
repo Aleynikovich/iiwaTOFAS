@@ -495,7 +495,7 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 	EchoServer server_;
 	//EchoClient client_;
 	DirectControl direct_control_;
-	SmartControl  smart_control_;
+	//SmartControl  smart_control_;
 
 	
     boolean exit;
@@ -577,14 +577,14 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			//client_ = new EchoClient();
 			//client_.start();
 			
-//			direct_control_ = new DirectControl();
-//			direct_control_.start();
-//			direct_control_.setPriority(Thread.MAX_PRIORITY);
-//			
-			smart_control_ = new SmartControl();
-			smart_control_.start();
-			smart_control_.setPriority(Thread.MAX_PRIORITY);
+			direct_control_ = new DirectControl();
+			direct_control_.start();
+			direct_control_.setPriority(Thread.MAX_PRIORITY);
 			
+//			smart_control_ = new SmartControl();
+//			smart_control_.start();
+//			smart_control_.setPriority(Thread.MAX_PRIORITY);
+//			
 			exit=false;
 			do {
 				switch (getApplicationUI().displayModalDialog(
@@ -605,8 +605,8 @@ public class RosUdpDriver extends RoboticsAPIApplication {
 			//client_.stop_running();
 			System.out.println("Closed the client ");
 			
-//			direct_control_.stop_running();
-			smart_control_.stop_running();
+			direct_control_.stop_running();
+//			smart_control_.stop_running();
 			System.out.println("Closed the controller ");
 
 
