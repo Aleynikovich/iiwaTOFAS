@@ -638,7 +638,8 @@
         <toolTemplate class="" name="Gimatic">
             <frames>
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <transformation a="0.0" b="0.0" c="0.0" x="-0.01942778870110812" y="1.030023179285334" z="50.22305210447917"/>
+                    <measurementTranslation calculationError="1.1368035797985787" method="XYZ4Point" timestamp="1540449390172"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
