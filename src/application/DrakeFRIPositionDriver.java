@@ -36,7 +36,7 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
         _lbr = (LBR) _lbrController.getDevices().toArray()[0];
         
         getLogger().info("Attached Tool. Name : Tool");
-        tool = createFromTemplate("Flange");
+        tool = createFromTemplate("Gimatic");
 		tool.attachTo(_lbr.getFlange()); // Attach the tool
         // **********************************************************************
         // *** change next line to the FRIClient's IP address                 ***
