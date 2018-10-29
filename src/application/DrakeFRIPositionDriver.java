@@ -35,7 +35,7 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
         _lbrController = (Controller) getContext().getControllers().toArray()[0];
         _lbr = (LBR) _lbrController.getDevices().toArray()[0];
         
-        getLogger().info("Attached Tool. Name : Tool");
+        getLogger().info("Attached Tool. Name : Gimatic");
         tool = createFromTemplate("Gimatic");
 		tool.attachTo(_lbr.getFlange()); // Attach the tool
         // **********************************************************************
