@@ -12,6 +12,7 @@ import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.PositionHold;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.PositionControlMode;
 
@@ -24,12 +25,19 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
     private LBR _lbr;
     private String _clientName;
     private int _clientPort;
+    
+	private Tool tool;
+
 
     @Override
     public void initialize()
     {
         _lbrController = (Controller) getContext().getControllers().toArray()[0];
         _lbr = (LBR) _lbrController.getDevices().toArray()[0];
+        
+        getLogger().info("Attached Tool. Name : Tool");
+        tool = createFromTemplate("Flange");
+		tool.attachTo(_lbr.getFlange()); // Attach the tool
         // **********************************************************************
         // *** change next line to the FRIClient's IP address                 ***
         // **********************************************************************
