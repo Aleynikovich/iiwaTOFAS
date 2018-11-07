@@ -19,7 +19,7 @@ import com.kuka.roboticsAPI.motionModel.controlModeModel.PositionControlMode;
 /**
  * Creates a FRI Session.
  */
-public class DrakeFRIPositionDriver extends RoboticsAPIApplication
+public class FriDriver extends RoboticsAPIApplication
 {
     private Controller _lbrController;
     private LBR _lbr;
@@ -100,7 +100,7 @@ public class DrakeFRIPositionDriver extends RoboticsAPIApplication
      */
     public static void main(final String[] args)
     {
-        final DrakeFRIPositionDriver app = new DrakeFRIPositionDriver();
+        final FriDriver app = new FriDriver();
         app.runApplication();
     }
 
