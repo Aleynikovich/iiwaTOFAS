@@ -35,8 +35,8 @@ public class FriDriver extends RoboticsAPIApplication
         _lbrController = (Controller) getContext().getControllers().toArray()[0];
         _lbr = (LBR) _lbrController.getDevices().toArray()[0];
         
-        getLogger().info("Attached Tool. Name : Gimatic");
-        tool = createFromTemplate("Gimatic");
+        getLogger().info("Attached Tool. Name : RollScan");
+        tool = createFromTemplate("RollScan");
 		tool.attachTo(_lbr.getFlange()); // Attach the tool
         // **********************************************************************
         // *** change next line to the FRIClient's IP address                 ***
