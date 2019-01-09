@@ -60,6 +60,9 @@ public class TrajPoints extends RoboticsAPIApplication{
 		    	 String data[] = str.split(",");
 		    	 j_pose.clear();
 		    	 
+			     System.out.println(data.length);
+
+		    	 
 		    	 for(int i=0; i<data.length; i++)
 		    	 {
 		    		
@@ -71,7 +74,6 @@ public class TrajPoints extends RoboticsAPIApplication{
 
 		    	 joints_poses.add(j_pose);
 		    	
-
 		     }
 		     
 		  
