@@ -408,6 +408,12 @@
                     </redundancy>
                 </redundancyData>
             </frame>
+            <frame id="_a1cbade3-a2c2-45c5-878b-9a3eaec597bd" name="Home">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1547045658181"/>
+                </additionalInformation>
+            </frame>
         </frame>
         <frame id="_a9484a3c-81d7-447b-b3bc-e5f649dc4d6c" name="P21">
             <transformation a="-1.565774482745566" b="0.0024922578836812067" c="-1.650113858239181" x="478.0190429131179" y="599.2839541781717" z="542.6075948611012"/>
