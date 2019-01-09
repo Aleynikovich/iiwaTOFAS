@@ -100,7 +100,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 		 	rec.enable();
 			rec.startRecording();*/
 			
-			tracker_tool.getFrame("sphere_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			tracker_tool.getFrame("sphere_tcp").move(ptp(getFrame("/robot_base/Home")).setJointVelocityRel(0.25));
 			
 			switch (getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"Start running the application?", 
