@@ -121,6 +121,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 						for(int i=0; i<joints_poses.size(); i++)
 						{
 							
+							System.out.println("Movement " + i);
 							str = "Movement " + String.valueOf(i) + "\n";
 							file.write(str);
 							
@@ -133,7 +134,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 							joints.set(4, joints_poses.get(i).get(4));
 							joints.set(5, joints_poses.get(i).get(5));
 							joints.set(6, joints_poses.get(i).get(6));
-								
+							
 							lbr.move(ptp(joints).setJointVelocityRel(0.25));
 							
 							//Save current joint position
