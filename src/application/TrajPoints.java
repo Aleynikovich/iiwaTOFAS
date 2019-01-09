@@ -124,7 +124,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 							str = "Movement " + String.valueOf(i) + "\n";
 							file.write(str);
 							
-							JointPosition joints = new JointPosition();
+							JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 								
 							joints.set(0, joints_poses.get(i).get(0));
 							joints.set(1, joints_poses.get(i).get(1));
