@@ -58,7 +58,6 @@ public class TrajPoints extends RoboticsAPIApplication{
 		    	 
 		    	 String data[] = str.split(",");
 				 ArrayList<Double> j_pose = new ArrayList<Double>();
-
 		    	 
 			     System.out.println(data.length);
 
@@ -69,25 +68,10 @@ public class TrajPoints extends RoboticsAPIApplication{
 		    		 j_pose.add(val);
 
 		    	 } 		 	 
-			     System.out.println(j_pose.toString());
 
 		    	 joints_poses.add(j_pose);
-		    	
-			     System.out.println(joints_poses.toString());
-
 		     }
 		     
-		  
-		     System.out.println(joints_poses.size());
-		     
-		     
-	    //	 System.out.println(joints_poses.get(0).toString());
-	    //	 System.out.println(joints_poses.get(1).toString());
-
-
-		    /* for(int i =0; i<joints_poses.size(); i++)
-		    	 System.out.println(joints_poses.get(i).toString());
-	    	 */
 		     br.close();
 	      } 
 	      catch (FileNotFoundException e) {
