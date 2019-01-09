@@ -62,7 +62,6 @@ public class TrajPoints extends RoboticsAPIApplication{
 		    	 
 			     System.out.println(data.length);
 
-		    	 
 		    	 for(int i=0; i<data.length; i++)
 		    	 {
 		    		
@@ -79,9 +78,14 @@ public class TrajPoints extends RoboticsAPIApplication{
 		  
 		     System.out.println(joints_poses.size());
 		     
-		     for(int i =0; i<joints_poses.size(); i++)
+		     
+	    	 System.out.println(joints_poses.get(0).toString());
+	    	 System.out.println(joints_poses.get(1).toString());
+
+
+		    /* for(int i =0; i<joints_poses.size(); i++)
 		    	 System.out.println(joints_poses.get(i).toString());
-	    	 
+	    	 */
 		     br.close();
 	      } 
 	      catch (FileNotFoundException e) {
