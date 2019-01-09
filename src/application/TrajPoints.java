@@ -52,13 +52,13 @@ public class TrajPoints extends RoboticsAPIApplication{
 			f = new FileReader(file);
 		
 			 BufferedReader br = new BufferedReader(f);
-			 ArrayList<Double> j_pose = new ArrayList<Double>();
 			 
 		     while((str = br.readLine())!=null) 
 		     {
 		    	 
 		    	 String data[] = str.split(",");
-		    	 j_pose.clear();
+				 ArrayList<Double> j_pose = new ArrayList<Double>();
+
 		    	 
 			     System.out.println(data.length);
 
