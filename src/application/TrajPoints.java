@@ -135,18 +135,16 @@ public class TrajPoints extends RoboticsAPIApplication{
 							joints.set(5, joints_poses.get(i).get(5));
 							joints.set(6, joints_poses.get(i).get(6));
 							
-				    		System.out.println(joints.toString() + "\n");
-
 							lbr.move(ptp(joints).setJointVelocityRel(0.25));
 							
 							//Save current joint position
 							joints = lbr.getCurrentJointPosition();
-							str = joints.toString();
+							str = joints.toString()+ "\n";
 							file.write(str + "\n");
 							
 							//Save current robot cartesian pose
 							Frame current_pose = lbr.getCurrentCartesianPosition(tracker_tool.getFrame("sphere_tcp"),  getApplicationData().getFrame("/robot_base"));
-							str = current_pose.toString();
+							str = current_pose.toString() + "\n";
 							file.write(str + "\n");
 							
 							
