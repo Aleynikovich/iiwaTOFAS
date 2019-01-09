@@ -69,17 +69,16 @@ public class TrajPoints extends RoboticsAPIApplication{
 		    	 } 		 	 
 			     System.out.println(j_pose.toString());
 
-		    	 
 		    	 joints_poses.add(j_pose);
 		    	
-			     System.out.println(joints_poses.toString());
 
 		     }
 		     
-		    
-		     System.out.println(joints_poses.toString());
-
+		  
 		     System.out.println(joints_poses.size());
+		     
+		     for(int i =0; i<joints_poses.size(); i++)
+		    	 System.out.println(joints_poses.get(i).toString());
 	    	 
 		     br.close();
 	      } 
