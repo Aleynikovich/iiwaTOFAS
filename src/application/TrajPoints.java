@@ -65,10 +65,10 @@ public class TrajPoints extends RoboticsAPIApplication{
 		    		
 		    		 val = Double.parseDouble(data[i]);
 		    		 j_pose.add(val);
-				     System.out.println(j_pose.toString());
 
 		    	 } 		 	 
-		    	 
+			     System.out.println(j_pose.toString());
+
 		    	 
 		    	 joints_poses.add(j_pose);
 		    	
