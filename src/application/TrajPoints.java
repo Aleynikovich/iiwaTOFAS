@@ -140,12 +140,12 @@ public class TrajPoints extends RoboticsAPIApplication{
 							//Save current joint position
 							joints = lbr.getCurrentJointPosition();
 							str = joints.toString()+ "\n";
-							file.write(str + "\n");
+							file.write(str);
 							
 							//Save current robot cartesian pose
 							Frame current_pose = lbr.getCurrentCartesianPosition(tracker_tool.getFrame("sphere_tcp"),  getApplicationData().getFrame("/robot_base"));
 							str = current_pose.toString() + "\n";
-							file.write(str + "\n");
+							file.write(str);
 							
 							
 							try {
