@@ -135,7 +135,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 							joints.set(5, joints_poses.get(i).get(5));
 							joints.set(6, joints_poses.get(i).get(6));
 							
-							lbr.move(ptp(joints).setJointVelocityRel(0.25));
+							lbr.move(ptp(joints).setJointVelocityRel(0.05));
 							
 							//Save current joint position
 							joints = lbr.getCurrentJointPosition();
