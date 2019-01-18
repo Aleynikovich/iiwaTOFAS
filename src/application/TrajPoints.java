@@ -100,7 +100,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 		 	rec.enable();
 			rec.startRecording();*/
 			
-			tracker_tool.getFrame("sphere_tcp").move(ptp(getFrame("/robot_base/Home")).setJointVelocityRel(0.1));
+			tracker_tool.getFrame("sphere_tcp").move(ptp(getFrame("/robot_base/Home")).setJointVelocityRel(0.18));
 			
 			switch (getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"Start running the application?", 
@@ -135,7 +135,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 							joints.set(5, joints_poses.get(i).get(5));
 							joints.set(6, joints_poses.get(i).get(6));
 							
-							lbr.move(ptp(joints).setJointVelocityRel(0.1));
+							lbr.move(ptp(joints).setJointVelocityRel(0.18));
 							
 							//Save current joint position
 							joints = lbr.getCurrentJointPosition();
