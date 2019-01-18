@@ -672,7 +672,7 @@
         <toolTemplate class="" name="TrackerTool">
             <frames>
                 <frame id="_91691eb3-25f0-4fd3-9085-fb2fb1cf66fd" name="sphere_tcp">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="65.57"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
