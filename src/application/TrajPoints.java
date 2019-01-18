@@ -149,7 +149,7 @@ public class TrajPoints extends RoboticsAPIApplication{
 							
 							
 							try {
-								TimeUnit.SECONDS.sleep(5);
+								TimeUnit.SECONDS.sleep(7);
 							} catch (InterruptedException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
