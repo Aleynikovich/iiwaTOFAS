@@ -638,7 +638,7 @@
             <additionalInformation>
                 <info key="Comment" type="java.lang.String" value="tool"/>
             </additionalInformation>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="11.325028642227618" cogY="10.352704476693273" cogZ="40.406616496961355" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.1062590961505023"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-3.3877702480558063" cogY="-3.396731036958692" cogZ="115.31836222697991" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.4085456230362055"/>
         </toolTemplate>
         <toolTemplate class="" name="RollScan">
             <frames>
