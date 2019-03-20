@@ -226,8 +226,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		 
 		 point.transform(XyzAbcTransformation.ofDeg(1.0, 0.0, 0.0, 0.0, 0.0, 0.0));
 		 
-		 System.out.println("Point Transform--> x: " + point.getX() + "y: " + point.getY() + "z: " + point.getZ() 
-					+ " A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
+		 System.out.println("Point Transform--> x: " + point.getX() + "  y: " + point.getY() + "  z: " + point.getZ() 
+					+ "  A: " + point.getAlphaRad() + "  B: " + point.getBetaRad() + "  C: " + point.getGammaRad());
 
 		 Frame new_fr = new Frame(getFrame("/my_fr"));
 		 
@@ -239,8 +239,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		 
 		 point.transformationTo(new_fr);
 		 
-		 System.out.println("Point TransformationTo--> x: " + point.getX() + "y: " + point.getY() + "z: " + point.getZ() 
-					+ " A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
+		 System.out.println("Point TransformationTo--> x: " + point.getX() + "  y: " + point.getY() + "  z: " + point.getZ() 
+					+ "  A: " + point.getAlphaRad() + "  B: " + point.getBetaRad() + "  C: " + point.getGammaRad());
 
 		
 		//TCPServer object
