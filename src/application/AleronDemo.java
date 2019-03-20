@@ -229,7 +229,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		 System.out.println("Point Transform--> x: " + point.getX() + "y: " + point.getY() + "z: " + point.getZ() 
 					+ " A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
 
-		 Frame new_fr = new Frame();
+		 Frame new_fr = new Frame(getFrame("/my_fr"));
 		 
 		 new_fr.setX(1.0); new_fr.setY(0.0); new_fr.setZ(0.0);
 		 new_fr.setAlphaRad(0.0); new_fr.setBetaRad(0.0); new_fr.setGammaRad(0.0);
