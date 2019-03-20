@@ -58,8 +58,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	//Frames
 	Frame caltab_robot_fr;
 	Frame tcp_camera_fr;
-	ArrayList<Frame> caltab_aileron_fr_list;
-	ArrayList<Frame> traj_caltab_ref_fr;
+	ArrayList<Frame> caltab_aileron_fr_list = new ArrayList<Frame>();
+	ArrayList<Frame> traj_caltab_ref_fr = new ArrayList<Frame>();
 	
 	DataRecorder rec;
 	
