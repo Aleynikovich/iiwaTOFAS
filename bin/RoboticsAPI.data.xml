@@ -624,6 +624,12 @@
                 </redundancy>
             </redundancyData>
         </frame>
+        <frame id="_ecdc5a44-dec8-44d4-bac4-1031d4e5966b" name="my_fr">
+            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1553070828996"/>
+            </additionalInformation>
+        </frame>
     </world>
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="/flange_2_tool" name="Tool">

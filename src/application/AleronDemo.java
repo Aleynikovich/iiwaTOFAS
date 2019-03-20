@@ -80,7 +80,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		tcp_camera_fr.setAlphaRad(0.0); tcp_camera_fr.setBetaRad(0.0); tcp_camera_fr.setGammaRad(0.0);
 
 		
-		Frame point = new Frame();
+		Frame point = new Frame(getFrame("my_fr"));
 		point.setX(0.0); point.setY(0.0); point.setZ(0.0);
 		point.setAlphaRad(0.0); point.setBetaRad(0.0); point.setGammaRad(0.0);
 		caltab_aileron_fr_list.add(point);
