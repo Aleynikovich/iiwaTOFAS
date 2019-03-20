@@ -88,7 +88,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 		//roll_scan.getLoadData().setMass(2.07);
 		//roll_scan.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
 		//roll_scan.getLoadData().setCenterOfMass(1.36,2.68,42.81);
-
+      
 	
 		// hasta aqui desired force
 		impedanceControlMode =	new CartesianImpedanceControlMode();

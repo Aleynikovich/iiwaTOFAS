@@ -3,6 +3,14 @@ package application;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
 
+/*import javax.media.j3d.Transform3D;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
+*/
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,6 +19,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -58,7 +67,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	//Frames
 	Frame caltab_robot_fr;
 	Frame tcp_camera_fr;
-	ArrayList<Frame> caltab_aileron_fr_list = new ArrayList<Frame>();
+	//ArrayList<Transform3D> caltab_aileron_fr_list = new ArrayList<Transform3D>();
+	
+	ArrayList<Frame> aileron_caltabs_fr_list = new ArrayList<Frame>();
 	ArrayList<Frame> traj_caltab_ref_fr = new ArrayList<Frame>();
 	
 	DataRecorder rec;
@@ -80,18 +91,52 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		tcp_camera_fr.setAlphaRad(0.0); tcp_camera_fr.setBetaRad(0.0); tcp_camera_fr.setGammaRad(0.0);
 
 		
-		Frame point = new Frame(getFrame("/my_fr"));
-		point.setX(0.0); point.setY(0.0); point.setZ(0.0);
-		point.setAlphaRad(0.0); point.setBetaRad(0.0); point.setGammaRad(0.0);
-		caltab_aileron_fr_list.add(point);
+		/*Transform3D pose = new Transform3D();
+		pose.setTranslation(new Vector3d(0.0, 0.0, 0.0));
+		pose.setEuler(new Vector3d(Math.PI, 0.0, Math.PI/2)); //rotacion xyz
+		caltab_aileron_fr_list.add(pose);
 		
-		point.setX(0.0); point.setY(0.0); point.setZ(0.0);
-		point.setAlphaRad(0.0); point.setBetaRad(0.0); point.setGammaRad(0.0);
-		caltab_aileron_fr_list.add(point);
+		pose.invert();
+		Vector3d trans = new Vector3d();
+		Matrix3d rot = new Matrix3d();
+		double rot_array[][] = new double[3][3];
+		pose.get(rot,trans);
 		
-		point.setX(0.0); point.setY(0.0); point.setZ(0.0);
-		point.setAlphaRad(0.0); point.setBetaRad(0.0); point.setGammaRad(0.0);
-		caltab_aileron_fr_list.add(point);
+		rot_array[0][0] = rot.m00; rot_array[0][1] = rot.m01; rot_array[0][2] = rot.m02; 
+		rot_array[1][0] = rot.m10; rot_array[1][1] = rot.m11; rot_array[1][2] = rot.m12;
+		rot_array[2][0] = rot.m20; rot_array[2][1] = rot.m21; rot_array[2][2] = rot.m22;
+		
+		double[] angles = new Rotation(rot_array,1.0e-10).getAngles(RotationOrder.ZYX, RotationConvention.FRAME_TRANSFORM);
+		
+		System.out.println("Pose --> x: " + trans.getX() + "  y: " + trans.getY() + "  z: " + trans.getZ() 
+					+ "  A: " + angles[2] + "  B: " + angles[1]+ "  C: " + angles[2]);
+				
+		pose.setTranslation(new Vector3d(0.0, 0.0, 0.0));
+		pose.setEuler(new Vector3d(0.0, 0.0, 0.0)); //rotacion xyz
+		caltab_aileron_fr_list.add(pose);
+		
+		pose.setTranslation(new Vector3d(0.0, 0.0, 0.0));
+		pose.setEuler(new Vector3d(0.0, 0.0, 0.0)); //rotacion xyz
+		caltab_aileron_fr_list.add(pose);
+	
+		*/
+		
+		Frame pose = new Frame(getFrame("/my_fr"));
+		//Catlab 1
+		pose.setX(0.0); pose.setY(0.0); pose.setZ(0.0);
+		pose.setAlphaRad(0.0); pose.setBetaRad(0.0); pose.setGammaRad(0.0);
+		aileron_caltabs_fr_list.add(pose);
+
+		//Catlab 2
+		pose.setX(0.0); pose.setY(0.0); pose.setZ(0.0);
+		pose.setAlphaRad(0.0); pose.setBetaRad(0.0); pose.setGammaRad(0.0);
+		aileron_caltabs_fr_list.add(pose);
+
+		//Catlab 3
+		pose.setX(0.0); pose.setY(0.0); pose.setZ(0.0);
+		pose.setAlphaRad(0.0); pose.setBetaRad(0.0); pose.setGammaRad(0.0);
+		aileron_caltabs_fr_list.add(pose);
+
 		
 		impedanceControlMode =	new CartesianImpedanceControlMode();
 				
@@ -176,34 +221,23 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		    		 }
 		    	 }
 		    	 
-		    	 point.setX(x.get(cont)); point.setY(y.get(cont)); point.setZ(z.get(cont));
-	    		 point.setAlphaRad(a.get(cont)); point.setBetaRad(b.get(cont)); point.setGammaRad(c.get(cont));
+		    	/* pose.setParent(getFrame("/aileron"));
+		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
+		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
 	 		 
-	    		 /*point.transform(XyzAbcTransformation.ofDeg(0, 0, 0, -72.73, 0.56, 179.45));
-	    		 
-	    		 
-	    		 
-	    		 Frame caltab_aileron_fr;
+  		  
+	    		 Frame aileron_caltab_fr;
 	    		 
 		    	 if(x.get(cont) < 0.0)
-		    	 {
-		    		 caltab_aileron_fr = caltab_aileron_fr_list.get(0);
-		    		 point.transformationTo(caltab_aileron_fr);
-		    		 point.tra
-		    		 //point.transform()
-		    		 //traj_caltab_ref_fr
-		    	 }
-		    	 else if (10.0 < x.get(cont) < 100.0)
-		    	 {
-		    		 caltab_aileron_fr = caltab_aileron_fr_list.get(1);
- 
-		    	 }
+		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0);		    		 
+		    	 else if (10.0 < x.get(cont) &&  x.get(cont) < 100.0)
+		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1);
 		    	 else
-		    	 {
-		    		 caltab_aileron_fr = caltab_aileron_fr_list.get(2);
+		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(2);
 
-		    	 }*/
-		    	 
+		    	 aileron_caltab_fr.transform(XyzAbcTransformation.ofRad(pose.getX(), pose.getY(), pose.getZ(),
+		    			 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
+	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);*/
 		 		 cont++;
 		     }
 		    
@@ -216,32 +250,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	      catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		 point.setX(x.get(0)); point.setY(y.get(0)); point.setZ(z.get(0));
-		 point.setAlphaRad(a.get(0)); point.setBetaRad(b.get(0)); point.setGammaRad(c.get(0));
-		 
-		 System.out.println("Point --> x: " + point.getX() + "y: " + point.getY() + "z: " + point.getZ() 
-			+ " A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-		 
-		 point.transform(XyzAbcTransformation.ofDeg(1.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-		 
-		 System.out.println("Point Transform--> x: " + point.getX() + "  y: " + point.getY() + "  z: " + point.getZ() 
-					+ "  A: " + point.getAlphaRad() + "  B: " + point.getBetaRad() + "  C: " + point.getGammaRad());
-
-		 Frame new_fr = new Frame(getFrame("/my_fr"));
-		 
-		 new_fr.setX(1.0); new_fr.setY(0.0); new_fr.setZ(0.0);
-		 new_fr.setAlphaRad(0.0); new_fr.setBetaRad(0.0); new_fr.setGammaRad(0.0);
-		 
-		 point.setX(x.get(0)); point.setY(y.get(0)); point.setZ(z.get(0));
-		 point.setAlphaRad(a.get(0)); point.setBetaRad(b.get(0)); point.setGammaRad(c.get(0));
-		 
-		 point.transformationTo(new_fr);
-		 
-		 System.out.println("Point TransformationTo--> x: " + point.getX() + "  y: " + point.getY() + "  z: " + point.getZ() 
-					+ "  A: " + point.getAlphaRad() + "  B: " + point.getBetaRad() + "  C: " + point.getGammaRad());
-
+		} 
 		
 		//TCPServer object
 		/*try {
