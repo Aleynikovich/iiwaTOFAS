@@ -224,7 +224,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		    		 }
 		    	 }
 		    	 
-		    	 pose.setParent(getFrame("/DemosCroinspect/aileron"));
+		    	 pose.setParent(getFrame("/DemoCroinspect/aileron"));
 		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
 		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
 	 		 
