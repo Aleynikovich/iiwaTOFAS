@@ -41,7 +41,7 @@ public class CopyOfTCPServer  extends RoboticsAPIApplication
 	@Inject
 	public CopyOfTCPServer() throws IOException
 	{		
-		socket = new ServerSocket(7001);	
+		socket = new ServerSocket(7002);	
 		connectionSocket = null;
 		response = new AtomicBoolean(false);
 	}
