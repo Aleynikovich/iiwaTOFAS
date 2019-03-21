@@ -79,7 +79,7 @@ public class TCPServer implements Runnable {
 		
 		try
 		{
-			socket.setSoTimeout(15000);
+			//socket.setSoTimeout(15000);
 			
 			while(connectionSocket == null)
 			{
