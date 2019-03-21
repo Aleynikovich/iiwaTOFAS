@@ -90,37 +90,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		tcp_camera_fr = new Frame(getFrame("/robot_base"));
 		tcp_camera_fr.setX(0.0); tcp_camera_fr.setY(0.0); tcp_camera_fr.setZ(0.0);
 		tcp_camera_fr.setAlphaRad(0.0); tcp_camera_fr.setBetaRad(0.0); tcp_camera_fr.setGammaRad(0.0);
-
-		
-		/*Transform3D pose = new Transform3D();
-		pose.setTranslation(new Vector3d(0.0, 0.0, 0.0));
-		pose.setEuler(new Vector3d(Math.PI, 0.0, Math.PI/2)); //rotacion xyz
-		caltab_aileron_fr_list.add(pose);
-		
-		pose.invert();
-		Vector3d trans = new Vector3d();
-		Matrix3d rot = new Matrix3d();
-		double rot_array[][] = new double[3][3];
-		pose.get(rot,trans);
-		
-		rot_array[0][0] = rot.m00; rot_array[0][1] = rot.m01; rot_array[0][2] = rot.m02; 
-		rot_array[1][0] = rot.m10; rot_array[1][1] = rot.m11; rot_array[1][2] = rot.m12;
-		rot_array[2][0] = rot.m20; rot_array[2][1] = rot.m21; rot_array[2][2] = rot.m22;
-		
-		double[] angles = new Rotation(rot_array,1.0e-10).getAngles(RotationOrder.ZYX, RotationConvention.FRAME_TRANSFORM);
-		
-		System.out.println("Pose --> x: " + trans.getX() + "  y: " + trans.getY() + "  z: " + trans.getZ() 
-					+ "  A: " + angles[2] + "  B: " + angles[1]+ "  C: " + angles[2]);
-				
-		pose.setTranslation(new Vector3d(0.0, 0.0, 0.0));
-		pose.setEuler(new Vector3d(0.0, 0.0, 0.0)); //rotacion xyz
-		caltab_aileron_fr_list.add(pose);
-		
-		pose.setTranslation(new Vector3d(0.0, 0.0, 0.0));
-		pose.setEuler(new Vector3d(0.0, 0.0, 0.0)); //rotacion xyz
-		caltab_aileron_fr_list.add(pose);
-	
-		*/
 		
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		//Catlab 1
@@ -134,13 +103,21 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		Frame pose_inv = new Frame(pose, t);
 		
 		System.out.println("Aileron caltab  --> x: " + pose_inv.getX() + "  y: " + pose_inv.getY() + "  z: " + pose_inv.getZ() 
-				+ "  A: " + pose_inv.getAlphaRad() + "  B: " + pose_inv.getBetaRad() + "  C: " + pose_inv.getGammaRad());
+			+ "  A: " + pose_inv.getAlphaRad() + "  B: " + pose_inv.getBetaRad() + "  C: " + pose_inv.getGammaRad());
 	
-		aileron_caltabs_fr_list.add(pose);
+		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab 2
-		pose.setX(0.0); pose.setY(0.0); pose.setZ(0.0);
-		pose.setAlphaRad(0.0); pose.setBetaRad(0.0); pose.setGammaRad(0.0);
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+			
+		t = pose.getTransformationFromParent().invert();
+		pose_inv.setParent(pose);
+		pose_inv.setTransformationFromParent(t);
+		
+		System.out.println("Aileron caltab  --> x: " + pose_inv.getX() + "  y: " + pose_inv.getY() + "  z: " + pose_inv.getZ() 
+				+ "  A: " + pose_inv.getAlphaRad() + "  B: " + pose_inv.getBetaRad() + "  C: " + pose_inv.getGammaRad());
+			
 		aileron_caltabs_fr_list.add(pose);
 
 		//Catlab 3
