@@ -102,6 +102,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		Transformation t = pose.getTransformationFromParent().invert();
 		Frame pose_inv = new Frame(pose, t);
 		
+		System.out.println("Transformation  --> x: " + t.getX() + "  y: " + t.getY() + "  z: " + t.getZ() 
+				+ "  A: " + t.getAlphaRad() + "  B: " + t.getBetaRad() + "  C: " + t.getGammaRad());
+		
+		
 		System.out.println("Aileron caltab  --> x: " + pose_inv.getX() + "  y: " + pose_inv.getY() + "  z: " + pose_inv.getZ() 
 			+ "  A: " + pose_inv.getAlphaRad() + "  B: " + pose_inv.getBetaRad() + "  C: " + pose_inv.getGammaRad());
 	
@@ -115,9 +119,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		pose_inv.setParent(pose);
 		pose_inv.setTransformationFromParent(t);
 		
-		System.out.println("Aileron caltab  --> x: " + pose_inv.getX() + "  y: " + pose_inv.getY() + "  z: " + pose_inv.getZ() 
-				+ "  A: " + pose_inv.getAlphaRad() + "  B: " + pose_inv.getBetaRad() + "  C: " + pose_inv.getGammaRad());
-			
 		aileron_caltabs_fr_list.add(pose);
 
 		//Catlab 3
