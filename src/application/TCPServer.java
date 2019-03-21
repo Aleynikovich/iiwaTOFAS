@@ -44,8 +44,7 @@ public class TCPServer implements Runnable {
 	@Inject
 	public TCPServer() throws IOException
 	{		
-		System.out.println("InetAddress: " + InetAddress.getLocalHost());
-		socket = new ServerSocket(7000);	   
+		socket = new ServerSocket(7000);	
 		connectionSocket = null;
 		listeners = new ArrayList<ITCPListener>();
 		tcpServerThread = null;
@@ -80,7 +79,7 @@ public class TCPServer implements Runnable {
 		
 		try
 		{
-			//socket.setSoTimeout(15000);
+			socket.setSoTimeout(15000);
 			
 			while(connectionSocket == null)
 			{
