@@ -86,6 +86,8 @@ public class TCPServer implements Runnable {
 				try
 				{
 				connectionSocket = socket.accept();
+				System.out.println("Socket communication established");
+
 				}catch(Exception e)
 				{
 					System.out.println("Socket Accept: " + e.getMessage());
