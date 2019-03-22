@@ -102,22 +102,19 @@ public class TCPServer implements Runnable {
 			String datagram = "";
 			
 			while(true){
-				System.out.println("PIPO1");
 				
 				if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 				
-				System.out.println("PIPO2");
 
 				if(inFromClient.ready())
 				{
-					System.out.println("PIPO3");
+					System.out.println("PIPO");
 
 					datagram = inFromClient.readLine();
 
 					for(ITCPListener l : listeners)
 						l.OnTCPMessageReceived(datagram);
 				}
-				System.out.println("PIPO4");
 
 				if(response.get())
 				{

@@ -357,6 +357,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 						
 							case 4:
 								getLogger().info("App Terminated\n"+"***END***");
+								try {
+									tcp_server.dispose();
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								exit = true;
 								break;
 					}
