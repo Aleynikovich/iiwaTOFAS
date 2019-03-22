@@ -54,6 +54,8 @@ public class TCPServer implements Runnable {
 	public void enable(){
 		tcpServerThread = new Thread(this);
 		tcpServerThread.start();
+		System.out.println("Thread started");
+
 	}
 	  
 	public void dispose() throws InterruptedException{
