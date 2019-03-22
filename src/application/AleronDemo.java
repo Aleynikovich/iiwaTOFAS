@@ -452,7 +452,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
 		
 	 	
-		Frame point = new Frame(getFrame("/caltab"));
+		Frame point = new Frame(getFrame("/DemoCroinspect/caltab"));
 		LBRE1Redundancy redundancyInfo;
 		
 		Frame copy_caltab_robot_fr = new Frame(caltab_robot_fr);
