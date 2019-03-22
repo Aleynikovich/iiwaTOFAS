@@ -322,6 +322,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								Force_XND(10,fname,select_velocity);
 								//Force_XND(0.0,"measured_force_10ND_stiffZ_300.log",select_velocity);	
 						
+								closeCommunication();
+								exit = true;
+								
 								break;				
 							case 1:
 								//15N=500*0.03
@@ -331,6 +334,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								
 								fname="measured_force_15ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								Force_XND(15,fname,select_velocity);	
+								
+								closeCommunication();
+								exit = true;
 						
 								break;					
 							case 2:
@@ -341,6 +347,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								
 								fname="measured_force_20ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								Force_XND(20,fname,select_velocity);
+								
+								closeCommunication();
+								exit = true;
 								
 								break;
 							case 3:
@@ -353,16 +362,21 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								fname="measured_force_24ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								Force_XND(24,fname,select_velocity);
 								
+								closeCommunication();
+								exit = true;
+								
 								break;
 						
 							case 4:
 								getLogger().info("App Terminated\n"+"***END***");
-								try {
+								/*try {
 									tcp_server.dispose();
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
+								exit = true;*/
+								closeCommunication();
 								exit = true;
 								break;
 					}
@@ -372,6 +386,15 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 	}
 	
+	private void closeCommunication()
+	{
+		try {
+			tcp_server.dispose();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private double velocity(){
 
 		double velocidad=0.0;
