@@ -452,6 +452,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		Frame point = new Frame(getFrame("/DemoCroinspect/caltab"));
 		LBRE1Redundancy redundancyInfo;
 		
+		System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
+				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());
+		
+		
 		Frame copy_caltab_robot_fr; //= new Frame(caltab_robot_fr);
 		for(int i=0; i<x.size();i++)
 		{
