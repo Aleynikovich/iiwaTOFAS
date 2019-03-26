@@ -456,15 +456,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());
 		
 		
-		Frame copy_caltab_robot_fr = new Frame(caltab_robot_fr);
-		caltab_robot_fr.copy(copy_caltab_robot_fr);
-		System.out.println("Copy Caltab frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-				" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-	
+		Frame copy_caltab_robot_fr;
+		
 		for(int i=0; i<x.size();i++)
 		{
-			//copy_caltab_robot_fr = //new Frame(caltab_robot_fr);
-				caltab_robot_fr.copy(copy_caltab_robot_fr);
+			copy_caltab_robot_fr = new Frame(caltab_robot_fr);
 			
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
@@ -534,7 +530,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 
 			//Frame definition
 			caltab_robot_fr = new Frame(getFrame("/robot_base"));
-
+			
+			
+			
 			caltab_robot_fr.setX(caltab_pose_data.get(0)*1000); caltab_robot_fr.setY(caltab_pose_data.get(1)*1000); 
 			caltab_robot_fr.setZ(caltab_pose_data.get(2)*1000); caltab_robot_fr.setAlphaRad(caltab_pose_data.get(5)); 
 			caltab_robot_fr.setBetaRad(caltab_pose_data.get(4)); caltab_robot_fr.setGammaRad(caltab_pose_data.get(3));	
@@ -544,7 +542,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());
 								
-	
+		Frame copy_caltab_robot_fr = new Frame(caltab_robot_fr);
+		
+		System.out.println("Copy Caltab after transformation --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+				" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
+					
+
 		data_received.set(true);
 	}
 }
