@@ -542,9 +542,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());
 								
-		Frame copy_caltab_robot_fr = new Frame(getFrame("/aleron_java/Aprox"));
+		Frame copy_caltab_robot_fr = getApplicationData().getFrame("/aleron_java/Aprox").copy();
 		
-		getFrame("/aleron_java/Aprox").copy(copy_caltab_robot_fr);
 		System.out.println("Copy Caltab after transformation --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 				" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 					
