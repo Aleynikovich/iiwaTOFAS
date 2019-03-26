@@ -472,7 +472,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			 	
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			*/
-			System.out.println("Caltab frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+			System.out.println("Copy Caltab frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 									
 			System.out.println("x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
