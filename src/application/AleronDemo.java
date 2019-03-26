@@ -461,7 +461,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
 			ref_catlab_robot_fr = getFrame("/robot_base").copy();
-			ref_catlab_robot_fr.setAlphaRad(Math.PI); ref_catlab_robot_fr.setAlphaRad(-Math.PI/2);
+			ref_catlab_robot_fr.setAlphaRad(Math.PI); ref_catlab_robot_fr.setBetaRad(-Math.PI/2);
 			
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
@@ -499,7 +499,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			//System.out.println("Z: " + current_force.getForce().getZ() + " A: " + current_force.getTorque().getZ()
 				//+ " B: " + current_force.getTorque().getY() + " C: " + current_force.getTorque().getX());
 			
-			System.out.println("Caltab after transformation --> x: " + tmp.getX() + " y: " + tmp.getY() + " z: " + tmp.getZ() + 
+			System.out.println("Ref Caltab after transformation --> x: " + tmp.getX() + " y: " + tmp.getY() + " z: " + tmp.getZ() + 
 					" A: " + tmp.getAlphaRad() + " B: " + tmp.getBetaRad() + " C: " + tmp.getGammaRad());
 							
 			System.out.println("Caltab after transformation --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
