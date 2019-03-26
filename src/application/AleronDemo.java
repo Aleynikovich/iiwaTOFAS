@@ -142,13 +142,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 		//Adding the frame to the list
 		aileron_caltabs_fr_list.add(pose);
-
-		for(int i = 0; i<aileron_caltabs_fr_list.size(); i++)
-		{
-			 System.out.println("Caltab " + i + "  --> x: " + aileron_caltabs_fr_list.get(i).getX() + " y: " + aileron_caltabs_fr_list.get(i).getY() + " z: " + aileron_caltabs_fr_list.get(i).getZ() + 
-						" A: " + aileron_caltabs_fr_list.get(i).getAlphaRad() + " B: " + aileron_caltabs_fr_list.get(i).getBetaRad() + " C: " + aileron_caltabs_fr_list.get(i).getGammaRad());	
-
-		}
 		
 		//Impedance control object definition
 		impedanceControlMode =	new CartesianImpedanceControlMode();
