@@ -452,19 +452,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		Frame point = new Frame(getFrame("/DemoCroinspect/caltab"));
 		LBRE1Redundancy redundancyInfo;
 		
-		System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
-				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());
-		
-		
 		Frame copy_caltab_robot_fr;
 		
 		for(int i=0; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
-			System.out.println("Copy Caltab after transformation --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-		;
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
 					
@@ -501,9 +494,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 						
 	
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
-			
-		
-			
+				
 		}
 		
 		rec.stopRecording();
