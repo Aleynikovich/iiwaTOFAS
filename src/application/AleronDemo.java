@@ -463,6 +463,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			ref_catlab_robot_fr = getFrame("/robot_base").copy();
 			ref_catlab_robot_fr.setAlphaRad(Math.PI); ref_catlab_robot_fr.setBetaRad(-Math.PI/2);
 			
+			point  = traj_caltab_ref_fr.get(i).copy();
 			point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
 			point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
 					
