@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+import com.kuka.roboticsAPI.conditionModel.ICondition;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy;
@@ -322,7 +323,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								Force_XND(10,fname,select_velocity);
 								//Force_XND(0.0,"measured_force_10ND_stiffZ_300.log",select_velocity);	
 						
-								closeCommunication();
 								exit = true;
 								
 								break;				
@@ -335,7 +335,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								fname="measured_force_15ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								Force_XND(15,fname,select_velocity);	
 								
-								closeCommunication();
 								exit = true;
 						
 								break;					
@@ -348,7 +347,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								fname="measured_force_20ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								Force_XND(20,fname,select_velocity);
 								
-								closeCommunication();
 								exit = true;
 								
 								break;
@@ -362,7 +360,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								fname="measured_force_24ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								Force_XND(24,fname,select_velocity);
 								
-								closeCommunication();
 								exit = true;
 								
 								break;
@@ -469,12 +466,16 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			 	
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			*/
+			
+			
+			System.out.println("x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+					" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
+			
+			
 			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 					point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 				
-			System.out.println("x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-				" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-		
+			
 			/*if(i<x.size()-1)
 				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 			else
