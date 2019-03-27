@@ -548,11 +548,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			caltab_robot_fr.setX(caltab_pose_data.get(0)*1000); caltab_robot_fr.setY(caltab_pose_data.get(1)*1000); 
 			caltab_robot_fr.setZ(caltab_pose_data.get(2)*1000); caltab_robot_fr.setAlphaRad(caltab_pose_data.get(5)); 
 			caltab_robot_fr.setBetaRad(caltab_pose_data.get(4)); caltab_robot_fr.setGammaRad(caltab_pose_data.get(3));	
-		}
-		
-		System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
+			
+			System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());				
 
+		}
+		
+		
 		data_received.set(true);
 	}
 }
