@@ -103,6 +103,7 @@ public class TCPServer implements Runnable {
 			
 			while(true){
 				
+				System.out.println("Server waiting");
 				if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 				
 
