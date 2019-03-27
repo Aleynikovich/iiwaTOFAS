@@ -111,7 +111,7 @@ public class TCPServer implements Runnable {
 					System.out.println("Request received");
 
 					datagram = inFromClient.readLine();
-
+					System.out.println("Datagram: " + datagram);
 					for(ITCPListener l : listeners)
 						l.OnTCPMessageReceived(datagram);
 				}
