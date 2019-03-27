@@ -97,7 +97,9 @@ public class TCPServer implements Runnable {
 				}
 			}
 
-			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+			//BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+			ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
+
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			String datagram = "";
 			
@@ -106,17 +108,14 @@ public class TCPServer implements Runnable {
 				if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 				
 
-				if(inFromClient.ready() && (datagram=inFromClient.readLine())!=null)
+				if(inFromClient.available()>0)
 				{
 					System.out.println("Request received");
 					
-					
-						
-						//datagram = inFromClient.readLine();
-						System.out.println("Datagram: " + datagram);
-						for(ITCPListener l : listeners)
-							l.OnTCPMessageReceived(datagram);
-					
+					datagram = inFromClient.readUTF();
+					System.out.println("Datagram: " + datagram);
+					for(ITCPListener l : listeners)
+						l.OnTCPMessageReceived(datagram);
 				}
 
 				if(response.get())
