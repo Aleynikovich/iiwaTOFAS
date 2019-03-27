@@ -303,7 +303,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				
 				if(operation_type.compareTo("calibration") == 0)
 				{
-					JointPosition joints = new JointPosition();
+					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 					
 					joints.set(0, 0.0*(180/Math.PI));joints.set(1, -33.28*(180/Math.PI));
 					joints.set(2, -0.0*(180/Math.PI));joints.set(3, -108.67*(180/Math.PI));
