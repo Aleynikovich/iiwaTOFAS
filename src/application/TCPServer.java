@@ -102,9 +102,7 @@ public class TCPServer implements Runnable {
 			//ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
 
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-		    StringBuilder datagram = new StringBuilder();
-			CharBuffer cbuf = CharBuffer.allocate(1024);
-
+		    String datagram = "";
 			
 			while(true){
 				
@@ -114,13 +112,11 @@ public class TCPServer implements Runnable {
 				{
 					System.out.println("Request received");
 					
-					while((inFromClient.read(cbuf))!=-1)
-					{
-						datagram.append(cbuf);
 					
+					if((datagram = inFromClient.readLine())!=null)
+					{
+						System.out.println("Datagram: " + datagram.toString());
 					}
-					System.out.println("Datagram: " + datagram.toString());
-
 					//datagram = inFromClient.readUTF();
 					for(ITCPListener l : listeners)
 						l.OnTCPMessageReceived(datagram.toString());
