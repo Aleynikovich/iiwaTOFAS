@@ -112,7 +112,7 @@ public class TCPServer implements Runnable {
 				{
 					System.out.println("Request received");
 					
-					while((datagram = inFromClient.readLine()) != null)
+					if((datagram = inFromClient.readLine()) == null)
 					{
 						System.out.println("Datagram: " + datagram);
 					}
