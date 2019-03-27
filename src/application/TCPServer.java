@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.net.*;
+import java.nio.CharBuffer;
 import java.io.*;
 
 import com.kuka.task.ITaskLogger;
@@ -101,23 +102,28 @@ public class TCPServer implements Runnable {
 			//ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
 
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-			String datagram = "";
+		    StringBuilder datagram = new StringBuilder();
+			CharBuffer cbuf = CharBuffer.allocate(1024);
+
 			
 			while(true){
 				
 				if(tcpServerThread.isInterrupted()) throw new InterruptedException();
-				
+
 				if(inFromClient.ready())
 				{
 					System.out.println("Request received");
 					
-					if((datagram = inFromClient.readLine()) != null)
+					while((inFromClient.read(cbuf))!=-1)
 					{
-						System.out.println("Datagram: " + datagram);
+						datagram.append(cbuf);
+					
 					}
+					System.out.println("Datagram: " + datagram.toString());
+
 					//datagram = inFromClient.readUTF();
 					for(ITCPListener l : listeners)
-						l.OnTCPMessageReceived(datagram);
+						l.OnTCPMessageReceived(datagram.toString());
 				}
 
 				if(response.get())
