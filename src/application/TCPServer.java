@@ -108,7 +108,7 @@ public class TCPServer implements Runnable {
 
 				if(inFromClient.ready())
 				{
-					System.out.println("PIPO");
+					System.out.println("Request received");
 
 					datagram = inFromClient.readLine();
 
@@ -120,6 +120,7 @@ public class TCPServer implements Runnable {
 				{
 					outToClient.writeBytes(clientSentence);
 					response.set(false);
+					System.out.println("Response sended");
 				}
 			}	
 		}

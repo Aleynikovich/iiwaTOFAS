@@ -308,7 +308,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					joints.set(0, 0.0*(Math.PI/180));joints.set(1, -33.28*(Math.PI/180));
 					joints.set(2, -0.0*(Math.PI/180));joints.set(3, -108.67*(Math.PI/180));
 					joints.set(4, 0.0*(Math.PI/180));joints.set(5, 65.32*(Math.PI/180));
-					joints.set(6, 0.0*(Math.PI/180));
+					joints.set(6, -90.0*(Math.PI/180));
 					
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));
 					
