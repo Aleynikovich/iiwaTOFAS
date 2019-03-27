@@ -81,7 +81,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	
 	//Exchanged data info 
 	String operation_type;
-	double time_stamp;
+	String time_stamp;
 	int frame_id;
 	Frame caltab_robot_fr;
 	
@@ -305,9 +305,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				{
 					JointPosition joints = new JointPosition();
 					
-					joints.set(0, 0.0*(180/Math.PI));joints.set(1, -49.0*(180/Math.PI));
-					joints.set(2, -5.73*(180/Math.PI));joints.set(3, -90.0*(180/Math.PI));
-					joints.set(4, 0.0*(180/Math.PI));joints.set(5, 86.7*(180/Math.PI));
+					joints.set(0, 0.0*(180/Math.PI));joints.set(1, -33.28*(180/Math.PI));
+					joints.set(2, -0.0*(180/Math.PI));joints.set(3, -108.67*(180/Math.PI));
+					joints.set(4, 0.0*(180/Math.PI));joints.set(5, 65.32*(180/Math.PI));
 					joints.set(6, 0.0*(180/Math.PI));
 					
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));
@@ -531,7 +531,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 
 		String splittedData[] = datagram.split(";");
 		
-		time_stamp = Double.parseDouble(splittedData[0]);
+		time_stamp = splittedData[0];
 		frame_id = Integer.parseInt(splittedData[1]);
 		operation_type = splittedData[2];
 		
