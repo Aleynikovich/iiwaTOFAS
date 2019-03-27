@@ -106,14 +106,17 @@ public class TCPServer implements Runnable {
 				if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 				
 
-				if(inFromClient.ready())
+				if(inFromClient.ready() && (datagram=inFromClient.readLine())!=null)
 				{
 					System.out.println("Request received");
-
-					datagram = inFromClient.readLine();
-					System.out.println("Datagram: " + datagram);
-					for(ITCPListener l : listeners)
-						l.OnTCPMessageReceived(datagram);
+					
+					
+						
+						//datagram = inFromClient.readLine();
+						System.out.println("Datagram: " + datagram);
+						for(ITCPListener l : listeners)
+							l.OnTCPMessageReceived(datagram);
+					
 				}
 
 				if(response.get())
