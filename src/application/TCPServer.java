@@ -80,9 +80,11 @@ public class TCPServer implements Runnable {
 	@Override
 	public void run() {
 		
+		boolean socket_close = true;
+		
 		try
 		{
-			while(true)
+			while(socket_close)
 			{
 				socket.setSoTimeout(15000);
 				
@@ -92,6 +94,7 @@ public class TCPServer implements Runnable {
 					{
 					connectionSocket = socket.accept();
 					System.out.println("Socket communication established");
+					socket_close = false;
 	
 					}catch(Exception e)
 					{
@@ -106,10 +109,8 @@ public class TCPServer implements Runnable {
 				DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			    String datagram = "";
 				
-				while(socket.getInetAddress().isReachable(100)){
-			
-					
-					
+				while(true)
+				{
 					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 	
 					if(inFromClient.ready())
@@ -117,12 +118,13 @@ public class TCPServer implements Runnable {
 						System.out.println("Request received");
 						
 						if((datagram = inFromClient.readLine())!=null)
-						{
 							System.out.println("Datagram: " + datagram.toString());
-						}else
+						else
 						{
 							System.out.println("Close");
+							break;
 						}
+						
 						//datagram = inFromClient.readUTF();
 						for(ITCPListener l : listeners)
 							l.OnTCPMessageReceived(datagram.toString());
@@ -135,6 +137,7 @@ public class TCPServer implements Runnable {
 					}
 				}
 				System.out.println("Socket closed");
+				socket_close = true;
 				connectionSocket = null;
 			}
 		}
