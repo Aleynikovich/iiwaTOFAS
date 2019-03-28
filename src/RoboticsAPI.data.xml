@@ -647,6 +647,102 @@
                     <info key="LastModificationTime" type="java.lang.Long" value="1553171095946"/>
                 </additionalInformation>
             </frame>
+            <frame id="_c66581a4-0fcb-4228-95b2-788bf296528c" name="calibration">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1553782436842"/>
+                </additionalInformation>
+                <frame id="_d301f8b4-0f6a-4480-aa68-2bb6463cc182" name="P1">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782462487"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_d4716250-7b0b-40f2-8b59-0fa72d80ef03" name="P2">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782477008"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_d98dfe68-8019-4f45-aaa0-70663974c0a3" name="P3">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782479391"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_89b9e5e7-93d6-4e34-aac0-dcd91caf1da3" name="P4">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782480976"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_38571845-e9aa-4398-a2de-041c738a0dd2" name="P5">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782482759"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_d8116645-f51f-4d03-b153-1670a6c38d07" name="P6">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782484872"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_67cad5e3-08b8-4b14-91fb-32f57adc0a17" name="P7">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782486600"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_6e7dfd4b-e4d0-4807-b3ea-4f933cae6f41" name="P8">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782488224"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_f17af865-9d73-4ee2-8def-f465266062dc" name="P9">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782490568"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_a88ce395-58e5-4b62-a99b-b24f7b25da71" name="P10">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782492152"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_5da164b7-bea7-40b7-8863-b1d725637c63" name="P11">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782494023"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_81df1505-1a80-4e9f-ab7a-eec0db20c750" name="P12">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782495888"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_e05e87fd-7aa2-4110-bbe0-2708be41f6fd" name="P13">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782505631"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_501d9ba6-81cb-4b1f-bd12-3ea45748dc1a" name="P14">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782511895"/>
+                    </additionalInformation>
+                </frame>
+                <frame id="_7819e849-1d44-40c5-b8a2-917c7483f4eb" name="P15">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <additionalInformation>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1553782513424"/>
+                    </additionalInformation>
+                </frame>
+            </frame>
         </frame>
     </world>
     <objectTemplates>
