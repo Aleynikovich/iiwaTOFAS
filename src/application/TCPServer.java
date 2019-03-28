@@ -81,8 +81,6 @@ public class TCPServer implements Runnable {
 			System.out.println("Response sended");
 					
 			response.set(true);
-			
-			outToClient.close();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
