@@ -106,7 +106,7 @@ public class TCPServer implements Runnable {
 				DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			    String datagram = "";
 				
-				while(socket.getInetAddress().isReachable(10)){
+				while(socket.getInetAddress().isReachable(100)){
 			
 					
 					
@@ -116,10 +116,12 @@ public class TCPServer implements Runnable {
 					{
 						System.out.println("Request received");
 						
-						
 						if((datagram = inFromClient.readLine())!=null)
 						{
 							System.out.println("Datagram: " + datagram.toString());
+						}else
+						{
+							System.out.println("Close");
 						}
 						//datagram = inFromClient.readUTF();
 						for(ITCPListener l : listeners)
@@ -133,7 +135,7 @@ public class TCPServer implements Runnable {
 					}
 				}
 				System.out.println("Socket closed");
-				connectionSocket.close();
+				connectionSocket = null;
 			}
 		}
 		catch (IOException e) {
