@@ -73,7 +73,22 @@ public class TCPServer implements Runnable {
 	public void setResponseData(String response_data)
 	{
 		clientSentence = response_data;
-		response.set(true);
+		DataOutputStream outToClient;
+		try {
+			outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			outToClient.writeBytes(clientSentence);
+			response.set(false);
+			System.out.println("Response sended");
+					
+			response.set(true);
+			
+			outToClient.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
@@ -106,17 +121,17 @@ public class TCPServer implements Runnable {
 				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 				//ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
 	
-				DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+				//DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			    String datagram = "";
 				
 				while(true)
 				{
 					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 	
+					
 					if(inFromClient.ready())
 					{
 						System.out.println("Request received");
-						
 						if((datagram = inFromClient.readLine())!=null)
 							System.out.println("Datagram: " + datagram.toString());
 						else
@@ -128,12 +143,6 @@ public class TCPServer implements Runnable {
 						//datagram = inFromClient.readUTF();
 						for(ITCPListener l : listeners)
 							l.OnTCPMessageReceived(datagram.toString());
-					}
-					if(response.get())
-					{
-						outToClient.writeBytes(clientSentence);
-						response.set(false);
-						System.out.println("Response sended");
 					}
 				}
 				System.out.println("Socket closed");
