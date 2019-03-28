@@ -108,7 +108,6 @@ public class TCPServer implements Runnable {
 				
 				while(connectionSocket.isConnected()){
 					
-					
 					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 	
 					if(inFromClient.ready())
@@ -131,7 +130,8 @@ public class TCPServer implements Runnable {
 						response.set(false);
 						System.out.println("Response sended");
 					}
-				}	
+				}
+				System.out.println("Socket closed");
 				connectionSocket.close();
 			}
 		}
