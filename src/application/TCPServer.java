@@ -106,8 +106,10 @@ public class TCPServer implements Runnable {
 				DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			    String datagram = "";
 				
-				while(connectionSocket.isConnected()){
+				while(socket.getInetAddress().isReachable(10)){
 			
+					
+					
 					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 	
 					if(inFromClient.ready())
