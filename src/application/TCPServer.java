@@ -107,7 +107,7 @@ public class TCPServer implements Runnable {
 			    String datagram = "";
 				
 				while(connectionSocket.isConnected()){
-					
+			
 					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 	
 					if(inFromClient.ready())
@@ -123,7 +123,8 @@ public class TCPServer implements Runnable {
 						for(ITCPListener l : listeners)
 							l.OnTCPMessageReceived(datagram.toString());
 					}
-	
+					System.out.println("a");
+					tcpServerThread.sleep(30000);
 					if(response.get())
 					{
 						outToClient.writeBytes(clientSentence);
