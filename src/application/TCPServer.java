@@ -26,6 +26,8 @@ public class TCPServer implements Runnable {
 
 	ServerSocket socket;
 	Socket connectionSocket;
+	DataOutputStream outToClient;
+	
 	String clientSentence;
 	AtomicBoolean response;
 
@@ -61,7 +63,7 @@ public class TCPServer implements Runnable {
 	  
 	public void dispose() throws InterruptedException{
 		System.out.println("dispose"); //cont=false;
-
+		
 		tcpServerThread.interrupt();
 		tcpServerThread.join();
 	}
@@ -73,9 +75,8 @@ public class TCPServer implements Runnable {
 	public void setResponseData(String response_data)
 	{
 		clientSentence = response_data;
-		DataOutputStream outToClient;
 		try {
-			outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			
 			outToClient.writeBytes(clientSentence);
 			response.set(false);
 			System.out.println("Response sended");
@@ -117,9 +118,8 @@ public class TCPServer implements Runnable {
 				}
 	
 				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-				//ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
 	
-				//DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+				outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			    String datagram = "";
 				
 				while(true)
@@ -150,7 +150,7 @@ public class TCPServer implements Runnable {
 				System.out.println("Socket closed");
 				socket_close = true;
 				connectionSocket = null;
-			}
+							}
 		}
 		catch (IOException e) {
 			System.out.println("IOException: "+e.getMessage());
