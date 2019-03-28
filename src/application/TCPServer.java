@@ -82,53 +82,58 @@ public class TCPServer implements Runnable {
 		
 		try
 		{
-			socket.setSoTimeout(15000);
-			
-			while(connectionSocket == null)
+			while(true)
 			{
-				try
-				{
-				connectionSocket = socket.accept();
-				System.out.println("Socket communication established");
-
-				}catch(Exception e)
-				{
-					System.out.println("Socket Accept: " + e.getMessage());
-					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
-				}
-			}
-
-			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-			//ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
-
-			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-		    String datagram = "";
-			
-			while(true){
+				socket.setSoTimeout(15000);
 				
-				if(tcpServerThread.isInterrupted()) throw new InterruptedException();
-
-				if(inFromClient.ready())
+				while(connectionSocket == null)
 				{
-					System.out.println("Request received");
-					
-					
-					if((datagram = inFromClient.readLine())!=null)
+					try
 					{
-						System.out.println("Datagram: " + datagram.toString());
+					connectionSocket = socket.accept();
+					System.out.println("Socket communication established");
+	
+					}catch(Exception e)
+					{
+						System.out.println("Socket Accept: " + e.getMessage());
+						if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 					}
-					//datagram = inFromClient.readUTF();
-					for(ITCPListener l : listeners)
-						l.OnTCPMessageReceived(datagram.toString());
 				}
-
-				if(response.get())
-				{
-					outToClient.writeBytes(clientSentence);
-					response.set(false);
-					System.out.println("Response sended");
-				}
-			}	
+	
+				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+				//ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());;
+	
+				DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			    String datagram = "";
+				
+				while(connectionSocket.isConnected()){
+					
+					
+					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
+	
+					if(inFromClient.ready())
+					{
+						System.out.println("Request received");
+						
+						
+						if((datagram = inFromClient.readLine())!=null)
+						{
+							System.out.println("Datagram: " + datagram.toString());
+						}
+						//datagram = inFromClient.readUTF();
+						for(ITCPListener l : listeners)
+							l.OnTCPMessageReceived(datagram.toString());
+					}
+	
+					if(response.get())
+					{
+						outToClient.writeBytes(clientSentence);
+						response.set(false);
+						System.out.println("Response sended");
+					}
+				}	
+				connectionSocket.close();
+			}
 		}
 		catch (IOException e) {
 			System.out.println("IOException: "+e.getMessage());
