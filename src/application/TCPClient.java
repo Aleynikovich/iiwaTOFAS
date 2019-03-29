@@ -91,6 +91,7 @@ public class TCPClient implements Runnable {
 				
 				if(Thread.currentThread().isInterrupted()) throw new InterruptedException();
 				
+				clientSocket.setSoTimeout(5000);
 				if((datagram = inFromServer.readLine()) != null)
 				{	
 					for(ITCPListener l : listeners)
