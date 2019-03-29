@@ -130,7 +130,7 @@ public class TCPClient implements Runnable {
 		
 		try {
 			clientSocket.close();
-			System.out.println("Server disconnected");
+			System.out.println("Socket closed");
 			for(ITCPListener l : listeners)
 				l.OnTCPConnection();
 
