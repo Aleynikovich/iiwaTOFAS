@@ -58,8 +58,13 @@ public class TCPClient implements Runnable {
 	public void dispose() throws InterruptedException{
 		System.out.println("dispose"); //cont=false;
 		
+		
 		tcpClientThread.interrupt();
 		tcpClientThread.join();
+		
+		//IOException exception;
+		
+		//exception.
 	}
 	
 	public void addListener(ITCPListener listener){
@@ -87,25 +92,21 @@ public class TCPClient implements Runnable {
 				
 				if(Thread.currentThread().isInterrupted()) throw new InterruptedException();
 				
-				if((datagram = inFromServer.readLine()) != null && inFromServer.ready())
-				{
-									
-					for(ITCPListener l : listeners){
-						l.OnTCPMessageReceived(datagram);
-					}
+				//if((datagram = inFromServer.readLine()) != null)
+				if(inFromServer.ready())
+				{	
+					datagram = inFromServer.readLine();
+					for(ITCPListener l : listeners)
+						l.OnTCPMessageReceived(datagram);	
 				}
-				else
-				{
-					if(datagram == null)
-					{
-						System.out.println("Server disconnected");
-						for(ITCPListener l : listeners){
-							l.OnTCPConnection();
-						}
-					}
-					
-					break;
-				}
+				//else
+				//{				
+					//System.out.println("Server disconnected");
+					//for(ITCPListener l : listeners)
+						//l.OnTCPConnection();
+				
+					//break;
+				//}
 			}
 		}catch (InterruptedException e) {
 			e.printStackTrace();
