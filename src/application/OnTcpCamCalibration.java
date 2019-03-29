@@ -111,12 +111,19 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 				{
 					try {
 						Thread.sleep(100);
+						if(!server_connected.get())
+						{
+							System.out.println("Connection to the server has been lost while waiting for the response");
+							break;
+						}
+							
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 				data_received.set(false);
+				kont++;
 			}
 			else
 			{
@@ -127,7 +134,10 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		}
 		
 		try {
+			System.out.println("Before dispose");
 			tcp_client.dispose();
+			System.out.println("After dispose");
+
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
