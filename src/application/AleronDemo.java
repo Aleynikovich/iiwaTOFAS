@@ -557,5 +557,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 		data_received.set(true);
 	}
+
+
+	@Override
+	public void OnTCPConnection() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
