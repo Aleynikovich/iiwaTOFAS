@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 
@@ -71,7 +72,17 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		
 		// your application execution starts here
 		//lbr.move(ptpHome());
-				
+		
+		JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
+		
+		joints.set(0, -90.0*(Math.PI/180));joints.set(1, 0.0*(Math.PI/180));
+		joints.set(2, 0.0*(Math.PI/180));joints.set(3, -90*(Math.PI/180));
+		joints.set(4, 0.0*(Math.PI/180));joints.set(5, 90.0*(Math.PI/180));
+		joints.set(6, -90.0*(Math.PI/180));
+		
+		lbr.move(ptp(joints).setJointVelocityRel(0.25));
+		
+		
 		exit=false;
 		
 		int kont = 1;
@@ -83,7 +94,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		{
 			
 			String frame_name = "/DemoCroinspect/calibration/P" + kont;
-			lbr.move(ptp(getFrame(frame_name)));
+			//lbr.move(ptp(getFrame(frame_name)));
 			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
