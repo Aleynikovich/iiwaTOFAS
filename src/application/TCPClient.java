@@ -41,7 +41,7 @@ public class TCPClient implements Runnable {
 	@Inject
 	public TCPClient() throws IOException
 	{		
-		clientSocket = new Socket("0.0.0.0", 23);
+		clientSocket = new Socket("10.66.171.149", 23);
 		inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		listeners = new ArrayList<ITCPListener>();
