@@ -105,6 +105,14 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 			
 			if(server_connected.get())
 			{
+				
+				try {
+					Thread.sleep(20000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				tcp_client.sendData(request_str);
 			
 				while(!data_received.get())
@@ -135,12 +143,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 			
 		}
 		
-		try {
-			Thread.sleep(20000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	
 		
 		try {
 			tcp_client.dispose();
