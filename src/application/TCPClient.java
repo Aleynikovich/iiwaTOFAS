@@ -55,7 +55,7 @@ public class TCPClient implements Runnable {
 
 	}
 	  
-	public void dispose() throws InterruptedException, IOException {
+	public void dispose() throws IOException, InterruptedException {
 		System.out.println("dispose"); //cont=false;
 		
 		
