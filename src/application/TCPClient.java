@@ -127,8 +127,13 @@ public class TCPClient implements Runnable {
 			e.printStackTrace();
 		}
 		
+		
 		try {
 			clientSocket.close();
+			System.out.println("Server disconnected");
+			for(ITCPListener l : listeners)
+				l.OnTCPConnection();
+
 			
 		} catch (IOException e) {
 			e.printStackTrace();
