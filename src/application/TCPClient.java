@@ -86,7 +86,9 @@ public class TCPClient implements Runnable {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("senData --> IO exception");
+			for(ITCPListener l : listeners)
+				l.OnTCPConnection();
 		}
 		
 	}
