@@ -101,8 +101,23 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
 				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + "\n";
 		
+			System.out.println(frame_name + " -->  " + request_str);
+			
 			if(server_connected.get())
+			{
 				tcp_client.sendData(request_str);
+			
+				while(!data_received.get())
+				{
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				data_received.set(false);
+			}
 			else
 			{
 				System.out.println("Calibration process failed");
@@ -124,7 +139,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 	{
 		System.out.println("OnTCPMessageReceived: " + datagram);
 
-		data_recv = Integer.parseInt(datagram);
+		//data_recv = Integer.parseInt(datagram);
 		
 		data_received.set(true);
 	}
