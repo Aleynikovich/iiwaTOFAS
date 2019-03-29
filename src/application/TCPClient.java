@@ -105,7 +105,7 @@ public class TCPClient implements Runnable {
 				if(start_listening.get())
 				{
 					clientSocket.setSoTimeout(15000);
-					start_listening.set(true);
+					start_listening.set(false);
 					if((datagram = inFromServer.readLine()) != null)
 					{	
 						for(ITCPListener l : listeners)
