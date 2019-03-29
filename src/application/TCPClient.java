@@ -56,9 +56,11 @@ public class TCPClient implements Runnable {
 	}
 	  
 	public void dispose() throws IOException, InterruptedException {
+		
 		System.out.println("dispose"); //cont=false;
 		
-		
+		outToServer.writeBytes(null);
+
 		tcpClientThread.interrupt();
 		tcpClientThread.join();
 		//IOException exception;
