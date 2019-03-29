@@ -121,7 +121,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 						Thread.sleep(100);
 						if(!server_connected.get())
 						{
-							System.out.println("Connection to the server has been lost while waiting for the response");
+							System.out.println("Communication with the server has been lost");
 							break;
 						}
 							
