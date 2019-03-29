@@ -87,7 +87,7 @@ public class TCPClient implements Runnable {
 				
 				if(Thread.currentThread().isInterrupted()) throw new InterruptedException();
 				
-				if((datagram = inFromServer.readLine()) != null)
+				if((datagram = inFromServer.readLine()) != null && inFromServer.ready())
 				{
 									
 					for(ITCPListener l : listeners){
@@ -96,10 +96,14 @@ public class TCPClient implements Runnable {
 				}
 				else
 				{
-					System.out.println("Server disconnected");
-					for(ITCPListener l : listeners){
-						l.OnTCPConnection();
+					if(datagram == null)
+					{
+						System.out.println("Server disconnected");
+						for(ITCPListener l : listeners){
+							l.OnTCPConnection();
+						}
 					}
+					
 					break;
 				}
 			}
