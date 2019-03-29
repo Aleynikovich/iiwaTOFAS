@@ -136,10 +136,14 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		}
 		
 		try {
-			System.out.println("Before dispose");
+			Thread.sleep(20000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
 			tcp_client.dispose();
-			System.out.println("After dispose");
-
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
