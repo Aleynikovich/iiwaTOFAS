@@ -97,6 +97,9 @@ public class TCPClient implements Runnable {
 				else
 				{
 					System.out.println("Server disconnected");
+					for(ITCPListener l : listeners){
+						l.OnTCPConnection();
+					}
 					break;
 				}
 			}
