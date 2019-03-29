@@ -4,10 +4,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.net.*;
-import java.nio.CharBuffer;
 import java.io.*;
-
-import com.kuka.task.ITaskLogger;
 
 /**
  * Implementation of a class that observes a TCP  server input (can be a scanner of safety areas) and
@@ -19,8 +16,6 @@ import com.kuka.task.ITaskLogger;
 
 public class TCPServer implements Runnable {
 	
-	private @Inject ITaskLogger appLogger;
-
 	private Thread tcpServerThread;
 	private ArrayList<ITCPListener> listeners;
 
@@ -31,8 +26,6 @@ public class TCPServer implements Runnable {
 	String clientSentence;
 	AtomicBoolean response;
 
-	private boolean cont;
-	
 	/**
 	 * Constructor.
 	 * <p>

@@ -1,6 +1,5 @@
 package application;
 
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
 
 /*import javax.media.j3d.Transform3D;
@@ -23,7 +22,6 @@ import javax.inject.Inject;
 
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
-import com.kuka.roboticsAPI.conditionModel.ICondition;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy;

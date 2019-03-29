@@ -4,10 +4,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.net.*;
-import java.nio.CharBuffer;
 import java.io.*;
-
-import com.kuka.task.ITaskLogger;
 
 /**
  * Implementation of a class that observes a TCP  server input (can be a scanner of safety areas) and
