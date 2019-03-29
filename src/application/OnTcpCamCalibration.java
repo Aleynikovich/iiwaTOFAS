@@ -94,7 +94,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		{
 			
 			String frame_name = "/DemoCroinspect/calibration/P" + kont;
-			//lbr.move(ptp(getFrame(frame_name)));
+			lbr.move(ptp(getFrame(frame_name)));
 			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
@@ -105,13 +105,6 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 			
 			if(server_connected.get())
 			{
-				
-				try {
-					Thread.sleep(20000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
 				tcp_client.sendData(request_str);
 			
