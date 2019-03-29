@@ -123,22 +123,25 @@ public class TCPClient implements Runnable {
 			}
 		}catch(java.net.SocketTimeoutException e)
 		{
-			System.out.println("Socket timput exception");
+			System.out.println("Socket time-out exception");
 			for(ITCPListener l : listeners)
 				l.OnTCPConnection();
 			
 		}catch (InterruptedException e) {
-			e.printStackTrace();
+			
+			System.out.println("Interruption exception");
+
 		} catch (IOException e) {
 			
-			e.printStackTrace();
+			System.out.println("IO exception");
+			//e.printStackTrace();
 		}
 		
 		try {
 			clientSocket.close();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Socket close method IO exception");
 		}
 		System.out.println("Finish TCP Client Run ");
 	}

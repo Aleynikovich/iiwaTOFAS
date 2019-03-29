@@ -122,6 +122,8 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 						e.printStackTrace();
 					}
 				}
+				if(!server_connected.get())
+					break;
 				data_received.set(false);
 				kont++;
 			}
