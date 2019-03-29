@@ -1,6 +1,8 @@
 package application;
 
 import javax.inject.Inject;
+import javax.swing.Timer;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.net.*;
@@ -26,6 +28,7 @@ public class TCPClient implements Runnable {
 
 	String request_str;
 	AtomicBoolean request;
+	AtomicBoolean start_listening;
 	
 	/**
 	 * Constructor.
@@ -47,6 +50,7 @@ public class TCPClient implements Runnable {
 		listeners = new ArrayList<ITCPListener>();
 		tcpClientThread = new Thread(this);
 		request = new AtomicBoolean(false);
+		start_listening = new AtomicBoolean(false);
 	}
 
 	public void enable(){
@@ -58,8 +62,6 @@ public class TCPClient implements Runnable {
 	public void dispose() throws IOException, InterruptedException {
 		
 		System.out.println("dispose"); //cont=false;
-		
-		outToServer.writeBytes(null);
 
 		tcpClientThread.interrupt();
 		tcpClientThread.join();
@@ -75,8 +77,13 @@ public class TCPClient implements Runnable {
 	public void sendData(String datagram)
 	{
 		try {
+			
+			start_listening.set(true);
 			outToServer.writeBytes(datagram);
 			System.out.println("Request sended");
+			
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,24 +95,29 @@ public class TCPClient implements Runnable {
 	public void run() {
 		
 		String datagram = "";
+		Timer start_time; ;
 		try {
 			while(true){
 				
+				
 				if(Thread.currentThread().isInterrupted()) throw new InterruptedException();
 				
-				//clientSocket.setSoTimeout(5000);
-				if((datagram = inFromServer.readLine()) != null)
-				{	
-					for(ITCPListener l : listeners)
-						l.OnTCPMessageReceived(datagram);	
-				}
-				else
-				{				
-					System.out.println("Server disconnected");
-					for(ITCPListener l : listeners)
-						l.OnTCPConnection();
-				
-					break;
+				if(start_listening.get())
+				{
+					clientSocket.setSoTimeout(15000);
+					if((datagram = inFromServer.readLine()) != null)
+					{	
+						for(ITCPListener l : listeners)
+							l.OnTCPMessageReceived(datagram);	
+					}
+					else
+					{				
+						System.out.println("Server disconnected");
+						for(ITCPListener l : listeners)
+							l.OnTCPConnection();
+					
+						break;
+					}
 				}
 			}
 		}catch (InterruptedException e) {
