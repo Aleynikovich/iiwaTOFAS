@@ -97,8 +97,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		//TODO: Fulfill with correct values
 		//Frames definition
 		tcp_camera_fr = new Frame(getFrame("/robot_base"));
-		tcp_camera_fr.setX(0.0); tcp_camera_fr.setY(0.0); tcp_camera_fr.setZ(0.0);
-		tcp_camera_fr.setAlphaRad(0.0); tcp_camera_fr.setBetaRad(0.0); tcp_camera_fr.setGammaRad(0.0);
+				Frame robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
+		tcp_camera_fr = robot_pose.transform(XyzAbcTransformation.ofRad(-20.0, -101.902, 105.038,
+			0.375 *(Math.PI/180),359.535*(Math.PI/180), 1.39*(Math.PI/180)));
+		
+		System.out.println("Camara Robot base Frame --> x: " + tcp_camera_fr.getX() + "  y: " + tcp_camera_fr.getY() + "  z: " + tcp_camera_fr.getZ() 
+				+ "  A: " + tcp_camera_fr.getAlphaRad() + "  B: " + tcp_camera_fr.getBetaRad() + "  C: " + tcp_camera_fr.getGammaRad());
 		
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
@@ -540,15 +544,26 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				caltab_pose_data.add(Double.parseDouble(splittedData[i]));
 			}
 
+			
+		
 			//Frame definition
 			caltab_robot_fr = new Frame(getFrame("/robot_base"));
+			//caltab_robot_fr = robot_pose.transform()
 				
-			caltab_robot_fr.setX(caltab_pose_data.get(0)*1000); caltab_robot_fr.setY(caltab_pose_data.get(1)*1000); 
-			caltab_robot_fr.setZ(caltab_pose_data.get(2)*1000); caltab_robot_fr.setAlphaRad(caltab_pose_data.get(5)); 
-			caltab_robot_fr.setBetaRad(caltab_pose_data.get(4)); caltab_robot_fr.setGammaRad(caltab_pose_data.get(3));	
+			caltab_robot_fr = tcp_camera_fr.transform(XyzAbcTransformation.ofRad(caltab_pose_data.get(0)*1000, caltab_pose_data.get(1)*1000, caltab_pose_data.get(2)*1000, 
+					caltab_pose_data.get(5), caltab_pose_data.get(4), caltab_pose_data.get(3)));
+			
+			//caltab_robot_fr.setX(caltab_pose_data.get(0)*1000); caltab_robot_fr.setY(caltab_pose_data.get(1)*1000); 
+			//caltab_robot_fr.setZ(caltab_pose_data.get(2)*1000); caltab_robot_fr.setAlphaRad(caltab_pose_data.get(5)); 
+			//caltab_robot_fr.setBetaRad(caltab_pose_data.get(4)); caltab_robot_fr.setGammaRad(caltab_pose_data.get(3));	
 			
 			System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
-				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());				
+				" A: " + caltab_robot_fr.getAlphaRad() + " B: " + caltab_robot_fr.getBetaRad() + " C: " + caltab_robot_fr.getGammaRad());
+			
+			
+			
+			
+			
 
 		}
 		
