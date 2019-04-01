@@ -81,6 +81,7 @@ public class TCPClient implements Runnable {
 			
 			start_listening.set(true);
 			outToServer.writeBytes(datagram);
+			System.out.println(datagram);
 			System.out.println("Request sended");
 			
 			
