@@ -138,7 +138,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		
 		if(server_connected.get())
 		{
-			tcp_client.sendData("END");
+			tcp_client.sendData("END@");
 		}
 		
 		try {
