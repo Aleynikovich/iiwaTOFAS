@@ -45,6 +45,7 @@ public class TCPClient implements Runnable {
 	public TCPClient() throws IOException
 	{		
 		clientSocket = new Socket("10.66.171.203", 8800);
+		System.out.println("Communication with the server started");
 		inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		listeners = new ArrayList<ITCPListener>();
