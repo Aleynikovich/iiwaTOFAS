@@ -80,7 +80,7 @@ public class TCPClient implements Runnable {
 		try {
 			
 			start_listening.set(true);
-			datagram="-255.015;-476.083;395.091;3.129;7.298E-5;3.135";
+			datagram="-255.015;-476.083;395.091;3.129;7.298E-5;3.135\n";
 		
 			outToServer.writeBytes(datagram);
 			System.out.println(datagram);
