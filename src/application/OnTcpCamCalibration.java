@@ -99,7 +99,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
 			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
-				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + "\n";
+				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + "@";
 		
 			System.out.println(frame_name + " -->  " + request_str);
 			

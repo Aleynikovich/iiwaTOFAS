@@ -81,7 +81,6 @@ public class TCPClient implements Runnable {
 			
 			start_listening.set(true);
 //			datagram="255.015;-476.083;395.091;3.129;0.0;3.135\n";
-		
 			outToServer.writeBytes(datagram);
 			System.out.println(datagram);
 			System.out.println("Request sended");
@@ -110,7 +109,7 @@ public class TCPClient implements Runnable {
 				
 				if(start_listening.get())
 				{
-					clientSocket.setSoTimeout(15000);
+					clientSocket.setSoTimeout(60000);
 					start_listening.set(false);
 					if((datagram = inFromServer.readLine()) != null)
 					{	
