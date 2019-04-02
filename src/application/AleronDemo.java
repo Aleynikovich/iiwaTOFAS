@@ -333,6 +333,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 						e.printStackTrace();
 					}
 					
+					System.out.println("Caltab 1 frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
+							" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
+
 					
 					Frame caltab_fr = caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0,0,-40000,0,0,0));
 					
