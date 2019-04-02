@@ -301,6 +301,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			{
 				data_received.set(false);
 				
+				System.out.println("Type:" + operation_type);
+				
 				if(operation_type.compareTo("calibration") == 0)
 				{
 					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
