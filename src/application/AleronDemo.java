@@ -345,6 +345,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 							" A: " + caltab_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_fr.getGammaRad()*(180/Math.PI));
 
 					
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+
+					
 					lbr.move(ptp(caltab_fr).setJointVelocityRel(0.1));
 
 					
