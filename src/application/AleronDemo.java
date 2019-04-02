@@ -333,7 +333,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 						e.printStackTrace();
 					}
 					
-					roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
+					//roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
+					lbr.move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
 
 					
 					switch (getApplicationUI().displayModalDialog(
