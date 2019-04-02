@@ -292,10 +292,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 		// your application execution starts here
 		//lbr.move(ptpHome());
-				
+		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+		
 		exit=false;
 		
 		do {
+			
 			
 			if(data_received.get())
 			{
@@ -312,8 +314,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					joints.set(4, 0.0*(Math.PI/180));joints.set(5, 65.32*(Math.PI/180));
 					joints.set(6, -90.0*(Math.PI/180));
 					
-					lbr.move(ptp(joints).setJointVelocityRel(0.25));
-					
+					//lbr.move(ptp(joints).setJointVelocityRel(0.25));
+					lbr.move(ptp(getFrame("/DemoCroinspect/Aprox1")).setJointVelocityRel(0.25));
+
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
 	
@@ -323,16 +326,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				
 					rec = new DataRecorder();
 					rec.setTimeout(2L, TimeUnit.MINUTES);
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 					
-					
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
+							
 					System.out.println("Caltab 1 frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 							" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
 
@@ -344,13 +339,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					System.out.println("Caltab 2 frame --> x: " + caltab_fr.getX() + " y: " + caltab_fr.getY() + " z: " + caltab_fr.getZ() + 
 							" A: " + caltab_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_fr.getGammaRad()*(180/Math.PI));
 
-					
-					lbr.move(ptp(getFrame("/DemoCroinspect/Aprox1")).setJointVelocityRel(0.25));
-
-					
-					lbr.move(ptp(caltab_fr).setJointVelocityRel(0.1));
-
-					
 					switch (getApplicationUI().displayModalDialog(
 							ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 							"10N", "15N", "20N", "24N", "END DO NOTHING")) {
