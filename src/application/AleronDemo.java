@@ -571,7 +571,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			
 			
 			System.out.println("Caltab in camera frame--> x: " + caltab_pose_data.get(0)*1000 + " y: " + caltab_pose_data.get(1)*1000 + " z: " + caltab_pose_data.get(2)*1000+ 
-					" Roll: " + caltab_pose_data.get(3)*1000*(180/Math.PI)+ " Pitch: " + caltab_pose_data.get(4)*1000*(180/Math.PI)+ " Yaw: " + caltab_pose_data.get(5)*1000*(180/Math.PI));
+					" Roll: " + caltab_pose_data.get(3)*(180/Math.PI)+ " Pitch: " + caltab_pose_data.get(4)*(180/Math.PI)+ " Yaw: " + caltab_pose_data.get(5)*(180/Math.PI));
 
 			//caltab_robot_fr.setX(caltab_pose_data.get(0)*1000); caltab_robot_fr.setY(caltab_pose_data.get(1)*1000); 
 			//caltab_robot_fr.setZ(caltab_pose_data.get(2)*1000); caltab_robot_fr.setAlphaRad(caltab_pose_data.get(5)); 
