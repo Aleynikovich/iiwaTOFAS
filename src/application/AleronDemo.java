@@ -231,13 +231,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
   		  
 	    		 Frame aileron_caltab_fr;
 	    		 
-		    	 if(x.get(cont) < 750.0)
+		    	 if(x.get(cont) < 400.0)
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
 		    	 }
-		    	 else if (750.0 < x.get(cont) &&  x.get(cont) < 1500.0)
+		    	 else if (400.0 < x.get(cont) &&  x.get(cont) < 1500.0)
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		 //System.out.println("Caltab 2 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
@@ -469,24 +469,39 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 	 	
 		Frame point = new Frame(getFrame("/DemoCroinspect/caltab"));
-		LBRE1Redundancy redundancyInfo;
+		LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
+		
+		
+		Frame aprox_pose = caltab_robot_fr.copy();
+		
+		point  = traj_caltab_ref_fr.get(0).copy();
+					
+		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
+				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
+							
+		System.out.println("Traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
+				" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
+					
+		aprox_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-300, Math.PI/2,0.0,0.0));
+		
+		System.out.println("Safety traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
+				" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
+	
+		//aprox_pose.setRedundancyInformation(lbr, redundancyInfo);
+		
+		lbr.move(ptp(aprox_pose).setJointVelocityRel(0.1));
 		
 		Frame copy_caltab_robot_fr;
 		
-		//Frame ref_catlab_robot_fr; 
-	
 		for(int i=0; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
-			
-			//ref_catlab_robot_fr = getFrame("/robot_base").copy();
-			//ref_catlab_robot_fr.setAlphaRad(Math.PI); ref_catlab_robot_fr.setBetaRad(-Math.PI/2);
 			
 			point  = traj_caltab_ref_fr.get(i).copy();
 			
 			System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 					" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-				
+			
 			/*if(point.getX() > 444)
 			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
 			else
@@ -512,6 +527,15 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			System.out.println("Safety traj point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 		
+			copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
+
+			
+			/*if(i<x.size()-1)
+			roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+		else
+			roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+*/
+
 			
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				
