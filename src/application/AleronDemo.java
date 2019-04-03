@@ -232,7 +232,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
   		  
 	    		 Frame aileron_caltab_fr;
 	    		 
-		    	 if(x.get(cont) < 400.0)
+		    	 if(x.get(cont) < 700.0)
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
