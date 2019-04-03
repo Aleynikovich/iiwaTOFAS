@@ -327,20 +327,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					rec = new DataRecorder();
 					rec.setTimeout(2L, TimeUnit.MINUTES);
 					
-							
-					System.out.println("Caltab 1 frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
-							" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
-
-					
-					Frame caltab_fr = caltab_robot_fr.copy();
-					
-					caltab_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0, -300, Math.PI,0.0,0.0));
-					
-					lbr.move(ptp(caltab_fr).setJointVelocityRel(0.1));
-					
-					System.out.println("Caltab 2 frame --> x: " + caltab_fr.getX() + " y: " + caltab_fr.getY() + " z: " + caltab_fr.getZ() + 
-							" A: " + caltab_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_fr.getGammaRad()*(180/Math.PI));
-
 					switch (getApplicationUI().displayModalDialog(
 							ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 							"10N", "15N", "20N", "24N", "END DO NOTHING")) {
@@ -498,12 +484,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			
 			point  = traj_caltab_ref_fr.get(i).copy();
 			
-			System.out.println("Ref Caltab after transformation --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+			System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 					" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-	
-			//point.setX(x.get(i)); point.setY(y.get(i)); point.setZ(z.get(i));
-			//point.setAlphaRad(a.get(i)); point.setBetaRad(b.get(i)); point.setGammaRad(c.get(i));
-					
+				
 			/*if(point.getX() > 444)
 			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
 			else
@@ -511,10 +494,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			 	
 			point.setRedundancyInformation(lbr, redundancyInfo);
 			*/
-					
-			//Frame tmp = ref_catlab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
-				//	point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
-						
+									
 			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 					point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 			
@@ -523,18 +503,16 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			else
 				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 */
-			//ForceSensorData current_force = lbr.getExternalForceTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
-
-			//System.out.println("Z: " + current_force.getForce().getZ() + " A: " + current_force.getTorque().getZ()
-				//+ " B: " + current_force.getTorque().getY() + " C: " + current_force.getTorque().getX());
-			
-			//System.out.println("Ref Caltab after transformation --> x: " + tmp.getX() + " y: " + tmp.getY() + " z: " + tmp.getZ() + 
-				//	" A: " + tmp.getAlphaRad() + " B: " + tmp.getBetaRad() + " C: " + tmp.getGammaRad());
-							
-			System.out.println("Caltab after transformation --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+								
+			System.out.println("Traj point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 						
-	
+			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-300, Math.PI/2,0.0,0.0));
+			
+			System.out.println("Safety traj point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
+		
+			
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				
 		}
@@ -569,31 +547,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			
 			Frame robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
-			System.out.println("Robot pose --> x: " + robot_pose.getX() + " y: " + robot_pose.getY() + " z: " + robot_pose.getZ() + 
-					" A: " + robot_pose.getAlphaRad()*(180/Math.PI)+ " B: " + robot_pose.getBetaRad()*(180/Math.PI)+ " C: " + robot_pose.getGammaRad()*(180/Math.PI));
-
-			
 			Frame cam_robot_fr = robot_pose.transform(XyzAbcTransformation.ofRad(tcp_camera_fr.getX(),tcp_camera_fr.getY(),tcp_camera_fr.getZ(),
 				tcp_camera_fr.getAlphaRad(),tcp_camera_fr.getBetaRad(), tcp_camera_fr.getGammaRad()));
 				
-			
-			System.out.println("Camera robot base pose--> x: " + cam_robot_fr.getX() + " y: " + cam_robot_fr.getY() + " z: " + cam_robot_fr.getZ() + 
-					" A: " + cam_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + cam_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + cam_robot_fr.getGammaRad()*(180/Math.PI));
-
-			//caltab_robot_fr = robot_pose.transform()
-				
 			caltab_robot_fr = cam_robot_fr.transform(XyzAbcTransformation.ofRad(caltab_pose_data.get(0)*1000, caltab_pose_data.get(1)*1000, caltab_pose_data.get(2)*1000, 
 					caltab_pose_data.get(5), caltab_pose_data.get(4), caltab_pose_data.get(3)));
-			
-			
-			System.out.println("Caltab in camera frame--> x: " + caltab_pose_data.get(0)*1000 + " y: " + caltab_pose_data.get(1)*1000 + " z: " + caltab_pose_data.get(2)*1000+ 
-					" Roll: " + caltab_pose_data.get(3)*(180/Math.PI)+ " Pitch: " + caltab_pose_data.get(4)*(180/Math.PI)+ " Yaw: " + caltab_pose_data.get(5)*(180/Math.PI));
-
-			//caltab_robot_fr.setX(caltab_pose_data.get(0)*1000); caltab_robot_fr.setY(caltab_pose_data.get(1)*1000); 
-			//caltab_robot_fr.setZ(caltab_pose_data.get(2)*1000); caltab_robot_fr.setAlphaRad(caltab_pose_data.get(5)); 
-			//caltab_robot_fr.setBetaRad(caltab_pose_data.get(4)); caltab_robot_fr.setGammaRad(caltab_pose_data.get(3));	
-			
-			System.out.println("Caltab frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
+					
+			System.out.println("Caltab in robot base frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 				" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
 		}
 			
