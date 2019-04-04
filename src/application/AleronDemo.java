@@ -343,8 +343,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								try {
 									Force_XND(10,fname,select_velocity);
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									System.out.println("IO Exception in Force_XND 10");
 								}
 								//Force_XND(0.0,"measured_force_10ND_stiffZ_300.log",select_velocity);	
 						
@@ -361,8 +360,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								try {
 									Force_XND(15,fname,select_velocity);
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									System.out.println("IO Exception in Force_XND 15");
 								}	
 								
 								//exit = true;
@@ -378,8 +376,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								try {
 									Force_XND(20,fname,select_velocity);
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									System.out.println("IO Exception in Force_XND 20");
+
 								}
 										
 								//exit = true;
@@ -396,8 +394,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								try {
 									Force_XND(24,fname,select_velocity);
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									System.out.println("IO Exception in Force_XND 24");
 								}
 								
 								//exit = true;
