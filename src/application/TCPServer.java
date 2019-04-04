@@ -171,7 +171,8 @@ public class TCPServer implements Runnable {
 					socket.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("IO exception closing the socket after thread interruption");
+
 			}
 		}
 		catch (Exception e) {
