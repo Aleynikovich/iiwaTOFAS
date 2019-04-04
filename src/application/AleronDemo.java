@@ -340,7 +340,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 								
 								fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
-								Force_XND(10,fname,select_velocity);
+								try {
+									Force_XND(10,fname,select_velocity);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								//Force_XND(0.0,"measured_force_10ND_stiffZ_300.log",select_velocity);	
 						
 								//exit = true;
@@ -353,7 +358,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								
 								
 								fname="measured_force_15ND_stiffZ_500_"+select_velocity+"mm_S.log";
-								Force_XND(15,fname,select_velocity);	
+								try {
+									Force_XND(15,fname,select_velocity);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}	
 								
 								//exit = true;
 						
@@ -365,8 +375,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								
 								
 								fname="measured_force_20ND_stiffZ_500_"+select_velocity+"mm_S.log";
-								Force_XND(20,fname,select_velocity);
-								
+								try {
+									Force_XND(20,fname,select_velocity);
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+										
 								//exit = true;
 								
 								break;
@@ -378,7 +393,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 								
 							
 								fname="measured_force_24ND_stiffZ_500_"+select_velocity+"mm_S.log";
-								Force_XND(24,fname,select_velocity);
+								try {
+									Force_XND(24,fname,select_velocity);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								
 								//exit = true;
 								
@@ -393,7 +413,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 									e.printStackTrace();
 								}
 								exit = true;*/
-								closeCommunication();
+								try {
+									closeCommunication();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								exit = true;
 								break;
 					}
@@ -407,14 +432,14 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 	}
 	
-	private void closeCommunication()
+	private void closeCommunication() throws IOException
 	{
 		try {
 			
 			tcp_server.dispose();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("App InterruptedException");
 		}
 	}
 	private double velocity(){
@@ -445,7 +470,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	}
 	
 	//Rastering execution with force control
-	private void Force_XND(int force, String nfichero, double velocidad )
+	private void Force_XND(int force, String nfichero, double velocidad ) throws IOException
 	{
 		
 		//Impedance mode configuration
@@ -504,8 +529,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			
 			point  = traj_caltab_ref_fr.get(i).copy();
 			
-			System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
-					" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
+			//System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+				//	" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
 			
 			/*if(point.getX() > 444)
 			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
@@ -520,15 +545,27 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				
 			copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 
-			
-			if(i<x.size()-1)
-				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-			else
-				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
-			
-			
-			System.out.println("Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+			System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
+		
+			try
+			{
+				if(i<x.size()-1)
+					roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				else
+					roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+			}
+			catch(IllegalStateException e)
+			{
+				System.out.println("Movement failed and the app was finished");
+				try {
+					tcp_server.dispose();
+				} catch (InterruptedException e1) {
+					System.out.println("Closing TCP server from App");
+					break;
+				}	
+			}
+			
 			
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				

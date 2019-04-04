@@ -21,6 +21,7 @@ public class TCPServer implements Runnable {
 
 	ServerSocket socket;
 	Socket connectionSocket;
+	BufferedReader inFromClient;
 	DataOutputStream outToClient;
 	
 	String clientSentence;
@@ -54,8 +55,16 @@ public class TCPServer implements Runnable {
 
 	}
 	  
-	public void dispose() throws InterruptedException{
+	public void dispose() throws InterruptedException, IOException{
 		System.out.println("dispose"); //cont=false;
+		
+		if(!socket.isClosed())
+		{
+			inFromClient.close();
+			outToClient.close();
+			socket.close();
+
+		}
 		
 		tcpServerThread.interrupt();
 		tcpServerThread.join();
@@ -110,7 +119,7 @@ public class TCPServer implements Runnable {
 					}
 				}
 	
-				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+				inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 	
 				outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			    String datagram = "";
@@ -153,11 +162,17 @@ public class TCPServer implements Runnable {
 			System.out.println("Thread interrupt");
 			
 			try {
-				socket.close();
+				
+				if(!socket.isClosed())
+				{
+					
+					inFromClient.close();
+					outToClient.close();
+					socket.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("OverrideReduction.run(): InterruptedException --> Thread interrupted");
 		}
 		catch (Exception e) {
 			System.out.println("Exception: "+e.getMessage());
