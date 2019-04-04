@@ -59,15 +59,20 @@ public class TCPServer implements Runnable {
 		System.out.println("dispose"); //cont=false;
 		
 		if(!socket.isClosed())
-		{
+		{	
+			
 			inFromClient.close();
 			outToClient.close();
 			socket.close();
+			System.out.println("TCP connection closed");
 
 		}
 		
 		tcpServerThread.interrupt();
 		tcpServerThread.join();
+		
+		System.out.println("Thread interrupted");
+
 	}
 	
 	public void addListener(ITCPListener listener){
