@@ -26,6 +26,7 @@ import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy;
+import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
 import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
@@ -552,7 +553,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				else
 					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 			}
-			catch(IllegalStateException e)
+			catch(CommandInvalidException e)
 			{
 				System.out.println("Movement failed and the app was finished");
 				try {
