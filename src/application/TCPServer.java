@@ -81,7 +81,7 @@ public class TCPServer implements Runnable {
 	
 	public void setResponseData(String response_data)
 	{
-		clientSentence = response_data;
+		clientSentence = response_data + "\r\n";
 		try {
 			
 			outToClient.writeBytes(clientSentence);
