@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,6 +24,7 @@ import javax.inject.Inject;
 
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy;
@@ -32,6 +34,9 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import com.kuka.roboticsAPI.geometricModel.math.XyzAbcTransformation;
+import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
+import com.kuka.roboticsAPI.motionModel.IErrorHandler;
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianImpedanceControlMode;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianSineImpedanceControlMode;
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
@@ -84,6 +89,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	String time_stamp;
 	int frame_id;
 	Frame caltab_robot_fr;
+	
+	
+	// not injected fields
+	private IErrorHandler errorHandler;
+	
 	
 	@Override
 	public void initialize() {
@@ -286,6 +296,26 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		}
 		
 		
+	
+		//Asyncronous movement error handling
+		errorHandler = new IErrorHandler() {
+			 @Override
+			 public ErrorHandlingAction handleError(Device device, IMotionContainer failedContainer,
+			 List<IMotionContainer> canceledContainers)
+			 {
+				 System.out.println("Excecution of the following motion failed: " + failedContainer.getCommand().toString());
+				 //logger.info("The following motions will not be executed:");
+				 //for (int i = 0; i < canceledContainers.size(); i++) {
+					 //logger.info(canceledContainers.get(i).getCommand().toString());
+					 
+				 //}
+				 System.out.println("The following " + canceledContainers.size() + " motions will not be executed");
+				 return ErrorHandlingAction.Ignore;
+			 }
+		};
+			
+		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);
+			 
 	} 
     
 	
