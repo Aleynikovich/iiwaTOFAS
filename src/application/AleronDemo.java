@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
@@ -94,6 +95,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	// not injected fields
 	private IErrorHandler errorHandler;
 	
+	//Movement execution state
+	AtomicBoolean movement_failed;
+	AtomicInteger failed_movement_nbr;
 	
 	@Override
 	public void initialize() {
@@ -105,6 +109,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
 
 		data_received = new AtomicBoolean(false);
+		
+		movement_failed = new AtomicBoolean(false);
+		failed_movement_nbr = new AtomicInteger(0);
+		
 		
 		//TODO: Fulfill with correct values
 		//Frames definition
@@ -309,22 +317,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				 //}
 				 System.out.println("The following " + canceledContainers.size() + " motions will not be executed");
 				 
-				 
-				 Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-				 String response_data = frame_id + ";" + operation_type + ";0" ;
-					tcp_server.setResponseData(response_data);
+				
+				movement_failed.set(true);
+				failed_movement_nbr.set(x.size() - canceledContainers.size());
 					
-				current_pos.transform(XyzAbcTransformation.ofRad(0.0,0.0,-75,0.0,0.0,0.0));
-				
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
-				
-				
-				JointPosition joints = lbr.getCurrentJointPosition();
-				joints.set(0, 75*(Math.PI/180));
-				lbr.move(ptp(joints).setJointVelocityRel(0.25));
-				
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-
 				return ErrorHandlingAction.Ignore;
 			 }
 		};
@@ -618,6 +614,23 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					}	
 				}
 						
+			}
+			
+			if(movement_failed.get())
+			{
+				System.out.println("Movement failed. Moving the robot to safe position");
+				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+				
+				current_pos.transform(XyzAbcTransformation.ofRad(0.0,0.0,-75,0.0,0.0,0.0));
+				
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
+				
+				JointPosition joints = lbr.getCurrentJointPosition();
+				joints.set(0, 75*(Math.PI/180));
+				lbr.move(ptp(joints).setJointVelocityRel(0.25));
+				
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+
 			}
 			
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
