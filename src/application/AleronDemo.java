@@ -294,8 +294,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
-		
-		
 	
 		//Asyncronous movement error handling
 		errorHandler = new IErrorHandler() {
@@ -310,7 +308,24 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					 
 				 //}
 				 System.out.println("The following " + canceledContainers.size() + " motions will not be executed");
-				 return ErrorHandlingAction.Ignore;
+				 
+				 
+				 Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+				 String response_data = frame_id + ";" + operation_type + ";0" ;
+					tcp_server.setResponseData(response_data);
+					
+				current_pos.transform(XyzAbcTransformation.ofRad(0.0,0.0,-75,0.0,0.0,0.0));
+				
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
+				
+				
+				JointPosition joints = lbr.getCurrentJointPosition();
+				joints.set(0, 75*(Math.PI/180));
+				lbr.move(ptp(joints).setJointVelocityRel(0.25));
+				
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+
+				return ErrorHandlingAction.Ignore;
 			 }
 		};
 			
@@ -576,33 +591,41 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 		
-			try
-			{
-				if(i<x.size()-1)
-					roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-				else
-					roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
-			}
-			catch(CommandInvalidException e)
-			{
-				System.out.println("Movement failed and the app was finished");
-				try {
-					tcp_server.dispose();
-				} catch (InterruptedException e1) {
-					System.out.println("Closing TCP server from App");
-					break;
-				}	
-			}
 			
+			if(i<x.size()-1)
+				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+			else
+			{
+				try
+				{
+					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+					String response_data = frame_id + ";" + operation_type + ";1" ;
+					tcp_server.setResponseData(response_data);
+				}
+				catch(CommandInvalidException e)
+				{
+					System.out.println("Last Movement failed and the app was finished");
+					try {
+						
+						String response_data = frame_id + ";" + operation_type + ";0" ;
+						tcp_server.setResponseData(response_data);
+						
+						tcp_server.dispose();
+						
+					} catch (InterruptedException e1) {
+						System.out.println("Closing TCP server from App");
+						break;
+					}	
+				}
+						
+			}
 			
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				
 		}
 		
 		rec.stopRecording();
-		
-		tcp_server.setResponseData("Finished");
-		
+		System.out.println("Trajectory done");
 	}
 	
 	
