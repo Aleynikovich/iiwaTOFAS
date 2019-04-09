@@ -87,10 +87,11 @@ public class TCPServer implements Runnable {
 		try {
 			
 			outToClient.writeBytes(clientSentence);
-			response.set(false);
+			//response.set(false);
+			
 			System.out.println("Response sended");
-					
-			response.set(true);
+			request.set(true);		
+			//response.set(true);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
