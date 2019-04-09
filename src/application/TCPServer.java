@@ -90,7 +90,7 @@ public class TCPServer implements Runnable {
 			//response.set(false);
 			
 			System.out.println("Response sended");
-			request.set(true);		
+			request.set(false);		
 			//response.set(true);
 
 		} catch (IOException e) {
