@@ -27,6 +27,7 @@ public class TCPServer implements Runnable {
 	String clientSentence;
 	AtomicBoolean response;
 
+	AtomicBoolean request;
 	/**
 	 * Constructor.
 	 * <p>
@@ -46,6 +47,7 @@ public class TCPServer implements Runnable {
 		listeners = new ArrayList<ITCPListener>();
 		tcpServerThread = null;
 		response = new AtomicBoolean(false);
+		request = new AtomicBoolean(false);
 	}
 
 	public void enable(){
@@ -138,6 +140,8 @@ public class TCPServer implements Runnable {
 					//{
 						//System.out.println("Request received");
 						
+					if(!request.get())
+					{
 						if((datagram = inFromClient.readLine())!=null)
 						{
 							System.out.println("Datagram: " + datagram.toString());
@@ -145,6 +149,8 @@ public class TCPServer implements Runnable {
 							//datagram = inFromClient.readUTF();
 							for(ITCPListener l : listeners)
 								l.OnTCPMessageReceived(datagram.toString());
+							
+							request.set(true);
 						}
 						else
 						{
@@ -152,7 +158,7 @@ public class TCPServer implements Runnable {
 							break;
 						}
 						
-						
+					}	
 					//}
 				}
 				System.out.println("Socket closed");
