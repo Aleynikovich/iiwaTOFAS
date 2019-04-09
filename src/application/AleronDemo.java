@@ -588,13 +588,19 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 		
 			
+			
+			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
+
 			if(i<x.size()-1)
-				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				//roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				roll_scan.getFrame("cam_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
+
 			else
 			{
 				try
-				{
-					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				{					
+					roll_scan.getFrame("cam_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
+					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
 				}
