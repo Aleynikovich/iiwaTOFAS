@@ -337,7 +337,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 		// your application execution starts here
 		//lbr.move(ptpHome());
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 		
 		exit=false;
 		
@@ -637,7 +637,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				joints.set(0, 75*(Math.PI/180));
 				lbr.move(ptp(joints).setJointVelocityRel(0.25));
 				
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 				
 				i = failed_movement_nbr.get() -1 ;
 				
