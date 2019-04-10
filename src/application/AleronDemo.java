@@ -253,13 +253,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
   		  
 	    		 Frame aileron_caltab_fr;
 	    		 
-		    	 if(x.get(cont) < 700.0)
+		    	 if(x.get(cont) < 1000.0)
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
 		    	 }
-		    	 else if (400.0 < x.get(cont) &&  x.get(cont) < 1500.0)
+		    	 else if (1000.0 < x.get(cont) &&  x.get(cont) < 1500.0)
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		 //System.out.println("Caltab 2 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
