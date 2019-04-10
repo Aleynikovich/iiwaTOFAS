@@ -358,7 +358,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					joints.set(6, -90.0*(Math.PI/180));
 					
 					//lbr.move(ptp(joints).setJointVelocityRel(0.25));
-					lbr.move(ptp(getFrame("/DemoCroinspect/Aprox1")).setJointVelocityRel(0.25));
+					lbr.move(ptp(getFrame("/DemoCroinspect/Aprox2")).setJointVelocityRel(0.25));
 
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
@@ -589,17 +589,17 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 			
 			
-			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
+			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
 
 			if(i<x.size()-1)
-				//roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-				roll_scan.getFrame("cam_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
+				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				//roll_scan.getFrame("cam_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
 
 			else
 			{
 				try
 				{					
-					roll_scan.getFrame("cam_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
+					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
