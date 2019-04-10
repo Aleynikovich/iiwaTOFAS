@@ -935,7 +935,7 @@
                     <transformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="264.5"/>
                 </frame>
                 <frame id="_cd210055-4369-4f28-8d77-f676b0d36cab" name="cam_tcp">
-                    <transformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="130.0"/>
+                    <transformation a="1.6" b="0.0" c="0.0" x="3.7" y="1.3" z="130.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="5.158755647515418" cogY="7.904144403343447" cogZ="119.37004350994258" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.4114163994170092"/>
