@@ -89,7 +89,7 @@ public class TCPServer implements Runnable {
 			outToClient.writeBytes(clientSentence);
 			//response.set(false);
 			
-			System.out.println("Response sended");
+			System.out.println("Response sended: " + clientSentence);
 			request.set(false);		
 			//response.set(true);
 
