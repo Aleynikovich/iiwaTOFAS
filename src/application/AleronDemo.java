@@ -601,10 +601,20 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			{
 				try
 				{					
-					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
-					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
+					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+					
+					Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+					
+					current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
+					
+					roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
+					
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
+					
 				}
 				catch(CommandInvalidException e)
 				{
