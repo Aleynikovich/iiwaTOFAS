@@ -83,7 +83,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	DataRecorder rec;
 	
 	private TCPServer tcp_server;
-	private TCPServer us_tcp_srv;
 	AtomicBoolean data_received;
 	
 	//Exchanged data info 
@@ -306,20 +305,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
-		
-		try {
-			us_tcp_srv = new TCPServer();
-				
-			us_tcp_srv.addListener(this);
-			us_tcp_srv.enable();
-					
-		} catch (IOException e) {
-			//TODO Bloque catch generado automáticamente
-			System.err.println("Could not create TCPServer:" +e.getMessage());
-		}
-		
-		//TCP server instance for ultrasound alarm managing
-		
 	
 		//Asyncronous movement error handling
 		errorHandler = new IErrorHandler() {
