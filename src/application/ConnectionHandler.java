@@ -14,13 +14,12 @@ import java.io.*;
  * @author Ane.F
  */
 
-public class TCPServer implements Runnable {
+public class ConnectionHandler implements Runnable {
 	
-	private Thread tcpServerThread;
-	private ArrayList<ITCPListener> listeners;
+	private Socket connectionSocket;
+	ArrayList<ITCPListener> connection_listeners;
+	private Thread connection_thread;
 
-	ServerSocket socket;
-	Socket connectionSocket;
 	BufferedReader inFromClient;
 	DataOutputStream outToClient;
 	
@@ -40,19 +39,18 @@ public class TCPServer implements Runnable {
 	 * @throws IOException 
 	 */
 	@Inject
-	public TCPServer() throws IOException
-	{		
-		socket = new ServerSocket(30001);	
-		connectionSocket = null;
-		listeners = new ArrayList<ITCPListener>();
-		tcpServerThread = null;
+	public ConnectionHandler(Socket socket, ArrayList<ITCPListener> listeners) throws IOException
+	{	
+		connectionSocket = socket;
+		connection_listeners = listeners;
+		connection_thread = null;
 		response = new AtomicBoolean(false);
 		request = new AtomicBoolean(false);
 	}
 
 	public void enable(){
-		tcpServerThread = new Thread(this);
-		tcpServerThread.start();
+		connection_thread = new Thread(this);
+		connection_thread.start();
 		System.out.println("Thread started");
 
 	}
@@ -60,25 +58,21 @@ public class TCPServer implements Runnable {
 	public void dispose() throws InterruptedException, IOException{
 		System.out.println("dispose"); //cont=false;
 		
-		if(!socket.isClosed())
+		if(!connectionSocket.isClosed())
 		{	
 			
 			inFromClient.close();
 			outToClient.close();
-			socket.close();
+			connectionSocket.close();
 			System.out.println("TCP connection closed");
 
 		}
 		
-		tcpServerThread.interrupt();
-		tcpServerThread.join();
+		connection_thread.interrupt();
+		connection_thread.join();
 		
 		System.out.println("Thread interrupted");
 
-	}
-	
-	public void addListener(ITCPListener listener){
-		listeners.add(listener);
 	}
 	
 	public void setResponseData(String response_data)
@@ -106,30 +100,62 @@ public class TCPServer implements Runnable {
 				
 		try
 		{
+			
+			inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+	
+			outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			String datagram = "";
+				
 			while(true)
 			{
-				socket.setSoTimeout(15000);
-				while(connectionSocket == null)
+				if(connection_thread.isInterrupted()) throw new InterruptedException();
+		
+				if(!request.get())
 				{
-					try
+					if((datagram = inFromClient.readLine())!=null)
 					{
-					connectionSocket = socket.accept();
-					new ConnectionHandler(connectionSocket, listeners);
-					System.out.println("Socket communication established");
-					connectionSocket = null;
-					}catch(Exception e)
-					{
-						System.out.println("Socket Accept Exception: " + e.getMessage());
-						if(tcpServerThread.isInterrupted()) throw new InterruptedException();
+						System.out.println("Datagram: " + datagram.toString());
+							
+						for(ITCPListener l : connection_listeners)
+							l.OnTCPMessageReceived(datagram.toString());
+							request.set(true);
 					}
-				}
+					else
+					{
+						System.out.println("Close");
+						break;
+					}
+						
+				}	
 			}
+			System.out.println("Socket closed");
+			connectionSocket = null;
+		}
+		catch (IOException e) {
+			System.out.println("IOException: "+e.getMessage());
+		}
+		catch (InterruptedException ie) {
+						
+			System.out.println("Thread interrupt");
+			
+			try {
 				
+				if(!connectionSocket.isClosed())
+				{
+					
+					inFromClient.close();
+					outToClient.close();
+					connectionSocket.close();
+				}
+			} catch (IOException e) {
+				System.out.println("IO exception closing the socket after thread interruption");
+
+			}
 		}
 		catch (Exception e) {
 			System.out.println("Exception: "+e.getMessage());
 			try {
-				socket.close();
+				connectionSocket.close();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
