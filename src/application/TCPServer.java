@@ -103,28 +103,90 @@ public class TCPServer implements Runnable {
 	
 	@Override
 	public void run() {
-				
+		
+		boolean socket_close = true;
+		
 		try
 		{
-			while(true)
+			while(socket_close)
 			{
 				socket.setSoTimeout(15000);
+				
 				while(connectionSocket == null)
 				{
 					try
 					{
 					connectionSocket = socket.accept();
-					new ConnectionHandler(connectionSocket, listeners);
 					System.out.println("Socket communication established");
-					connectionSocket = null;
+					socket_close = false;
+	
 					}catch(Exception e)
 					{
-						System.out.println("Socket Accept Exception: " + e.getMessage());
+						System.out.println("Socket Accept: " + e.getMessage());
 						if(tcpServerThread.isInterrupted()) throw new InterruptedException();
 					}
 				}
-			}
+	
+				inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+	
+				outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			    String datagram = "";
 				
+				while(true)
+				{
+					if(tcpServerThread.isInterrupted()) throw new InterruptedException();
+	
+					
+					//if(inFromClient.ready())
+					//{
+						//System.out.println("Request received");
+						
+					if(!request.get())
+					{
+						if((datagram = inFromClient.readLine())!=null)
+						{
+							System.out.println("Datagram: " + datagram.toString());
+							
+							//datagram = inFromClient.readUTF();
+							for(ITCPListener l : listeners)
+								l.OnTCPMessageReceived(datagram.toString());
+							
+							request.set(true);
+						}
+						else
+						{
+							System.out.println("Close");
+							break;
+						}
+						
+					}	
+					//}
+				}
+				System.out.println("Socket closed");
+				socket_close = true;
+				connectionSocket = null;
+							}
+		}
+		catch (IOException e) {
+			System.out.println("IOException: "+e.getMessage());
+		}
+		catch (InterruptedException ie) {
+						
+			System.out.println("Thread interrupt");
+			
+			try {
+				
+				if(!socket.isClosed())
+				{
+					
+					inFromClient.close();
+					outToClient.close();
+					socket.close();
+				}
+			} catch (IOException e) {
+				System.out.println("IO exception closing the socket after thread interruption");
+
+			}
 		}
 		catch (Exception e) {
 			System.out.println("Exception: "+e.getMessage());

@@ -327,8 +327,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				return ErrorHandlingAction.Ignore;
 			 }
 		};
-			
+		
+		
 		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);
+		
 			 
 	} 
     
