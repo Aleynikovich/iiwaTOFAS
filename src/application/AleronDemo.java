@@ -83,6 +83,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	DataRecorder rec;
 	
 	private TCPServer tcp_server;
+	private TCPServer us_tcp_srv;
 	AtomicBoolean data_received;
 	
 	//Exchanged data info 
@@ -253,21 +254,22 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
   		  
 	    		 Frame aileron_caltab_fr;
 	    		 
-		    	 if(x.get(cont) < 1250.0)
+	    		 
+	    		 //Definicion de la recta en el punto x=1239 (ultimo punto asociado a la primera caltab)
+	    		 // y = -3.319181909*x + 4245.846756186
+	    		 
+	    		 Double y_val = -3.319181909*x.get(cont) + 4245.846756186;
+	    		 
+	    		 
+		    	 if(y_val > y.get(cont) )
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
 		    	 }
-		    	 else if (1250.0 < x.get(cont) &&  x.get(cont) < 2500.0)
+		    	 else 
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
-		    		 //System.out.println("Caltab 2 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
-						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
-		    	 }
-		    	 else
-		    	 {
-		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(2).copy();
 		    		// System.out.println("Caltab 3 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 								//" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
 		    	 }
@@ -293,7 +295,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			e.printStackTrace();
 		} 
 		
-		//TCPServer object
+		//Application TCPServer object
 		try {
 			tcp_server = new TCPServer();
 				
@@ -304,6 +306,20 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
+		
+		try {
+			us_tcp_srv = new TCPServer();
+				
+			us_tcp_srv.addListener(this);
+			us_tcp_srv.enable();
+					
+		} catch (IOException e) {
+			//TODO Bloque catch generado automáticamente
+			System.err.println("Could not create TCPServer:" +e.getMessage());
+		}
+		
+		//TCP server instance for ultrasound alarm managing
+		
 	
 		//Asyncronous movement error handling
 		errorHandler = new IErrorHandler() {
@@ -349,8 +365,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 				data_received.set(false);
 				
 				System.out.println("Type:" + operation_type);
-				
-				if(operation_type.compareTo("calibration") == 0)
+				if(operation_type.compareTo("warning") == 0)
+				{
+					
+				}
+				else if(operation_type.compareTo("calibration") == 0)
 				{
 					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 					
