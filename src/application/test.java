@@ -65,14 +65,16 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		//lBR_iiwa_14_R820_1.move(ptpHome());
 		
 		
-		BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
+		//BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
 				 
 		//IMotionContainer motionCmd =
 		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
-		motion_list.add(roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos"))));
-		motion_list.add(roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3"))));
-		motion_list.add(roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos"))));
-	
+		IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
+		motion_list.add(motion_cmd);
+		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3")));
+		motion_list.add(motion_cmd);
+		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
+		motion_list.add(motion_cmd);
 		
 		/*IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
 				 
