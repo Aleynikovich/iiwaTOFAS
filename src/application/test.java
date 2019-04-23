@@ -59,7 +59,7 @@ public class test extends RoboticsAPIApplication {
 		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
 		IMotionContainer motionCmd =
 			roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
-
+		
 		IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
 				 
 		 if(firedInfo != null){
