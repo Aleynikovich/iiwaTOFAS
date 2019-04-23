@@ -55,8 +55,11 @@ public class test extends RoboticsAPIApplication {
 		
 		BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
 				 
+		//IMotionContainer motionCmd =
+		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
 		IMotionContainer motionCmd =
-		roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
+			roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
+
 		IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
 				 
 		 if(firedInfo != null){
