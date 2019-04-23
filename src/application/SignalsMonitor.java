@@ -37,7 +37,7 @@ public class SignalsMonitor implements Runnable {
 	 * @throws IOException 
 	 */
 	@Inject
-	public SignalsMonitor(MediaFlangeIOGroup mediaFlangeIO) throws IOException
+	public SignalsMonitor(MediaFlangeIOGroup mediaFlangeIO)
 	{		
 		
 		listeners = new ArrayList<ISignalListener>();

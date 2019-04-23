@@ -39,12 +39,19 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
     
     @Inject
     private MediaFlangeIOGroup mediaFIO;
+    
+	private SignalsMonitor signal_monitor;
+
 
 	@Override
 	public void initialize() {
 		// initialize your application here
 		roll_scan = createFromTemplate("RollScan");
 		roll_scan.attachTo(lbr.getFlange());
+		
+		signal_monitor = new SignalsMonitor(mediaFIO);
+		signal_monitor.addListener(this);
+		signal_monitor.enable();
 	}
 
 	@Override
