@@ -1,6 +1,8 @@
 package application;
 
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
@@ -76,6 +78,12 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		
 		try {
 			Thread.sleep(10000);
+			try {
+				signal_monitor.dispose();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
