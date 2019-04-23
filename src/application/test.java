@@ -32,11 +32,11 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
  * @see #run()
  * @see #dispose()
  */
-public class test extends RoboticsAPIApplication {
+public class test extends RoboticsAPIApplication implements ISignalListener {
 	@Inject
 	private LBR lbr;
     private Tool roll_scan;
-
+    
     @Inject
     private MediaFlangeIOGroup mediaFIO;
 
@@ -58,14 +58,23 @@ public class test extends RoboticsAPIApplication {
 		//IMotionContainer motionCmd =
 		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
 		IMotionContainer motionCmd =
-			roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
+			roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
 		
-		IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
+		/*IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
 				 
 		 if(firedInfo != null){
 		  getLogger().info("pulsador 1 ");
 		 }
-		 
+		 */
+		
 
+	}
+	
+	@Override
+	public void OnSignalReceived(Boolean data) {
+		// TODO Auto-generated method stub
+		
+		System.out.println("Boton pulsado");
+		
 	}
 }
