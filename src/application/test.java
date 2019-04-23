@@ -2,9 +2,17 @@ package application;
 
 
 import javax.inject.Inject;
+
+import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
+
+import com.kuka.roboticsAPI.conditionModel.BooleanIOCondition;
+import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.executionModel.IFiredConditionInfo;
+import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 
 /**
  * Implementation of a robot application.
@@ -26,16 +34,35 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
  */
 public class test extends RoboticsAPIApplication {
 	@Inject
-	private LBR lBR_iiwa_14_R820_1;
+	private LBR lbr;
+    private Tool roll_scan;
+
+    @Inject
+    private MediaFlangeIOGroup mediaFIO;
 
 	@Override
 	public void initialize() {
 		// initialize your application here
+		roll_scan = createFromTemplate("RollScan");
+		roll_scan.attachTo(lbr.getFlange());
 	}
 
 	@Override
 	public void run() {
 		// your application execution starts here
-		lBR_iiwa_14_R820_1.move(ptpHome());
+		//lBR_iiwa_14_R820_1.move(ptpHome());
+		
+		
+		BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
+				 
+		IMotionContainer motionCmd =
+		roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
+		IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
+				 
+		 if(firedInfo != null){
+		  getLogger().info("pulsador 1 ");
+		 }
+		 
+
 	}
 }
