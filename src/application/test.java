@@ -44,7 +44,7 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
     private MediaFlangeIOGroup mediaFIO;
     
 	private SignalsMonitor signal_monitor;
-	ArrayList<IMotionContainer> motion_list;
+	ArrayList<IMotionContainer> motion_list = new ArrayList<IMotionContainer>();
 
 
 	@Override
