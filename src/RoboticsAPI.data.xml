@@ -941,6 +941,12 @@
                     </redundancy>
                 </redundancyData>
             </frame>
+            <frame id="_96c8dec5-ab70-4362-884d-22944b196baa" name="Aprox3">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1556031855014"/>
+                </additionalInformation>
+            </frame>
         </frame>
     </world>
     <objectTemplates>
