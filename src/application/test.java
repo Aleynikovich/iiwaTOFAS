@@ -46,6 +46,7 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 	private SignalsMonitor signal_monitor;
 	ArrayList<IMotionContainer> motion_list = new ArrayList<IMotionContainer>();
 
+	IMotionContainer motion_cmd;
 
 	@Override
 	public void initialize() {
@@ -69,12 +70,12 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 				 
 		//IMotionContainer motionCmd =
 		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
-		IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
-		motion_list.add(motion_cmd);
-		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3")));
-		motion_list.add(motion_cmd);
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
-		motion_list.add(motion_cmd);
+		//motion_list.add(motion_cmd);
+		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3")));
+		//motion_list.add(motion_cmd);
+		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
+		//motion_list.add(motion_cmd);
 		
 		/*IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
 				 
@@ -103,11 +104,12 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		
 		System.out.println("Boton pulsado");
 		
-		for(IMotionContainer motion : motion_list)
+		/*for(IMotionContainer motion : motion_list)
 		{
 			motion.cancel();
 			System.out.println("Motion cancelled");
-		}
+		}*/
+		motion_cmd.cancel();
 	}
 
 }
