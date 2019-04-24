@@ -72,7 +72,7 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		motion_list.add(motion_cmd);
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3")));
 		motion_list.add(motion_cmd);
-		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
+		motion_cmd = roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")));
 		motion_list.add(motion_cmd);
 		
 		/*IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
@@ -81,19 +81,6 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		  getLogger().info("pulsador 1 ");
 		 }
 		 */
-		
-		try {
-			Thread.sleep(10000);
-			try {
-				signal_monitor.dispose();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
