@@ -63,19 +63,17 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 	@Override
 	public void run() {
 		// your application execution starts here
-		//lBR_iiwa_14_R820_1.move(ptpHome());
-		
-		
+	
 		//BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
 				 
 		//IMotionContainer motionCmd =
 		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
-		//motion_list.add(motion_cmd);
+		motion_list.add(motion_cmd);
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3")));
-		//motion_list.add(motion_cmd);
+		motion_list.add(motion_cmd);
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
-		//motion_list.add(motion_cmd);
+		motion_list.add(motion_cmd);
 		
 		/*IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
 				 
@@ -104,12 +102,13 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		
 		System.out.println("Boton pulsado");
 		
-		/*for(IMotionContainer motion : motion_list)
+		for(IMotionContainer motion : motion_list)
 		{
+			System.out.println("Motion is finished: " + motion.isFinished());
+			System.out.println("Motion state: " + motion.getState());
 			motion.cancel();
 			System.out.println("Motion cancelled");
-		}*/
-		motion_cmd.cancel();
+		}
 	}
 
 }
