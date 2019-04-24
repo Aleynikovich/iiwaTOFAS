@@ -64,23 +64,25 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 	public void run() {
 		// your application execution starts here
 	
-		//BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
-				 
+						 
 		//IMotionContainer motionCmd =
 		//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/robot_base/SafePos")));
 		motion_list.add(motion_cmd);
 		motion_cmd = roll_scan.getFrame("Gripper").moveAsync(ptp(getFrame("/DemoCroinspect/Aprox3")));
 		motion_list.add(motion_cmd);
-		motion_cmd = roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")));
-		motion_list.add(motion_cmd);
 		
-		/*IFiredConditionInfo firedInfo =  motionCmd.getFiredBreakConditionInfo();
+		
+		BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
+
+		motion_cmd = roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).breakWhen(switch1_active));
+		
+		IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 				 
 		 if(firedInfo != null){
 		  getLogger().info("pulsador 1 ");
 		 }
-		 */
+		 
 	}
 	
 	@Override
@@ -92,9 +94,12 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		for(IMotionContainer motion : motion_list)
 		{
 			System.out.println("Motion is finished: " + motion.isFinished());
-			System.out.println("Motion state: " + motion.getState());
-			motion.cancel();
-			System.out.println("Motion cancelled");
+			if(!motion.isFinished())
+			{
+				System.out.println("Motion state: " + motion.getState());
+				motion.cancel();
+				System.out.println("Motion cancelled");
+			}
 		}
 	}
 
