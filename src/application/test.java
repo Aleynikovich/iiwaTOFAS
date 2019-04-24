@@ -83,6 +83,12 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		  getLogger().info("pulsador 1 ");
 		 }
 		 
+		 try {
+			signal_monitor.dispose();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Test exception executing the dispose method");
+		} 
 	}
 	
 	@Override
