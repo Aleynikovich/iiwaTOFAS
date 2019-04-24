@@ -87,8 +87,10 @@ public class SignalsMonitor implements Runnable {
 				
 				if(monitoring.get() && input_state != mediaFIO.getInputX3Pin3())
 				{
+					System.out.println("Recovering data from Input 3");
 					input_state = mediaFIO.getInputX3Pin3();
-					
+					System.out.println("Data recovered from Input 3");
+
 					if(input_state)
 					{
 						for(ISignalListener l : listeners)
