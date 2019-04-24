@@ -23,6 +23,7 @@ public class SignalsMonitor implements Runnable {
 	private ArrayList<ISignalListener> listeners;
 	private Boolean input_state;
 	private MediaFlangeIOGroup mediaFIO;
+	AtomicBoolean monitoring;
 	
 
 	/**
@@ -44,9 +45,13 @@ public class SignalsMonitor implements Runnable {
 		monitorThread = null;
 		input_state = false;
 		mediaFIO = mediaFlangeIO;
+		monitoring.set(false);
 	}
 
 	public void enable(){
+		
+		monitoring.set(true);
+
 		monitorThread = new Thread(this);
 		monitorThread.start();
 		System.out.println("Monitor Thread started");
@@ -56,6 +61,8 @@ public class SignalsMonitor implements Runnable {
 	public void dispose() throws InterruptedException{
 		System.out.println("dispose"); //cont=false;
 		
+		monitoring.set(false);
+
 		monitorThread.interrupt();
 		monitorThread.join();
 		
@@ -77,7 +84,8 @@ public class SignalsMonitor implements Runnable {
 			{
 				if(monitorThread.isInterrupted()) throw new InterruptedException();
 	
-				if(input_state != mediaFIO.getInputX3Pin3())
+				
+				if(monitoring.get() && input_state != mediaFIO.getInputX3Pin3())
 				{
 					input_state = mediaFIO.getInputX3Pin3();
 					
