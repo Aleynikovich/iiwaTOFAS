@@ -88,10 +88,8 @@ public class SignalsMonitor implements Runnable {
 				if(monitorThread.isInterrupted()) throw new InterruptedException();
 	
 				
-				if(monitoring.get() )
-				{
-					
-					System.out.println("Monitoring true");
+				if(monitoring.get())
+				{	
 					
 					if(input_state != mediaFIO.getInputX3Pin3())
 					{	 
@@ -106,6 +104,9 @@ public class SignalsMonitor implements Runnable {
 						}
 					}
 				}
+				else
+					System.out.println("Monitoring false");
+
 			}		
 
 	
