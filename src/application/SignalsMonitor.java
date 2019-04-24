@@ -63,7 +63,10 @@ public class SignalsMonitor implements Runnable {
 		
 		monitoring.set(false);
 
+		System.out.println("Before interrupt"); //cont=false;
 		monitorThread.interrupt();
+		System.out.println("After interrupt"); //cont=false;
+
 		monitorThread.join();
 		
 		System.out.println("Monitor Thread interrupted");
