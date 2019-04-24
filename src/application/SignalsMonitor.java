@@ -45,8 +45,8 @@ public class SignalsMonitor implements Runnable {
 		monitorThread = null;
 		input_state = false;
 		mediaFIO = mediaFlangeIO;
-		monitoring.set(false);
-	}
+		monitoring = new AtomicBoolean(false);
+	} 
 
 	public void enable(){
 		
