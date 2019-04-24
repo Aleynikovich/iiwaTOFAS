@@ -53,10 +53,8 @@ public class SignalsMonitor implements Runnable {
 
 	}
 	  
-	public void dispose() throws InterruptedException, IOException{
+	public void dispose() throws InterruptedException{
 		System.out.println("dispose"); //cont=false;
-		
-	
 		
 		monitorThread.interrupt();
 		monitorThread.join();
@@ -98,7 +96,7 @@ public class SignalsMonitor implements Runnable {
 			System.out.println("Thread interrupt");
 		}
 		catch (Exception e) {
-			System.out.println("Exception: "+e.getMessage());
+			System.out.println("Signals monitor Exception: " +e.getMessage());
 		}	
 		System.out.println("Finish Signal Monitor Run ");
 	}
