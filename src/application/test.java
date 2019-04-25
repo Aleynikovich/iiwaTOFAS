@@ -130,7 +130,9 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 			System.out.println("Third point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
 		
-			//pose.setGammaRad(current_pos.getGammaRad() - (30*Math.PI/180));  
+			roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(2));
+
+			pose.setGammaRad(current_pos.getGammaRad() + (30*Math.PI/180));  
 		
 			
 			roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(2));
