@@ -97,10 +97,10 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 			Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 			
 			Frame pose = current_pos.copy();
-			pose.setGammaRad(current_pos.getGammaRad() + Math.PI/4);  
+			pose.setGammaRad(current_pos.getGammaRad() + (30*Math.PI/180));  
 			roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(2));
 			
-			pose.setGammaRad(current_pos.getGammaRad() - Math.PI/4);  
+			pose.setGammaRad(current_pos.getGammaRad() - (30*Math.PI/180));  
 			roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(2));
 			
 			roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(2));
