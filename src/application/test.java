@@ -3,6 +3,7 @@ package application;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
@@ -14,6 +15,7 @@ import com.kuka.roboticsAPI.conditionModel.BooleanIOCondition;
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.executionModel.IFiredConditionInfo;
+import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 
@@ -48,6 +50,8 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 
 	IMotionContainer motion_cmd;
 
+	AtomicBoolean warning_signal;
+	
 	@Override
 	public void initialize() {
 		// initialize your application here
@@ -57,6 +61,9 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		signal_monitor = new SignalsMonitor(mediaFIO);
 		signal_monitor.addListener(this);
 		signal_monitor.enable();
+		
+		warning_signal = new AtomicBoolean(false);
+
 	}
 
 
@@ -79,9 +86,27 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		
 		IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 				 
-		 if(firedInfo != null){
-		  getLogger().info("pulsador 1 ");
-		 }
+		if(firedInfo != null){
+			getLogger().info("pulsador 1 ");
+			warning_signal.set(true);
+		
+		}
+		 
+		if(warning_signal.get())
+		{
+			Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+			
+			Frame pose = current_pos.copy();
+			pose.setGammaRad(current_pos.getGammaRad() + Math.PI/4);  
+			roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(2));
+			
+			pose.setGammaRad(current_pos.getGammaRad() - Math.PI/4);  
+			roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(2));
+			
+			roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(2));
+			
+			warning_signal.set(false);
+		}
 		 
 		 try {
 			signal_monitor.dispose();
@@ -96,6 +121,7 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Boton pulsado");
+		warning_signal.set(true);
 		
 		for(IMotionContainer motion : motion_list)
 		{

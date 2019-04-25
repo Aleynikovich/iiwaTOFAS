@@ -24,12 +24,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 
 
+import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+import com.kuka.roboticsAPI.conditionModel.BooleanIOCondition;
 import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy;
 import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
+import com.kuka.roboticsAPI.executionModel.ExecutionState;
+import com.kuka.roboticsAPI.executionModel.IFiredConditionInfo;
 import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
@@ -44,7 +48,7 @@ import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
-public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
+public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, ISignalListener{
 	
 	@Inject
 	private LBR lbr;
@@ -99,6 +103,20 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	AtomicBoolean movement_failed;
 	AtomicInteger failed_movement_nbr;
 	
+	
+	//Motion list	
+	ArrayList<IMotionContainer> motion_list = new ArrayList<IMotionContainer>();
+
+	//Media flange instance
+    @Inject
+    private MediaFlangeIOGroup mediaFIO;
+    
+    //Media flange input signal manager
+	private SignalsMonitor signal_monitor;
+
+	//Movement counter
+	AtomicInteger move_cont; 
+	AtomicBoolean warning_signal;
 	@Override
 	public void initialize() {
 		
@@ -113,6 +131,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		movement_failed = new AtomicBoolean(false);
 		failed_movement_nbr = new AtomicInteger(0);
 		
+		warning_signal = new AtomicBoolean(false);
+		move_cont = new AtomicInteger(0);
 		
 		//TODO: Fulfill with correct values
 		//Frames definition
@@ -305,6 +325,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
+		
+		//Media flange management
+		mediaFIO.setLEDBlue(true);
+		signal_monitor = new SignalsMonitor(mediaFIO);
+		signal_monitor.addListener(this);
+		signal_monitor.enable();
 	
 		//Asyncronous movement error handling
 		errorHandler = new IErrorHandler() {
@@ -570,7 +596,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 		
 		Frame copy_caltab_robot_fr;
 		
-		for(int i=0; i<x.size();i++)
+		int i = move_cont.get();
+		for(; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
@@ -596,30 +623,43 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 		
 			
-			
 			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
 
 			if(i<x.size()-1)
-				roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-				//roll_scan.getFrame("cam_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
-
+			{
+				
+				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				motion_list.add(motion_cmd);
+			}	
 			else
 			{
 				try
-				{					
+				{			
+					
+					BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
+					
 					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
-					roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 					
-					Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-					
-					current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
-					
-					roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
-					
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-
-					String response_data = frame_id + ";" + operation_type + ";1" ;
-					tcp_server.setResponseData(response_data);
+					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
+							 
+					 if(firedInfo != null){
+					  getLogger().info("pulsador 1 ");
+					  warning_signal.set(true);
+					 }
+					 else
+					 {
+						Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+						
+						current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
+						
+						roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
+						
+						roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+	
+						String response_data = frame_id + ";" + operation_type + ";1" ;
+						tcp_server.setResponseData(response_data);
+					 }
 					
 				}
 				catch(CommandInvalidException e)
@@ -636,8 +676,24 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 						System.out.println("Closing TCP server from App");
 						break;
 					}	
-				}
-						
+				}		
+			}
+			
+			if(warning_signal.get())
+			{
+				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+				
+				Frame pose = current_pos.copy();
+				pose.setGammaRad(current_pos.getGammaRad() + Math.PI/4);  
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				
+				pose.setGammaRad(current_pos.getGammaRad() - Math.PI/4);  
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				
+				i = move_cont.get();
+				warning_signal.set(false);
 			}
 			
 			if(movement_failed.get())
@@ -711,6 +767,30 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener{
 	public void OnTCPConnection() {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void OnSignalReceived(Boolean data) {
+		
+		// TODO Auto-generated method stub
+		
+		System.out.println("Boton pulsado");
+		
+		warning_signal.set(true);
+		//for(IMotionContainer motion : motion_list)
+		for(int i=0; i < motion_list.size(); i++ )
+		{
+			System.out.println("Motion is finished: " + motion_list.get(i).isFinished());
+			if(!motion_list.get(i).isFinished())
+			{
+				if(motion_list.get(i).getState() == ExecutionState.Executing)
+					move_cont.set(i);
+				System.out.println("Motion state: " + motion_list.get(i).getState());
+				motion_list.get(i).cancel();
+				System.out.println("Motion cancelled");
+			}
+		}
 	}
 }
 
