@@ -110,6 +110,9 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 			
 			current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 			
+			System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+			
 			pose.setGammaRad(current_pos.getGammaRad() - (2*30*Math.PI/180));  
 			
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
