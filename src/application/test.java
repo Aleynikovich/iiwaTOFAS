@@ -113,7 +113,7 @@ public class test extends RoboticsAPIApplication implements ISignalListener {
 			System.out.println("Current pose point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
 					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
 		
-			pose.setGammaRad(current_pos.getGammaRad() - (2*30*Math.PI/180));  
+			pose.setGammaRad(current_pos.getGammaRad() - (30*Math.PI/180));  
 			
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
