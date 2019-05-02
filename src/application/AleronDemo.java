@@ -681,6 +681,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			
 			if(warning_signal.get())
 			{
+				
+				System.out.println("Performing new scan");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
 				Frame pose = current_pos.copy();
