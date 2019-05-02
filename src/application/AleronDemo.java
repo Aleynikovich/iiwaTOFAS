@@ -685,14 +685,26 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				System.out.println("Performing new scan");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
+				System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
+					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
+			
+				
 				Frame pose = current_pos.copy();
-				pose.setGammaRad(current_pos.getGammaRad() + Math.PI/4);  
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				pose.setGammaRad(current_pos.getGammaRad() + Math.PI/4);
+			
+				System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+			
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
 				
-				pose.setGammaRad(current_pos.getGammaRad() - Math.PI/4);  
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 				
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				pose.setGammaRad(current_pos.getGammaRad() - Math.PI/4); 
+				System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+			
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
+				
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
 				
 				i = move_cont.get();
 				warning_signal.set(false);
@@ -786,7 +798,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			if(!motion_list.get(i).isFinished())
 			{
 				if(motion_list.get(i).getState() == ExecutionState.Executing)
+				{
 					move_cont.set(i);
+					System.out.println("Running motion--> " + motion_list.get(i).getCurrentMotion().toString());
+				
+				}
 				System.out.println("Motion state: " + motion_list.get(i).getState());
 				motion_list.get(i).cancel();
 				System.out.println("Motion cancelled");
