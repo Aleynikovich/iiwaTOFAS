@@ -776,9 +776,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		// TODO Auto-generated method stub
 		
 		System.out.println("Boton pulsado");
-		
 		warning_signal.set(true);
-		//for(IMotionContainer motion : motion_list)
+		
 		for(int i=0; i < motion_list.size(); i++ )
 		{
 			System.out.println("Motion is finished: " + motion_list.get(i).isFinished());
