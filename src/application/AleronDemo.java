@@ -644,7 +644,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 							 
 					 if(firedInfo != null){
-					  getLogger().info("pulsador 1 ");
+					  System.out.println("pulsador 1 ");
 					  warning_signal.set(true);
 					 }
 					 else
