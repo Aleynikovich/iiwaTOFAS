@@ -627,7 +627,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 			if(i<x.size()-1 && !warning_signal.get())
 			{
-				
+
 				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 				motion_list.add(motion_cmd);
 			}	
@@ -802,6 +802,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		// TODO Auto-generated method stub
 		System.out.println("Boton pulsado");
+		warning_signal.set(true);
 
 		for(int i=0; i < motion_list.size(); i++ )
 		{
@@ -816,7 +817,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			}
 		}
 		
-		warning_signal.set(true);
 		System.out.println("Alarma activado");
 
 	}
