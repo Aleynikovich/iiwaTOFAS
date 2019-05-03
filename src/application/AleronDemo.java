@@ -788,26 +788,24 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	public void OnSignalReceived(Boolean data) {
 		
 		// TODO Auto-generated method stub
-		
 		System.out.println("Boton pulsado");
-		warning_signal.set(true);
-		
+
 		for(int i=0; i < motion_list.size(); i++ )
 		{
-			System.out.println("Motion is finished: " + motion_list.get(i).isFinished());
 			if(!motion_list.get(i).isFinished())
 			{
 				if(motion_list.get(i).getState() == ExecutionState.Executing)
 				{
 					move_cont.set(i);
 					System.out.println("Running motion--> " + motion_list.get(i).getCurrentMotion().toString());
-				
 				}
-				System.out.println("Motion state: " + motion_list.get(i).getState());
 				motion_list.get(i).cancel();
-				System.out.println("Motion cancelled");
 			}
 		}
+		
+		warning_signal.set(true);
+		System.out.println("Alarma activado");
+
 	}
 }
 
