@@ -819,6 +819,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			}
 		}
 		
+		motion_list.clear();
 		System.out.println("Alarma activado");
 
 	}
