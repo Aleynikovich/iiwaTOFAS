@@ -41,6 +41,7 @@ import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import com.kuka.roboticsAPI.geometricModel.math.XyzAbcTransformation;
 import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
+import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianImpedanceControlMode;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianSineImpedanceControlMode;
@@ -106,7 +107,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	
 	//Motion list	
 	ArrayList<IMotionContainer> motion_list = new ArrayList<IMotionContainer>();
-
+	IMotion canceled_motion;
+	
 	//Media flange instance
     @Inject
     private MediaFlangeIOGroup mediaFIO;
@@ -813,15 +815,17 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				if(motion_list.get(i).getState() == ExecutionState.Executing)
 				{
 					move_cont.set(i);
+					canceled_motion = motion_list.get(i).getCurrentMotion();
 					System.out.println("Running motion--> " + motion_list.get(i).getCurrentMotion().toString());
 				}
 				motion_list.get(i).cancel();
 			}
 		}
 		
-		motion_list.clear();
+		//motion_list.clear();
 		System.out.println("Alarma activado");
-
+		
+		
 	}
 }
 
