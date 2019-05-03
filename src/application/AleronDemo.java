@@ -712,6 +712,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			
 			if(movement_failed.get())
 			{
+				mediaFIO.setLEDBlue(false);
+
 				System.out.println("Movement failed. Moving the robot to safe position");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
@@ -725,10 +727,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 				
-				i = failed_movement_nbr.get() -1 ;
+				//i = failed_movement_nbr.get() -1 ;
 				
-				roll_scan.getFrame("roll_tcp").moveAsync(ptp(copy_caltab_robot_fr).setJointVelocityRel(0.25).setMode(impedanceControlMode));
-
+				//roll_scan.getFrame("roll_tcp").moveAsync(ptp(copy_caltab_robot_fr).setJointVelocityRel(0.25).setMode(impedanceControlMode));
+				break;
 			}
 			
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
