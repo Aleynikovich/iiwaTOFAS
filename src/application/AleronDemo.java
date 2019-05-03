@@ -730,6 +730,17 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				//i = failed_movement_nbr.get() -1 ;
 				
 				//roll_scan.getFrame("roll_tcp").moveAsync(ptp(copy_caltab_robot_fr).setJointVelocityRel(0.25).setMode(impedanceControlMode));
+				
+				String response_data = frame_id + ";" + operation_type + ";0" ;
+				tcp_server.setResponseData(response_data);
+				
+				try {
+					tcp_server.dispose();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				break;
 			}
 			
