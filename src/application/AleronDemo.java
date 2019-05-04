@@ -719,6 +719,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
 				
 				i = move_cont.get();
+				
+				for(int j=0; j < motion_list.size(); j++ )
+					System.out.println("Motion state--> " + motion_list.get(j).getCurrentMotion().toString());
+				
 				warning_signal.set(false);
 			}
 			
