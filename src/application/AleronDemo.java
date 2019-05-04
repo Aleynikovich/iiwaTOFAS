@@ -629,7 +629,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 			if(i<x.size()-1)
 			{
-				synchronized(this)
+				synchronized(motion_list)
 				{
 					if(!warning_signal.get())
 					{
@@ -811,7 +811,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		// TODO Auto-generated method stub
 		System.out.println("Boton pulsado");
 		
-		synchronized(this)
+		synchronized(motion_list)
 		{
 			warning_signal.set(true);
 	
@@ -833,8 +833,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		//motion_list.clear();
 		System.out.println("Alarma activado");
-		
-		
 	}
 }
 
