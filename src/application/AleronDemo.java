@@ -811,10 +811,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		// TODO Auto-generated method stub
 		System.out.println("Boton pulsado");
 		
+		warning_signal.set(true);
+		
 		synchronized(motion_list)
 		{
-			warning_signal.set(true);
-	
 			System.out.println("OnSignalReceived motion list: " + motion_list.size());
 			for(int i=0; i < motion_list.size(); i++ )
 			{
