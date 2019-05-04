@@ -627,17 +627,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			
 			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
 
-			if(i<x.size()-1)
+			if(i<x.size()-1 && !warning_signal.get())
 			{
-				synchronized(motion_list)
-				{
-					if(!warning_signal.get())
-					{
-						IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-						motion_list.add(motion_cmd);
-						System.out.println("Movement list: " + motion_list.size());
-					}
-				}
+				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				motion_list.add(motion_cmd);
+				System.out.println("Movement list: " + motion_list.size());
 			}	
 			else
 			{
@@ -689,6 +683,20 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			
 			if(warning_signal.get())
 			{
+				
+				for(int j=0; j < motion_list.size(); j++ )
+				{
+					if(!motion_list.get(j).isFinished())
+					{
+						if(motion_list.get(j).getState() == ExecutionState.Executing)
+						{
+							move_cont.set(j);
+							canceled_motion = motion_list.get(j).getCurrentMotion();
+							System.out.println("Running motion--> " + motion_list.get(i).getCurrentMotion().toString());
+						}
+						motion_list.get(j).cancel();
+					}
+				}
 				
 				System.out.println("Performing new scan");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
@@ -813,24 +821,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		warning_signal.set(true);
 		
-		synchronized(motion_list)
-		{
-			System.out.println("OnSignalReceived motion list: " + motion_list.size());
-			for(int i=0; i < motion_list.size(); i++ )
-			{
-				if(!motion_list.get(i).isFinished())
-				{
-					if(motion_list.get(i).getState() == ExecutionState.Executing)
-					{
-						move_cont.set(i);
-						canceled_motion = motion_list.get(i).getCurrentMotion();
-						System.out.println("Running motion--> " + motion_list.get(i).getCurrentMotion().toString());
-					}
-					motion_list.get(i).cancel();
-				}
-			}
-		}
-		
+		System.out.println("OnSignalReceived motion list: " + motion_list.size());
+			
 		//motion_list.clear();
 		System.out.println("Alarma activado");
 	}
