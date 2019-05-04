@@ -720,9 +720,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				i = move_cont.get();
 				
-				for(int j=0; j < motion_list.size(); j++ )
-					System.out.println("Motion state--> " + motion_list.get(j).getCurrentMotion().toString());
-				
+				for(int j=0; j < motion_list.size(); j++)
+				{
+					System.out.println("Motion state " + j + "  --> " + motion_list.get(j).getCurrentMotion().toString());
+				}
 				warning_signal.set(false);
 			}
 			
