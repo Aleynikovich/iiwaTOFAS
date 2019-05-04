@@ -644,7 +644,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 										
 					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 							 
-					 if(firedInfo != null){
+					 if(firedInfo != null)
+					 {
 					  System.out.println("pulsador 1 ");
 					  warning_signal.set(true);
 					 }
@@ -718,15 +719,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
 				
-				i = move_cont.get();
+				i = move_cont.get()-1;
 				
 				System.out.println("Movement list: " + motion_list.size());
 
-				
-				for(int j=0; j < motion_list.size(); j++)
-				{
-					System.out.println("Motion state " + j + "  --> " + motion_list.get(j).getState().toString());
-				}
 				warning_signal.set(false);
 			}
 			
