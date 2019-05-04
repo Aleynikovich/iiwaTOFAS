@@ -638,9 +638,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			{
 				try
 				{			
-					
-					BooleanIOCondition switch1_active = new BooleanIOCondition(mediaFIO.getInput("InputX3Pin3"), true);
-						
+											
 					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 										
@@ -703,18 +701,16 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
 					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
-			
-				
+							
 				Frame pose = current_pos.copy();
-				pose.setGammaRad(current_pos.getGammaRad() + Math.PI/4);
+				pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
 			
 				System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
 			
 				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
-				
-				
-				pose.setGammaRad(current_pos.getGammaRad() - Math.PI/4); 
+								
+				pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
 				System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
 			
@@ -737,16 +733,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
 				
+				
 				JointPosition joints = lbr.getCurrentJointPosition();
 				joints.set(0, 75*(Math.PI/180));
 				lbr.move(ptp(joints).setJointVelocityRel(0.25));
 				
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-				
-				//i = failed_movement_nbr.get() -1 ;
-				
-				//roll_scan.getFrame("roll_tcp").moveAsync(ptp(copy_caltab_robot_fr).setJointVelocityRel(0.25).setMode(impedanceControlMode));
-				
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
+							
 				String response_data = frame_id + ";" + operation_type + ";0" ;
 				tcp_server.setResponseData(response_data);
 				
