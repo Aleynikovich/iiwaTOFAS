@@ -621,24 +621,22 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 			copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 
-			//System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-				//	" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-		
-			
+			System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
+					
 			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
 
 			if(i<x.size()-1 && !warning_signal.get())
 			{
-				System.out.println("Warning signal: " + warning_signal.get());
+				//System.out.println("Warning signal: " + warning_signal.get());
 				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 				motion_list.add(motion_cmd);
-				System.out.println("Movement list: " + motion_list.size());
+				//System.out.println("Movement list: " + motion_list.size());
 			}	
 			else
 			{
 				try
-				{			
-											
+				{								
 					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 										
@@ -720,9 +718,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
 				
 				i = move_cont.get()-1;
+				System.out.println("Next movement: " + i);
 				
-				System.out.println("Movement list: " + motion_list.size());
-
 				warning_signal.set(false);
 			}
 			
