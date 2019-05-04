@@ -119,6 +119,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	//Movement counter
 	AtomicInteger move_cont; 
 	AtomicBoolean warning_signal;
+	int next_movement;
 	@Override
 	public void initialize() {
 		
@@ -135,6 +136,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		warning_signal = new AtomicBoolean(false);
 		move_cont = new AtomicInteger(0);
+		next_movement = 0;
 		
 		//TODO: Fulfill with correct values
 		//Frames definition
@@ -717,7 +719,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setMode(impedanceControlMode).setBlendingCart(0));
 				
-				i = move_cont.get()-1;
+				
+				next_movement = next_movement + move_cont.get(); 
+				motion_list.clear();
+				i = next_movement;
 				System.out.println("Next movement: " + i);
 				
 				warning_signal.set(false);
