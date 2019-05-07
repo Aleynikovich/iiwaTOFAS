@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.conditionModel.BooleanIOCondition;
+import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -49,10 +50,13 @@ import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
-public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, ISignalListener{
+public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener, ISignalListener{
 	
 	@Inject
 	private LBR lbr;
+	
+    private Controller controller;
+
     private Tool roll_scan;
     boolean exit;
     
@@ -123,6 +127,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	@Override
 	public void initialize() {
 		
+		controller = getController("KUKA_Sunrise_Cabinet_1");
+
 		// initialize your application here
 		roll_scan = createFromTemplate("RollScan");
 		roll_scan.attachTo(lbr.getFlange());
@@ -149,7 +155,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
 		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 		
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
@@ -683,21 +689,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			}
 			
 			if(warning_signal.get())
-			{
-				for(int j=0; j < motion_list.size(); j++ )
-				{
-					if(!motion_list.get(j).isFinished())
-					{
-						if(motion_list.get(j).getState() == ExecutionState.Executing)
-						{
-							move_cont.set(j);
-							canceled_motion = motion_list.get(j).getCurrentMotion();
-							System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
-						}
-						motion_list.get(j).cancel();
-					}
-				}
-				
+			{		
 				System.out.println("Performing new scan");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
@@ -820,6 +812,24 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		System.out.println("Boton pulsado");
 		
 		warning_signal.set(true);
+		
+		
+		
+		for(int j=0; j < motion_list.size(); j++ )
+		{
+			if(!motion_list.get(j).isFinished())
+			{
+				if(motion_list.get(j).getState() == ExecutionState.Executing)
+				{
+					move_cont.set(j);
+					canceled_motion = motion_list.get(j).getCurrentMotion();
+					System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
+					break;
+				}
+			}
+		}
+		
+		controller.getExecutionService().cancelAll();
 		
 		System.out.println("OnSignalReceived motion list: " + motion_list.size());
 			
