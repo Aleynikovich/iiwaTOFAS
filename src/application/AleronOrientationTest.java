@@ -14,6 +14,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
-public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, ISignalListener{
+public class AleronOrientationTest extends RoboticsAPIApplication implements ITCPListener{
 	
 	@Inject
 	private LBR lbr;
@@ -57,7 +58,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
     boolean exit;
     
     String fname;
-	
+    FileWriter fw;
+
     CartesianImpedanceControlMode impedanceControlMode;
 	
     private static final int stiffnessZ = 300;
@@ -85,8 +87,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	ArrayList<Frame> aileron_caltabs_fr_list = new ArrayList<Frame>();
 	ArrayList<Frame> traj_caltab_ref_fr = new ArrayList<Frame>();
 	
-	DataRecorder rec;
-	
 	private TCPServer tcp_server;
 	AtomicBoolean data_received;
 	
@@ -104,22 +104,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	AtomicBoolean movement_failed;
 	AtomicInteger failed_movement_nbr;
 	
-	
-	//Motion list	
-	ArrayList<IMotionContainer> motion_list = new ArrayList<IMotionContainer>();
-	IMotion canceled_motion;
+	boolean success;
 	
 	//Media flange instance
     @Inject
     private MediaFlangeIOGroup mediaFIO;
     
-    //Media flange input signal manager
-	private SignalsMonitor signal_monitor;
-
-	//Movement counter
-	AtomicInteger move_cont; 
-	AtomicBoolean warning_signal;
-	int next_movement;
+	
 	@Override
 	public void initialize() {
 		
@@ -134,10 +125,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		movement_failed = new AtomicBoolean(false);
 		failed_movement_nbr = new AtomicInteger(0);
 		
-		warning_signal = new AtomicBoolean(false);
-		move_cont = new AtomicInteger(0);
-		next_movement = 0;
-		
 		//TODO: Fulfill with correct values
 		//Frames definition
 		tcp_camera_fr = new Frame(lbr.getFlange());
@@ -149,7 +136,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
 		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 		
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
@@ -164,35 +151,18 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	
 		aileron_caltabs_fr_list.add(pose_inv);
 
-		//Catlab2 Aileron frame definition
-		pose.setX(0.75 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
-			
-		//Getting the inverse frame (Aileron - Caltab2)
-		t = pose.getTransformationFromParent().invert();
-		pose_inv = new Frame(getFrame("/DemoCroinspect/caltab"), t);
-	
-		//Adding the frame to the list
-		aileron_caltabs_fr_list.add(pose);
-		
-		pose = new Frame(getFrame("/DemoCroinspect/aileron"));
-		//Catlab 3 Aileron frame definition
-		pose.setX(0.0); pose.setY(0.0); pose.setZ(0.0);
-		pose.setAlphaRad(0.0); pose.setBetaRad(0.0); pose.setGammaRad(0.0);
-		
-		//Getting the inverse frame (Aileron - Caltab3)
-		t = pose.getTransformationFromParent().invert();
-		pose_inv = new Frame(getFrame("/DemoCroinspect/caltab"), t);
-		
-		//Adding the frame to the list
-		aileron_caltabs_fr_list.add(pose);
-		
 		//Impedance control object definition
 		impedanceControlMode =	new CartesianImpedanceControlMode();
 				
 		String str;
 		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
+		
+		try {
+			fw = new FileWriter("C:\\Users\\KukaUser\\Desktop\\logs\\failed_movements.txt");
+		} catch (IOException e1) {
+			System.out.println("Error creating log file");
+		}
       
 		String val_str[];
 		Double val;
@@ -207,7 +177,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			 
 		     while((str = br.readLine())!=null) 
 		     {
-		    	 
 		    	 String data[] = str.split(" ");
 		    	  	    	  
 		    	 for(int i=0; i<data.length; i++)
@@ -285,24 +254,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	    		 
 	    		 
 		    	 if(y_val > y.get(cont) )
-		    	 {
+		    	
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
-		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
-						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
-		    	 }
 		    	 else 
-		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
-		    		// System.out.println("Caltab 3 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
-								//" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
-		    	 }
-		    	 
-		    	//System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
-					//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
-				
-		
-		    	 aileron_caltab_fr.transform(XyzAbcTransformation.ofRad(pose.getX(), pose.getY(), pose.getZ(),
-		    			 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
+		       	
+		      	 aileron_caltab_fr.transform(XyzAbcTransformation.ofRad(pose.getX(), pose.getY(), pose.getZ(),
+		      			 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
 	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);
 		 		 cont++;
 		     }
@@ -332,38 +290,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		//Media flange management
 		mediaFIO.setLEDBlue(true);
-		signal_monitor = new SignalsMonitor(mediaFIO);
-		signal_monitor.addListener(this);
-		signal_monitor.enable();
-	
-		//Asyncronous movement error handling
-		errorHandler = new IErrorHandler() {
-			 @Override
-			 public ErrorHandlingAction handleError(Device device, IMotionContainer failedContainer,
-			 List<IMotionContainer> canceledContainers)
-			 {
-				 System.out.println("Excecution of the following motion failed: " + failedContainer.getCommand().toString());
-				 //logger.info("The following motions will not be executed:");
-				 //for (int i = 0; i < canceledContainers.size(); i++) {
-					 //logger.info(canceledContainers.get(i).getCommand().toString());
-					 
-				 //}
-				 System.out.println("The following " + canceledContainers.size() + " motions will not be executed");
-				 
 				
-				movement_failed.set(true);
-				failed_movement_nbr.set(x.size() - canceledContainers.size());
-					
-				return ErrorHandlingAction.Ignore;
-			 }
-		};
+		success = true;
 		
-		
-		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);
-		
-			 
+		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler); 
 	} 
-    
 	
 	@Override
 	public void run() {	
@@ -376,17 +307,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		do {
 			
-			
 			if(data_received.get())
 			{
 				data_received.set(false);
 				
 				System.out.println("Type:" + operation_type);
-				if(operation_type.compareTo("warning") == 0)
-				{
-					
-				}
-				else if(operation_type.compareTo("calibration") == 0)
+			
+				if(operation_type.compareTo("calibration") == 0)
 				{
 					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 					
@@ -405,12 +332,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				}
 				else if (operation_type.compareTo("inspection") == 0)
 				{
-				
-					rec = new DataRecorder();
-					rec.setTimeout(2L, TimeUnit.MINUTES);
-					
 					switch (getApplicationUI().displayModalDialog(
-							ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
+						ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 							"10N", "15N", "20N", "24N", "END DO NOTHING")) {
 		
 							case 0:
@@ -426,9 +349,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 								} catch (IOException e) {
 									System.out.println("IO Exception in Force_XND 10");
 								}
-								//Force_XND(0.0,"measured_force_10ND_stiffZ_300.log",select_velocity);	
-						
-								//exit = true;
 								
 								break;				
 							case 1:
@@ -443,8 +363,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 								} catch (IOException e) {
 									System.out.println("IO Exception in Force_XND 15");
 								}	
-								
-								//exit = true;
 						
 								break;					
 							case 2:
@@ -460,9 +378,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 									System.out.println("IO Exception in Force_XND 20");
 
 								}
-										
-								//exit = true;
-								
+															
 								break;
 							case 3:
 								//24N=500*0.048
@@ -478,19 +394,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 									System.out.println("IO Exception in Force_XND 24");
 								}
 								
-								//exit = true;
-								
 								break;
 						
 							case 4:
 								getLogger().info("App Terminated\n"+"***END***");
-								/*try {
-									tcp_server.dispose();
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								exit = true;*/
+								
 								try {
 									closeCommunication();
 								} catch (IOException e) {
@@ -520,6 +428,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			System.out.println("App InterruptedException");
 		}
 	}
+	
 	private double velocity(){
 
 		double velocidad=0.0;
@@ -560,26 +469,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		impedanceControlMode.parametrize(CartDOF.Y).setStiffness(stiffnessY).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.Z).setStiffness(stiffnessZ).setDamping(0.7);
 		impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
-		//impedanceControlMode.parametrize(CartDOF.C).setStiffness(100).setDamping(0.7);
-
-		
-		//Data recorder configuration
-		rec.setFileName(nfichero);
-		rec.addCartesianForce(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
-		rec.addCurrentCartesianPositionXYZ(roll_scan.getFrame("roll_tcp"), getApplicationData().getFrame("/robot_base"));
-	 	rec.addCartesianTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
-	 	rec.enable();
-		rec.startRecording();
+		//impedanceControlMode.parametrize(CartDOF.C).setStiffness(100).setDamping(0.7);		
 	
-		//Get close to the aileron 
-		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
-		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
-		
-	 	
 		Frame point = new Frame(getFrame("/DemoCroinspect/caltab"));
 		LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(-0.03), 6, 108);
-		
 		
 		Frame aprox_pose = caltab_robot_fr.copy();
 		
@@ -591,7 +484,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		System.out.println("Traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
 				" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
 					
-		//aprox_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-300, Math.PI/2,0.0,0.0));
 		aprox_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-50, 0.0,0.0,0.0));
 
 		System.out.println("Safety traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
@@ -600,24 +492,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		roll_scan.getFrame("roll_tcp").move(ptp(aprox_pose).setJointVelocityRel(0.1));
 		
 		Frame copy_caltab_robot_fr;
+		int cont =0;
 		
-		int i = move_cont.get();
-		for(; i<x.size();i++)
+		for(int i = 0; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
 			point  = traj_caltab_ref_fr.get(i).copy();
-			
-			//System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
-				//	" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-			
-			/*if(point.getX() > 444)
-			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
-			else
-			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 88);
-			 	
-			point.setRedundancyInformation(lbr, redundancyInfo);
-			*/
 									
 			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 					point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
@@ -626,111 +507,17 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 			System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 					" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-					
-			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
-
-			if(i<x.size()-1 && !warning_signal.get())
-			{
-				//System.out.println("Warning signal: " + warning_signal.get());
-				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-				motion_list.add(motion_cmd);
-				//System.out.println("Movement list: " + motion_list.size());
-			}	
-			else
-			{
-				try
-				{								
-					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
-					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
-										
-					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
-							 
-					 if(firedInfo != null)
-					 {
-					  System.out.println("pulsador 1 ");
-					  warning_signal.set(true);
-					 }
-					 else
-					 {
-						Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-						
-						current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
-						
-						roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
-						
-						roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-	
-						String response_data = frame_id + ";" + operation_type + ";1" ;
-						tcp_server.setResponseData(response_data);
-					 }
-					
-				}
-				catch(CommandInvalidException e)
-				{
-					System.out.println("Last Movement failed and the app was finished");
-					try {
-						
-						String response_data = frame_id + ";" + operation_type + ";0" ;
-						tcp_server.setResponseData(response_data);
-						
-						tcp_server.dispose();
-						
-					} catch (InterruptedException e1) {
-						System.out.println("Closing TCP server from App");
-						break;
-					}	
-				}		
+				
+			try
+			{	
+				roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 			}
-			
-			if(warning_signal.get())
+			catch(CommandInvalidException e)
 			{
-				for(int j=0; j < motion_list.size(); j++ )
-				{
-					if(!motion_list.get(j).isFinished())
-					{
-						if(motion_list.get(j).getState() == ExecutionState.Executing)
-						{
-							move_cont.set(j);
-							canceled_motion = motion_list.get(j).getCurrentMotion();
-							System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
-						}
-						motion_list.get(j).cancel();
-					}
-				}
+				System.out.println("Movement failed and the app was finished");
 				
-				System.out.println("Performing new scan");
-				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+				success = false;
 				
-				System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
-					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
-							
-				Frame pose = current_pos.copy();
-				pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
-			
-				System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
-			
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode)
-								
-				pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
-				System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
-			
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
-				
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
-				
-				
-				next_movement = next_movement + move_cont.get(); 
-				motion_list.clear();
-				i = next_movement;
-				System.out.println("Next movement: " + i);
-				
-				warning_signal.set(false);
-			}
-			
-			if(movement_failed.get())
-			{
 				mediaFIO.setLEDBlue(false);
 
 				System.out.println("Movement failed. Moving the robot to safe position");
@@ -740,32 +527,85 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
 				
-				
 				JointPosition joints = lbr.getCurrentJointPosition();
 				joints.set(0, 75*(Math.PI/180));
 				lbr.move(ptp(joints).setJointVelocityRel(0.25));
 				
 				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
-							
-				String response_data = frame_id + ";" + operation_type + ";0" ;
-				tcp_server.setResponseData(response_data);
-				
+	
 				try {
+					
+					String response_data = frame_id + ";" + operation_type + ";0" ;
+					tcp_server.setResponseData(response_data);
+					
 					tcp_server.dispose();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
+				} catch (InterruptedException e1) {
+					System.out.println("Closing TCP server from App");
+					break;
 				}
-				
+					
 				break;
+			}		
+			
+			Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+				
+			System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
+				" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
+							
+			Frame pose = current_pos.copy();
+			pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
+			
+			System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+			
+			try
+			{
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode)
+			}
+			catch(CommandInvalidException e)
+			{
+				fw.write(i + "Re-scan up movement " + pose.toString());
+			}
+			pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
+			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+			
+			try
+			{
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+			}
+			catch(CommandInvalidException e)
+			{
+				fw.write(i + "Re-scan down movement " + pose.toString());
 			}
 			
+			try
+			{
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+			}
+			catch(CommandInvalidException e)
+			{
+				fw.write(i + "Returning to the " + i + " traj point" + current_pos.toString());
+			}																		
+						
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				
 		}
-		
-		rec.stopRecording();
-		System.out.println("Trajectory done");
+	
+		if(success)
+		{
+			Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+			current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
+			
+			roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));	
+			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+	
+			String response_data = frame_id + ";" + operation_type + ";1" ;
+			tcp_server.setResponseData(response_data);
+	
+			System.out.println("Trajectory done");
+		}
 	}
 	
 	
@@ -810,21 +650,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	public void OnTCPConnection() {
 		// TODO Auto-generated method stub
 		
-	}
-
-
-	@Override
-	public void OnSignalReceived(Boolean data) {
-		
-		// TODO Auto-generated method stub
-		System.out.println("Boton pulsado");
-		
-		warning_signal.set(true);
-		
-		System.out.println("OnSignalReceived motion list: " + motion_list.size());
-			
-		//motion_list.clear();
-		System.out.println("Alarma activado");
 	}
 }
 
