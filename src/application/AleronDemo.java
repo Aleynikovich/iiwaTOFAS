@@ -149,7 +149,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
 		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 		
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
@@ -165,7 +165,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX(0.75 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
 		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 			
 		//Getting the inverse frame (Aileron - Caltab2)
