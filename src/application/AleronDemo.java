@@ -356,6 +356,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				 
 				
 				movement_failed.set(true);
+				motion_list.clear();
 				failed_movement_nbr.set(x.size() - canceledContainers.size());
 					
 				return ErrorHandlingAction.Ignore;
@@ -609,33 +610,31 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		Frame copy_caltab_robot_fr;
 		
+			
 		int i = move_cont.get();
+		
+		copy_caltab_robot_fr = caltab_robot_fr.copy();
+		
+		point  = traj_caltab_ref_fr.get(0).copy();
+								
+		copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
+				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
+			
+		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
+		
+		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(1).setMode(impedanceControlMode).setBlendingCart(10));
+	
+		i++;
 		for(; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
 			point  = traj_caltab_ref_fr.get(i).copy();
-			
-			//System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
-				//	" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
-			
-			/*if(point.getX() > 444)
-			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 24);
-			else
-			 	redundancyInfo = new LBRE1Redundancy(Math.toRadians(0.2), 2, 88);
-			 	
-			point.setRedundancyInformation(lbr, redundancyInfo);
-			*/
 									
 			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 					point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 				
 			copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
-
-			//System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-				//	" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-					
-			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
 
 			if(i<x.size()-1 && !warning_signal.get()&& !movement_failed.get())
 			{
