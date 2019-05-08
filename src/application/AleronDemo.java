@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.conditionModel.BooleanIOCondition;
+import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -53,8 +54,12 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	
 	@Inject
 	private LBR lbr;
-    private Tool roll_scan;
+    
+    private Controller controller;
+
+	private Tool roll_scan;
     boolean exit;
+    
     
     String fname;
 	
@@ -122,7 +127,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	int next_movement;
 	@Override
 	public void initialize() {
-		
+				
+		controller = getController("KUKA_Sunrise_Cabinet_1");
+
 		// initialize your application here
 		roll_scan = createFromTemplate("RollScan");
 		roll_scan.attachTo(lbr.getFlange());
@@ -352,12 +359,15 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					 //logger.info(canceledContainers.get(i).getCommand().toString());
 					 
 				 //}
-				 System.out.println("The following " + canceledContainers.size() + " motions will not be executed");
+				System.out.println("The following " + canceledContainers.size() + " motions will not be executed");
 				 
+				for (int i = 0; i < motion_list.size(); i++) 
+				{ 
+					if(!motion_list.get(i).isFinished())
+						System.out.println(i + " Motion state: " + motion_list.get(i).getState());
+				}
 				
 				movement_failed.set(true);
-				motion_list.clear();
-				failed_movement_nbr.set(x.size() - canceledContainers.size());
 					
 				return ErrorHandlingAction.Ignore;
 			 }
@@ -366,7 +376,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);
 		
-			 
 	} 
     
 	
@@ -740,7 +749,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			{
 				mediaFIO.setLEDBlue(false);
 				System.out.println("Movement list size: " + motion_list.size());
-
+				
 				if(motion_list.size()>0)
 				{
 					for(int j=0; j < motion_list.size(); j++ )
@@ -753,9 +762,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 							motion_list.get(j).cancel();
 						}
-					}
-						
+					}	
 				}
+				
 				motion_list.clear();
 				
 				System.out.println("Movement failed. Moving the robot to safe position");
