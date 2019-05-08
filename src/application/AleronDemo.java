@@ -744,8 +744,15 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 				if(motion_list.size()>0)
 				{
+					
 					for(int j=0; j < motion_list.size(); j++ )
-						motion_list.get(j).cancel();
+					{
+						if(!motion_list.get(j).isFinished())
+						{
+							motion_list.get(j).cancel();
+						}
+					}
+						
 				}
 				motion_list.clear();
 				
@@ -753,7 +760,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
 				
-				current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
+				/*current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
 						
 				JointPosition joints = lbr.getCurrentJointPosition();
 				joints.set(0, 75*(Math.PI/180));
@@ -769,7 +776,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				
 				break;
 			}
