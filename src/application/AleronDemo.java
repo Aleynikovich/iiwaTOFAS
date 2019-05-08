@@ -637,7 +637,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					
 			//copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(0.0,0.0,-10, 0.0,0.0,0.0));
 
-			if(i<x.size()-1 && !warning_signal.get())
+			if(i<x.size()-1 && !warning_signal.get()&& !movement_failed.get())
 			{
 				System.out.println("Warning signal: " + warning_signal.get());
 				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
@@ -744,7 +744,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 				if(motion_list.size()>0)
 				{
-					
 					for(int j=0; j < motion_list.size(); j++ )
 					{
 						if(!motion_list.get(j).isFinished())
