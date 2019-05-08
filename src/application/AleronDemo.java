@@ -740,6 +740,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			if(movement_failed.get())
 			{
 				mediaFIO.setLEDBlue(false);
+				System.out.println("Movement list size: " + motion_list.size());
 
 				if(motion_list.size()>0)
 				{
