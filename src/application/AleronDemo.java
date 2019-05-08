@@ -742,11 +742,14 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				mediaFIO.setLEDBlue(false);
 
 				System.out.println("Movement failed. Moving the robot to safe position");
-				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+				Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
-				current_pos.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
+				current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
 				
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
+				System.out.println("Motion before safe pose --> x: " + current_pose_failed.getX() + " y: " + current_pose_failed.getY() + " z: " + current_pose_failed.getZ() + 
+						" A: " + current_pose_failed.getAlphaRad()*(180/Math.PI)+ " B: " + current_pose_failed.getBetaRad()*(180/Math.PI)+ " C: " + current_pose_failed.getGammaRad()*(180/Math.PI));
+
+				
 				
 				
 				JointPosition joints = lbr.getCurrentJointPosition();
