@@ -281,10 +281,14 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	    		 //Definicion de la recta en el punto x=1239 (ultimo punto asociado a la primera caltab)
 	    		 // y = -3.319181909*x + 4245.846756186
 	    		 
-	    		 Double y_val = -3.319181909*x.get(cont) + 4245.846756186;
+	    		 //Double y_val = -3.319181909*x.get(cont) + 4245.846756186;
 	    		 
+	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
+	    		 // y = -3.319181909*x + 3934.20009684124
+	    	
+	    		 Double y_val =  -3.319181909*x.get(cont) + 3934.20009684124;
 	    		 
-		    	 if(y_val > y.get(cont) )
+		    	 if(y_val > y.get(cont))
 		    	 {
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
