@@ -173,7 +173,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		pose_inv = new Frame(getFrame("/DemoCroinspect/caltab"), t);
 	
 		//Adding the frame to the list
-		aileron_caltabs_fr_list.add(pose);
+		aileron_caltabs_fr_list.add(pose_inv);
 		
 		pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		//Catlab 3 Aileron frame definition
@@ -185,7 +185,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		pose_inv = new Frame(getFrame("/DemoCroinspect/caltab"), t);
 		
 		//Adding the frame to the list
-		aileron_caltabs_fr_list.add(pose);
+		aileron_caltabs_fr_list.add(pose_inv);
 		
 		//Impedance control object definition
 		impedanceControlMode =	new CartesianImpedanceControlMode();
@@ -639,10 +639,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 			if(i<x.size()-1 && !warning_signal.get())
 			{
-				//System.out.println("Warning signal: " + warning_signal.get());
+				System.out.println("Warning signal: " + warning_signal.get());
 				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 				motion_list.add(motion_cmd);
-				//System.out.println("Movement list: " + motion_list.size());
+				System.out.println("Movement list: " + motion_list.size());
 			}	
 			else
 			{
