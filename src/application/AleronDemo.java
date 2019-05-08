@@ -748,6 +748,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					{
 						if(!motion_list.get(j).isFinished())
 						{
+							if(motion_list.get(j).getState() == ExecutionState.Executing)
+								System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
+
 							motion_list.get(j).cancel();
 						}
 					}
