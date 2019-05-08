@@ -744,6 +744,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				System.out.println("Movement failed. Moving the robot to safe position");
 				Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
+				System.out.println("Current pose --> x: " + current_pose_failed.getX() + " y: " + current_pose_failed.getY() + " z: " + current_pose_failed.getZ() + 
+						" A: " + current_pose_failed.getAlphaRad()*(180/Math.PI)+ " B: " + current_pose_failed.getBetaRad()*(180/Math.PI)+ " C: " + current_pose_failed.getGammaRad()*(180/Math.PI));
+
+	
 				current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
 				
 				System.out.println("Motion before safe pose --> x: " + current_pose_failed.getX() + " y: " + current_pose_failed.getY() + " z: " + current_pose_failed.getZ() + 
