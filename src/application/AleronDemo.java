@@ -147,7 +147,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		move_cont = new AtomicInteger(0);
 		next_movement = 0;
 		
-		move_cont = new AtomicInteger(0);
+		task_cont = new AtomicInteger(0);
 
 		
 		//TODO: Fulfill with correct values
