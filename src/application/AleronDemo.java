@@ -100,8 +100,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	String time_stamp;
 	int frame_id;
 	Frame caltab_robot_fr;
-	
-	
+		
 	// not injected fields
 	private IErrorHandler errorHandler;
 	
@@ -125,6 +124,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	AtomicInteger move_cont; 
 	AtomicBoolean warning_signal;
 	int next_movement;
+	
+	AtomicInteger task_cont;
+	
 	@Override
 	public void initialize() {
 				
@@ -144,6 +146,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		warning_signal = new AtomicBoolean(false);
 		move_cont = new AtomicInteger(0);
 		next_movement = 0;
+		
+		move_cont = new AtomicInteger(0);
+
 		
 		//TODO: Fulfill with correct values
 		//Frames definition
@@ -422,6 +427,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
+					
 	
 				}
 				else if (operation_type.compareTo("inspection") == 0)
@@ -429,6 +435,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				
 					rec = new DataRecorder();
 					rec.setTimeout(2L, TimeUnit.MINUTES);
+					
+					task_cont.set(task_cont.get()+1);
 					
 					switch (getApplicationUI().displayModalDialog(
 							ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
@@ -627,7 +635,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		copy_caltab_robot_fr = caltab_robot_fr.copy();
 		
-		point  = traj_caltab_ref_fr.get(0).copy();
+		point  = traj_caltab_ref_fr.get(i).copy();
 								
 		copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
@@ -637,155 +645,160 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
 	
 		i++;
+		
 		for(; i<x.size();i++)
 		{
-			copy_caltab_robot_fr = caltab_robot_fr.copy();
-			
-			point  = traj_caltab_ref_fr.get(i).copy();
-									
-			copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
-					point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
+			if((task_cont.get() ==0 && x.get(i)<1106 ) || (task_cont.get() ==1 && x.get(i)>1106))
+			{
+				copy_caltab_robot_fr = caltab_robot_fr.copy();
 				
-			copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
-
-			if(i<x.size()-1 && !warning_signal.get()&& !movement_failed.get())
-			{
-				System.out.println("Warning signal: " + warning_signal.get());
-				IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-				motion_list.add(motion_cmd);
-				System.out.println("Movement list: " + motion_list.size());
-			}	
-			else
-			{
-				try
-				{								
-					//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
-					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+				point  = traj_caltab_ref_fr.get(i).copy();
 										
-					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
-							 
-					 if(firedInfo != null)
-					 {
-					  System.out.println("pulsador 1 ");
-					  warning_signal.set(true);
-					 }
-					 else
-					 {
-						Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-						
-						current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
-						
-						roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
-						
-						roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-	
-						String response_data = frame_id + ";" + operation_type + ";1" ;
-						tcp_server.setResponseData(response_data);
-					 }
+				copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
+						point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 					
-				}
-				catch(CommandInvalidException e)
+				copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
+	
+				if(i<x.size()-1 && !warning_signal.get()&& !movement_failed.get())
 				{
-					System.out.println("Last Movement failed and the app was finished");
-					try {
-						
-						String response_data = frame_id + ";" + operation_type + ";0" ;
-						tcp_server.setResponseData(response_data);
-						
-						tcp_server.dispose();
-						
-					} catch (InterruptedException e1) {
-						System.out.println("Closing TCP server from App");
-						break;
-					}	
-				}		
-			}
-			
-			if(warning_signal.get())
-			{
-				for(int j=0; j < motion_list.size(); j++ )
+					System.out.println("Warning signal: " + warning_signal.get());
+					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+					motion_list.add(motion_cmd);
+					System.out.println("Movement list: " + motion_list.size());
+				}	
+				else
 				{
-					if(!motion_list.get(j).isFinished())
-					{
-						if(motion_list.get(j).getState() == ExecutionState.Executing)
-						{
-							move_cont.set(j);
-							canceled_motion = motion_list.get(j).getCurrentMotion();
-							System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
-						}
-						motion_list.get(j).cancel();
-					}
-				}
-				
-				System.out.println("Performing new scan");
-				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-				
-				System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
-					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
+					try
+					{								
+						//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
+						IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+											
+						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
+								 
+						 if(firedInfo != null)
+						 {
+						  System.out.println("pulsador 1 ");
+						  warning_signal.set(true);
+						 }
+						 else
+						 {
+							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 							
-				Frame pose = current_pos.copy();
-				pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
-			
-				System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
-			
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode)
-								
-				pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
-				System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-						" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
-			
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
-				
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
-				
-				
-				next_movement = next_movement + move_cont.get(); 
-				motion_list.clear();
-				i = next_movement;
-				System.out.println("Next movement: " + i);
-				
-				warning_signal.set(false);
-			}
-			
-			if(movement_failed.get())
-			{
-				mediaFIO.setLEDBlue(false);
-				System.out.println("Movement list size: " + motion_list.size());
-				
-				//controller.getExecutionService().cancelAll();
-
-				motion_list.clear();
-				
-				System.out.println("Movement failed. Moving the robot to safe position");
-				Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-				
-				
-				current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
+							current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
+							
+							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
+							
+							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+		
+							String response_data = frame_id + ";" + operation_type + ";1" ;
+							tcp_server.setResponseData(response_data);
+						 }
 						
-				JointPosition joints = lbr.getCurrentJointPosition();
-				joints.set(0, 75*(Math.PI/180));
-				lbr.move(ptp(joints).setJointVelocityRel(0.25));
-				
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
-						
-				String response_data = frame_id + ";" + operation_type + ";0" ;
-				tcp_server.setResponseData(response_data);
-				
-				try {
-					tcp_server.dispose();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					}
+					catch(CommandInvalidException e)
+					{
+						System.out.println("Last Movement failed and the app was finished");
+						try {
+							
+							String response_data = frame_id + ";" + operation_type + ";0" ;
+							tcp_server.setResponseData(response_data);
+							
+							tcp_server.dispose();
+							
+						} catch (InterruptedException e1) {
+							System.out.println("Closing TCP server from App");
+							break;
+						}	
+					}		
 				}
 				
-				break;
-			}
-			
-			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
+				if(warning_signal.get())
+				{
+					for(int j=0; j < motion_list.size(); j++ )
+					{
+						if(!motion_list.get(j).isFinished())
+						{
+							if(motion_list.get(j).getState() == ExecutionState.Executing)
+							{
+								move_cont.set(j);
+								canceled_motion = motion_list.get(j).getCurrentMotion();
+								System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
+							}
+							motion_list.get(j).cancel();
+						}
+					}
+					
+					System.out.println("Performing new scan");
+					Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+					
+					System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
+						" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
+								
+					Frame pose = current_pos.copy();
+					pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
 				
+					System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+							" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+				
+					roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode)
+									
+					pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
+					System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+							" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
+				
+					roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+					
+					roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+					
+					
+					next_movement = next_movement + move_cont.get(); 
+					motion_list.clear();
+					i = next_movement;
+					System.out.println("Next movement: " + i);
+					
+					warning_signal.set(false);
+				}
+				
+				if(movement_failed.get())
+				{
+					mediaFIO.setLEDBlue(false);
+					System.out.println("Movement list size: " + motion_list.size());
+					
+					//controller.getExecutionService().cancelAll();
+	
+					motion_list.clear();
+					
+					System.out.println("Movement failed. Moving the robot to safe position");
+					Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+					
+					
+					current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
+							
+					JointPosition joints = lbr.getCurrentJointPosition();
+					joints.set(0, 75*(Math.PI/180));
+					lbr.move(ptp(joints).setJointVelocityRel(0.25));
+					
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
+							
+					String response_data = frame_id + ";" + operation_type + ";0" ;
+					tcp_server.setResponseData(response_data);
+					
+					try {
+						tcp_server.dispose();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					break;
+				}
+				
+				copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
+			}	
 		}
 		
+		if(task_cont.get()==2)
+			task_cont.set(0);
 		rec.stopRecording();
 		System.out.println("Trajectory done");
 	}
