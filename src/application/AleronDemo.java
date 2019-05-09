@@ -648,7 +648,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		for(; i<x.size();i++)
 		{
-			if((task_cont.get() ==0 && x.get(i)<1106 ) || (task_cont.get() ==1 && x.get(i)>1106))
+			if((task_cont.get() ==1 && x.get(i)<1106 ) || (task_cont.get() ==2 && x.get(i)>1106))
 			{
 				copy_caltab_robot_fr = caltab_robot_fr.copy();
 				
