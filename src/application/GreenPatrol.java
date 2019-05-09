@@ -183,13 +183,22 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 		private void UpperZone(){
 			
 			//velocidad movimientos 0.25 para ptp 50  lin
-			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P1")).setJointVelocityRel(0.25));
+			
+			roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P4")).setJointVelocityRel(0.25));
+			
+			roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P7")).setJointVelocityRel(0.25));
+			
+			roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P10")).setJointVelocityRel(0.25));
 			
 		}
 
 		private void UpperZoneP(){
 			//velocidad movimientos 0.25 para ptp 50  lin
-			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			
+			
 			
 		}
 		
@@ -198,7 +207,15 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	private void MiddleZone(){
 		
 		//velocidad movimientos 0.25 para ptp 50  lin
-			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P13")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P16")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P19")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P22")).setJointVelocityRel(0.25));
+		
+		
 			
 	}
 
@@ -212,7 +229,15 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	private void DownZone(){
 		
 		//velocidad movimientos 0.25 para ptp 50  lin
-			roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P25")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P28")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P31")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P34")).setJointVelocityRel(0.25));
+		
+		roll_scan.getFrame("Gripper").move(ptp(getFrame("/Greenpatrol/P37")).setJointVelocityRel(0.25));
 			
 	}
 
