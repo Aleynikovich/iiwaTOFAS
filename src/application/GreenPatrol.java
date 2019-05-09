@@ -118,7 +118,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 									UpperZoneP();
 							}	
 					
-
+							roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 							break;				
 						case 1:
 						
@@ -134,7 +134,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 							}	
 					
 
-									
+							roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));			
 							break;					
 						case 2:
 							
@@ -148,7 +148,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 									DownZoneP();
 							}	
 					
-
+								roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 							break;			
 						case 3:
 						
@@ -167,7 +167,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 							}	
 					
-
+								roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 							break;			
 						case 4:
 
