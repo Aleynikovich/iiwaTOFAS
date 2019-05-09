@@ -363,12 +363,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				 
 				for (int i = 0; i < motion_list.size(); i++) 
 				{ 
-					//if(!motion_list.get(i).isFinished())
-					System.out.println(i + " Motion state: " + motion_list.get(i).getState());
+					if(!motion_list.get(i).isFinished())
+						System.out.println(i + " Motion state: " + motion_list.get(i).getState());
 				}
 				
 				movement_failed.set(true);
-					
+				
+				controller.getExecutionService().cancelAll();
 				return ErrorHandlingAction.Ignore;
 			 }
 		};
@@ -754,14 +755,14 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				{
 					for(int j=0; j < motion_list.size(); j++ )
 					{
-						//if(!motion_list.get(j).isFinished())
-						//{
+						if(!motion_list.get(j).isFinished())
+						{
 							System.out.println(j + "Motion state: " + motion_list.get(j).getState());
 							if(motion_list.get(j).getState() == ExecutionState.Executing)
 								System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
 
 							motion_list.get(j).cancel();
-						//}
+						}
 					}	
 				}
 				
