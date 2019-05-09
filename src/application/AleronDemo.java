@@ -631,7 +631,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
-		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(5).setMode(impedanceControlMode).setBlendingCart(10));
+		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
 	
 		i++;
 		for(; i<x.size();i++)
@@ -756,7 +756,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					{
 						//if(!motion_list.get(j).isFinished())
 						//{
-							System.out.println(i + "Motion state: " + motion_list.get(j).getState());
+							System.out.println(j + "Motion state: " + motion_list.get(j).getState());
 							if(motion_list.get(j).getState() == ExecutionState.Executing)
 								System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
 
