@@ -752,46 +752,22 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				mediaFIO.setLEDBlue(false);
 				System.out.println("Movement list size: " + motion_list.size());
 				
-				while(!motion_list.get(0).isFinished() &&  motion_list.get(0).getState() != ExecutionState.Executing)
-				{
-					System.out.println("Waiting");
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
-				if(motion_list.size()>0)
-				{
-					for(int j=0; j < motion_list.size(); j++ )
-					{
-						if(!motion_list.get(j).isFinished())
-						{
-							System.out.println(j + "Motion state: " + motion_list.get(j).getState());
-							if(motion_list.get(j).getState() == ExecutionState.Executing)
-								System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
+				controller.getExecutionService().cancelAll();
 
-							motion_list.get(j).cancel();
-						}
-					}	
-				}
-				
 				motion_list.clear();
 				
 				System.out.println("Movement failed. Moving the robot to safe position");
 				Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
 				
-				/*current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
+				current_pose_failed.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
 						
 				JointPosition joints = lbr.getCurrentJointPosition();
 				joints.set(0, 75*(Math.PI/180));
 				lbr.move(ptp(joints).setJointVelocityRel(0.25));
 				
 				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
-				*/			
+						
 				String response_data = frame_id + ";" + operation_type + ";0" ;
 				tcp_server.setResponseData(response_data);
 				
