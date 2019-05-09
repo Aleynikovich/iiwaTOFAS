@@ -631,7 +631,26 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		Frame copy_caltab_robot_fr;
 		
 			
-		int i = move_cont.get();
+		int i=0,k;
+		int last_index=0;
+		
+		for(k=0; k<x.size();k++)
+		{
+			if(x.get(k)>1106)
+				break;
+		}
+		
+		if(task_cont.get() == 1)
+		{
+			i=0;
+			last_index = k;
+		}
+		else if(task_cont.get() == 2)
+		{
+			i=k;
+			last_index = x.size();
+		}
+			
 		
 		copy_caltab_robot_fr = caltab_robot_fr.copy();
 		
@@ -646,7 +665,9 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	
 		i++;
 		
-		for(; i<x.size();i++)
+		
+		
+		for(; i<last_index;i++)
 		{
 			if((task_cont.get() ==1 && x.get(i)<1106 ) || (task_cont.get() ==2 && x.get(i)>1106))
 			{
