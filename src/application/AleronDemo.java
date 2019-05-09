@@ -370,7 +370,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				movement_failed.set(true);
 				
 				motion_list.clear();
-				
+				controller.getExecutionService().cancelAll();
+
 				return ErrorHandlingAction.Ignore;
 			 }
 		};
@@ -752,7 +753,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 				mediaFIO.setLEDBlue(false);
 				System.out.println("Movement list size: " + motion_list.size());
 				
-				controller.getExecutionService().cancelAll();
+				//controller.getExecutionService().cancelAll();
 
 				motion_list.clear();
 				
