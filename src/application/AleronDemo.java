@@ -680,7 +680,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					
 				copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 	
-				if(i<x.size()-1 && !warning_signal.get()&& !movement_failed.get())
+				if(i<last_index -1 && !warning_signal.get()&& !movement_failed.get())
 				{
 					System.out.println("Warning signal: " + warning_signal.get());
 					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
@@ -709,7 +709,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 							
 							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
 							
-							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 		
 							String response_data = frame_id + ";" + operation_type + ";1" ;
 							tcp_server.setResponseData(response_data);
