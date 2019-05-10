@@ -298,8 +298,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
 	    		 // y = -3.319181909*x + 3934.20009684124
 	    	
-	    		 Double y_val =  -3.319181909*x.get(cont) + 3934.20009684124;
-	    		 
+	    		 //Double y_val =  -3.319181909*x.get(cont) + 3934.20009684124;
+	    		 Double y_val = -3.3266661392405063291139240506329*x.get(cont) + 3942.4803498101265822784810126582;
 		    	 if(y_val > y.get(cont))
 		    	 {
 		    		 System.out.println( cont + " Caltab 1 --> y_val: " + y_val + " y: " + y.get(cont) );
