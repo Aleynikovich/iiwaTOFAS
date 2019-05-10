@@ -302,12 +302,15 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	    		 
 		    	 if(y_val > y.get(cont))
 		    	 {
+		    		 System.out.println("Traj point " + cont + " Caltab 1");
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
 		    	 }
 		    	 else 
 		    	 {
+		    		 System.out.println("Traj point " + cont + " Caltab 2");
+
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		// System.out.println("Caltab 3 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 								//" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
@@ -627,13 +630,17 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		{
 			i=k;
 			last_index = x.size();
-			System.out.println("i: " + i + "last_index: " + last_index);
+			System.out.println("i: " + i + " last_index: " + last_index);
 		}
 			
+		move_cont.set(i);
 		Frame aprox_pose = caltab_robot_fr.copy();
 		
 		point  = traj_caltab_ref_fr.get(i).copy();
-					
+		
+		System.out.println("Traj point in robot base frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+				" A: " + point.getAlphaRad() + " B: " + point.getBetaRad() + " C: " + point.getGammaRad());
+	
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 							
