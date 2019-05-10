@@ -699,6 +699,8 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		{
 			
    		 	int zone_id = poseChecking(x.get(i), y.get(i));
+   		 	
+   		 	//System.out.println("Task cont: " + task_cont.get() + " Zone id: " + zone_id);
 
 			if((task_cont.get() ==1 && zone_id==1) || (task_cont.get() ==2 && zone_id==2))
 			{
@@ -863,7 +865,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		 if(y_val > y)
 			 return 1;
 		 else 
-			 return 0;
+			 return 2;
 	}
 	
 	@Override
