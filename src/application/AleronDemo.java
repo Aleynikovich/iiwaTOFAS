@@ -301,7 +301,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	    		 //Double y_val =  -3.319181909*x.get(cont) + 3934.20009684124;
 	    		 //Double y_val = -3.3266661392405063291139240506329*x.get(cont) + 3942.4803498101265822784810126582;
 	    		 
-	    		 Double y_val =  -3.326786450896398540377597969221*x.get(cont) + 4020.7878085276852292559098841821;
+	    		 /*Double y_val =  -3.326786450896398540377597969221*x.get(cont) + 4020.7878085276852292559098841821;
 
 		    	 if(y_val > y.get(cont))
 		    	 {
@@ -317,7 +317,23 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		// System.out.println("Caltab 3 frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 								//" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
-		    	 }
+		    	 }*/
+	    		 
+	    		 int zone_id = poseChecking(x.get(cont), y.get(cont));
+	    		 
+	    		 if(zone_id ==1)
+	    		 {
+		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
+		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
+						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
+	    		 }
+	    		 else
+	    		 {
+		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
+		    		//System.out.println("Caltab 2 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
+						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
+
+	    		 }
 		    	 
 		    	//System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 					//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
@@ -681,7 +697,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		for(; i<last_index;i++)
 		{
-			if((task_cont.get() ==1 && x.get(i)<1106 ) || (task_cont.get() ==2 && x.get(i)>1106))
+			
+   		 	int zone_id = poseChecking(x.get(i), y.get(i));
+
+			if((task_cont.get() ==1 && zone_id==1) || (task_cont.get() ==2 && zone_id==2))
 			{
 				copy_caltab_robot_fr = caltab_robot_fr.copy();
 				
@@ -836,6 +855,16 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		System.out.println("Trajectory done");
 	}
 	
+	private int poseChecking(double x, double y)
+	{
+	
+		Double y_val =  -3.326786450896398540377597969221*x + 4020.7878085276852292559098841821;
+
+		 if(y_val > y)
+			 return 1;
+		 else 
+			 return 0;
+	}
 	
 	@Override
 	public void OnTCPMessageReceived(String datagram)
