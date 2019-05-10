@@ -636,7 +636,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		
 		for(k=0; k<x.size();k++)
 		{
-			if(x.get(k)>1106)
+			if(x.get(k)>1175)
 				break;
 		}
 		
