@@ -24,6 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 
 
+import com.kuka.common.ThreadUtil;
+
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.conditionModel.BooleanIOCondition;
@@ -56,10 +58,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	private LBR lbr;
 	
     private Controller controller;
-
     private Tool roll_scan;
     boolean exit;
-    
     String fname;
 	
     CartesianImpedanceControlMode impedanceControlMode;
@@ -99,8 +99,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	String time_stamp;
 	int frame_id;
 	Frame caltab_robot_fr;
-	
-	
+
 	// not injected fields
 	private IErrorHandler errorHandler;
 	
@@ -143,8 +142,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		warning_signal = new AtomicBoolean(false);
 		move_cont = new AtomicInteger(0);
 		next_movement = 0;
-		
-		//TODO: Fulfill with correct values
 		//Frames definition
 		tcp_camera_fr = new Frame(lbr.getFlange());
 		//tcp_camera_fr.setX(-20.0); tcp_camera_fr.setY(-101.902); tcp_camera_fr.setZ(105.038);
@@ -171,7 +168,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX(0.75 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
 		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 			
 		//Getting the inverse frame (Aileron - Caltab2)
@@ -179,7 +176,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		pose_inv = new Frame(getFrame("/DemoCroinspect/caltab"), t);
 	
 		//Adding the frame to the list
-		aileron_caltabs_fr_list.add(pose);
+		aileron_caltabs_fr_list.add(pose_inv);
 		
 		pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		//Catlab 3 Aileron frame definition
@@ -796,6 +793,30 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		data_received.set(true);
 	}
+	
+	private boolean waitUntilRobotAlmostStopped(double timeOut)
+	{
+		JointPosition currentJP;
+		JointPosition lastJP = new JointPosition(0, 0, 0, 0, 0, 0, 0);
+		long before = System.currentTimeMillis();
+		long now;
+		boolean robotAlmostStopped = false;
+		
+		do {
+			currentJP = lbr.getCurrentJointPosition();
+			ThreadUtil.milliSleep(10);
+			robotAlmostStopped = currentJP.isNearlyEqual(lastJP, Math.toRadians(0.2));
+			lastJP = currentJP;
+			now = System.currentTimeMillis();
+			if (timeOut > 0 && ((now - before) > timeOut)) {
+				break;
+			}
+		} while (!robotAlmostStopped);
+		if (robotAlmostStopped) {
+			System.out.println("Utils.waitUntilRobotAlmostStopped(...): Robot almost stopped");
+		}
+		return robotAlmostStopped;
+	}
 
 
 	@Override
@@ -804,6 +825,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 	}
 
+	
 
 	@Override
 	public void OnSignalReceived(Boolean data) {
@@ -811,9 +833,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		// TODO Auto-generated method stub
 		System.out.println("Boton pulsado");
 		
+		double current_override = getApplicationControl().getApplicationOverride();
 		warning_signal.set(true);
 		
+		getApplicationControl().clipApplicationOverride(0.0);
 		
+		waitUntilRobotAlmostStopped(-1);
 		
 		for(int j=0; j < motion_list.size(); j++ )
 		{
@@ -826,6 +851,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
 					break;
 				}
+				//motion_list.get(j).cancel();
 			}
 		}
 		

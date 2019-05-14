@@ -54,12 +54,11 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	
 	@Inject
 	private LBR lbr;
-    
+ 
     private Controller controller;
 
 	private Tool roll_scan;
     boolean exit;
-    
     
     String fname;
 	
@@ -100,7 +99,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	String time_stamp;
 	int frame_id;
 	Frame caltab_robot_fr;
-		
 	// not injected fields
 	private IErrorHandler errorHandler;
 	
@@ -738,7 +736,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 						 {
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 							
-							current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
+							current_pose.transform(XyzAbcTransformation.ofRad(0.0,-490.0,-400,0.0,0.0,0.0));
 							
 							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
 							
