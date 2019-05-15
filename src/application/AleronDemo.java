@@ -392,10 +392,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 						System.out.println(i + " Motion state: " + motion_list.get(i).getState());
 				}
 				
-				movement_failed.set(true);
 				
 				motion_list.clear();
 				controller.getExecutionService().cancelAll();
+				movement_failed.set(true);
 
 				return ErrorHandlingAction.Ignore;
 			 }
@@ -418,37 +418,19 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 		exit=false;
 		
 		do {
-			
-			
+
 			if(data_received.get())
 			{
 				data_received.set(false);
 				
 				System.out.println("Type:" + operation_type);
-				if(operation_type.compareTo("warning") == 0)
+				
+				if(operation_type.compareTo("calibration") == 0)
 				{
-					
-				}
-				else if(operation_type.compareTo("calibration") == 0)
-				{
-					
-					//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-
-					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
-					
-					joints.set(0, 0.0*(Math.PI/180));joints.set(1, -33.28*(Math.PI/180));
-					joints.set(2, -0.0*(Math.PI/180));joints.set(3, -108.67*(Math.PI/180));
-					joints.set(4, 0.0*(Math.PI/180));joints.set(5, 65.32*(Math.PI/180));
-					joints.set(6, -90.0*(Math.PI/180));
-					
-					//lbr.move(ptp(joints).setJointVelocityRel(0.25));
-					//lbr.move(ptp(getFrame("/DemoCroinspect/Aprox2")).setJointVelocityRel(0.25));
 					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
 
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
-					
-	
 				}
 				else if (operation_type.compareTo("inspection") == 0)
 				{
@@ -466,25 +448,19 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 								
 								select_velocity=velocity();
 								getLogger().info("Selected 10N and " + select_velocity + "mm/s");
-								//Force_10N(select_velocity);
 		
-								
 								fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 								try {
 									Force_XND(10,fname,select_velocity);
 								} catch (IOException e) {
 									System.out.println("IO Exception in Force_XND 10");
 								}
-								//Force_XND(0.0,"measured_force_10ND_stiffZ_300.log",select_velocity);	
-						
-								//exit = true;
-								
+							
 								break;				
 							case 1:
 								//15N=500*0.03
 								select_velocity=velocity();
 								getLogger().info("Selected 15N and " + select_velocity + "mm/s");
-								
 								
 								fname="measured_force_15ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								try {
@@ -493,8 +469,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 									System.out.println("IO Exception in Force_XND 15");
 								}	
 								
-								//exit = true;
-						
 								break;					
 							case 2:
 								//20N=500*0.04 REPASAR DESIRED
@@ -509,17 +483,13 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 									System.out.println("IO Exception in Force_XND 20");
 
 								}
-										
-								//exit = true;
 								
 								break;
 							case 3:
 								//24N=500*0.048
-		
 								select_velocity=velocity();
 								getLogger().info("Selected 24N and mm/s: " + select_velocity + "mm/s");
-								
-							
+
 								fname="measured_force_24ND_stiffZ_500_"+select_velocity+"mm_S.log";
 								try {
 									Force_XND(24,fname,select_velocity);
@@ -527,19 +497,10 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 									System.out.println("IO Exception in Force_XND 24");
 								}
 								
-								//exit = true;
-								
 								break;
 						
 							case 4:
 								getLogger().info("App Terminated\n"+"***END***");
-								/*try {
-									tcp_server.dispose();
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								exit = true;*/
 								try {
 									closeCommunication();
 								} catch (IOException e) {
@@ -619,12 +580,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 	 	rec.addCartesianTorque(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
 	 	rec.enable();
 		rec.startRecording();
-	
-		//Get close to the aileron 
-		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox1")).setJointVelocityRel(0.25));
-		//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/aleron/Aprox")).setJointVelocityRel(0.25));
-		
 	 	
 		Frame point = new Frame(getFrame("/DemoCroinspect/caltab"));
 		LBRE1Redundancy redundancyInfo = new LBRE1Redundancy(Math.toRadians(-0.03), 6, 108);
@@ -818,7 +773,7 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 					
 					//controller.getExecutionService().cancelAll();
 	
-					motion_list.clear();
+					//motion_list.clear();
 					
 					System.out.println("Movement failed. Moving the robot to safe position");
 					Frame current_pose_failed = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
