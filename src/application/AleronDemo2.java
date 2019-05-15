@@ -357,8 +357,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				//controller.getExecutionService().cancelAll();
 				
 				current_override = getApplicationControl().getApplicationOverride();
-				warning_signal.set(true);
-		
 				getApplicationControl().clipApplicationOverride(0.0);
 		
 				waitUntilRobotAlmostStopped(-1);
