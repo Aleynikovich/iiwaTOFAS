@@ -353,20 +353,15 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						System.out.println(i + " Motion state: " + motion_list.get(i).getState());
 				}
 				
+				//motion_list.clear();
+				//controller.getExecutionService().cancelAll();
 				
-				motion_list.clear();
-				controller.getExecutionService().cancelAll();
-				
-				/*
-				 * 
 				current_override = getApplicationControl().getApplicationOverride();
 				warning_signal.set(true);
 		
 				getApplicationControl().clipApplicationOverride(0.0);
 		
 				waitUntilRobotAlmostStopped(-1);
-				* 
-				*/
 				
 				movement_failed.set(true);
 				
@@ -375,9 +370,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		};
 		
 		
-		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);
-		
-			 
+		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);		 
 	} 
     
 	
