@@ -632,7 +632,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					 {
 						Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 						
-						current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
+						current_pose.transform(XyzAbcTransformation.ofRad(0.0,-490,-400,0.0,0.0,0.0));
 						
 						roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
 						
@@ -715,13 +715,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
 				
-				
-				JointPosition joints = lbr.getCurrentJointPosition();
-				joints.set(0, 75*(Math.PI/180));
-				lbr.move(ptp(joints).setJointVelocityRel(0.25));
-				
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
-							
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			
 				String response_data = frame_id + ";" + operation_type + ";0" ;
 				tcp_server.setResponseData(response_data);
 				
