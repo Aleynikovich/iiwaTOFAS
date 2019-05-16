@@ -646,8 +646,6 @@ public class AleronDemo extends RoboticsAPIApplication implements ITCPListener, 
 
 		i++;
 		
-		
-		
 		for(; i<last_index;i++)
 		{
 			
