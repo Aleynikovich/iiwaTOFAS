@@ -646,7 +646,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							
 							current_pose.transform(XyzAbcTransformation.ofRad(0.0,-490,-400,0.0,0.0,0.0));
 							
-							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
+							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setJointVelocityRel(0.25));
 							
 							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 		
