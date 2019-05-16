@@ -648,7 +648,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							
 							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));
 							
-							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 		
 							String response_data = frame_id + ";" + operation_type + ";1" ;
 							tcp_server.setResponseData(response_data);
@@ -727,7 +727,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					
 					roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
 					
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 				
 					String response_data = frame_id + ";" + operation_type + ";0" ;
 					tcp_server.setResponseData(response_data);
