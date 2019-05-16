@@ -650,6 +650,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							
 							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 		
+							move_cont.set(i+1);
 							String response_data = frame_id + ";" + operation_type + ";1" ;
 							tcp_server.setResponseData(response_data);
 						 }
@@ -746,6 +747,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					
 			}
 		}
+		
+		if(i>=x.size())
+			move_cont.set(0);
 		
 		rec.stopRecording();
 		System.out.println("Trajectory done");
