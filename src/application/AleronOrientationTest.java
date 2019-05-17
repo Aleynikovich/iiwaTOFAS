@@ -250,15 +250,10 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 	    		 //Definicion de la recta en el punto x=1239 (ultimo punto asociado a la primera caltab)
 	    		 // y = -3.319181909*x + 4245.846756186
 	    		 
-	    		 Double y_val = -3.319181909*x.get(cont) + 4245.846756186;
-	    		 
-	    		 
-		    	 if(y_val > y.get(cont) )
+	    		
 		    	
-		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
-		    	 else 
-		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
-		       	
+	    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
+		    		
 		      	 aileron_caltab_fr.transform(XyzAbcTransformation.ofRad(pose.getX(), pose.getY(), pose.getZ(),
 		      			 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
 	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);
