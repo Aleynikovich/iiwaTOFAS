@@ -960,10 +960,10 @@
                     </redundancy>
                 </redundancyData>
             </frame>
-            <frame id="_fdd87ddc-c7e6-44bd-84c9-34da1bfe478f" name="P1">
+            <frame id="_fdd87ddc-c7e6-44bd-84c9-34da1bfe478f" name="AproxRol">
                 <transformation a="-1.5284000963762536" b="0.008219815645103148" c="-1.6521435515349279" x="325.56766845291617" y="684.1701601663995" z="434.6032923132017"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1558110175458"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1558113066051"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="Roldana" tool="Roldana" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                     </info>

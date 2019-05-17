@@ -314,7 +314,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 					
 					//lbr.move(ptp(joints).setJointVelocityRel(0.25));
 					//lbr.move(ptp(getFrame("/DemoCroinspect/Aprox2")).setJointVelocityRel(0.25));
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/AproxRol")).setJointVelocityRel(0.25));
 
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
