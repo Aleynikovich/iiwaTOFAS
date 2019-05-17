@@ -161,7 +161,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 		try {
 			fw = new FileWriter("C:\\Users\\KukaUser\\Desktop\\logs\\failed_movements.txt");
 		} catch (IOException e1) {
-			System.out.println("Error creating log file");
+			System.out.println("Error creating log file: " + e1);
 		}
       
 		String val_str[];
