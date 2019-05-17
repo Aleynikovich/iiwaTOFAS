@@ -332,7 +332,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			System.out.println("X" + traj_caltab_ref_fr.get(i).getX());
 			System.out.println("X" + traj_caltab_ref_fr.get(i-1).getX());
 			
-			if(traj_caltab_ref_fr.get(i).getX() == traj_caltab_ref_fr.get(i-1).getX())
+			if(i!=0 && traj_caltab_ref_fr.get(i).getX() == traj_caltab_ref_fr.get(i-1).getX() )
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
 				
