@@ -329,7 +329,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		for(int i=1; i<traj_caltab_ref_fr.size();i++)
 		{
-			if(x.get(i)== x.get(i-1))
+			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
 				
@@ -338,8 +338,15 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
 		
-				traj_caltab_ref_fr.get(i+1).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
+				i++;
 				
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
+				
+				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
+							" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
+								" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
+
 				i++;
 			}
 			
