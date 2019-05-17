@@ -655,8 +655,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 				System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 						" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-										
-				int next_point_zone = poseChecking(x.get(i+1), y.get(i+1));
+					
+				int next_point_zone;
+				if(i<x.size())
+					next_point_zone = poseChecking(x.get(i+1), y.get(i+1));
+				else
+					next_point_zone = point_zone;
 				
 				//if(i<x.size()-1 && !warning_signal.get())
 				if((next_point_zone==point_zone) && !warning_signal.get())
