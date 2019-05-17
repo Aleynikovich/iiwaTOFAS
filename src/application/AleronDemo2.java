@@ -160,8 +160,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+		pose.setX(0.012800498646568 * 1000); pose.setY(0.416067618840187*1000); pose.setZ(0.0958228212077537*1000);
+		pose.setAlphaRad(93.631342620452*(Math.PI/180)); pose.setBetaRad(350.074462670324*(Math.PI/180)); pose.setGammaRad(178.711336963848*(Math.PI/180));
 		
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
 				+ "  A: " + pose.getAlphaRad() + "  B: " + pose.getBetaRad() + "  C: " + pose.getGammaRad());
@@ -176,8 +176,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+		pose.setX(1.0725191339774 * 1000); pose.setY(0.471247604621729*1000); pose.setZ(0.109787528885935*1000);
+		pose.setAlphaRad(91.3387188096205*(Math.PI/180)); pose.setBetaRad(351.594265564923*(Math.PI/180)); pose.setGammaRad(180.617825190025*(Math.PI/180));
 			
 		//Getting the inverse frame (Aileron - Caltab2)
 		t = pose.getTransformationFromParent().invert();
@@ -653,6 +653,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							move_cont.set(i+1);
 							String response_data = frame_id + ";" + operation_type + ";1" ;
 							tcp_server.setResponseData(response_data);
+							
+							
 						 }
 						
 					}
