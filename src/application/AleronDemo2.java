@@ -657,7 +657,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 					
 				int next_point_zone;
-				if(i<x.size())
+				if(i<x.size()-1)
 					next_point_zone = poseChecking(x.get(i+1), y.get(i+1));
 				else
 					next_point_zone = point_zone;
