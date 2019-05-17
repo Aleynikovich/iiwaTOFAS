@@ -549,7 +549,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 				" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
 							
 			Frame pose = current_pos.copy();
-			pose.setGammaRad(current_pos.getGammaRad() + 20*Math.PI/180);
+			pose.setGammaRad(current_pos.getGammaRad() + 25*Math.PI/180);
 			
 			System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
@@ -562,7 +562,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			{
 				fw.write(i + "Re-scan up movement " + pose.toString());
 			}
-			pose.setGammaRad(current_pos.getGammaRad() - 20*Math.PI/180); 
+			pose.setGammaRad(current_pos.getGammaRad() - 25*Math.PI/180); 
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
 			
