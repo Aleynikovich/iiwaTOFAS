@@ -305,15 +305,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			
 				if(operation_type.compareTo("calibration") == 0)
 				{
-					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 					
-					joints.set(0, 0.0*(Math.PI/180));joints.set(1, -33.28*(Math.PI/180));
-					joints.set(2, -0.0*(Math.PI/180));joints.set(3, -108.67*(Math.PI/180));
-					joints.set(4, 0.0*(Math.PI/180));joints.set(5, 65.32*(Math.PI/180));
-					joints.set(6, -90.0*(Math.PI/180));
-					
-					//lbr.move(ptp(joints).setJointVelocityRel(0.25));
-					//lbr.move(ptp(getFrame("/DemoCroinspect/Aprox2")).setJointVelocityRel(0.25));
 					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
 
 					String response_data = frame_id + ";" + operation_type + ";1" ;
@@ -557,7 +549,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 				" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
 							
 			Frame pose = current_pos.copy();
-			pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
+			pose.setGammaRad(current_pos.getGammaRad() + 20*Math.PI/180);
 			
 			System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
@@ -570,7 +562,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			{
 				fw.write(i + "Re-scan up movement " + pose.toString());
 			}
-			pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
+			pose.setGammaRad(current_pos.getGammaRad() - 20*Math.PI/180); 
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
 			
