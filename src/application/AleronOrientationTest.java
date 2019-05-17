@@ -115,7 +115,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 	public void initialize() {
 		
 		// initialize your application here
-		roll_scan = createFromTemplate("RollScan");
+		roll_scan = createFromTemplate("Roldana");
 		roll_scan.attachTo(lbr.getFlange());
 		
 		System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
@@ -494,7 +494,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 		Frame copy_caltab_robot_fr;
 		int cont =0;
 		
-		for(int i = 0; i<x.size();i++)
+		/*for(int i = 0; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
@@ -591,7 +591,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 						
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				
-		}
+		}*/
 	
 		if(success)
 		{
