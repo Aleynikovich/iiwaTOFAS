@@ -514,7 +514,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 				success = false;
 				
 				mediaFIO.setLEDBlue(false);
-
+				
 				System.out.println("Movement failed. Moving the robot to safe position");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
@@ -568,7 +568,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.5).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
 			}
 			catch(CommandInvalidException e)
 			{
@@ -577,7 +577,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.5).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
 			}
 			catch(CommandInvalidException e)
 			{
