@@ -160,11 +160,11 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(0.0313664621723358*1000); pose.setY(0.395561914641133*1000); pose.setZ(-0.0413475636068055*1000);
-		pose.setAlphaRad(94.1590454380218*(Math.PI/180)); pose.setBetaRad(8.49370541413218*(Math.PI/180)); pose.setGammaRad(179.927164497427*(Math.PI/180));
+		//pose.setX(0.0313664621723358*1000); pose.setY(0.395561914641133*1000); pose.setZ(-0.0413475636068055*1000);
+		//pose.setAlphaRad(94.1590454380218*(Math.PI/180)); pose.setBetaRad(8.49370541413218*(Math.PI/180)); pose.setGammaRad(179.927164497427*(Math.PI/180));
 		
-		//pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		//pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 	
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
 				+ "  A: " + pose.getAlphaRad() + "  B: " + pose.getBetaRad() + "  C: " + pose.getGammaRad());
@@ -179,11 +179,11 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX( 1.09050517805295*1000); pose.setY(0.462205870282191*1000); pose.setZ(-0.0465623174924928*1000);
-		pose.setAlphaRad(91.8888457465363*(Math.PI/180)); pose.setBetaRad(10.0469303660347*(Math.PI/180)); pose.setGammaRad(181.102590613324*(Math.PI/180));
+		//pose.setX( 1.09050517805295*1000); pose.setY(0.462205870282191*1000); pose.setZ(-0.0465623174924928*1000);
+		//pose.setAlphaRad(91.8888457465363*(Math.PI/180)); pose.setBetaRad(10.0469303660347*(Math.PI/180)); pose.setGammaRad(181.102590613324*(Math.PI/180));
 		
-		//pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		//pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 
 		//Getting the inverse frame (Aileron - Caltab2)
 		t = pose.getTransformationFromParent().invert();
