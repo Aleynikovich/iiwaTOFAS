@@ -1682,7 +1682,7 @@
         <toolTemplate class="" name="Roldana">
             <frames>
                 <frame id="_9855b5d0-5315-40c9-af67-e1f6ebd7f8e9" name="roll_tcp">
-                    <transformation a="0.0" b="0.0" c="0.0" x="3.7" y="1.3" z="189.5"/>
+                    <transformation a="-1.57" b="0.0" c="0.0" x="3.7" y="1.3" z="189.5"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="3.2620162459276245" cogY="-10.370269987747736" cogZ="52.032589409080494" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.557830305839725"/>
