@@ -659,7 +659,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				if(i<x.size()-1)
 					next_point_zone = poseChecking(x.get(i+1), y.get(i+1));
 				else
-					next_point_zone = 2;
+					next_point_zone = 3;
 				
 				//if(i<x.size()-1 && !warning_signal.get())
 				if((next_point_zone==point_zone) && !warning_signal.get())
