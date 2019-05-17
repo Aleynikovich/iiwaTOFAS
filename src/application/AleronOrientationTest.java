@@ -482,9 +482,25 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 		roll_scan.getFrame("roll_tcp").move(ptp(aprox_pose).setJointVelocityRel(0.1));
 		
 		Frame copy_caltab_robot_fr;
+		
+		copy_caltab_robot_fr = caltab_robot_fr.copy();
+		
+		point  = traj_caltab_ref_fr.get(0).copy();
+								
+		copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
+				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
+			
+		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
+		
+		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
+	
+		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+			" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
+
+		
 		int cont =0;
 		
-		/*for(int i = 0; i<x.size();i++)
+		/*for(int i = 1; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
