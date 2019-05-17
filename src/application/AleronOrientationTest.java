@@ -111,7 +111,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 	public void initialize() {
 		
 		// initialize your application here
-		roll_scan = createFromTemplate("Roldana");
+		roll_scan = createFromTemplate("RollScan");
 		roll_scan.attachTo(lbr.getFlange());
 		
 		System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
@@ -497,10 +497,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 			" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
 
-		
-		int cont =0;
-		
-		/*for(int i = 1; i<x.size();i++)
+		for(int i = 1; i<x.size();i++)
 		{
 			copy_caltab_robot_fr = caltab_robot_fr.copy();
 			
@@ -597,14 +594,14 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 						
 			copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
 				
-		}*/
+		}
 	
 		if(success)
 		{
 			Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 			current_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-450,0.0,0.0,0.0));
 			
-			roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(25));	
+			roll_scan.getFrame("roll_tcp").move(lin(current_pose).setCartVelocity(50));	
 			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 	
 			String response_data = frame_id + ";" + operation_type + ";1" ;
