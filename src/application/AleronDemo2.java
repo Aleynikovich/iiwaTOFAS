@@ -160,9 +160,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(0.012800498646568 * 1000); pose.setY(0.416067618840187*1000); pose.setZ(0.0958228212077537*1000);
+		/*pose.setX(0.012800498646568 * 1000); pose.setY(0.416067618840187*1000); pose.setZ(0.0958228212077537*1000);
 		pose.setAlphaRad(93.631342620452*(Math.PI/180)); pose.setBetaRad(350.074462670324*(Math.PI/180)); pose.setGammaRad(178.711336963848*(Math.PI/180));
-		
+		*/
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+	
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
 				+ "  A: " + pose.getAlphaRad() + "  B: " + pose.getBetaRad() + "  C: " + pose.getGammaRad());
 		
@@ -176,9 +179,13 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX(1.0725191339774 * 1000); pose.setY(0.471247604621729*1000); pose.setZ(0.109787528885935*1000);
+		/*pose.setX(1.0725191339774 * 1000); pose.setY(0.471247604621729*1000); pose.setZ(0.109787528885935*1000);
 		pose.setAlphaRad(91.3387188096205*(Math.PI/180)); pose.setBetaRad(351.594265564923*(Math.PI/180)); pose.setGammaRad(180.617825190025*(Math.PI/180));
-			
+		*/
+		
+		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+
 		//Getting the inverse frame (Aileron - Caltab2)
 		t = pose.getTransformationFromParent().invert();
 		pose_inv = new Frame(getFrame("/DemoCroinspect/caltab"), t);
@@ -299,11 +306,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	//System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 					//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
 				
-		
-		    	 aileron_caltab_fr.transform(XyzAbcTransformation.ofRad(pose.getX(), pose.getY(), pose.getZ(),
-		    			 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
+	    		
+    		   	 aileron_caltab_fr.transform(XyzAbcTransformation.ofRad(pose.getX(), pose.getY(), pose.getZ(),
+		    	 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
 	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);
-		 		 cont++;
+	    		 cont++;
+	    		 
 		     }
 		    
 		     br.close();
@@ -316,6 +324,32 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
+		//Modifing the lateral movements 
+		
+		for(int i=0; i<traj_caltab_ref_fr.size();i++)
+		{
+			if(traj_caltab_ref_fr.get(i).getX() == traj_caltab_ref_fr.get(i-1).getX())
+			{	
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
+				
+				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
+						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
+							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
+		
+				traj_caltab_ref_fr.get(i+1).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
+				
+				i++;
+			}
+			
+			System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
+						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
+							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
+
+		}
+		
 		
 		//Application TCPServer object
 		try {
@@ -546,7 +580,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		impedanceControlMode.parametrize(CartDOF.ROT).setStiffness(300).setDamping(0.7);
 		//impedanceControlMode.parametrize(CartDOF.C).setStiffness(100).setDamping(0.7);
 
-		
 		//Data recorder configuration
 		rec.setFileName(nfichero);
 		rec.addCartesianForce(roll_scan.getFrame("roll_tcp"),roll_scan.getFrame("roll_tcp"));
@@ -614,8 +647,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 				System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 						" A: " + copy_caltab_robot_fr.getAlphaRad() + " B: " + copy_caltab_robot_fr.getBetaRad() + " C: " + copy_caltab_robot_fr.getGammaRad());
-						
-				
+										
 				int next_point_zone = poseChecking(x.get(i+1), y.get(i+1));
 				
 				//if(i<x.size()-1 && !warning_signal.get())
