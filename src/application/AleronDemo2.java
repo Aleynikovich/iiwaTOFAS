@@ -600,7 +600,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame aprox_pose = caltab_robot_fr.copy();
 		
 		int i = move_cont.get();
-		
+		System.out.println("i value: " + i);
+
 		working_zone = poseChecking(x.get(i), y.get(i));
 			
 		point  = traj_caltab_ref_fr.get(i).copy();
@@ -693,7 +694,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							String response_data = frame_id + ";" + operation_type + ";1" ;
 							tcp_server.setResponseData(response_data);
 							
-							
+							break;
 						 }
 						
 					}
