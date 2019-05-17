@@ -95,11 +95,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 	String time_stamp;
 	int frame_id;
 	Frame caltab_robot_fr;
-	
-	
-	// not injected fields
-	private IErrorHandler errorHandler;
-	
+		
 	//Movement execution state
 	AtomicBoolean movement_failed;
 	AtomicInteger failed_movement_nbr;
@@ -288,7 +284,6 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 				
 		success = true;
 		
-		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler); 
 	} 
 	
 	@Override
