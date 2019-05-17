@@ -1631,6 +1631,14 @@
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
+        <toolTemplate class="" name="Roldana">
+            <frames>
+                <frame id="_9855b5d0-5315-40c9-af67-e1f6ebd7f8e9" name="roll_tcp">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                </frame>
+            </frames>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </toolTemplate>
     </objectTemplates>
     <processDataContainer>
         <processData dataType="java.lang.Integer" defaultValue="30000" displayName="Port" id="port" value="30000"/>
