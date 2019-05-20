@@ -281,7 +281,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
 		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
 	 		 
-		    	 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 180.0, 0.0, 180.0));
+		    	 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
 
 	    		 Frame aileron_caltab_fr;
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
@@ -614,8 +614,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//aprox_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-300, Math.PI/2,0.0,0.0));
 		aprox_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-50, 0.0,0.0,0.0));
 
-		//System.out.println("Safety traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
-			//	" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
+		System.out.println("Safety traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
+				" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
 	
 		roll_scan.getFrame("roll_tcp").move(ptp(aprox_pose).setJointVelocityRel(0.1));
 		
