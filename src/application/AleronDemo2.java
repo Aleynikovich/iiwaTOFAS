@@ -160,12 +160,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(-0.206668293869192 * 1000); pose.setY(0.0938811705121523*1000); pose.setZ(0.0231866294311087*1000);
-		pose.setAlphaRad(273.904622591501*(Math.PI/180)); pose.setBetaRad(350.013193339373); pose.setGammaRad(178.636440604839*(Math.PI/180));
+		//pose.setX(-0.206668293869192 * 1000); pose.setY(0.0938811705121523*1000); pose.setZ(0.0231866294311087*1000);
+		//pose.setAlphaRad(273.904622591501*(Math.PI/180)); pose.setBetaRad(350.013193339373); pose.setGammaRad(178.636440604839*(Math.PI/180));
 
 		
-		//pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		//pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+		pose.setX(0.02 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 		
 		System.out.println("Caltab Aileron Frame --> x: " + pose.getX() + "  y: " + pose.getY() + "  z: " + pose.getZ() 
 				+ "  A: " + pose.getAlphaRad() + "  B: " + pose.getBetaRad() + "  C: " + pose.getGammaRad());
@@ -180,11 +180,11 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX(-1.26610753130445*1000); pose.setY( 0.0339037043247469*1000); pose.setZ(0.0385044520946989*1000);
-		pose.setAlphaRad(271.609619988047*(Math.PI/180)); pose.setBetaRad(351.530092827164*(Math.PI/180)); pose.setGammaRad(180.545788345199*(Math.PI/180));
+		//pose.setX(-1.26610753130445*1000); pose.setY( 0.0339037043247469*1000); pose.setZ(0.0385044520946989*1000);
+		//pose.setAlphaRad(271.609619988047*(Math.PI/180)); pose.setBetaRad(351.530092827164*(Math.PI/180)); pose.setGammaRad(180.545788345199*(Math.PI/180));
 		
-		//pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
-		//pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
+		pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
+		pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
 
 		//Getting the inverse frame (Aileron - Caltab2)
 		t = pose.getTransformationFromParent().invert();
@@ -200,7 +200,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		impedanceControlMode =	new CartesianImpedanceControlMode();
 				
 		String str;
-		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\aleronTekniker.mpf";
+		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
       
 		String val_str[];
@@ -281,7 +281,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
 		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
 	 		 
-		    	// pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
+		    	pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 0.0, 180.0));
 
 	    		 Frame aileron_caltab_fr;
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
@@ -311,8 +311,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
     		   	 
 
- 		    	System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
- 						" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
+ 		    	//System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
+ 					//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
  		
 	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);
 	    		 cont++;
