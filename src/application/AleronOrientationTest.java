@@ -556,7 +556,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.1).setBlendingCart(0));//.setMode(impedanceControlMode)
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.5).setBlendingCart(0));//.setMode(impedanceControlMode)
 			}
 			catch(CommandInvalidException e)
 			{
