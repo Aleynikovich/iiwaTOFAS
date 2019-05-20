@@ -518,13 +518,9 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 				System.out.println("Movement failed. Moving the robot to safe position");
 				Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 				
-				current_pos.transform(XyzAbcTransformation.ofRad(0.0,0.0,-40,0.0,0.0,0.0));
+				current_pos.transform(XyzAbcTransformation.ofRad(0.0,-490,-40,0.0,0.0,0.0));
 				
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(25));
-				
-				JointPosition joints = lbr.getCurrentJointPosition();
-				joints.set(0, 75*(Math.PI/180));
-				lbr.move(ptp(joints).setJointVelocityRel(0.25));
 				
 				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));				
 	
@@ -549,7 +545,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 				" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
 							
 			Frame pose = current_pos.copy();
-			pose.setGammaRad(current_pos.getGammaRad() + 25*Math.PI/180);
+			pose.setGammaRad(current_pos.getGammaRad() + 30*Math.PI/180);
 			
 			System.out.println("First point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
@@ -562,7 +558,7 @@ public class AleronOrientationTest extends RoboticsAPIApplication implements ITC
 			{
 				fw.write(i + "Re-scan up movement " + pose.toString());
 			}
-			pose.setGammaRad(current_pos.getGammaRad() - 25*Math.PI/180); 
+			pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 				" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());
 			
