@@ -247,25 +247,25 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    		 {
 		    			 val_str= data[l].split("I=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 i.add(val*Math.PI/180);
+		    			 i.add(val);
 		    		 }
 		    		 else if(data[l].contains("J="))
 		    		 {
 		    			 val_str= data[l].split("J=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 j.add(val*Math.PI/180);
+		    			 j.add(val);
 		    		 }
 		    		 else if(data[l].contains("K="))
 		    		 {
 		    			 val_str= data[l].split("K=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 k.add(val*Math.PI/180);
+		    			 k.add(val);
 		    		 }
 		    		 else if(data[l].contains("ZROT="))
 		    		 {
 		    			 val_str= data[l].split("ZROT=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 z_rot.add(val);
+		    			 z_rot.add(val*Math.PI/180);
 		    		 }
 		    		 /*else if(data[i].contains("AN3="))
 		    		 {
