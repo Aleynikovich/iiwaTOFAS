@@ -265,7 +265,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    		 {
 		    			 val_str= data[l].split("ZROT=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 z_rot.add(val*Math.PI/180);
+		    			 z_rot.add(val);
 		    		 }
 		    		 /*else if(data[i].contains("AN3="))
 		    		 {
