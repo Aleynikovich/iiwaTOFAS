@@ -164,7 +164,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(-0.206668293869192 * 1000); pose.setY(0.0938811705121523*1000); pose.setZ(0.0231866294311087*1000);
+		pose.setX(-0.206668293869192 * 1000); pose.setY(0.0938811705121523*1000); pose.setZ(0.39*1000);
 		pose.setAlphaRad(273.904622591501*(Math.PI/180)); pose.setBetaRad(350.013193339373); pose.setGammaRad(178.636440604839*(Math.PI/180));
 
 		
