@@ -76,12 +76,16 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	ArrayList<Double> x = new ArrayList<Double>();
 	ArrayList<Double> y = new ArrayList<Double>();
 	ArrayList<Double> z = new ArrayList<Double>();
-	ArrayList<Double> a = new ArrayList<Double>();
+	ArrayList<Double> i = new ArrayList<Double>();
+	ArrayList<Double> j = new ArrayList<Double>();
+	ArrayList<Double> k = new ArrayList<Double>();
+	ArrayList<Double> z_rot = new ArrayList<Double>();											   
+	/*ArrayList<Double> a = new ArrayList<Double>();
 	ArrayList<Double> b = new ArrayList<Double>();
 	ArrayList<Double> c = new ArrayList<Double>();
 	ArrayList<Double> a_n = new ArrayList<Double>();
 	ArrayList<Double> b_n = new ArrayList<Double>();
-	ArrayList<Double> c_n = new ArrayList<Double>();
+	ArrayList<Double> c_n = new ArrayList<Double>();*/
 
 	//Frames
 	Frame tcp_camera_fr;
@@ -219,45 +223,51 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 
 		    	 String data[] = str.split(" ");
 		    	  	    	  
-		    	 for(int i=0; i<data.length; i++)
+		    	 for(int l=0; l<data.length; l++)
 		    	 {
-		    		 if(data[i].contains("X="))
+		    		 if(data[l].contains("X="))
 		    		 {
-		    			 val_str= data[i].split("X=");
+		    			 val_str= data[l].split("X=");
 		    			 val = Double.parseDouble(val_str[1]);
 		    			 x.add(val);
 		    		 }
-		    		 else if(data[i].contains("Y="))
+		    		 else if(data[l].contains("Y="))
 		    		 {
-		    			 val_str= data[i].split("Y=");
+		    			 val_str= data[l].split("Y=");
 		    			 val = Double.parseDouble(val_str[1]);
 		    			 y.add(val);
 		    		 }
-		    		 else if(data[i].contains("Z="))
+		    		 else if(data[l].contains("Z="))
 		    		 {
-		    			 val_str= data[i].split("Z=");
+		    			 val_str= data[l].split("Z=");
 		    			 val = Double.parseDouble(val_str[1]);
 		    			 z.add(val);
 		    		 }
-		    		 else if(data[i].contains("A3="))
+		    		 else if(data[l].contains("I="))
 		    		 {
-		    			 val_str= data[i].split("A3=");
+		    			 val_str= data[l].split("I=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 a.add(val*Math.PI/180);
+		    			 i.add(val*Math.PI/180);
 		    		 }
-		    		 else if(data[i].contains("B3="))
+		    		 else if(data[l].contains("J="))
 		    		 {
-		    			 val_str= data[i].split("B3=");
+		    			 val_str= data[l].split("J=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 b.add(val*Math.PI/180);
+		    			 j.add(val*Math.PI/180);
 		    		 }
-		    		 else if(data[i].contains("C3="))
+		    		 else if(data[l].contains("K="))
 		    		 {
-		    			 val_str= data[i].split("C3=");
+		    			 val_str= data[l].split("K=");
 		    			 val = Double.parseDouble(val_str[1]);
-		    			 c.add(val*Math.PI/180);
+		    			 k.add(val*Math.PI/180);
 		    		 }
-		    		 else if(data[i].contains("AN3="))
+		    		 else if(data[l].contains("ZROT="))
+		    		 {
+		    			 val_str= data[l].split("ZROT=");
+		    			 val = Double.parseDouble(val_str[1]);
+		    			 z_rot.add(val);
+		    		 }
+		    		 /*else if(data[i].contains("AN3="))
 		    		 {
 		    			 val_str= data[i].split("AN3=");
 		    			 val = Double.parseDouble(val_str[1]);
@@ -275,13 +285,63 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    			 val = Double.parseDouble(val_str[1]);
 		    			 c_n.add(val);
 		    		 }
+		    	 	 */
+		    	 }
+		    	 
+	    		 //Conversion from cosines directors to euler angles
+		    	 double[] axis_x, axis_y,axis_z;
+		    	 
+		    	 axis_x = new double[3]; axis_y = new double[3]; axis_z = new double[3];
+
+		    	 axis_x[0] = 1; axis_x[1] = 0; axis_x[2] = 0;	
+		    	 axis_z[0] = i.get(cont); axis_z[1] = j.get(cont); axis_z[2] = k.get(cont);
+		    	 
+		    	 double[] result = new double[3];
+		    	 result = productVector(axis_z, axis_x); 
+		    	 double module = moduleVector(productVector(axis_z, axis_x));
+		    	 axis_y = divisionVector(result,module);
+		    	 
+		    	 result = productVector(axis_y, axis_z); 
+		    	 module = moduleVector(productVector(axis_y, axis_z));
+		    	 axis_x = divisionVector(result,module);
+		    	 
+		    	 
+		    	 double matrix[][] = new double[3][3];
+		    	 
+		    	 matrix[0] = axis_x; matrix[1] = axis_y; matrix[2] = axis_z;
+		    	 
+		    	 double B =Math.atan2(matrix[0][2],Math.sqrt(Math.pow(matrix[1][2],2)+ Math.pow(matrix[2][2],2)));
+		    	 
+		    	 double A,C;
+			    	 
+		    	 if(Math.cos(B)!=0)
+		    	 {
+		    	 	A = -Math.atan2((matrix[1][2]/Math.cos(B)),(matrix[2][2]/Math.cos(B)));
+		    	 	C = -Math.atan2((matrix[0][1]/Math.cos(B)),(matrix[0][0]/Math.cos(B)));
+		    	 }
+		    	 else
+		    	 {
+		    	 	A = 0;
+		    	 	if(B ==90)
+		    	 		C = Math.atan2(matrix[2][1],matrix[1][1]);
+		    	 
+		    	 	else
+		    	 		C = -Math.atan2(matrix[2][1],matrix[1][1]);
 		    	 }
 		    	 
 		    	 pose.setParent(getFrame("/DemoCroinspect/aileron"));
 		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
-		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
+		    	 pose.setAlphaRad(A); pose.setBetaRad(B); pose.setGammaRad(C);
 	 		 
-		    	pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 0.0, 180.0));
+				 System.out.println(cont + " Traj point in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());	
+	
+				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, z_rot.get(cont), 0.0, 0.0));
+
+				 System.out.println(cont + " Traj point after z_rot in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());	
+				 
+				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 0.0, 180.0));
 
 	    		 Frame aileron_caltab_fr;
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
@@ -529,7 +589,37 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 	}
 	
-
+	private double[] productVector(double[] vA, double[] vB)
+	{
+	
+		double result[] = new double[3];
+		
+		result[0] = (vA[1]*vB[2]) - (vA[2]*vB[1]);
+		result[1] = -1 * ((vA[0]*vB[2]) - (vA[2]*vB[0]));
+		result[2] = (vA[0]*vB[1]) - (vA[1]*vB[0]);
+		
+		return result;
+	}
+	
+	private double moduleVector(double[] v)
+	{
+		double result;
+		
+		result = Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
+		
+		return result;
+	}
+	
+	private double[] divisionVector(double[] v, double mod)
+	{
+		double[] result = new double[3];
+		
+		result[0] = v[0]/mod;
+		result[1] = v[1]/mod;
+		result[2] = v[2]/mod;
+		
+		return result;
+	}
 	private int poseChecking(double x, double y)
 	{
 	
