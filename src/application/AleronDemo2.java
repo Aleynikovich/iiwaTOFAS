@@ -304,8 +304,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 result = productVector(axis_y, axis_z); 
 		    	 module = moduleVector(productVector(axis_y, axis_z));
 		    	 axis_x = divisionVector(result,module);
-		    	 
-		    	 
+		    	 		    	 
 		    	 double matrix[][] = new double[3][3];
 		    	 
 		    	 matrix[0] = axis_x; matrix[1] = axis_y; matrix[2] = axis_z;
@@ -371,8 +370,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 pose.getAlphaRad(), pose.getBetaRad(), pose.getGammaRad()));
     		   	 
 
- 		    	//System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
- 					//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
+ 		    	System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
+ 					" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
  		
 	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);
 	    		 cont++;
