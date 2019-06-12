@@ -164,7 +164,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
 		//Catlab1 Aileron frame definition
-		pose.setX(-0.206668293869192 * 1000); pose.setY(0.0938811705121523*1000); pose.setZ(0.39*1000);
+		pose.setX(-0.206668293869192 * 1000); pose.setY(0.0938811705121523*1000); pose.setZ(0.0231866294311087*1000);
 		pose.setAlphaRad(273.904622591501*(Math.PI/180)); pose.setBetaRad(350.013193339373); pose.setGammaRad(178.636440604839*(Math.PI/180));
 
 		
@@ -340,7 +340,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				 System.out.println(cont + " Traj point after z_rot in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());	
 				 
-				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 0.0, 180.0));
+				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
 
 	    		 Frame aileron_caltab_fr;
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
