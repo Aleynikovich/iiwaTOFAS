@@ -500,11 +500,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
 
 					String response_data = frame_id + ";" + operation_type + ";1" ;
-					tcp_server.setResponseData(response_data);																							
+					tcp_server.setResponseData(response_data);			
+					
 				}
 				else if (operation_type.compareTo("inspection") == 0)
 				{
 				
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+
 					rec = new DataRecorder();
 					rec.setTimeout(2L, TimeUnit.MINUTES);
 					switch (getApplicationUI().displayModalDialog(
@@ -927,6 +930,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					
 			System.out.println("Caltab in robot base frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 				" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
+			
+			roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.25));
+			
+			getApplicationUI().displayModalDialog(
+					ApplicationDialogType.QUESTION,"OK");
+			
+			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+
 		}
 			
 		data_received.set(true);
