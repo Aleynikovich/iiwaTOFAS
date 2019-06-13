@@ -21,6 +21,7 @@ import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
@@ -30,11 +31,11 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 	@Inject
 	private LBR lbr;
     boolean exit;
-    
-	
+   
 	//Frames
 	Frame robot_pose;
-		
+    private Tool roll_scan;
+	
 	
 	DataRecorder rec;
 	
@@ -49,6 +50,9 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 	public void initialize() {
 		
 		// initialize your application here
+		roll_scan = createFromTemplate("RollScan");
+		roll_scan.attachTo(lbr.getFlange());
+		
 		
 		//TCPClient object
 		try {
@@ -82,6 +86,14 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		
 		lbr.move(ptp(joints).setJointVelocityRel(0.25));
 		
+		
+		Frame touch_pose = new Frame(getFrame("world"));
+		
+		touch_pose.setX(-78.8); touch_pose.setY(-440.79); touch_pose.setZ(0.0);
+		touch_pose.setAlphaRad(0.0); touch_pose.setBetaRad(0.0); touch_pose.setGammaRad(Math.PI);
+		
+		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
+
 		
 		exit=false;
 		
