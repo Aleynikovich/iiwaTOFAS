@@ -25,6 +25,7 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
+import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPListener{
 	
@@ -94,6 +95,8 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		
 		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
 
+		getApplicationUI().displayModalDialog(
+				ApplicationDialogType.QUESTION,"OK");
 		
 		exit=false;
 		
