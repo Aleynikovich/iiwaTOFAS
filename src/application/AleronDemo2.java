@@ -336,12 +336,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 pose.setAlphaRad(A); pose.setBetaRad(B); pose.setGammaRad(C);
 	 		 
 				 System.out.println(cont + " Traj point in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());	
+					" A: " + pose.getAlphaRad() * (180/Math.PI) + " B: " + pose.getBetaRad()  * (180/Math.PI)+ " C: " + pose.getGammaRad() * (180/Math.PI));	
 	
 				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, z_rot.get(cont), 0.0, 0.0));
 
 				 System.out.println(cont + " Traj point after z_rot in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-					" A: " + pose.getAlphaRad() + " B: " + pose.getBetaRad() + " C: " + pose.getGammaRad());	
+					" A: " + pose.getAlphaRad() * (180/Math.PI) + " B: " + pose.getBetaRad() * (180/Math.PI) + " C: " + pose.getGammaRad() * (180/Math.PI));	
 				 
 				 //pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
 				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, -90, 0.0, 180.0));	
