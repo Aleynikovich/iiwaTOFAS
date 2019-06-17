@@ -295,7 +295,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 double[] axis_x, axis_y,axis_z;
 		    	 
 		    	 axis_x = new double[3]; axis_y = new double[3]; axis_z = new double[3];
-
+		    	 /*
 		    	 axis_x[0] = 1; axis_x[1] = 0; axis_x[2] = 0;	
 		    	 axis_z[0] = i.get(cont); axis_z[1] = j.get(cont); axis_z[2] = k.get(cont);
 		    	 
@@ -307,7 +307,13 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 result = productVector(axis_y, axis_z); 
 		    	 module = moduleVector(productVector(axis_y, axis_z));
 		    	 axis_x = divisionVector(result,module);
-		    	 		    	 
+		    	 */
+		    	 
+		    	 axis_x[0] =  i.get(cont); axis_x[1] = 0.0; axis_x[2] = 0.0;	
+		    	 axis_y[0] =  0.0; axis_y[1] = j.get(cont); axis_y[2] = 0.0;	
+		    	 axis_z[0] = 0.0; axis_z[1] = 0.0; axis_z[2] = k.get(cont);
+		
+		    	 
 		    	 double matrix[][] = new double[3][3];
 		    	 
 		    	 matrix[0] = axis_x; matrix[1] = axis_y; matrix[2] = axis_z;
