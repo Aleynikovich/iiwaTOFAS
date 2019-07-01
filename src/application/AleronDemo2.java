@@ -80,10 +80,10 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	ArrayList<Double> j = new ArrayList<Double>();
 	ArrayList<Double> k = new ArrayList<Double>();
 	ArrayList<Double> z_rot = new ArrayList<Double>();											   
-	/*ArrayList<Double> a = new ArrayList<Double>();
+	ArrayList<Double> a = new ArrayList<Double>();
 	ArrayList<Double> b = new ArrayList<Double>();
 	ArrayList<Double> c = new ArrayList<Double>();
-	ArrayList<Double> a_n = new ArrayList<Double>();
+	/*ArrayList<Double> a_n = new ArrayList<Double>();
 	ArrayList<Double> b_n = new ArrayList<Double>();
 	ArrayList<Double> c_n = new ArrayList<Double>();*/
 
@@ -246,7 +246,26 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    			 val = Double.parseDouble(val_str[1]);
 		    			 z.add(val);
 		    		 }
-		    		 else if(data[l].contains("I="))
+		    		 else if(data[l].contains("A="))
+		    		 {
+		    			 val_str= data[l].split("A=");
+		    			 val = Double.parseDouble(val_str[1]);
+		    			 a.add(val);
+		    		 }
+		    		 else if(data[l].contains("B="))
+		    		 {
+		    			 val_str= data[l].split("B=");
+		    			 val = Double.parseDouble(val_str[1]);
+		    			 b.add(val);
+		    		 }
+		    		 else if(data[l].contains("C="))
+		    		 {
+		    			 val_str= data[l].split("C=");
+		    			 val = Double.parseDouble(val_str[1]);
+		    			 c.add(val);
+		    		 }
+		    		
+		    		 /*else if(data[l].contains("I="))
 		    		 {
 		    			 val_str= data[l].split("I=");
 		    			 val = Double.parseDouble(val_str[1]);
@@ -269,7 +288,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    			 val_str= data[l].split("ZROT=");
 		    			 val = Double.parseDouble(val_str[1]);
 		    			 z_rot.add(val);
-		    		 }
+		    		 }*/
 		    		 /*else if(data[i].contains("AN3="))
 		    		 {
 		    			 val_str= data[i].split("AN3=");
@@ -292,9 +311,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 }
 		    	 
 	    		 //Conversion from cosines directors to euler angles
-		    	 double[] axis_x, axis_y,axis_z;
+		    	// double[] axis_x, axis_y,axis_z;
 		    	 
-		    	 axis_x = new double[3]; axis_y = new double[3]; axis_z = new double[3];
+		    	// axis_x = new double[3]; axis_y = new double[3]; axis_z = new double[3];
 		    	 /*
 		    	 axis_x[0] = 1; axis_x[1] = 0; axis_x[2] = 0;	
 		    	 axis_z[0] = i.get(cont); axis_z[1] = j.get(cont); axis_z[2] = k.get(cont);
@@ -309,8 +328,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 axis_x = divisionVector(result,module);
 		    	 */
 		    	 
-		    	 axis_x[0] =  i.get(cont); axis_x[1] = 0.0; axis_x[2] = 0.0;	
-		    	 axis_y[0] =  0.0; axis_y[1] = j.get(cont); axis_y[2] = 0.0;	
+		    	 /*axis_x[0] = i.get(cont); axis_x[1] = 0.0; axis_x[2] = 0.0;	
+		    	 axis_y[0] = 0.0; axis_y[1] = j.get(cont); axis_y[2] = 0.0;	
 		    	 axis_z[0] = 0.0; axis_z[1] = 0.0; axis_z[2] = k.get(cont);
 		
 		    	 
@@ -335,22 +354,22 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		    	 
 		    	 	else
 		    	 		C = -Math.atan2(matrix[2][1],matrix[1][1]);
-		    	 }
+		    	 }*/
 		    	 
 		    	 pose.setParent(getFrame("/DemoCroinspect/aileron"));
 		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
-		    	 pose.setAlphaRad(A); pose.setBetaRad(B); pose.setGammaRad(C);
+		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
 	 		 
 				 System.out.println(cont + " Traj point in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
 					" A: " + pose.getAlphaRad() * (180/Math.PI) + " B: " + pose.getBetaRad()  * (180/Math.PI)+ " C: " + pose.getGammaRad() * (180/Math.PI));	
 	
-				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, z_rot.get(cont), 0.0, 0.0));
+				 //pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, z_rot.get(cont), 0.0, 0.0));
 
-				 System.out.println(cont + " Traj point after z_rot in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
-					" A: " + pose.getAlphaRad() * (180/Math.PI) + " B: " + pose.getBetaRad() * (180/Math.PI) + " C: " + pose.getGammaRad() * (180/Math.PI));	
+				 //System.out.println(cont + " Traj point after z_rot in aileron frame --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
+					//" A: " + pose.getAlphaRad() * (180/Math.PI) + " B: " + pose.getBetaRad() * (180/Math.PI) + " C: " + pose.getGammaRad() * (180/Math.PI));	
 				 
-				 //pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
-				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, -90, 0.0, 180.0));	
+				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
+				 //pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, -90, 0.0, 180.0));	
 	    		 Frame aileron_caltab_fr;
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
 	    		 // y = -3.319181909*x + 3934.20009684124
