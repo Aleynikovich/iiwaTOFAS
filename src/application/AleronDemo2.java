@@ -425,28 +425,28 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
 				
-				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				
+				*/
 				i++;
 				
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -25.0, 0.0, 0.0, 0.0));
 				
-				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 							" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 								" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				
+				*/
 				i++;
 			}
 			
-			System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+			/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-			
+			*/
 		}
 		
 		
@@ -959,13 +959,13 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			System.out.println("Caltab in robot base frame --> x: " + caltab_robot_fr.getX() + " y: " + caltab_robot_fr.getY() + " z: " + caltab_robot_fr.getZ() + 
 				" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
 			
-			/*roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
+			roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
 			
 			getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"OK");
 			
 			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
-			*/
+			
 		}
 			
 		data_received.set(true);
