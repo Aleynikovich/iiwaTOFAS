@@ -369,7 +369,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					//" A: " + pose.getAlphaRad() * (180/Math.PI) + " B: " + pose.getBetaRad() * (180/Math.PI) + " C: " + pose.getGammaRad() * (180/Math.PI));	
 				 
 				 //pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 0.0, 180.0, 0.0));
-				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, -90, 0.0, 180.0));	
+				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90, 0.0, 180.0));	
 	    		 Frame aileron_caltab_fr;
 	    		 //Definicion de la recta en el punto x=1106 (ultimo punto asociado a la primera caltab)
 	    		 // y = -3.319181909*x + 3934.20009684124
@@ -399,7 +399,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
     		   	 
 
  		    	System.out.println("Ref Caltab frame --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
- 					" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());
+ 					" A: " + aileron_caltab_fr.getAlphaRad()*(180/Math.PI) + " B: " + aileron_caltab_fr.getBetaRad()*(180/Math.PI) + " C: " + aileron_caltab_fr.getGammaRad()*(180/Math.PI));
  		
 	    		 traj_caltab_ref_fr.add(aileron_caltab_fr);
 	    		 cont++;
