@@ -789,7 +789,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				{
 					//System.out.println("Warning signal: " + warning_signal.get());
 					//IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad));//.setMode(impedanceControlMode).setBlendingCart(0));
 					motion_list.add(motion_cmd);
 					System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 							" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
