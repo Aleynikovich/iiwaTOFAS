@@ -423,7 +423,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		{
 			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
-				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -40.0, 0.0, 0.0, 0.0));
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -50.0, 0.0, 0.0, 0.0));
 			/*	
 				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
@@ -432,7 +432,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			*/	
 				i++;
 				
-				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -40.0, 0.0, 0.0, 0.0));
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -50.0, 0.0, 0.0, 0.0));
 			/*	
 				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
