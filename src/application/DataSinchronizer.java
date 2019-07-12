@@ -34,6 +34,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	private MediaFlangeIOGroup mediaFIO;
     
 	private boolean sinc;
+	AtomicBoolean ato_sinc;
 	
 	@Override
 	public void initialize() {
