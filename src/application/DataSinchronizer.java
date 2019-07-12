@@ -44,15 +44,15 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
 	public void runCyclic() {
 		if(SharedData.sinc_data)
 		{	
-			if(mediaFIO.getLEDBlue())
+			if(mediaFIO.getOutputX3Pin1())
 			{	
-				//mediaFIO.setOutputX3Pin1(false);
-				mediaFIO.setLEDBlue(false);
+				mediaFIO.setOutputX3Pin1(false);
+				//mediaFIO.setLEDBlue(false);
 			}
 			else
 			{
-				mediaFIO.setLEDBlue(true);
-				//mediaFIO.setOutputX3Pin1(true);	
+				//mediaFIO.setLEDBlue(true);
+				mediaFIO.setOutputX3Pin1(true);	
 			}
 		}
 	}
