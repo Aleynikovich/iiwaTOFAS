@@ -41,6 +41,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
 		sinc = false;
+		ato_sinc = new AtomicBoolean();
 		ato_sinc.set(false);
 	}
 
