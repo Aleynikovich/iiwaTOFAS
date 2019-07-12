@@ -658,7 +658,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//Double y_val =  -3.326786450896398540377597969221*x + 4020.7878085276852292559098841821;
 		Double y_val =  -2.3033972534175868864766790752964*x -2675.2170127631620108236619013358;
 					
-		 if(y_val > y)
+		 if(y_val < y)
 			 return 1;
 		 else 
 			 return 2;
