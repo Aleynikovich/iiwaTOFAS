@@ -378,12 +378,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	    		 
 	    		 if(zone_id ==1)
 	    		 {
+	    			 System.out.println("Point " + cont + "Caltab 1"); 
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
 	    		 }
 	    		 else
 	    		 {
+	    			 System.out.println("Point " + cont + "Caltab 2"); 
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		//System.out.println("Caltab 2 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
@@ -653,8 +655,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	private int poseChecking(double x, double y)
 	{
 	
-		Double y_val =  -3.326786450896398540377597969221*x + 4020.7878085276852292559098841821;
-	
+		//Double y_val =  -3.326786450896398540377597969221*x + 4020.7878085276852292559098841821;
+		Double y_val =  -2.3033972534175868864766790752964*x -2675.2170127631620108236619013358;
+					
 		 if(y_val > y)
 			 return 1;
 		 else 
