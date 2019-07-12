@@ -25,7 +25,7 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
  * @see UseRoboticsAPIContext
  * 
  */
-public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements ISinchronizer {
+public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask{// implements ISinchronizer {
 	@Inject
 	Controller controller;
 
@@ -36,6 +36,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
+		sinc.set(true);
 	}
 
 	@Override
@@ -52,11 +53,12 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 				mediaFIO.setLEDBlue(true);
 				//mediaFIO.setOutputX3Pin1(true);	
 			}
-		}			}
+		}
+	}
 
-	@Override
+/*	@Override
 	public void Sincronization(Boolean data) {
 
 		sinc.set(data);
-	}
+	}*/
 }
