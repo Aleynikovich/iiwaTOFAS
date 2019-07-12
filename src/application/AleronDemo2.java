@@ -132,7 +132,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 	int working_zone;
 	
-	private DataSinchronizer data_sinc;
+	private ISinchronizer i_sinc ;
 	
 	@Override
 	public void initialize() {
@@ -466,9 +466,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
 		
-		//Data sinchronizer background task
-		data_sinc = new DataSinchronizer(mediaFIO);
-		
 		//Media flange management
 		mediaFIO.setLEDBlue(true);
 		signal_monitor = new SignalsMonitor(mediaFIO);
@@ -765,7 +762,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
 	
-		data_sinc.enable();
+		i_sinc.Sincronization(true);
 		
 		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 			" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI)  + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -843,7 +840,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					catch(CommandInvalidException e)
 					{
 						System.out.println("Last Movement failed and the app was finished");
-						data_sinc.disable();
+						i_sinc.Sincronization(false);
 
 						try {
 							
@@ -939,7 +936,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		rec.stopRecording();
 
-		data_sinc.disable();
+		i_sinc.Sincronization(false);
 
 		System.out.println("Trajectory done");
 	}
@@ -1057,5 +1054,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//motion_list.clear();
 		System.out.println("Alarma activado");
 	}
+
+
+
 }
 
