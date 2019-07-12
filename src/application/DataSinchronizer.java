@@ -33,13 +33,13 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask{// impleme
     @Inject
 	private MediaFlangeIOGroup mediaFIO;
     
-	//AtomicBoolean sinc;
+	AtomicBoolean sinc;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
-		//sinc.set(true);
+		sinc.set(true);
 	}
 
 	@Override
