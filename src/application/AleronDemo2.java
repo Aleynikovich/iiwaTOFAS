@@ -132,6 +132,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 	int working_zone;
 	
+	@Inject
 	private ISinchronizer i_sinc ;
 	
 	@Override
@@ -471,7 +472,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		signal_monitor = new SignalsMonitor(mediaFIO);
 		signal_monitor.addListener(this);
 		signal_monitor.enable();
-	
+			
 		//Asyncronous movement error handling
 		errorHandler = new IErrorHandler() {
 			 @Override
@@ -506,6 +507,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			 }
 		};
 		
+	
 		
 		getApplicationControl().registerMoveAsyncErrorHandler(errorHandler);		 
 	} 
@@ -763,6 +765,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
 	
 		i_sinc.Sincronization(true);
+	
 		
 		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 			" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI)  + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
