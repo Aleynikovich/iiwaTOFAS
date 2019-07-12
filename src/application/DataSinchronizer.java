@@ -41,11 +41,12 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
 		sinc = false;
+		ato_sinc.set(false);
 	}
 
 	@Override
 	public void runCyclic() {
-		if(sinc)
+		if(ato_sinc.get())
 		{	
 			if(mediaFIO.getLEDBlue())
 			{	
@@ -64,5 +65,6 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	public void Sincronization(Boolean data) {
 
 		sinc = data;
+		ato_sinc.set(data);
 	}
 }
