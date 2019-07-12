@@ -32,22 +32,19 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	//Media flange instance
     @Inject
 	private MediaFlangeIOGroup mediaFIO;
-    
-	private boolean sinc;
-	AtomicBoolean ato_sinc;
+    private AtomicBoolean sinc;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
-		sinc = false;
-		ato_sinc = new AtomicBoolean();
-		ato_sinc.set(false);
+		sinc = new AtomicBoolean();
+		sinc.set(false);
 	}
 
 	@Override
 	public void runCyclic() {
-		if(ato_sinc.get())
+		if(sinc.get())
 		{	
 			if(mediaFIO.getLEDBlue())
 			{	
@@ -65,7 +62,6 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	@Override
 	public void Sincronization(Boolean data) {
 
-		sinc = data;
-		ato_sinc.set(data);
+		sinc.set(data);
 	}
 }
