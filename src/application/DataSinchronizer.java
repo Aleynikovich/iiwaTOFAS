@@ -44,8 +44,8 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 
 	@Override
 	public void runCyclic() {
-		//if(sinc.get())
-		//{	
+		if(sinc)
+		{	
 			if(mediaFIO.getLEDBlue())
 			{	
 				//mediaFIO.setOutputX3Pin1(false);
@@ -56,7 +56,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 				mediaFIO.setLEDBlue(true);
 				//mediaFIO.setOutputX3Pin1(true);	
 			}
-		//}
+		}
 	}
 
 	@Override
