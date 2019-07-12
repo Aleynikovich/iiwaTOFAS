@@ -826,7 +826,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							System.out.println("Back to the safe pose");
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 							
-							current_pose.transform(XyzAbcTransformation.ofRad(-100.0,0.0,-400,0.0,0.0,0.0));
+							current_pose.transform(XyzAbcTransformation.ofRad(0.0,-400.0,-400,0.0,0.0,0.0));
 							
 							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setJointVelocityRel(0.25));
 							
