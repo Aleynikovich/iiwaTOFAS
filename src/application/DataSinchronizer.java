@@ -3,7 +3,6 @@ package application;
 
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
@@ -25,7 +24,7 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
  * @see UseRoboticsAPIContext
  * 
  */
-public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements ISinchronizer {
+public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
 	
 	
 	@Inject
@@ -34,19 +33,16 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	//Media flange instance
     @Inject
 	private MediaFlangeIOGroup mediaFIO;
-    private AtomicBoolean sinc;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
-		sinc = new AtomicBoolean();
-		sinc.set(false);
 	}
 
 	@Override
 	public void runCyclic() {
-		if(sinc.get())
+		if(SharedData.sinc_data)
 		{	
 			if(mediaFIO.getLEDBlue())
 			{	
@@ -59,11 +55,5 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 				//mediaFIO.setOutputX3Pin1(true);	
 			}
 		}
-	}
-
-	@Override
-	public void Sincronization(Boolean data) {
-
-		sinc.set(data);
 	}
 }
