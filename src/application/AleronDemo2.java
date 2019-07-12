@@ -807,6 +807,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					try
 					{								
 						//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
+						
 						IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 						
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
@@ -821,9 +822,11 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						 }
 						 else
 						 {
+							 
+							System.out.println("Back to the safe pose");
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 							
-							current_pose.transform(XyzAbcTransformation.ofRad(0.0,-490,-400,0.0,0.0,0.0));
+							current_pose.transform(XyzAbcTransformation.ofRad(-100.0,0.0,-400,0.0,0.0,0.0));
 							
 							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setJointVelocityRel(0.25));
 							
