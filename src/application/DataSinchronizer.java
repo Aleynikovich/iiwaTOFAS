@@ -28,8 +28,11 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
 public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask{// implements ISinchronizer {
 	@Inject
 	Controller controller;
-
+	
+	//Media flange instance
+    @Inject
 	private MediaFlangeIOGroup mediaFIO;
+    
 	AtomicBoolean sinc;
 	
 	@Override
