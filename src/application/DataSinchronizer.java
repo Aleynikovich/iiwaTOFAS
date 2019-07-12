@@ -39,7 +39,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
-		sinc = true;
+		sinc = false;
 	}
 
 	@Override
