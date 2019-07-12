@@ -132,8 +132,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 	int working_zone;
 	
-	@Inject
-	private ISinchronizer i_sinc ;
+
+	private ISinchronizer i_sinc = new DataSinchronizer();
 	
 	@Override
 	public void initialize() {
