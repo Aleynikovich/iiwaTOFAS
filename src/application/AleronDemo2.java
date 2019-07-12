@@ -131,13 +131,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	double current_override;
 	
 	int working_zone;
-	
-	public AleronDemo2(ISinchronizer i){
-		i_sinc=i;
-	}
-
-	private ISinchronizer i_sinc;
-	
+		
 	@Override
 	public void initialize() {
 		
@@ -768,8 +762,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
 	
-		i_sinc.Sincronization(true);
-	
+		SharedData.sinc_data=true;
 		
 		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 			" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI)  + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -847,8 +840,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					catch(CommandInvalidException e)
 					{
 						System.out.println("Last Movement failed and the app was finished");
-						i_sinc.Sincronization(false);
-
+						SharedData.sinc_data=false;
 						try {
 							
 							String response_data = frame_id + ";" + operation_type + ";0" ;
@@ -943,8 +935,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		rec.stopRecording();
 
-		i_sinc.Sincronization(false);
-
+		SharedData.sinc_data=false;
+		
 		System.out.println("Trajectory done");
 	}
 	
