@@ -33,19 +33,19 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask{// impleme
     @Inject
 	private MediaFlangeIOGroup mediaFIO;
     
-	AtomicBoolean sinc;
+	//AtomicBoolean sinc;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,CycleBehavior.BestEffort);
-		sinc.set(true);
+		//sinc.set(true);
 	}
 
 	@Override
 	public void runCyclic() {
-		if(sinc.get())
-		{	
+		//if(sinc.get())
+		//{	
 			if(mediaFIO.getLEDBlue())
 			{	
 				//mediaFIO.setOutputX3Pin1(false);
@@ -56,7 +56,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask{// impleme
 				mediaFIO.setLEDBlue(true);
 				//mediaFIO.setOutputX3Pin1(true);	
 			}
-		}
+		//}
 	}
 
 /*	@Override
