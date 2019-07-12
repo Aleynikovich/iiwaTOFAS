@@ -26,6 +26,8 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
  * 
  */
 public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask implements ISinchronizer {
+	
+	
 	@Inject
 	Controller controller;
 	
