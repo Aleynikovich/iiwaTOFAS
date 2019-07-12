@@ -208,6 +208,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		//Impedance control object definition
 		impedanceControlMode =	new CartesianImpedanceControlMode();
+		
+		i_sinc.Sincronization(true);
 				
 		String str;
 		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
