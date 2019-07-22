@@ -24,7 +24,7 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
  * @see UseRoboticsAPIContext
  * 
  */
-public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
+/*public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
 	
 	
 	@Inject
@@ -37,7 +37,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
 	@Override
 	public void initialize() {
 		// initialize your task here
-		//initializeCyclic(0, 500, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
+		initializeCyclic(0, 500, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
 	}
 
 	@Override
@@ -56,4 +56,4 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
 			}
 		}
 	}
-}
+}*/
