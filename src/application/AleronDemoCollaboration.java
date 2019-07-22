@@ -132,13 +132,13 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 				
 		// Init springs
 		gravityCompensatioMode = new CartesianImpedanceControlMode();
-		gravityCompensatioMode.setMaxCartesianVelocity(200.0,200.0,200.0,Math.toRadians(60),Math.toRadians(60),Math.toRadians(60));
-		gravityCompensatioMode.parametrize(CartDOF.X).setStiffness(0).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.Y).setStiffness(0).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.Z).setStiffness(0).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.A).setStiffness(0).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.B).setStiffness(0).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.C).setStiffness(0).setDamping(1.0);	
+		gravityCompensatioMode.setMaxCartesianVelocity(100.0,100.0,100.0,Math.toRadians(30),Math.toRadians(30),Math.toRadians(30));
+		gravityCompensatioMode.parametrize(CartDOF.X).setStiffness(5).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.Y).setStiffness(5).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.Z).setStiffness(5).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.A).setStiffness(1).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.B).setStiffness(1).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.C).setStiffness(1).setDamping(1.0);	
 			
 	} 
 	
@@ -375,7 +375,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			pose.setZ(current_pos.getZ() + 10);
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0).setMode(impedanceControlMode).setBlendingCart(0));
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0).setMode(impedanceControlMode).setBlendingCart(0));
 			}
 			catch(CommandInvalidException e)
 			{
