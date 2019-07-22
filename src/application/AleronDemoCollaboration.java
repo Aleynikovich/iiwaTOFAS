@@ -327,11 +327,12 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 	
 		
 		//Getting the current pose and executing a rescanning process
-		Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 		
 		for(int i=0; i<10; i++ )
 		{
 			
+			Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+
 			System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
 					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
 								
@@ -362,9 +363,6 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 				fw.write(i + "Re-scan down movement " + pose.toString());
 			}
 			
-			
-			pose = current_pos.copy();
-			current_pos.setY(current_pos.getY() - i*10);
 			try
 			{
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.5).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
@@ -375,7 +373,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			}	
 			
 			
-			current_pos.setY(current_pos.getY() - (i+1)*10);
+			pose.setZ(current_pos.getZ() + 10);
 			try
 			{
 				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0).setMode(impedanceControlMode).setBlendingCart(0));
