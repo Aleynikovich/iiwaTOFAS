@@ -1667,7 +1667,7 @@
                 <info key="ToolVelocityPointPath" type="java.lang.String" value="/roll_tcp"/>
                 <info key="ToolVelocityOrientationPath" type="java.lang.String" value="/roll_tcp"/>
             </additionalInformation>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-6.306715499484553" cogY="-14.698761221834488" cogZ="83.1717269608585" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.697161851336452"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-9.286296384229951" cogY="-16.509902307272725" cogZ="83.44272938441216" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.697908246530612"/>
         </toolTemplate>
         <toolTemplate class="" name="Gimatic">
             <frames>

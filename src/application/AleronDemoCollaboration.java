@@ -160,7 +160,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 				
 				System.out.println("Type:" + operation_type);
 			
-				if(operation_type.compareTo("manual_guidance") == 0)
+				if(operation_type.compareTo("manual_inspection") == 0)
 				{
 					
 					// Zero G
@@ -175,7 +175,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);
 				}
-				else if (operation_type.compareTo("rastering_in_collaboration") == 0)
+				else if (operation_type.compareTo("collaborative_inspection") == 0)
 				{
 					
 					// Zero G
