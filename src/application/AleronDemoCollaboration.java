@@ -372,7 +372,12 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			}	
 			
 			
+			pose = current_pos.copy();
 			pose.setZ(current_pos.getZ() + 10);
+			
+			System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
+					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
+		
 			try
 			{
 				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0).setMode(impedanceControlMode).setBlendingCart(0));
