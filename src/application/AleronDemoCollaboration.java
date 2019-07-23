@@ -134,9 +134,9 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 		// Init springs
 		gravityCompensatioMode = new CartesianImpedanceControlMode();
 		gravityCompensatioMode.setMaxCartesianVelocity(200.0,200.0,200.0,Math.toRadians(60),Math.toRadians(60),Math.toRadians(60));
-		gravityCompensatioMode.parametrize(CartDOF.X).setStiffness(25).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.Y).setStiffness(25).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.Z).setStiffness(25).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.X).setStiffness(10).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.Y).setStiffness(10).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.Z).setStiffness(10).setDamping(1.0);
 		gravityCompensatioMode.parametrize(CartDOF.A).setStiffness(1).setDamping(1.0);
 		gravityCompensatioMode.parametrize(CartDOF.B).setStiffness(1).setDamping(1.0);
 		gravityCompensatioMode.parametrize(CartDOF.C).setStiffness(1).setDamping(1.0);	
