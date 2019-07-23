@@ -70,10 +70,11 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 	private static final int stiffnessX = 5000;
 	private static final int stiffnessRot = 300;
 
-	
-	
 	private TCPServer tcp_server;
 	AtomicBoolean data_received;
+	
+	double length = 100; //distance to cover in mm
+	double step = 10; //mm
 	
 	//Exchanged data info 
 	String operation_type;
@@ -133,9 +134,9 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 		// Init springs
 		gravityCompensatioMode = new CartesianImpedanceControlMode();
 		gravityCompensatioMode.setMaxCartesianVelocity(200.0,200.0,200.0,Math.toRadians(60),Math.toRadians(60),Math.toRadians(60));
-		gravityCompensatioMode.parametrize(CartDOF.X).setStiffness(10).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.Y).setStiffness(10).setDamping(1.0);
-		gravityCompensatioMode.parametrize(CartDOF.Z).setStiffness(10).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.X).setStiffness(25).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.Y).setStiffness(25).setDamping(1.0);
+		gravityCompensatioMode.parametrize(CartDOF.Z).setStiffness(25).setDamping(1.0);
 		gravityCompensatioMode.parametrize(CartDOF.A).setStiffness(1).setDamping(1.0);
 		gravityCompensatioMode.parametrize(CartDOF.B).setStiffness(1).setDamping(1.0);
 		gravityCompensatioMode.parametrize(CartDOF.C).setStiffness(1).setDamping(1.0);	
@@ -326,10 +327,9 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 	
 		
 		//Getting the current pose and executing a rescanning process
-		
-		for(int i=0; i<10; i++ )
+		int iterations = (int) (length/step);
+		for(int i=0; i<iterations; i++)
 		{
-			
 			Frame current_pos = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 
 			System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
@@ -343,7 +343,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0));//.setMode(impedanceControlMode)
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.15).setBlendingCart(0));//.setMode(impedanceControlMode)
 			}
 			catch(CommandInvalidException e)
 			{
@@ -355,7 +355,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.15).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
 			}
 			catch(CommandInvalidException e)
 			{
@@ -364,7 +364,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.5).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
+				roll_scan.getFrame("roll_tcp").move(lin(current_pos).setCartVelocity(velocidad).setJointVelocityRel(0.15).setBlendingCart(0));//.setMode(impedanceControlMode).setBlendingCart(0));
 			}
 			catch(CommandInvalidException e)
 			{
@@ -373,14 +373,14 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			
 			
 			pose = current_pos.copy();
-			pose.setZ(current_pos.getZ() + 10);
+			pose.setZ(current_pos.getZ() + step);
 			
 			System.out.println("Current point --> x: " + current_pos.getX() + " y: " + current_pos.getY() + " z: " + current_pos.getZ() + 
 					" A: " + current_pos.getAlphaRad() + " B: " + current_pos.getBetaRad() + " C: " + current_pos.getGammaRad());
 		
 			try
 			{
-				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.25).setBlendingCart(0).setMode(impedanceControlMode).setBlendingCart(0));
+				roll_scan.getFrame("roll_tcp").move(lin(pose).setCartVelocity(velocidad).setJointVelocityRel(0.15).setBlendingCart(0).setMode(impedanceControlMode).setBlendingCart(0));
 			}
 			catch(CommandInvalidException e)
 			{
@@ -403,7 +403,13 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 		time_stamp = splittedData[0];
 		frame_id = Integer.parseInt(splittedData[1]);
 		operation_type = splittedData[2];
-	
+		
+		if(operation_type.compareTo("collaborative_inspection")==0)
+		{
+			length = Double.parseDouble(splittedData[3]);
+			step = Double.parseDouble(splittedData[4]);
+		}
+		
 		data_received.set(true);
 	}
 
