@@ -348,6 +348,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			catch(CommandInvalidException e)
 			{
 				fw.write(i + "Re-scan up movement " + pose.toString());
+				System.out.println(i + "Re-scan up movement " + pose.toString());
 			}
 			pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
@@ -360,6 +361,8 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			catch(CommandInvalidException e)
 			{
 				fw.write(i + "Re-scan down movement " + pose.toString());
+				System.out.println(i + "Re-scan down movement " + pose.toString());
+
 			}
 			
 			try
@@ -369,6 +372,8 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			catch(CommandInvalidException e)
 			{
 				fw.write(i + "Returning to the " + i + " traj point" + current_pos.toString());
+				System.out.println(i + "Returning to the " + i + " traj point" + current_pos.toString());
+
 			}	
 			
 			
@@ -385,8 +390,8 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			catch(CommandInvalidException e)
 			{
 				fw.write(i + "Relative movement to next Re-scanning point " + current_pos.toString());
+				System.out.println(i + "Relative movement to next Re-scanning point " + current_pos.toString());
 			}
-	
 		}
 			
 		System.out.println("Re-scanning done");
