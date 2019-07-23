@@ -148,7 +148,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 		
 		// your application execution starts here
 		//lbr.move(ptpHome());
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
+		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/CollabSafePose")).setJointVelocityRel(0.25));
 		
 		exit=false;
 		
