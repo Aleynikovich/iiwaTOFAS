@@ -162,13 +162,12 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			
 				if(operation_type.compareTo("manual_inspection") == 0)
 				{
-					
 					// Zero G
 					IMotionContainer ZeroGContainer=roll_scan.getFrame("/roll_tcp").moveAsync((new PositionHold(gravityCompensatioMode, -1, null)));
 
 					getApplicationUI().displayModalDialog(ApplicationDialogType.INFORMATION, "Push OK to finish", "OK");
 					
-					ThreadUtil.milliSleep(100);
+					ThreadUtil.milliSleep(50);
 					
 					ZeroGContainer.cancel();
 
@@ -183,7 +182,7 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 
 					getApplicationUI().displayModalDialog(ApplicationDialogType.INFORMATION, "Push OK to finish", "OK");
 					
-					ThreadUtil.milliSleep(100);
+					ThreadUtil.milliSleep(50);
 					
 					ZeroGContainer.cancel();
 
@@ -349,6 +348,17 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			{
 				fw.write(i + "Re-scan up movement " + pose.toString());
 				System.out.println(i + "Re-scan up movement " + pose.toString());
+				
+				String response_data = frame_id + ";" + operation_type + ";0" ;
+				tcp_server.setResponseData(response_data);
+				
+				try {
+					tcp_server.dispose();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			}
 			pose.setGammaRad(current_pos.getGammaRad() - 30*Math.PI/180); 
 			System.out.println("Second point --> x: " + pose.getX() + " y: " + pose.getY() + " z: " + pose.getZ() + 
@@ -362,7 +372,17 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			{
 				fw.write(i + "Re-scan down movement " + pose.toString());
 				System.out.println(i + "Re-scan down movement " + pose.toString());
-
+				
+				String response_data = frame_id + ";" + operation_type + ";0" ;
+				tcp_server.setResponseData(response_data);
+				
+				try {
+					tcp_server.dispose();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			}
 			
 			try
@@ -374,6 +394,16 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 				fw.write(i + "Returning to the " + i + " traj point" + current_pos.toString());
 				System.out.println(i + "Returning to the " + i + " traj point" + current_pos.toString());
 
+				String response_data = frame_id + ";" + operation_type + ";0" ;
+				tcp_server.setResponseData(response_data);
+				
+				try {
+					tcp_server.dispose();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			}	
 			
 			
@@ -391,9 +421,22 @@ public class AleronDemoCollaboration extends RoboticsAPIApplication implements I
 			{
 				fw.write(i + "Relative movement to next Re-scanning point " + current_pos.toString());
 				System.out.println(i + "Relative movement to next Re-scanning point " + current_pos.toString());
+				
+				String response_data = frame_id + ";" + operation_type + ";0" ;
+				tcp_server.setResponseData(response_data);
+				
+				try {
+					tcp_server.dispose();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			}
 		}
-			
+		
+		String response_data = frame_id + ";" + operation_type + ";1" ;
+		tcp_server.setResponseData(response_data);
 		System.out.println("Re-scanning done");
 	}
 	
