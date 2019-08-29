@@ -827,8 +827,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							
 							current_pose.transform(XyzAbcTransformation.ofRad(0.0,-400.0,-400,0.0,0.0,0.0));
 							
-							System.out.println("Pose before safe pose in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-									" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
+							System.out.println("Pose before safe pose in robot frame --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
+									" A: " + current_pose.getAlphaRad()*(180/Math.PI) + " B: " + current_pose.getBetaRad()*(180/Math.PI) + " C: " + current_pose.getGammaRad()*(180/Math.PI) );
 
 							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setJointVelocityRel(0.25));
 							
