@@ -773,7 +773,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
-		roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
+		roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
 	
 		SharedData.sinc_data=true;
 		
