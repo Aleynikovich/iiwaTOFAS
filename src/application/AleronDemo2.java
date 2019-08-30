@@ -535,10 +535,10 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
 					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 
-					joints.set(0, -89.21*(Math.PI/180));joints.set(1, 12.70*(Math.PI/180));
-					joints.set(2, 0.0*(Math.PI/180));joints.set(3, -110.02*(Math.PI/180));
-					joints.set(4, 0.18*(Math.PI/180));joints.set(5, 47.63*(Math.PI/180));
-					joints.set(6, -89.11*(Math.PI/180));
+					joints.set(0, -92.35*(Math.PI/180));joints.set(1, 27.53*(Math.PI/180));
+					joints.set(2, 0.0*(Math.PI/180));joints.set(3, -98.13*(Math.PI/180));
+					joints.set(4, 0.09*(Math.PI/180));joints.set(5, 53.47*(Math.PI/180));
+					joints.set(6, -90.78*(Math.PI/180));
 					
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));
 					
