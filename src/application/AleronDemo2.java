@@ -160,8 +160,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//tcp_camera_fr.setX(-13.7524); tcp_camera_fr.setY(-103.628); tcp_camera_fr.setZ(96.0968);
 		//tcp_camera_fr.setAlphaRad(2.11153*(Math.PI/180)); tcp_camera_fr.setBetaRad(1.30715*(Math.PI/180)); tcp_camera_fr.setGammaRad(0.784201*(Math.PI/180));
 
-		tcp_camera_fr.setX(-0.0160987087577798*1000); tcp_camera_fr.setY(-0.104177406893625*1000); tcp_camera_fr.setZ(0.0971637611000496*1000);
-		tcp_camera_fr.setAlphaRad(359.600196567427*(Math.PI/180)); tcp_camera_fr.setBetaRad(0.553586192503848*(Math.PI/180)); tcp_camera_fr.setGammaRad(0.825847140300407*(Math.PI/180));
+		//tcp_camera_fr.setX(-0.0160987087577798*1000); tcp_camera_fr.setY(-0.104177406893625*1000); tcp_camera_fr.setZ(0.0971637611000496*1000);
+		//tcp_camera_fr.setAlphaRad(359.600196567427*(Math.PI/180)); tcp_camera_fr.setBetaRad(0.553586192503848*(Math.PI/180)); tcp_camera_fr.setGammaRad(0.825847140300407*(Math.PI/180));
+
+		tcp_camera_fr.setX(-0.0159354768400467); tcp_camera_fr.setY(-0.104514274387134); tcp_camera_fr.setZ(0.0970593038223472*1000);
+		tcp_camera_fr.setAlphaRad(359.645275027744*(Math.PI/180)); tcp_camera_fr.setBetaRad(0.554167986910158*(Math.PI/180)); tcp_camera_fr.setGammaRad(0.77876180705853*(Math.PI/180));
+
 
 		Frame pose = new Frame(getFrame("/DemoCroinspect/aileron"));
 		
