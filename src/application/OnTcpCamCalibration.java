@@ -88,7 +88,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		lbr.move(ptp(joints).setJointVelocityRel(0.25));
 		
 		
-		/*Frame touch_pose = new Frame(getFrame("/DemoCroinspect"));
+		Frame touch_pose = new Frame(getFrame("/DemoCroinspect"));
 		
 		touch_pose.setX(-78.8); touch_pose.setY(-440.79); touch_pose.setZ(0.0);
 		touch_pose.setAlphaRad(0.0); touch_pose.setBetaRad(0.0); touch_pose.setGammaRad(Math.PI);
@@ -96,7 +96,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		roll_scan.getFrame("roll_tcp").move(ptp(touch_pose).setJointVelocityRel(0.25));
 
 		getApplicationUI().displayModalDialog(
-				ApplicationDialogType.QUESTION,"OK");*/
+				ApplicationDialogType.QUESTION,"OK");
 		
 		exit=false;
 		
