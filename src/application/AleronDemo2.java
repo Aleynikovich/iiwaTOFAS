@@ -533,20 +533,19 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				
 				if(operation_type.compareTo("calibration") == 0)
 				{
-					//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
-					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
+					
+					/*JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 
 					joints.set(0, -92.35*(Math.PI/180));joints.set(1, 27.53*(Math.PI/180));
 					joints.set(2, 0.0*(Math.PI/180));joints.set(3, -98.13*(Math.PI/180));
 					joints.set(4, 0.09*(Math.PI/180));joints.set(5, 53.47*(Math.PI/180));
 					joints.set(6, -90.78*(Math.PI/180));
 					
-					lbr.move(ptp(joints).setJointVelocityRel(0.25));
+					lbr.move(ptp(joints).setJointVelocityRel(0.25));*/
 					
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);	
-					
-					
 					
 				}
 				else if (operation_type.compareTo("inspection") == 0)
@@ -809,7 +808,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				if((next_point_zone==point_zone) && !warning_signal.get())
 				{
 					//System.out.println("Warning signal: " + warning_signal.get());
-					IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 					motion_list.add(motion_cmd);
 					System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 							" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -822,7 +821,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					{								
 						//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 						
-						IMotionContainer motion_cmd = roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 						
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -995,7 +994,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
 			
 			
-			caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90, 0.0, 0.0));
+			/*caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90, 0.0, 0.0));
 
 			
 			roll_scan.getFrame("Gripper").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
@@ -1004,7 +1003,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					ApplicationDialogType.QUESTION,"OK");
 			
 			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
-			
+			*/
 		}
 			
 		data_received.set(true);
