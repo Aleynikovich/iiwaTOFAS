@@ -982,7 +982,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
 			
 			
-			caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, Math.PI/2, 0.0, 0.0));
+			caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90, 0.0, 0.0));
 
 			
 			roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
