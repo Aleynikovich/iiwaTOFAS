@@ -93,7 +93,7 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		touch_pose.setX(-78.8); touch_pose.setY(-440.79); touch_pose.setZ(0.0);
 		touch_pose.setAlphaRad(0.0); touch_pose.setBetaRad(0.0); touch_pose.setGammaRad(Math.PI);
 		
-		roll_scan.getFrame("roll_tcp").move(ptp(touch_pose).setJointVelocityRel(0.25));
+		roll_scan.getFrame("Gripper").move(ptp(touch_pose).setJointVelocityRel(0.25));
 
 		getApplicationUI().displayModalDialog(
 				ApplicationDialogType.QUESTION,"OK");
