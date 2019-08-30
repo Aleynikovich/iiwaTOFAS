@@ -528,7 +528,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				
 				if(operation_type.compareTo("calibration") == 0)
 				{
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
 					
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);	
@@ -985,7 +985,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90, 0.0, 0.0));
 
 			
-			roll_scan.getFrame("roll_tcp").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
+			roll_scan.getFrame("Gripper").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
 			
 			getApplicationUI().displayModalDialog(
 					ApplicationDialogType.QUESTION,"OK");
