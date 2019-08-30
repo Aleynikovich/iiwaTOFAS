@@ -532,8 +532,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 
 					joints.set(0, -90.0*(Math.PI/180));joints.set(1, 0.0*(Math.PI/180));
-					joints.set(2, 0.0*(Math.PI/180));joints.set(3, -90*(Math.PI/180));
-					joints.set(4, 0.0*(Math.PI/180));joints.set(5, 90.0*(Math.PI/180));
+					joints.set(2, 0.0*(Math.PI/180));joints.set(3, -114.88*(Math.PI/180));
+					joints.set(4, 0.0*(Math.PI/180));joints.set(5, 55.46*(Math.PI/180));
 					joints.set(6, -90.0*(Math.PI/180));
 					
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));
