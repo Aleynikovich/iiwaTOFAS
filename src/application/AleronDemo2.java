@@ -996,7 +996,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				" A: " + caltab_robot_fr.getAlphaRad()*(180/Math.PI)+ " B: " + caltab_robot_fr.getBetaRad()*(180/Math.PI)+ " C: " + caltab_robot_fr.getGammaRad()*(180/Math.PI));
 			
 			
-			caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90.0, 0.0, 0.0));
+			/*caltab_robot_fr.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90.0, 0.0, 0.0));
 
 			
 			roll_scan.getFrame("Gripper").move(ptp(caltab_robot_fr).setJointVelocityRel(0.1));
@@ -1005,7 +1005,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					ApplicationDialogType.QUESTION,"OK");
 			
 			roll_scan.getFrame("Gripper").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
-			
+			*/
 		}
 			
 		data_received.set(true);
