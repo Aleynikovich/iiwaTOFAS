@@ -1008,10 +1008,10 @@
                     </redundancy>
                 </redundancyData>
             </frame>
-            <frame id="_d3cd1370-579a-445f-bd07-e8c619b489a9" name="P1">
+            <frame id="_d3cd1370-579a-445f-bd07-e8c619b489a9" name="Aprox5">
                 <transformation a="0.4986107720071926" b="-1.4926559556547192" c="2.7105751320126696" x="709.7924688858602" y="507.0427658513487" z="580.0988977580045"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1567438723435"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1567441489999"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RollScan/roll_tcp" tool="RollScan" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-1.6" b="-0.017" c="0.0" x="3.7" y="1.3" z="189.5"/>
                     </info>
