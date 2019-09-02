@@ -536,7 +536,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				
 				if(operation_type.compareTo("calibration") == 0)
 				{
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox5")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
 					
 					/*JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 
