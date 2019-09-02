@@ -979,7 +979,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				caltab_pose_data.add(Double.parseDouble(splittedData[i]));
 			}
 	
-			caltab_pose_data.set(3, (caltab_pose_data.get(3) - 0.02)); 
+			caltab_pose_data.set(3, (caltab_pose_data.get(3) - 0.03)); 
 			
 			//Frame definition
 			caltab_robot_fr = new Frame(getFrame("/robot_base"));
