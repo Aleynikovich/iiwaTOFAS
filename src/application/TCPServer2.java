@@ -42,7 +42,7 @@ public class TCPServer2 implements Runnable {
 	@Inject
 	public TCPServer2() throws IOException
 	{		
-		socket = new ServerSocket(30002);	
+		socket = new ServerSocket(30003);	
 		connectionSocket = null;
 		listeners = new ArrayList<ITCPListener2>();
 		tcpServerThread = null;
