@@ -1132,23 +1132,30 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		int zone = Integer.parseInt(zone_str);
 		double override_vel = getApplicationControl().getApplicationOverride();
 		
+		System.out.println("Current Override vel: " + override_vel);
+
 		if(zone == 0)
 		{
 			//No obstacle 
+			System.out.println("No obstacle");
 			override_vel = 1.0;
 		}
 		else if(zone == 1)
 		{
 			//Obstacle in Warning area
+			System.out.println("Obstacle in WARNING area");
 			override_vel = 0.5;
 		}
 		else if(zone == 2)
 		{
 			///Obstacle in Stop area
+			System.out.println("Obstacle in STOP area");
 			override_vel = 0.0;
 			waitUntilRobotAlmostStopped(-1);
 		}
 		
+		System.out.println("Override vel: " + override_vel);
+
 		getApplicationControl().setApplicationOverride(override_vel);
 	}
 
