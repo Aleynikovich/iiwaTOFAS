@@ -197,8 +197,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 
 		//Catlab2 Aileron frame definition
-		pose.setX(-1.26610753130445*1000); pose.setY( 0.0339037043247469*1000); pose.setZ(0.0385044520946989*1000);
-		pose.setAlphaRad(271.609619988047*(Math.PI/180)); pose.setBetaRad(351.530092827164*(Math.PI/180)); pose.setGammaRad(180.545788345199*(Math.PI/180));
+		pose.setX(-1.2073015441932*1000); pose.setY(-0.248037023536067*1000); pose.setZ(-0.277826501203178*1000);
+		pose.setAlphaRad(272.688617372343*(Math.PI/180)); pose.setBetaRad(348.11918885943 *(Math.PI/180)); pose.setGammaRad(179.235054731383*(Math.PI/180));
 		
 		//pose.setX(1.078 * 1000); pose.setY(0.43*1000); pose.setZ(0.005*1000);
 		//pose.setAlphaRad(-Math.PI/2); pose.setBetaRad(Math.PI); pose.setGammaRad(0.0);
@@ -712,6 +712,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			 return 1;
 		 else 
 			 return 2;
+		 
+		 
 	}
 	private void closeCommunication() throws IOException
 	{
