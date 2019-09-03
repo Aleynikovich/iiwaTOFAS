@@ -641,6 +641,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 								
 								try {
 									closeCommunication();
+									closeCommunication2();
+
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -708,6 +710,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println("App InterruptedException");
+		}
+	}
+	
+	private void closeCommunication2() throws IOException
+	{
+		try {
+			
+			tcp_server_2.dispose();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("App InterruptedException2");
 		}
 	}
 	private double velocity(){
@@ -889,6 +902,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							tcp_server.setResponseData(response_data);
 							
 							tcp_server.dispose();
+							tcp_server_2.dispose();
 							
 						} catch (InterruptedException e1) {
 							System.out.println("Closing TCP server from App");
@@ -959,6 +973,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					
 					try {
 						tcp_server.dispose();
+						tcp_server_2.dispose();
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
