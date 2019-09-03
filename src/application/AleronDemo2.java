@@ -577,7 +577,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 
 					rec = new DataRecorder();
 					rec.setTimeout(2L, TimeUnit.MINUTES);
-					switch (getApplicationUI().displayModalDialog(
+					/*switch (getApplicationUI().displayModalDialog(
 							ApplicationDialogType.QUESTION,"How many Force do I have to do?", 
 							"10N", "15N", "20N", "24N", "END DO NOTHING")) {
 		
@@ -649,7 +649,18 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 								}
 								exit = true;
 								break;
+					}*/
+					
+					//select_velocity=velocity();
+					getLogger().info("Selected 10N and " + 25 + "mm/s");
+
+					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
+					try {
+						Force_XND(20,fname,25);
+					} catch (IOException e) {
+						System.out.println("IO Exception in Force_XND 10");
 					}
+					
 				}
 				else if(operation_type.compareTo("end") == 0)
 				{
