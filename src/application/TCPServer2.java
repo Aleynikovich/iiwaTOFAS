@@ -141,31 +141,31 @@ public class TCPServer2 implements Runnable {
 					//{
 						//System.out.println("Request received");
 						
-					if(!request.get())
+					//if(!request.get())
+					//{
+					if((datagram = inFromClient.readLine())!=null)
 					{
-						if((datagram = inFromClient.readLine())!=null)
-						{
-							System.out.println("Datagram: " + datagram.toString());
+						System.out.println("Datagram: " + datagram.toString());
 							
-							//datagram = inFromClient.readUTF();
-							for(ITCPListener2 l : listeners)
-								l.OnTCPMessageReceived2(datagram.toString());
-							
-							request.set(true);
-						}
-						else
-						{
-							System.out.println("Close");
-							break;
-						}
+						//datagram = inFromClient.readUTF();
+						for(ITCPListener2 l : listeners)
+							l.OnTCPMessageReceived2(datagram.toString());
 						
-					}	
+						//request.set(true);
+					}
+					else
+					{
+						System.out.println("Close");
+						break;
+					}
+						
+					//}	
 					//}
 				}
 				System.out.println("Socket closed");
 				socket_close = true;
 				connectionSocket = null;
-							}
+			}
 		}
 		catch (IOException e) {
 			System.out.println("IOException: "+e.getMessage());
