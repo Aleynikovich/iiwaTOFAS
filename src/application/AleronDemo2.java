@@ -52,7 +52,7 @@ import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
-public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener, ISignalListener{
+public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,ITCPListener2, ISignalListener{
 	
 	@Inject
 	private LBR lbr;
@@ -98,10 +98,13 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	private TCPServer tcp_server;
 	AtomicBoolean data_received;
 	
+	private TCPServer2 tcp_server_2;
+
+	
 	//Exchanged data info 
 	String operation_type;
 	String time_stamp;
-	int frame_id;
+	int frame_id, frame_id_2;
 	Frame caltab_robot_fr;
 
 	// not injected fields
@@ -471,6 +474,19 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
+		
+		//Application TCPServer object
+		try {
+			tcp_server_2 = new TCPServer2();
+				
+			tcp_server_2.addListener(this);
+			tcp_server_2.enable();
+					
+		} catch (IOException e) {
+			//TODO Bloque catch generado automáticamente
+			System.err.println("Could not create TCPServer2:" +e.getMessage());
+		}
+		
 		
 		//Media flange management
 		mediaFIO.setLEDBlue(true);
@@ -1084,6 +1100,47 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		//motion_list.clear();
 		System.out.println("Alarma activado");
+	}
+
+
+	@Override
+	public void OnTCPMessageReceived2(String datagram) {
+		
+		System.out.println("OnTCPMessageReceived2: " + datagram);
+
+		String splittedData[] = datagram.split(";");
+		
+		String stamp = splittedData[0];
+		String msg_id = splittedData[1];
+		String zone_str= splittedData[2];
+		
+		int zone = Integer.parseInt(zone_str);
+		double override_vel = getApplicationControl().getApplicationOverride();
+		
+		if(zone == 0)
+		{
+			//No obstacle 
+			override_vel = 1.0;
+		}
+		else if(zone == 1)
+		{
+			//Obstacle in Warning area
+			override_vel = 0.5;
+		}
+		else if(zone == 2)
+		{
+			///Obstacle in Stop area
+			override_vel = 0.0;
+			waitUntilRobotAlmostStopped(-1);
+		}
+		
+		getApplicationControl().setApplicationOverride(override_vel);
+	}
+
+	@Override
+	public void OnTCPConnection2() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
