@@ -862,6 +862,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,-75,0.0,0.0,0.0));
 					
+					System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
+
+					
+					System.out.println("Conctactless Traj point in caltab frame --> x: " + contactless_point.getX() + " y: " + contactless_point.getY() + " z: " + contactless_point.getZ() + 
+							" A: " + contactless_point.getAlphaRad()*(180/Math.PI) + " B: " + contactless_point.getBetaRad()*(180/Math.PI) + " C: " + contactless_point.getGammaRad()*(180/Math.PI) );
+
+					System.out.println("Conctact Traj point in caltab frame --> x: " + contact_point.getX() + " y: " + contact_point.getY() + " z: " + contact_point.getZ() + 
+							" A: " + contact_point.getAlphaRad()*(180/Math.PI) + " B: " + contact_point.getBetaRad()*(180/Math.PI) + " C: " + contact_point.getGammaRad()*(180/Math.PI) );
+
+					
 					if(point.equals(contactless_point) || point.equals(contact_point))
 					{
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
