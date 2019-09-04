@@ -913,7 +913,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					*/
 					boolean res = checkEqualPoints(point,contactless_point);
 					System.out.println("Response:" +  res);
-					if(checkEqualPoints(point,contactless_point) || checkEqualPoints(point,contact_point))
+					if(checkEqualPoints(point,contactless_point))
 					{
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -930,22 +930,36 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						}
 						else
 						{
-							if(point.equals(contactless_point))
-							{	
-								System.out.println("Starting lateral movement");
-								//El robot se separa del aleron en el proximo movimiento
-								//  - Desactivar salida
-								mediaFIO.setOutputX3Pin1(false);
-							}
-							else if(point.equals(contact_point))
-							{
-								System.out.println("Finishing lateral movement");
-								//El robot entra en coctacto con el aleron en el proximo movimiento
-								//  - Activar salida
-								mediaFIO.setOutputX3Pin1(true);
-								setVelOuputConf();
+					
+							System.out.println("Starting lateral movement");
+							//El robot se separa del aleron en el proximo movimiento
+							//  - Desactivar salida
+							mediaFIO.setOutputX3Pin1(false);
+						}
+					}
+					else if (checkEqualPoints(point,contact_point))
+					{
+						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
+				
+						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+						motion_list.add(motion_cmd);
+						
+						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
+						 
+						if(firedInfo != null)
+						{
+						 System.out.println("pulsador 1 ");
+						 warning_signal.set(true);
+						}
+						else
+						{
+							System.out.println("Finishing lateral movement");
+							//El robot entra en coctacto con el aleron en el proximo movimiento
+							//  - Activar salida
+							mediaFIO.setOutputX3Pin1(true);
+							setVelOuputConf();
 								
-							}
 						}
 					}
 					else
