@@ -493,7 +493,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		signal_monitor = new SignalsMonitor(mediaFIO);
 		signal_monitor.addListener(this);
 		signal_monitor.enable();
-			
+		
+		//Configure media outputs
+		mediaFIO.setOutputX3Pin1(false);
+		mediaFIO.setOutputX3Pin11(false);
+		mediaFIO.setOutputX3Pin12(false);
+		
 		//Asyncronous movement error handling
 		errorHandler = new IErrorHandler() {
 			 @Override
@@ -772,6 +777,27 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			return false;
 	}
 	
+	
+	void setVelOuputConf()
+	{
+		double override = getApplicationControl().getApplicationOverride();
+		if(override == 1.0)
+		{
+			mediaFIO.setOutputX3Pin11(true);
+			mediaFIO.setOutputX3Pin12(false);
+		}
+		else if(override == 0.5)
+		{
+			mediaFIO.setOutputX3Pin11(true);
+			mediaFIO.setOutputX3Pin12(false);
+		}
+		else if(override == 0.0)
+		{
+			mediaFIO.setOutputX3Pin11(true);
+			mediaFIO.setOutputX3Pin12(true);
+		}
+	}
+	
 	//Rastering execution with force control
 	private void Force_XND(int force, String nfichero, double velocidad ) throws IOException
 	{
@@ -830,8 +856,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
-		roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
-	
+		roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
+		
+		//Robot in contact with the aileron, notify to NDT system
+		mediaFIO.setOutputX3Pin1(true);
+		setVelOuputConf();
+		
 		SharedData.sinc_data=true;
 		
 		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
@@ -871,7 +901,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,-75,0.0,0.0,0.0));
 					
-					System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+					/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
 
 					
@@ -880,7 +910,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 
 					System.out.println("Conctact Traj point in caltab frame --> x: " + contact_point.getX() + " y: " + contact_point.getY() + " z: " + contact_point.getZ() + 
 							" A: " + contact_point.getAlphaRad()*(180/Math.PI) + " B: " + contact_point.getBetaRad()*(180/Math.PI) + " C: " + contact_point.getGammaRad()*(180/Math.PI) );
-
+					*/
 					boolean res = checkEqualPoints(point,contactless_point);
 					System.out.println("Response:" +  res);
 					if(checkEqualPoints(point,contactless_point) || checkEqualPoints(point,contact_point))
@@ -904,13 +934,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							{	
 								System.out.println("Starting lateral movement");
 								//El robot se separa del aleron en el proximo movimiento
-								//  - Desactivar salida 
+								//  - Desactivar salida
+								mediaFIO.setOutputX3Pin1(false);
 							}
 							else if(point.equals(contact_point))
 							{
 								System.out.println("Finishing lateral movement");
 								//El robot entra en coctacto con el aleron en el proximo movimiento
 								//  - Activar salida
+								mediaFIO.setOutputX3Pin1(true);
+								setVelOuputConf();
+								
 							}
 						}
 					}
@@ -946,10 +980,10 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						 }
 						 else
 						 {
-							
-							//TODO: El robot deja de tener contacto --> Desactivar salida
+							//Robot move away from the aileron, notify to NDT system
 							System.out.println("Robot moves away from the aileron ");
-
+							mediaFIO.setOutputX3Pin1(false);
+							
 							System.out.println("Back to the safe pose");
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 							
@@ -1031,6 +1065,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				if(movement_failed.get())
 				{
 					mediaFIO.setLEDBlue(false);
+					System.out.println("Robot moves away from the aileron ");
+					mediaFIO.setOutputX3Pin1(false);
 	
 					System.out.println("Warning motion list: " + motion_list.size());
 					for(int k=0; k<motion_list.size();k++)
@@ -1236,6 +1272,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		System.out.println("Override vel: " + override_vel);
 
 		getApplicationControl().setApplicationOverride(override_vel);
+		setVelOuputConf();
 	}
 
 	@Override
