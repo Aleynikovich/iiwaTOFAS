@@ -438,28 +438,28 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
 				
-				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				
+				*/
 				i++;
 				
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
 				
-				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 							" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 								" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				 
+				*/
 				i++;
 			}
 			
-			System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+			/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-			
+			*/
 		}
 		
 		
@@ -856,7 +856,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
-		roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(10));
+		roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
 		
 		//Robot in contact with the aileron, notify to NDT system
 		mediaFIO.setOutputX3Pin1(true);
@@ -930,7 +930,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						}
 						else
 						{
-					
 							System.out.println("Starting lateral movement");
 							//El robot se separa del aleron en el proximo movimiento
 							//  - Desactivar salida
@@ -959,7 +958,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							//  - Activar salida
 							mediaFIO.setOutputX3Pin1(true);
 							setVelOuputConf();
-								
 						}
 					}
 					else
