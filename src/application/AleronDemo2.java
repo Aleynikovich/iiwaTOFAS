@@ -852,17 +852,57 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				else
 					next_point_zone = 3;
 				
-				//Comprobar si el proximo 
-				
 				//if(i<x.size()-1 && !warning_signal.get())
 				if((next_point_zone==point_zone) && !warning_signal.get())
 				{
-					//System.out.println("Warning signal: " + warning_signal.get());
-					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
-					motion_list.add(motion_cmd);
-					System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-							" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
-			
+					
+					//Comprobar si en el proximo punto tiene contacto o no con la superficie
+					Frame contactless_point = traj_caltab_ref_fr.get(i+1).copy();
+					Frame contact_point = traj_caltab_ref_fr.get(i-1).copy();
+					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
+					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,-75,0.0,0.0,0.0));
+					
+					if(point.equals(contactless_point) || point.equals(contact_point))
+					{
+						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
+				
+						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+						motion_list.add(motion_cmd);
+						
+						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
+						 
+						if(firedInfo != null)
+						{
+						 System.out.println("pulsador 1 ");
+						 warning_signal.set(true);
+						}
+						else
+						{
+							if(point.equals(contactless_point))
+							{	
+								System.out.println("Starting lateral movement");
+								//El robot se separa del aleron en el proximo movimiento
+								//  - Desactivar salida 
+							}
+							else if(point.equals(contact_point))
+							{
+								System.out.println("Finishing lateral movement");
+								//El robot entra en coctacto con el aleron en el proximo movimiento
+								//  - Activar salida
+							}
+						}
+					}
+					else
+					{
+						//Movimiento de flanco de subida o de bajada de la almena
+						//System.out.println("Warning signal: " + warning_signal.get());
+						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+						motion_list.add(motion_cmd);
+						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
+					}
+				
 					//System.out.println("Movement list: " + motion_list.size());
 				}	
 				else
@@ -885,7 +925,10 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						 }
 						 else
 						 {
-							 
+							
+							//TODO: El robot deja de tener contacto --> Desactivar salida
+							System.out.println("Robot moves away from the aileron ");
+
 							System.out.println("Back to the safe pose");
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 							
