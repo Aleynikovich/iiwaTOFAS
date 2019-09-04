@@ -437,29 +437,29 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
-			/*	
+				
 				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-			*/	
+				
 				i++;
 				
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
-			/*	
+				
 				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 							" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 								" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-			*/	
+			
 				i++;
 			}
 			
-			/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+			System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-			*/
+			
 		}
 		
 		
@@ -852,6 +852,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				else
 					next_point_zone = 3;
 				
+				//Comprobar si el proximo 
+				
 				//if(i<x.size()-1 && !warning_signal.get())
 				if((next_point_zone==point_zone) && !warning_signal.get())
 				{
@@ -995,8 +997,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					break;
 				}
 				
-				copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);
-					
+				copy_caltab_robot_fr= null; // new Frame(caltab_robot_fr);	
 			}
 		}
 		
@@ -1114,6 +1115,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				if(motion_list.get(j).getState() == ExecutionState.Executing)
 				{
 					move_cont.set(j);
+					System.out.println("Move_cont after alarm signal" + move_cont.get());
 					canceled_motion = motion_list.get(j).getCurrentMotion();
 					System.out.println("Running motion--> " + motion_list.get(j).getCurrentMotion().toString());
 					break;
