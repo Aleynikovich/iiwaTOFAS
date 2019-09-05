@@ -901,7 +901,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,-75,0.0,0.0,0.0));
 					
-					/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+					System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
 
 					
@@ -910,9 +910,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 
 					System.out.println("Conctact Traj point in caltab frame --> x: " + contact_point.getX() + " y: " + contact_point.getY() + " z: " + contact_point.getZ() + 
 							" A: " + contact_point.getAlphaRad()*(180/Math.PI) + " B: " + contact_point.getBetaRad()*(180/Math.PI) + " C: " + contact_point.getGammaRad()*(180/Math.PI) );
-					*/
-					boolean res = checkEqualPoints(point,contactless_point);
-					System.out.println("Response:" +  res);
+					
+					//boolean res = checkEqualPoints(point,contactless_point);
+					//System.out.println("Response:" +  res);
 					if(checkEqualPoints(point,contactless_point))
 					{
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
