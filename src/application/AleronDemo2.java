@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -770,8 +771,16 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 	boolean checkEqualPoints(Frame A, Frame B)
 	{
-		if((A.getX() == B.getX()) && (A.getY() == B.getY()) && (A.getZ() == B.getZ()) &&
-			(A.getAlphaRad() == B.getAlphaRad()) && (A.getBetaRad() == B.getBetaRad()) && (A.getGammaRad() == B.getGammaRad()))
+		
+		DecimalFormat formato = new DecimalFormat("#.0000000000");
+		String x_a = formato.format(A.getX()); String x_b = formato.format(B.getX()); 
+		String y_a = formato.format(A.getY()); String y_b = formato.format(B.getY());
+		String z_a = formato.format(A.getZ()); String z_b = formato.format(B.getZ());
+		String alpha_a = formato.format(A.getAlphaRad()); String alpha_b = formato.format(B.getAlphaRad());
+		String beta_a = formato.format(A.getBetaRad()); String beta_b = formato.format(B.getBetaRad());
+		String gamma_a = formato.format(A.getGammaRad()); String gamma_b = formato.format(B.getGammaRad());
+		
+		if((x_a == x_b) && (y_a == y_b) && (z_a == z_b) && (alpha_a == alpha_b) && (beta_a == beta_b) && (gamma_a==gamma_b))
 			return true;
 		else
 			return false;
