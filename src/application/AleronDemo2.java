@@ -786,7 +786,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		System.out.println("B Traj point in caltab frame --> x: " +  x_b + " y: " + y_b + " z: " + z_b + 
 				" A: " + alpha_b + " B: " + beta_b + " C: " + gamma_b );
 	
-		if((x_a == x_b) && (y_a == y_b) && (z_a == z_b) && (alpha_a == alpha_b) && (beta_a == beta_b) && (gamma_a==gamma_b))
+		//if((x_a == x_b) && (y_a == y_b) && (z_a == z_b) && (alpha_a == alpha_b) && (beta_a == beta_b) && (gamma_a==gamma_b))
+		if((x_a.equals(x_b)) && (y_a.equals(y_b)) && (z_a.equals(z_b)) && (alpha_a.equals(alpha_b)) && (beta_a.equals(beta_b)) && (gamma_a.equals(gamma_b)))
 			return true;
 		else
 			return false;
