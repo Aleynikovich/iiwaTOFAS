@@ -439,28 +439,28 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
 				
-				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				
+				*/
 				i++;
 				
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
 				
-				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 							" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 								" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				
+				*/
 				i++;
 			}
 			
-			System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+			/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-			
+			*/
 		}
 		
 		
@@ -780,6 +780,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		String beta_a = formato.format(A.getBetaRad()); String beta_b = formato.format(B.getBetaRad());
 		String gamma_a = formato.format(A.getGammaRad()); String gamma_b = formato.format(B.getGammaRad());
 		
+		System.out.println("Conctactless Traj point in caltab frame --> x: " + x_a + " y: " + y_a + " z: " + z_a + 
+				" A: " + alpha_a + " B: " + beta_a + " C: " + gamma_a);
+
+		System.out.println("Conctact Traj point in caltab frame --> x: " +  x_b + " y: " + y_b + " z: " + z_b + 
+				" A: " + alpha_b + " B: " + beta_b + " C: " + gamma_b );
+	
 		if((x_a == x_b) && (y_a == y_b) && (z_a == z_b) && (alpha_a == alpha_b) && (beta_a == beta_b) && (gamma_a==gamma_b))
 			return true;
 		else
