@@ -780,12 +780,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		String beta_a = formato.format(A.getBetaRad()); String beta_b = formato.format(B.getBetaRad());
 		String gamma_a = formato.format(A.getGammaRad()); String gamma_b = formato.format(B.getGammaRad());
 		
-		System.out.println("A Traj point in caltab frame --> x: " + x_a + " y: " + y_a + " z: " + z_a + 
+		/*System.out.println("A Traj point in caltab frame --> x: " + x_a + " y: " + y_a + " z: " + z_a + 
 				" A: " + alpha_a + " B: " + beta_a + " C: " + gamma_a);
 
 		System.out.println("B Traj point in caltab frame --> x: " +  x_b + " y: " + y_b + " z: " + z_b + 
 				" A: " + alpha_b + " B: " + beta_b + " C: " + gamma_b );
-	
+		*/
 		//if((x_a == x_b) && (y_a == y_b) && (z_a == z_b) && (alpha_a == alpha_b) && (beta_a == beta_b) && (gamma_a==gamma_b))
 		if((x_a.equals(x_b)) && (y_a.equals(y_b)) && (z_a.equals(z_b)) && (alpha_a.equals(alpha_b)) && (beta_a.equals(beta_b)) && (gamma_a.equals(gamma_b)))
 			return true;
@@ -917,7 +917,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					
-					/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+					System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
 
 					
@@ -926,7 +926,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 
 					System.out.println("Conctact Traj point in caltab frame --> x: " + contact_point.getX() + " y: " + contact_point.getY() + " z: " + contact_point.getZ() + 
 							" A: " + contact_point.getAlphaRad()*(180/Math.PI) + " B: " + contact_point.getBetaRad()*(180/Math.PI) + " C: " + contact_point.getGammaRad()*(180/Math.PI) );
-					*/
+					
 					//boolean res = checkEqualPoints(point,contactless_point);
 					//System.out.println("Response:" +  res);
 					if(checkEqualPoints(point,contactless_point))
@@ -982,9 +982,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						//System.out.println("Warning signal: " + warning_signal.get());
 						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 						motion_list.add(motion_cmd);
-						/*System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
-						*/
+						
 					}
 				
 					//System.out.println("Movement list: " + motion_list.size());
