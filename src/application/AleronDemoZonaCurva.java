@@ -560,7 +560,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,60,0.0,0.0,0.0));
 				contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,60,0.0,0.0,0.0));
 					
-				System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+				/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 					" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
 
 				System.out.println("Conctactless Traj point in caltab frame --> x: " + contactless_point.getX() + " y: " + contactless_point.getY() + " z: " + contactless_point.getZ() + 
@@ -568,7 +568,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 
 				System.out.println("Conctact Traj point in caltab frame --> x: " + contact_point.getX() + " y: " + contact_point.getY() + " z: " + contact_point.getZ() + 
 					" A: " + contact_point.getAlphaRad()*(180/Math.PI) + " B: " + contact_point.getBetaRad()*(180/Math.PI) + " C: " + contact_point.getGammaRad()*(180/Math.PI) );
-					
+				*/	
 				//boolean res = checkEqualPoints(point,contactless_point);
 				//System.out.println("Response:" +  res);
 				if(checkEqualPoints(point,contactless_point))
@@ -638,7 +638,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 					try
 					{								
 						//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
-						System.out.println("move_sync");
+						//System.out.println("move_sync");
 						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 							
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
@@ -660,7 +660,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 							System.out.println("Back to the safe pose");
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 								
-							current_pose.transform(XyzAbcTransformation.ofRad(90.0,-400.0,0.0,0.0,0.0,0.0));
+							current_pose.transform(XyzAbcTransformation.ofRad(90.0,0.0,-400.0,0.0,0.0,0.0));
 								
 							System.out.println("Pose before safe pose in robot frame --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
 								" A: " + current_pose.getAlphaRad()*(180/Math.PI) + " B: " + current_pose.getBetaRad()*(180/Math.PI) + " C: " + current_pose.getGammaRad()*(180/Math.PI) );
