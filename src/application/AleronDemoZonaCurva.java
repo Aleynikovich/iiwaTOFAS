@@ -378,7 +378,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				
 				if(operation_type.compareTo("calibration") == 0)
 				{
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox5")).setJointVelocityRel(0.25));
 					
 					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
 			
