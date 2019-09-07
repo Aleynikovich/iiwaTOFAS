@@ -178,9 +178,11 @@ public class TCPServer2 implements Runnable {
 				
 				if(!socket.isClosed())
 				{
-					
-					inFromClient.close();
-					outToClient.close();
+					if(socket_close)
+					{
+						inFromClient.close();
+						outToClient.close();
+					}
 					socket.close();
 				}
 			} catch (IOException e) {
