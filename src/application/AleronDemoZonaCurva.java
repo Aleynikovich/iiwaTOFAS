@@ -272,7 +272,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 		{
 			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
-				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -40.0, 0.0, 0.0, 0.0));
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
 				
 				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
@@ -281,7 +281,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				*/
 				i++;
 				
-				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -40.0, 0.0, 0.0, 0.0));
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -75.0, 0.0, 0.0, 0.0));
 				
 				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
@@ -557,8 +557,8 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				//Comprobar si en el proximo punto tiene contacto o no con la superficie
 				Frame contactless_point = traj_caltab_ref_fr.get(i+1).copy();
 				Frame contact_point = traj_caltab_ref_fr.get(i-1).copy();
-				contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,40,0.0,0.0,0.0));
-				contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,40,0.0,0.0,0.0));
+				contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
+				contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					
 				System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 					" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
@@ -660,7 +660,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 							System.out.println("Back to the safe pose");
 							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
 								
-							current_pose.transform(XyzAbcTransformation.ofRad(90.0,-400.0,-400,0.0,0.0,0.0));
+							current_pose.transform(XyzAbcTransformation.ofRad(90.0,-400.0,0.0,0.0,0.0,0.0));
 								
 							System.out.println("Pose before safe pose in robot frame --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
 								" A: " + current_pose.getAlphaRad()*(180/Math.PI) + " B: " + current_pose.getBetaRad()*(180/Math.PI) + " C: " + current_pose.getGammaRad()*(180/Math.PI) );
