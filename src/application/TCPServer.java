@@ -172,7 +172,7 @@ public class TCPServer implements Runnable {
 		}
 		catch (InterruptedException ie) {
 						
-			System.out.println("Thread interrupt");
+			System.out.println("TCP Server Thread interrupt");
 			
 			try {
 				
