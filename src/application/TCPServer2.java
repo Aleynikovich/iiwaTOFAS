@@ -172,13 +172,13 @@ public class TCPServer2 implements Runnable {
 		}
 		catch (InterruptedException ie) {
 						
-			System.out.println("Thread interrupt");
+			System.out.println("TCP Server 2 Thread interrupt");
 			
 			try {
 				
 				if(!socket.isClosed())
 				{
-					if(socket_close)
+					if(!socket_close)
 					{
 						inFromClient.close();
 						outToClient.close();
