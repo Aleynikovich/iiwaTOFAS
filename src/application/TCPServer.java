@@ -176,12 +176,15 @@ public class TCPServer implements Runnable {
 			
 			try {
 				
-				if(!socket.isClosed())
+				if(!socket_close)
 				{
-					
-					inFromClient.close();
-					outToClient.close();
-					socket.close();
+					if(!socket.isClosed())
+					{
+						
+						inFromClient.close();
+						outToClient.close();
+						socket.close();
+					}
 				}
 			} catch (IOException e) {
 				System.out.println("IO exception closing the socket after thread interruption");
