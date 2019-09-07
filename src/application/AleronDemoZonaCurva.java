@@ -240,7 +240,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 		    	 pose.setX(x.get(cont)); pose.setY(y.get(cont)); pose.setZ(z.get(cont));
 		    	 pose.setAlphaRad(a.get(cont)); pose.setBetaRad(b.get(cont)); pose.setGammaRad(c.get(cont));
 	 		 
-				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, 90, 0.0, 180.0));	
+				 pose.transform(XyzAbcTransformation.ofDeg(0.0, 0.0, 0.0, -90, 0.0, 180.0));	
 				 
 				 Frame copy_aileron_caltab_fr = aileron_caltab_fr.copy();
 				 
