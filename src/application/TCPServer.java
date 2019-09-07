@@ -179,8 +179,11 @@ public class TCPServer implements Runnable {
 				if(!socket.isClosed())
 				{
 					System.out.println("Socket is open");
-					inFromClient.close();
-					outToClient.close();
+					if(!socket_close)
+					{	
+						inFromClient.close();
+						outToClient.close();
+					}
 					socket.close();
 				}
 				else
