@@ -396,10 +396,10 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 					rec.setTimeout(2L, TimeUnit.MINUTES);
 				
 					getLogger().info("Selected 20N and 25mm/s");
-					select_velocity=25;
+					select_velocity=10;
 					fname="measured_force_20ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(20,fname,25);
+						Force_XND(10,fname,10);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
