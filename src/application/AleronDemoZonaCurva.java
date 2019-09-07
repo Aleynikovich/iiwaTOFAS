@@ -363,54 +363,61 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 	@Override
 	public void run() {	
 		
-		// your application execution starts here
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
-		exit=false;
-		
-		do {
+		try
+		{
+			// your application execution starts here
+			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
+			exit=false;
 			
-			
-			if(data_received.get())
-			{
-				data_received.set(false);
+			do {
 				
-				System.out.println("Type:" + operation_type);
 				
-				if(operation_type.compareTo("calibration") == 0)
+				if(data_received.get())
 				{
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
+					data_received.set(false);
 					
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
-			
-					String response_data = frame_id + ";" + operation_type + ";1" ;
-					tcp_server.setResponseData(response_data);	
+					System.out.println("Type:" + operation_type);
 					
-				}
-				else if (operation_type.compareTo("inspection") == 0)
-				{
+					if(operation_type.compareTo("calibration") == 0)
+					{
+						roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
+						
+						roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
 				
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
-
-					rec = new DataRecorder();
-					rec.setTimeout(2L, TimeUnit.MINUTES);
-				
-					getLogger().info("Selected 20N and 25mm/s");
-					select_velocity=25;
-					fname="measured_force_20ND_stiffZ_300_"+select_velocity+"mm_S.log";
-					try {
-						Force_XND(20,fname,25);
-					} catch (IOException e) {
-						System.out.println("IO Exception in Force_XND 10");
+						String response_data = frame_id + ";" + operation_type + ";1" ;
+						tcp_server.setResponseData(response_data);	
+						
 					}
+					else if (operation_type.compareTo("inspection") == 0)
+					{
 					
-				}
-				else if(operation_type.compareTo("end") == 0)
-				{
+						roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+	
+						rec = new DataRecorder();
+						rec.setTimeout(2L, TimeUnit.MINUTES);
 					
+						getLogger().info("Selected 20N and 25mm/s");
+						select_velocity=25;
+						fname="measured_force_20ND_stiffZ_300_"+select_velocity+"mm_S.log";
+						try {
+							Force_XND(20,fname,25);
+						} catch (IOException e) {
+							System.out.println("IO Exception in Force_XND 10");
+						}
+						
+					}
+					else if(operation_type.compareTo("end") == 0)
+					{
+						
+					}
 				}
-			}
-		} while (!exit);
-		System.out.println("Fin");
+			} while (!exit);
+			System.out.println("Fin");
+		}
+		catch (Exception e) {
+			System.out.println("AleronDemoZonaCurva  Exception: " +e.getMessage());
+		}	
+		System.out.println("Finish AleronDemoZonaCurva Run ");
 		
 	}
 	
