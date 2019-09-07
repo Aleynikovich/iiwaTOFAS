@@ -908,16 +908,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					next_point_zone = 3;
 				
 				//if(i<x.size()-1 && !warning_signal.get())
+				System.out.println("Before checking");
 				if((next_point_zone==point_zone) && !warning_signal.get())
 				{
-					
+					System.out.println("After checking");
 					//Comprobar si en el proximo punto tiene contacto o no con la superficie
 					Frame contactless_point = traj_caltab_ref_fr.get(i+1).copy();
 					Frame contact_point = traj_caltab_ref_fr.get(i-1).copy();
 					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,75,0.0,0.0,0.0));
 					
-					System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
+					/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
 
 					System.out.println("Conctactless Traj point in caltab frame --> x: " + contactless_point.getX() + " y: " + contactless_point.getY() + " z: " + contactless_point.getZ() + 
@@ -925,7 +926,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 
 					System.out.println("Conctact Traj point in caltab frame --> x: " + contact_point.getX() + " y: " + contact_point.getY() + " z: " + contact_point.getZ() + 
 							" A: " + contact_point.getAlphaRad()*(180/Math.PI) + " B: " + contact_point.getBetaRad()*(180/Math.PI) + " C: " + contact_point.getGammaRad()*(180/Math.PI) );
-					
+					*/
 					//boolean res = checkEqualPoints(point,contactless_point);
 					//System.out.println("Response:" +  res);
 					if(checkEqualPoints(point,contactless_point))
