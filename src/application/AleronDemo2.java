@@ -658,7 +658,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					}*/
 					
 					//select_velocity=velocity();
-					getLogger().info("Selected 10N and " + 25 + "mm/s");
+					select_velocity=50;
+					getLogger().info("Selected 10N and " + 50 + "mm/s");
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
