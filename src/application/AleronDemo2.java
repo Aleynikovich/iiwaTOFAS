@@ -658,12 +658,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					}*/
 					
 					//select_velocity=velocity();
-					select_velocity=100;
-					getLogger().info("Selected 10N and " + 100 + "mm/s");
+					select_velocity=75;
+					getLogger().info("Selected 10N and " + 75 + "mm/s");
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(10,fname,100);
+						Force_XND(10,fname,75);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
@@ -860,7 +860,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//System.out.println("Safety traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
 			//	" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
 	
-		roll_scan.getFrame("Gripper").move(ptp(aprox_pose).setJointVelocityRel(0.1));
+		roll_scan.getFrame("Gripper").move(ptp(aprox_pose).setJointVelocityRel(0.3));
 		
 		Frame copy_caltab_robot_fr;
 		
