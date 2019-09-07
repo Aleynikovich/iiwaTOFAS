@@ -113,7 +113,7 @@ public class SignalsMonitor implements Runnable {
 		}
 		catch (InterruptedException ie) {
 						
-			System.out.println("Thread interrupt");
+			System.out.println("Signal Monitor Thread interrupt");
 		}
 		catch (Exception e) {
 			System.out.println("Signals monitor Exception: " +e.getMessage());
