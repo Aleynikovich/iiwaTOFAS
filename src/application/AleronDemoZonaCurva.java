@@ -381,7 +381,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				{
 					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox5")).setJointVelocityRel(0.25));
 					
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox6")).setJointVelocityRel(0.25));
 			
 					String response_data = frame_id + ";" + operation_type + ";1" ;
 					tcp_server.setResponseData(response_data);	
@@ -390,7 +390,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				else if (operation_type.compareTo("inspection") == 0)
 				{
 				
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox6")).setJointVelocityRel(0.25));
 
 					rec = new DataRecorder();
 					rec.setTimeout(2L, TimeUnit.MINUTES);
