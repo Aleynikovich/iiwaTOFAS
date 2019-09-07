@@ -658,12 +658,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					}*/
 					
 					//select_velocity=velocity();
-					select_velocity=50;
-					getLogger().info("Selected 10N and " + 50 + "mm/s");
+					select_velocity=100;
+					getLogger().info("Selected 10N and " + 100 + "mm/s");
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(10,fname,50);
+						Force_XND(10,fname,100);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
