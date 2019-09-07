@@ -410,6 +410,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				}
 			}
 		} while (!exit);
+		System.out.println("Fin");
 		
 	}
 	
