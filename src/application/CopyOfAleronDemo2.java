@@ -53,7 +53,7 @@ import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
-public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,ITCPListener2, ISignalListener{
+public class CopyOfAleronDemo2 extends RoboticsAPIApplication implements ITCPListener,ITCPListener2, ISignalListener{
 	
 	@Inject
 	private LBR lbr;
