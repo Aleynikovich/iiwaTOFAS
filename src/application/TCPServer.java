@@ -175,17 +175,18 @@ public class TCPServer implements Runnable {
 			System.out.println("TCP Server Thread interrupt");
 			
 			try {
-				
-				if(!socket_close)
+			
+				if(!socket.isClosed())
 				{
-					if(!socket.isClosed())
-					{
-						
-						inFromClient.close();
-						outToClient.close();
-						socket.close();
-					}
+					System.out.println("Socket is open");
+					inFromClient.close();
+					outToClient.close();
+					socket.close();
 				}
+				else
+					System.out.println("Socket is close");
+
+				
 			} catch (IOException e) {
 				System.out.println("IO exception closing the socket after thread interruption");
 
