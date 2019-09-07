@@ -991,66 +991,69 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				}	
 				else
 				{
-					try
-					{								
-						//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
-						System.out.println("Before Move async");
-						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
-						System.out.println("After Move async");
-						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
-				
-						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
-								 
-						 if(firedInfo != null)
-						 {
-						  System.out.println("pulsador 1 ");
-						  warning_signal.set(true);
-						 }
-						 else
-						 {
-							//Robot move away from the aileron, notify to NDT system
-							System.out.println("Robot moves away from the aileron ");
-							mediaFIO.setOutputX3Pin1(false);
-							
-							System.out.println("Back to the safe pose");
-							Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
-							
-							current_pose.transform(XyzAbcTransformation.ofRad(90.0,-400.0,-400,0.0,0.0,0.0));
-							
-							System.out.println("Pose before safe pose in robot frame --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
-									" A: " + current_pose.getAlphaRad()*(180/Math.PI) + " B: " + current_pose.getBetaRad()*(180/Math.PI) + " C: " + current_pose.getGammaRad()*(180/Math.PI) );
-
-							roll_scan.getFrame("roll_tcp").move(lin(current_pose).setJointVelocityRel(0.25));
-							
-													
-							roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
-		
-							move_cont.set(i+1);
-							String response_data = frame_id + ";" + operation_type + ";1" ;
-							tcp_server.setResponseData(response_data);
-							
-							break;
-						 }
-						
-					}
-					catch(CommandInvalidException e)
+					if(!warning_signal.get())
 					{
-						System.out.println("Last Movement failed and the app was finished");
-						SharedData.sinc_data=false;
-						try {
+						try
+						{								
+							//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
+							System.out.println("Before Move async");
+							IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+							System.out.println("After Move async");
+							System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
+									" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
+					
+							IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
+									 
+							 if(firedInfo != null)
+							 {
+							  System.out.println("pulsador 1 ");
+							  warning_signal.set(true);
+							 }
+							 else
+							 {
+								//Robot move away from the aileron, notify to NDT system
+								System.out.println("Robot moves away from the aileron ");
+								mediaFIO.setOutputX3Pin1(false);
+								
+								System.out.println("Back to the safe pose");
+								Frame current_pose = lbr.getCurrentCartesianPosition(roll_scan.getFrame("roll_tcp"));
+								
+								current_pose.transform(XyzAbcTransformation.ofRad(90.0,-400.0,-400,0.0,0.0,0.0));
+								
+								System.out.println("Pose before safe pose in robot frame --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
+										" A: " + current_pose.getAlphaRad()*(180/Math.PI) + " B: " + current_pose.getBetaRad()*(180/Math.PI) + " C: " + current_pose.getGammaRad()*(180/Math.PI) );
+	
+								roll_scan.getFrame("roll_tcp").move(lin(current_pose).setJointVelocityRel(0.25));
+								
+														
+								roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/SafePose")).setJointVelocityRel(0.25));
+			
+								move_cont.set(i+1);
+								String response_data = frame_id + ";" + operation_type + ";1" ;
+								tcp_server.setResponseData(response_data);
+								
+								break;
+							 }
 							
-							String response_data = frame_id + ";" + operation_type + ";0" ;
-							tcp_server.setResponseData(response_data);
-							
-							tcp_server.dispose();
-							tcp_server_2.dispose();
-							
-						} catch (InterruptedException e1) {
-							System.out.println("Closing TCP server from App");
-							break;
-						}	
-					}		
+						}
+						catch(CommandInvalidException e)
+						{
+							System.out.println("Last Movement failed and the app was finished");
+							SharedData.sinc_data=false;
+							try {
+								
+								String response_data = frame_id + ";" + operation_type + ";0" ;
+								tcp_server.setResponseData(response_data);
+								
+								tcp_server.dispose();
+								tcp_server_2.dispose();
+								
+							} catch (InterruptedException e1) {
+								System.out.println("Closing TCP server from App");
+								break;
+							}	
+						}
+					}
 				}
 				
 				if(warning_signal.get())
