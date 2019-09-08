@@ -1040,6 +1040,12 @@
                     </redundancy>
                 </redundancyData>
             </frame>
+            <frame id="_8a6e408e-3d8e-43e0-a99f-a3ef66250724" name="Aprox3_ZB">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1567959624342"/>
+                </additionalInformation>
+            </frame>
         </frame>
         <frame id="_3dca846b-a962-4c2b-a300-c9e337e24c84" name="P26">
             <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
