@@ -212,7 +212,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		aileron_caltabs_fr_list.add(pose_inv);
 		
 		//Adding the frame to the list
-		aileron_caltabs_fr_list.add(pose);
+		//aileron_caltabs_fr_list.add(pose);
 		
 		//Impedance control object definition
 		impedanceControlMode =	new CartesianImpedanceControlMode();
