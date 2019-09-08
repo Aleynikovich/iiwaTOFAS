@@ -938,8 +938,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					//Comprobar si en el proximo punto tiene contacto o no con la superficie
 					Frame contactless_point = traj_caltab_ref_fr.get(i+1).copy();
 					Frame contact_point = traj_caltab_ref_fr.get(i-1).copy();
-					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,10,0.0,0.0,0.0));
-					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,10,0.0,0.0,0.0));
+					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,10.0,0.0,0.0,0.0));
+					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,10.0,0.0,0.0,0.0));
 					
 					/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
@@ -986,7 +986,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
 						//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
-						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(1).setMode(impedanceControlMode).setBlendingCart(0));
+						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(1).setMode(impedanceControlMode).setBlendingCart(10));
 						motion_list.add(motion_cmd);
 												
 						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
@@ -1016,7 +1016,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
 							motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(10).setBlendingCart(0));
 							impedance_kont++;
-							if(impedance_kont ==2)
+							if(impedance_kont == 2)
 							{
 								impedance_off = false;
 								impedance_kont = 0;
