@@ -40,6 +40,7 @@ import com.kuka.roboticsAPI.executionModel.ExecutionState;
 import com.kuka.roboticsAPI.executionModel.IFiredConditionInfo;
 import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
+import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import com.kuka.roboticsAPI.geometricModel.math.XyzAbcTransformation;
@@ -135,6 +136,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	double current_override;
 	
 	int working_zone;
+	
+	boolean impedance_off;
 		
 	@Override
 	public void initialize() {
@@ -161,6 +164,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		current_override= 1;
 		
+		impedance_off = false;
 		//Frames definition
 		tcp_camera_fr = new Frame(lbr.getFlange());
 		
@@ -849,7 +853,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		System.out.println("i value: " + i);
 
 		working_zone = poseChecking(x.get(i), y.get(i));
-			
+		
+		ObjectFrame tool_frame; 
+		
+		if(working_zone ==1)
+			tool_frame = roll_scan.getFrame("Gripper_Z1");
+		else
+			tool_frame = roll_scan.getFrame("Gripper_Z2");
+
 		point  = traj_caltab_ref_fr.get(i).copy();
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
@@ -863,7 +874,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//System.out.println("Safety traj point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
 			//	" A: " + aprox_pose.getAlphaRad() + " B: " + aprox_pose.getBetaRad() + " C: " + aprox_pose.getGammaRad());
 	
-		roll_scan.getFrame("Gripper").move(ptp(aprox_pose).setJointVelocityRel(0.3));
+		//roll_scan.getFrame("Gripper").move(ptp(aprox_pose).setJointVelocityRel(0.3));
+		tool_frame.move(ptp(aprox_pose).setJointVelocityRel(0.3));
 		
 		Frame copy_caltab_robot_fr;
 		
@@ -876,7 +888,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
-		roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+		//roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+		tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
 		
 		//Robot in contact with the aileron, notify to NDT system
 		mediaFIO.setOutputX3Pin1(true);
@@ -912,10 +925,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					next_point_zone = 3;
 				
 				//if(i<x.size()-1 && !warning_signal.get())
-				System.out.println("Before checking");
 				if((next_point_zone==point_zone) && !warning_signal.get())
 				{
-					System.out.println("After checking");
 					//Comprobar si en el proximo punto tiene contacto o no con la superficie
 					Frame contactless_point = traj_caltab_ref_fr.get(i+1).copy();
 					Frame contact_point = traj_caltab_ref_fr.get(i-1).copy();
@@ -935,11 +946,15 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					//System.out.println("Response:" +  res);
 					if(checkEqualPoints(point,contactless_point))
 					{
+						
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
-						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+						//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 						motion_list.add(motion_cmd);
+						
+						impedance_off = true;
 						
 						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 						 
@@ -961,8 +976,11 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
-						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+						//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 						motion_list.add(motion_cmd);
+						
+						impedance_off = true;
 						
 						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 						 
@@ -984,7 +1002,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					{
 						//Movimiento de flanco de subida o de bajada de la almena
 						//System.out.println("Warning signal: " + warning_signal.get());
-						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+						IMotionContainer motion_cmd; 
+						if(impedance_off)
+						{
+							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
+							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
+						}
+						else
+						{
+							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+						}
 						motion_list.add(motion_cmd);
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -1001,7 +1029,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						{								
 							//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 							System.out.println("Before Move async");
-							IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+							//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+							IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 							System.out.println("After Move async");
 							System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 									" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
