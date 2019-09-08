@@ -446,7 +446,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		{
 			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
-				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -20.0, 0.0, 0.0, 0.0));
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -10.0, 0.0, 0.0, 0.0));
 				
 				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
@@ -455,7 +455,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 				*/
 				i++;
 				
-				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -20.0, 0.0, 0.0, 0.0));
+				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -10.0, 0.0, 0.0, 0.0));
 				
 				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
@@ -938,8 +938,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					//Comprobar si en el proximo punto tiene contacto o no con la superficie
 					Frame contactless_point = traj_caltab_ref_fr.get(i+1).copy();
 					Frame contact_point = traj_caltab_ref_fr.get(i-1).copy();
-					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,20,0.0,0.0,0.0));
-					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,20,0.0,0.0,0.0));
+					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,10,0.0,0.0,0.0));
+					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,10,0.0,0.0,0.0));
 					
 					/*System.out.println("Traj point in caltab frame --> x: " + point.getX() + " y: " + point.getY() + " z: " + point.getZ() + 
 							" A: " + point.getAlphaRad()*(180/Math.PI) + " B: " + point.getBetaRad()*(180/Math.PI) + " C: " + point.getGammaRad()*(180/Math.PI) );
@@ -985,7 +985,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
 						//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
-						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
 						motion_list.add(motion_cmd);
 												
 						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
