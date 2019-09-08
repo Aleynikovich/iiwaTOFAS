@@ -987,9 +987,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
 						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 						motion_list.add(motion_cmd);
-						
-						impedance_off = true;
-						
+												
 						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
 						 
 						if(firedInfo != null)
