@@ -138,7 +138,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	int working_zone;
 	
 	boolean impedance_off;
-		
+	int impedance_kont; 	
 	@Override
 	public void initialize() {
 		
@@ -166,6 +166,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		current_override= 1;
 		
 		impedance_off = false;
+		impedance_kont = 0; 
 		//Frames definition
 		tcp_camera_fr = new Frame(lbr.getFlange());
 		
@@ -1015,7 +1016,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							System.out.println("Movement without impedance");
 							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
 							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
-							impedance_off = false;
+							impedance_kont++;
+							if(impedance_kont ==2)
+							{
+								impedance_off = false;
+								impedance_kont = 0;
+							}
 						}
 						else
 						{
