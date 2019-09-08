@@ -667,12 +667,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					}*/
 					
 					//select_velocity=velocity();
-					select_velocity=25;
+					select_velocity=50;
 					getLogger().info("Selected 10N and " + 75 + "mm/s");
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(10,fname,25);
+						Force_XND(10,fname,50);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
@@ -1014,7 +1014,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						{
 							System.out.println("Movement without impedance");
 							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
-							motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(10).setBlendingCart(0));
+							motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 							impedance_kont++;
 							if(impedance_kont == 2)
 							{
