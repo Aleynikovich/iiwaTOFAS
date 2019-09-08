@@ -897,7 +897,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
 		//roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
-		tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+		tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(5).setMode(impedanceControlMode).setBlendingCart(0));
 		
 		//Robot in contact with the aileron, notify to NDT system
 		mediaFIO.setOutputX3Pin1(true);
