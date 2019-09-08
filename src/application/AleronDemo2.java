@@ -666,12 +666,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					}*/
 					
 					//select_velocity=velocity();
-					select_velocity=25;
+					select_velocity=50;
 					getLogger().info("Selected 10N and " + 75 + "mm/s");
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(20,fname,25);
+						Force_XND(20,fname,50);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
@@ -858,9 +858,15 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		ObjectFrame tool_frame; 
 		
 		if(working_zone ==1)
+		{
 			tool_frame = roll_scan.getFrame("Gripper_Z1");
+			System.out.println("Gripper_Z1");
+		}	
 		else
+		{
 			tool_frame = roll_scan.getFrame("Gripper_Z2");
+			System.out.println("Gripper_Z2");
+		}
 
 		point  = traj_caltab_ref_fr.get(i).copy();
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
@@ -1006,14 +1012,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						IMotionContainer motion_cmd; 
 						if(impedance_off)
 						{
+							System.out.println("Movement without impedance");
 							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
 							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
+							impedance_off = false;
 						}
 						else
 						{
 							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 						}
+						
 						motion_list.add(motion_cmd);
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
