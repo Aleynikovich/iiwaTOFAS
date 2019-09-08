@@ -569,7 +569,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					
 					lbr.move(ptp(joints).setJointVelocityRel(0.25));*/
 					
-					roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
+					//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/DemoCroinspect/Aprox4")).setJointVelocityRel(0.25));
 
 					
 					String response_data = frame_id + ";" + operation_type + ";1" ;
