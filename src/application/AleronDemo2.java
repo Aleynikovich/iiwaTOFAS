@@ -151,7 +151,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
 		
-		System.out.println("Roll scan frame: " + roll_scan.getFrame("Gripper").toString());
+		System.out.println("Roll scan frame: " + roll_scan.getFrame("Gripper_Z1").toString());
+		System.out.println("Roll scan frame: " + roll_scan.getFrame("Gripper_Z2").toString());
 
 		data_received = new AtomicBoolean(false);
 		
