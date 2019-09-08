@@ -1014,7 +1014,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						{
 							System.out.println("Movement without impedance");
 							//motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
-							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(10));
+							motion_cmd = tool_frame.moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 							impedance_kont++;
 							if(impedance_kont ==2)
 							{
