@@ -450,7 +450,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			if(zone_id == 1)
 				z_dist = 75;
 			else
-				z_dist = 85;
+				z_dist = 75;
 			
 			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
@@ -951,7 +951,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					if(point_zone == 1)
 						z_dist = 75;
 					else
-						z_dist = 85;
+						z_dist = 75;
 					contactless_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,z_dist,0.0,0.0,0.0));
 					contact_point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,z_dist,0.0,0.0,0.0));
 					
