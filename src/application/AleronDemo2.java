@@ -990,9 +990,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							System.out.println("Starting lateral movement");
 							//El robot se separa del aleron en el proximo movimiento
 							//  - Desactivar salida
-							
-							
 							mediaFIO.setOutputX3Pin1(false);
+							mediaFIO.setOutputX3Pin11(false);
+							mediaFIO.setOutputX3Pin12(false);
 						}
 					}
 					else if (checkEqualPoints(point,contact_point))
