@@ -227,8 +227,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 				
 		String str;
-		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
-		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
+		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
+		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
       
 		String val_str[];
@@ -1025,7 +1025,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							else
 							{
 								System.out.println("Downward edge");
-								mediaFIO.setOutputX3Pin12(false);
+								mediaFIO.setOutputX3Pin12(true);
 							}
 								
 							mediaFIO.setOutputX3Pin1(true);
