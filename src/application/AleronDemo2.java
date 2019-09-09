@@ -818,17 +818,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		if(override == 1.0)
 		{
 			mediaFIO.setOutputX3Pin11(true);
-			mediaFIO.setOutputX3Pin12(false);
+			//mediaFIO.setOutputX3Pin12(false);
 		}
-		else if(override == 0.5)
+	/*	else if(override == 0.5)
 		{
 			mediaFIO.setOutputX3Pin11(true);
 			mediaFIO.setOutputX3Pin12(false);
-		}
+		}*/
 		else if(override == 0.0)
 		{
-			mediaFIO.setOutputX3Pin11(true);
-			mediaFIO.setOutputX3Pin12(true);
+			mediaFIO.setOutputX3Pin11(false);
+			//mediaFIO.setOutputX3Pin12(true);
 		}
 	}
 	
@@ -990,6 +990,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							System.out.println("Starting lateral movement");
 							//El robot se separa del aleron en el proximo movimiento
 							//  - Desactivar salida
+							
+							
 							mediaFIO.setOutputX3Pin1(false);
 						}
 					}
@@ -1015,6 +1017,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							System.out.println("Finishing lateral movement");
 							//El robot entra en coctacto con el aleron en el proximo movimiento
 							//  - Activar salida
+							if(traj_caltab_ref_fr.get(i).getX()< traj_caltab_ref_fr.get(i+1).getX())
+							{
+								System.out.println("Upward edge");
+								mediaFIO.setOutputX3Pin12(false);
+							}
+							else
+							{
+								System.out.println("Downward edge");
+								mediaFIO.setOutputX3Pin12(false);
+							}
+								
 							mediaFIO.setOutputX3Pin1(true);
 							setVelOuputConf();
 						}
