@@ -885,14 +885,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 		}
 		
-		point  = traj_caltab_ref_fr.get(i).copy();
+		//point  = traj_caltab_ref_fr.get(i).copy();
 		
 		if(zone_2_first_call)
 		{
 			//zone_2_first_call=false;
 			i++;
 		}
-
+		point  = traj_caltab_ref_fr.get(i).copy();
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 							
