@@ -399,14 +399,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	    		 
 	    		 if(zone_id ==1)
 	    		 {
-	    			 System.out.println("Point " + cont + "Caltab 1"); 
+	    			 //System.out.println("Point " + cont + "Caltab 1"); 
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(0).copy();
 		    		 //System.out.println("Caltab 1 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//		" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
 	    		 }
 	    		 else
 	    		 {
-	    			 System.out.println("Point " + cont + "Caltab 2"); 
+	    			 //System.out.println("Point " + cont + "Caltab 2"); 
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		//System.out.println("Caltab 2 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
 						//	" A: " + aileron_caltab_fr.getAlphaRad() + " B: " + aileron_caltab_fr.getBetaRad() + " C: " + aileron_caltab_fr.getGammaRad());	
@@ -456,20 +456,20 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			{	
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -z_dist, 0.0, 0.0, 0.0));
 				
-				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 					" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 						" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 							" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				*/
+				
 				i++;
 				
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -z_dist, 0.0, 0.0, 0.0));
 				
-				/*System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
+				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
 						" y: " + traj_caltab_ref_fr.get(i).getY() + " z: " + traj_caltab_ref_fr.get(i).getZ() + 
 							" A: " + traj_caltab_ref_fr.get(i).getAlphaRad() + " B: " + traj_caltab_ref_fr.get(i).getBetaRad() + 
 								" C: " + traj_caltab_ref_fr.get(i).getGammaRad());
-				*/
+				
 				i++;
 			}
 			
