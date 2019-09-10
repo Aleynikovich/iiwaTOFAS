@@ -232,8 +232,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 				
 		String str;
-		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
-		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
+		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
+		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
       
 		String val_str[];
@@ -891,7 +891,10 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		{
 			point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,0.75,0.0,0.0,0.0));
 			zone_2_first_call=false;
+			i=i+2;
 		}
+		point  = traj_caltab_ref_fr.get(i).copy();
+
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 							
