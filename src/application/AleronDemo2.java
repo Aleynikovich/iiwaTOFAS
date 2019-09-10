@@ -889,11 +889,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		if(zone_2_first_call)
 		{
-			point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,0.75,0.0,0.0,0.0));
-			zone_2_first_call=false;
-			i=i+2;
+			//zone_2_first_call=false;
+			i++;
 		}
-		point  = traj_caltab_ref_fr.get(i).copy();
 
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
@@ -983,7 +981,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					*/
 					//boolean res = checkEqualPoints(point,contactless_point);
 					//System.out.println("Response:" +  res);
-					if(checkEqualPoints(point,contactless_point))
+					if(checkEqualPoints(point,contactless_point) && !zone_2_first_call)
 					{
 						
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
@@ -1012,7 +1010,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							mediaFIO.setOutputX3Pin12(false);
 						}
 					}
-					else if (checkEqualPoints(point,contact_point))
+					else if (checkEqualPoints(point,contact_point)&& !zone_2_first_call)
 					{
 						System.out.println("Entra en contacto");
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
@@ -1076,6 +1074,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 						
+						if(zone_2_first_call)
+							zone_2_first_call=false;
 					}
 				
 					//System.out.println("Movement list: " + motion_list.size());
