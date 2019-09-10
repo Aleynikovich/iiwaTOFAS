@@ -232,8 +232,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 				
 		String str;
-		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
-		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
+		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
+		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
       
 		String val_str[];
@@ -686,7 +686,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(10,fname,50);
+						Force_XND(20,fname,100);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
