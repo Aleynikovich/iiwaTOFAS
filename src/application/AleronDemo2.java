@@ -139,6 +139,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	
 	boolean impedance_off;
 	int impedance_kont; 	
+	
+	boolean zone_2_first_call;
 	@Override
 	public void initialize() {
 		
@@ -167,6 +169,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		impedance_off = false;
 		impedance_kont = 0; 
+		
+		zone_2_first_call= false;
+		
 		//Frames definition
 		tcp_camera_fr = new Frame(lbr.getFlange());
 		
@@ -406,6 +411,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	    		 }
 	    		 else
 	    		 {
+	    			 
 	    			 //System.out.println("Point " + cont + "Caltab 2"); 
 		    		 aileron_caltab_fr = aileron_caltabs_fr_list.get(1).copy();
 		    		//System.out.println("Caltab 2 --> x: " + aileron_caltab_fr.getX() + " y: " + aileron_caltab_fr.getY() + " z: " + aileron_caltab_fr.getZ() + 
@@ -875,9 +881,17 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		{
 			tool_frame = roll_scan.getFrame("Gripper_Z2");
 			System.out.println("Gripper_Z2");
+			zone_2_first_call = true;
+			
 		}
-
+		
 		point  = traj_caltab_ref_fr.get(i).copy();
+		
+		if(zone_2_first_call)
+		{
+			point.transform(XyzAbcTransformation.ofRad(0.0, 0.0,0.75,0.0,0.0,0.0));
+			zone_2_first_call=false;
+		}
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 							
