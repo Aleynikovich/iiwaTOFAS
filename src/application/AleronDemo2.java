@@ -459,6 +459,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 			if(traj_caltab_ref_fr.get(i).getX()== traj_caltab_ref_fr.get(i-1).getX())
 			{	
+				System.out.println("i_x igual que i+1_x");
 				traj_caltab_ref_fr.get(i).transform(XyzAbcTransformation.ofDeg(0.0, 0.0, -z_dist, 0.0, 0.0, 0.0));
 				
 				System.out.println(i + " Traj Position in caltab frame --> x: " + traj_caltab_ref_fr.get(i).getX() + 
