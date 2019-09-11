@@ -230,10 +230,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//Impedance control object definition
 		impedanceControlMode =	new CartesianImpedanceControlMode();
 		
-				
 		String str;
-		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
-		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
+		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
+		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
       
 		String val_str[];
