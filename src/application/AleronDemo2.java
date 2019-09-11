@@ -231,8 +231,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		impedanceControlMode =	new CartesianImpedanceControlMode();
 		
 		String str;
-		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
-		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
+		//String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin_ZoneB.MPF";
+		String file = "C:\\Users\\KukaUser\\Desktop\\CADTraj\\Plana_Sin.MPF";
 		FileReader f;
       
 		String val_str[];
@@ -884,7 +884,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			System.out.println("Gripper_Z2");
 			zone_2_first_call = true;
 
-			i=i+3;
+			i++;
 			
 		}
 		
