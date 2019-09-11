@@ -681,12 +681,12 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					}*/
 					
 					//select_velocity=velocity();
-					select_velocity=50;
+					select_velocity=100;
 					getLogger().info("Selected 10N and " + 75 + "mm/s");
 
 					fname="measured_force_10ND_stiffZ_300_"+select_velocity+"mm_S.log";
 					try {
-						Force_XND(10,fname,50);
+						Force_XND(10,fname,100);
 					} catch (IOException e) {
 						System.out.println("IO Exception in Force_XND 10");
 					}
@@ -882,17 +882,14 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			tool_frame = roll_scan.getFrame("Gripper_Z2");
 			System.out.println("Gripper_Z2");
 			zone_2_first_call = true;
+
+			i++;
 			
 		}
 		
-		//point  = traj_caltab_ref_fr.get(i).copy();
-		
-		if(zone_2_first_call)
-		{
-			//zone_2_first_call=false;
-			i++;
-		}
-		point  = traj_caltab_ref_fr.get(i).copy();
+		System.out.println("i value: " + i);
+
+		point = traj_caltab_ref_fr.get(i).copy();
 		aprox_pose.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
 				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 							
@@ -908,6 +905,9 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		//roll_scan.getFrame("Gripper").move(ptp(aprox_pose).setJointVelocityRel(0.3));
 		tool_frame.move(ptp(aprox_pose).setJointVelocityRel(0.3));
 		
+		System.out.println("Aprox point in robot base frame --> x: " + aprox_pose.getX() + " y: " + aprox_pose.getY() + " z: " + aprox_pose.getZ() + 
+				" A: " + aprox_pose.getAlphaRad()*(180/Math.PI)  + " B: " + aprox_pose.getBetaRad()*(180/Math.PI) + " C: " + aprox_pose.getGammaRad()*(180/Math.PI) );
+
 		Frame copy_caltab_robot_fr;
 		
 		copy_caltab_robot_fr = caltab_robot_fr.copy();
@@ -915,7 +915,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		point  = traj_caltab_ref_fr.get(i).copy();
 								
 		copy_caltab_robot_fr.transform(XyzAbcTransformation.ofRad(point.getX(), point.getY(), point.getZ(), 
-				point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
+			point.getAlphaRad(), point.getBetaRad(), point.getGammaRad()));
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
@@ -928,9 +928,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		
 		SharedData.sinc_data=true;
 		
-		System.out.println("Aprox point in robot base frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
-			" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI)  + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
-
 		i++;
 		
 		int point_zone;
@@ -981,9 +978,10 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 					*/
 					//boolean res = checkEqualPoints(point,contactless_point);
 					//System.out.println("Response:" +  res);
-					if(checkEqualPoints(point,contactless_point) && !zone_2_first_call)
+					if(checkEqualPoints(point,contactless_point))
 					{
-						
+						System.out.println("Finaliza el contacto");
+
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
@@ -1010,7 +1008,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 							mediaFIO.setOutputX3Pin12(false);
 						}
 					}
-					else if (checkEqualPoints(point,contact_point)&& !zone_2_first_call)
+					else if (checkEqualPoints(point,contact_point))
 					{
 						System.out.println("Entra en contacto");
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
@@ -1074,8 +1072,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 						
-						if(zone_2_first_call)
-							zone_2_first_call=false;
 					}
 				
 					//System.out.println("Movement list: " + motion_list.size());
