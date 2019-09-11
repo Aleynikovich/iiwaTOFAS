@@ -884,7 +884,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			System.out.println("Gripper_Z2");
 			zone_2_first_call = true;
 
-			i++;
+			i=i+3;
 			
 		}
 		
