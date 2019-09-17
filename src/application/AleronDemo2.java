@@ -1244,6 +1244,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		frame_id = Integer.parseInt(splittedData[1]);
 		operation_type = splittedData[2];
 		
+		caltab_pose_data.clear();
 		if(operation_type.compareTo("inspection")==0)
 		{
 			for(int i=3; i<splittedData.length; i++)
