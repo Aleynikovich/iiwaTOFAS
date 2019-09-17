@@ -142,7 +142,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 		roll_scan.attachTo(lbr.getFlange());
 		
 		System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
-		System.out.println("Roll scan frame: " + roll_scan.getFrame("Gripper").toString());
+		System.out.println("Roll scan frame: " + roll_scan.getFrame("Gripper_Z2").toString());
 
 		data_received = new AtomicBoolean(false);
 		
@@ -512,7 +512,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 					
 		aprox_pose.transform(XyzAbcTransformation.ofRad(0.0,0.0,-50, 0.0,0.0,0.0));
 
-		roll_scan.getFrame("Gripper").move(ptp(aprox_pose).setJointVelocityRel(0.1));
+		roll_scan.getFrame("Gripper_Z2").move(ptp(aprox_pose).setJointVelocityRel(0.1));
 		
 		Frame copy_caltab_robot_fr;
 		
@@ -525,7 +525,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 			
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
-		roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+		roll_scan.getFrame("Gripper_Z2").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
 		
 		//Robot in contact with the aileron, notify to NDT system
 		mediaFIO.setOutputX3Pin1(true);
@@ -576,7 +576,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 					System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 						" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
-					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper_Z2").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 					motion_list.add(motion_cmd);
 						
 					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
@@ -599,7 +599,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 					System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 						" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
-					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
+					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper_Z2").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
 					motion_list.add(motion_cmd);
 						
 					IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
@@ -622,7 +622,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 				{
 					//Movimiento de flanco de subida o de bajada de la almena
 					//System.out.println("Warning signal: " + warning_signal.get());
-					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+					IMotionContainer motion_cmd = roll_scan.getFrame("Gripper_Z2").moveAsync(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
 					motion_list.add(motion_cmd);
 					System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 						" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
@@ -639,7 +639,7 @@ public class AleronDemoZonaCurva extends RoboticsAPIApplication implements ITCPL
 					{								
 						//roll_scan.getFrame("roll_tcp").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setBlendingCart(0));
 						//System.out.println("move_sync");
-						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
+						IMotionContainer motion_cmd = roll_scan.getFrame("Gripper_Z2").move(lin(copy_caltab_robot_fr).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 							
 						System.out.println(i + " Traj point in robot frame --> x: " + copy_caltab_robot_fr.getX() + " y: " + copy_caltab_robot_fr.getY() + " z: " + copy_caltab_robot_fr.getZ() + 
 							" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
