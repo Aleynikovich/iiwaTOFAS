@@ -87,7 +87,7 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		joints.set(4, 0.0*(Math.PI/180));joints.set(5, 53.0*(Math.PI/180));
 		joints.set(6, 0.0*(Math.PI/180));
 		
-		lbr.move(ptp(joints).setJointVelocityRel(0.25));
+		lbr.move(ptp(joints).setJointVelocityRel(0.15));
 				
 		Frame  current_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 		
