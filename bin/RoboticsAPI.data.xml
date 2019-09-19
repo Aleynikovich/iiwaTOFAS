@@ -1695,7 +1695,7 @@
         </frame>
     </world>
     <objectTemplates>
-        <toolTemplate class="" defaultMotionFrameRef="/flange_2_tool" name="Tool">
+        <toolTemplate class="" defaultMotionFrameRef="" name="Tool">
             <frames>
                 <frame id="_f9d50d68-07d5-460b-8ec3-921bb142a26f" name="flange_2_tool">
                     <transformation a="0.0" b="0.0" c="0.0" x="-0.5685902465325279" y="-0.3008472544565028" z="307.9"/>
@@ -1741,6 +1741,9 @@
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
                     <transformation a="0.0" b="0.0" c="0.0" x="-0.01942778870110812" y="1.030023179285334" z="50.22305210447917"/>
                     <measurementTranslation calculationError="1.1368035797985787" method="XYZ4Point" timestamp="1540449390172"/>
+                </frame>
+                <frame id="_d49cdb5c-3a5b-4e0d-b777-fd7506418d1e" name="flange">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="20.915341449322568" cogY="26.34215741082029" cogZ="11.171597797478464" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.8297194102548855"/>
