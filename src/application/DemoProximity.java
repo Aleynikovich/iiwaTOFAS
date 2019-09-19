@@ -40,7 +40,7 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
  * @see #run()
  * @see #dispose()
  */
-public class DemoProximity extends RoboticsAPIApplication implements ITCPListener{
+public class DemoProximity extends RoboticsAPIApplication implements ITCPListener2{
 	@Inject
 	private LBR lbr;
     private Tool flange;
@@ -48,7 +48,7 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
     @Inject
     private MediaFlangeIOGroup mediaFIO;
     
-    private TCPServer tcp_server;
+    private TCPServer2 tcp_server;
 	AtomicBoolean data_received;
 	
 	@Override
@@ -59,7 +59,7 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		
 		//Application TCPServer object
 		try {
-			tcp_server = new TCPServer();
+			tcp_server = new TCPServer2();
 				
 			tcp_server.addListener(this);
 			tcp_server.enable();
@@ -146,52 +146,53 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 	}
 
 	@Override
-	public void OnTCPMessageReceived(String datagram) {
+	public void OnTCPMessageReceived2(String datagram) {
 		// TODO Auto-generated method stub
-		System.out.println("OnTCPMessageReceived: " + datagram);
+		// TODO Auto-generated method stub
+				System.out.println("OnTCPMessageReceived: " + datagram);
 
-		String splittedData[] = datagram.split(";");
-		
-		String stamp = splittedData[0];
-		String msg_id = splittedData[1];
-		String zone_str= splittedData[2];
-		
-		int zone = Integer.parseInt(zone_str);
-		double override_vel = getApplicationControl().getApplicationOverride();
-		
-		System.out.println("Current Override vel: " + override_vel);
+				String splittedData[] = datagram.split(";");
+				
+				String stamp = splittedData[0];
+				String msg_id = splittedData[1];
+				String zone_str= splittedData[2];
+				
+				int zone = Integer.parseInt(zone_str);
+				double override_vel = getApplicationControl().getApplicationOverride();
+				
+				System.out.println("Current Override vel: " + override_vel);
 
-		if(zone == 0)
-		{
-			//No obstacle 
-			System.out.println("No obstacle");
-			override_vel = 1.0;
-		}
-		else if(zone == 1)
-		{
-			//Obstacle in Warning area
-			System.out.println("Obstacle in WARNING area");
-			override_vel = 0.5;
-		}
-		else if(zone == 2)
-		{
-			///Obstacle in Stop area
-			System.out.println("Obstacle in STOP area");
-			override_vel = 0.0;
-			
-		}
-		
-		System.out.println("Override vel: " + override_vel);
+				if(zone == 0)
+				{
+					//No obstacle 
+					System.out.println("No obstacle");
+					override_vel = 1.0;
+				}
+				else if(zone == 1)
+				{
+					//Obstacle in Warning area
+					System.out.println("Obstacle in WARNING area");
+					override_vel = 0.5;
+				}
+				else if(zone == 2)
+				{
+					///Obstacle in Stop area
+					System.out.println("Obstacle in STOP area");
+					override_vel = 0.0;
+					
+				}
+				
+				System.out.println("Override vel: " + override_vel);
 
-		getApplicationControl().setApplicationOverride(override_vel);
-		
-		if(override_vel ==0)
-			waitUntilRobotAlmostStopped(-1);
-		
+				getApplicationControl().setApplicationOverride(override_vel);
+				
+				if(override_vel ==0)
+					waitUntilRobotAlmostStopped(-1);
 	}
 
+
 	@Override
-	public void OnTCPConnection() {
+	public void OnTCPConnection2() {
 		// TODO Auto-generated method stub
 		
 	}
