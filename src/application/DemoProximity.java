@@ -95,7 +95,10 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 			" A: " + current_pose.getAlphaRad()*(180/Math.PI)+ " B: " + current_pose.getBetaRad()*(180/Math.PI)+ " C: " + current_pose.getGammaRad()*(180/Math.PI));
 			
 		Frame left_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,15.0,0.0,0.0,0.0,0.0));
-				
+			
+		System.out.println("Current pose --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
+				" A: " + current_pose.getAlphaRad()*(180/Math.PI)+ " B: " + current_pose.getBetaRad()*(180/Math.PI)+ " C: " + current_pose.getGammaRad()*(180/Math.PI));
+			
 		System.out.println("Left pose --> x: " + left_pose.getX() + " y: " + left_pose.getY() + " z: " + left_pose.getZ() + 
 				" A: " + left_pose.getAlphaRad()*(180/Math.PI)+ " B: " + left_pose.getBetaRad()*(180/Math.PI)+ " C: " + left_pose.getGammaRad()*(180/Math.PI));
 		
@@ -106,8 +109,8 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 	
 		while(true)
 		{
-			flange.moveAsync(lin(left_pose).setCartVelocity(50).setBlendingCart(10));
-			flange.moveAsync(lin(right_pose).setCartVelocity(50).setBlendingCart(10));
+			flange.move(lin(left_pose).setCartVelocity(50));
+			flange.move(lin(right_pose).setCartVelocity(50));
 		}
 	}
 	
