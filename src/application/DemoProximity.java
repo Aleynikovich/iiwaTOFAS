@@ -76,7 +76,7 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		// your application execution starts here
 	
 						 
-		flange.getFrame("flange").move(ptp(getFrame("/DemoProximity/SafePose")));
+		flange.getFrame("flange").move(ptp(getFrame("/DemoProximity/SafePose")).setJointVelocityRel(0.25));
 		
 		mediaFIO.setLEDBlue(true);
 		
@@ -87,26 +87,28 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		joints.set(4, 0.0*(Math.PI/180));joints.set(5, 53.0*(Math.PI/180));
 		joints.set(6, 0.0*(Math.PI/180));
 		
-		lbr.move(ptp(joints).setJointVelocityRel(0.15));
+		lbr.move(ptp(joints).setJointVelocityRel(0.25));
 				
 		Frame  current_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 		
 		System.out.println("Current pose --> x: " + current_pose.getX() + " y: " + current_pose.getY() + " z: " + current_pose.getZ() + 
 			" A: " + current_pose.getAlphaRad()*(180/Math.PI)+ " B: " + current_pose.getBetaRad()*(180/Math.PI)+ " C: " + current_pose.getGammaRad()*(180/Math.PI));
 			
-		Frame left_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,15.0,0.0,0.0,0.0,0.0));
+		Frame left_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,150.0,0.0,0.0,0.0,0.0));
 			
 		System.out.println("Left pose --> x: " + left_pose.getX() + " y: " + left_pose.getY() + " z: " + left_pose.getZ() + 
 				" A: " + left_pose.getAlphaRad()*(180/Math.PI)+ " B: " + left_pose.getBetaRad()*(180/Math.PI)+ " C: " + left_pose.getGammaRad()*(180/Math.PI));
 		
-		Frame right_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,-30.0,0.0,0.0,0.0,0.0));
+		Frame right_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,-300.0,0.0,0.0,0.0,0.0));
 		
 		System.out.println("Right pose --> x: " + right_pose.getX() + " y: " + right_pose.getY() + " z: " + right_pose.getZ() + 
 				" A: " + right_pose.getAlphaRad()*(180/Math.PI)+ " B: " + right_pose.getBetaRad()*(180/Math.PI)+ " C: " + right_pose.getGammaRad()*(180/Math.PI));
 	
 		while(true)
 		{
+			System.out.println("Left movement");
 			flange.move(lin(left_pose).setCartVelocity(50));
+			System.out.println("Right movement");
 			flange.move(lin(right_pose).setCartVelocity(50));
 		}
 	}
