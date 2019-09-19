@@ -104,12 +104,11 @@ public class TCPClient implements Runnable {
 		try {
 			while(true){
 				
-				
 				if(Thread.currentThread().isInterrupted()) throw new InterruptedException();
 				
 				if(start_listening.get())
 				{
-					clientSocket.setSoTimeout(60000);
+					
 					start_listening.set(false);
 					if((datagram = inFromServer.readLine()) != null)
 					{	

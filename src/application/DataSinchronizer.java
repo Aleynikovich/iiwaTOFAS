@@ -2,12 +2,17 @@ package application;
 
 
 import javax.inject.Inject;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.controllerModel.Controller;
+import com.kuka.roboticsAPI.deviceModel.JointPosition;
+import com.kuka.roboticsAPI.deviceModel.LBR;
 
 /**
  * Implementation of a cyclic background task.
@@ -24,27 +29,41 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
  * @see UseRoboticsAPIContext
  * 
  */
-/*public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask {
+public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implements ITCPListener{
 	
 	
 	@Inject
-	Controller controller;
+	private LBR lbr;
 	
-	//Media flange instance
-    @Inject
-	private MediaFlangeIOGroup mediaFIO;
+	private TCPClient tcp_client;
+	AtomicBoolean data_received;
+	AtomicBoolean server_connected;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
-		initializeCyclic(0, 500, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
+		initializeCyclic(0, 200, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
+		
+		try {
+			tcp_client = new TCPClient();
+			tcp_client.addListener(this);
+			tcp_client.enable();
+			
+			data_received = new AtomicBoolean(false);
+			server_connected = new AtomicBoolean(true);
+
+					
+		} catch (IOException e) {
+			//TODO Bloque catch generado automáticamente
+			System.err.println("Could not create TCPServer:" +e.getMessage());
+		}
 	}
 
 	@Override
 	public void runCyclic() {
 		if(SharedData.sinc_data)
 		{	
-			if(mediaFIO.getOutputX3Pin1())
+			/*if(mediaFIO.getOutputX3Pin1())
 			{	
 				mediaFIO.setOutputX3Pin1(false);
 				//mediaFIO.setLEDBlue(false);
@@ -53,7 +72,28 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
 			{
 				//mediaFIO.setLEDBlue(true);
 				mediaFIO.setOutputX3Pin1(true);	
-			}
+			}*/
+			//TCPClient object
+			
+			JointPosition joints = lbr.getCurrentJointPosition();
+			
+			String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
+					joints.get(3) + ";" + joints.get(4) + ";" + joints.get(5) + ";" + joints.get(6);
+			
+			tcp_client.sendData(joint_str);
+			
 		}
 	}
-}*/
+
+	@Override
+	public void OnTCPMessageReceived(String datagram) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void OnTCPConnection() {
+		// TODO Auto-generated method stub
+		
+	}
+}
