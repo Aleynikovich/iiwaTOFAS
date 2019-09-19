@@ -61,8 +61,8 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 
 	@Override
 	public void runCyclic() {
-		if(SharedData.sinc_data)
-		{	
+		//if(SharedData.sinc_data)
+		//{	
 			/*if(mediaFIO.getOutputX3Pin1())
 			{	
 				mediaFIO.setOutputX3Pin1(false);
@@ -75,14 +75,14 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 			}*/
 			//TCPClient object
 			
-			JointPosition joints = lbr.getCurrentJointPosition();
+		/*	JointPosition joints = lbr.getCurrentJointPosition();
 			
 			String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
 					joints.get(3) + ";" + joints.get(4) + ";" + joints.get(5) + ";" + joints.get(6);
 			
 			tcp_client.sendData(joint_str);
 			
-		}
+		}*/
 	}
 
 	@Override

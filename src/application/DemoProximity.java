@@ -104,18 +104,20 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		System.out.println("Right pose --> x: " + right_pose.getX() + " y: " + right_pose.getY() + " z: " + right_pose.getZ() + 
 				" A: " + right_pose.getAlphaRad()*(180/Math.PI)+ " B: " + right_pose.getBetaRad()*(180/Math.PI)+ " C: " + right_pose.getGammaRad()*(180/Math.PI));
 	
+		flange.move(lin(left_pose).setCartVelocity(100));
+
 		while(true)
 		{
 			System.out.println("Left movement");
-			flange.move(lin(right_pose).setCartVelocity(100));
+			flange.move(lin(left_pose).setCartVelocity(100));
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Right movement");
-			flange.move(lin(left_pose).setCartVelocity(100));
+			//System.out.println("Right movement");
+			//flange.move(lin(left_pose).setCartVelocity(100));
 		}
 	}
 	
