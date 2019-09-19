@@ -76,7 +76,7 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		// your application execution starts here
 	
 						 
-		flange.getFrame("flange").move(ptp(getFrame("/robot_base/SafePos")));
+		flange.getFrame("flange").move(ptp(getFrame("/DemoProximity/SafePose")));
 		
 		mediaFIO.setLEDBlue(true);
 		
@@ -104,13 +104,11 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		System.out.println("Right pose --> x: " + right_pose.getX() + " y: " + right_pose.getY() + " z: " + right_pose.getZ() + 
 				" A: " + right_pose.getAlphaRad()*(180/Math.PI)+ " B: " + right_pose.getBetaRad()*(180/Math.PI)+ " C: " + right_pose.getGammaRad()*(180/Math.PI));
 	
-
 		while(true)
 		{
 			flange.moveAsync(lin(left_pose).setCartVelocity(50).setBlendingCart(10));
 			flange.moveAsync(lin(right_pose).setCartVelocity(50).setBlendingCart(10));
 		}
-		
 	}
 	
 	
