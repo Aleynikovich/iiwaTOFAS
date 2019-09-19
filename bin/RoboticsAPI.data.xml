@@ -1693,6 +1693,18 @@
                 </redundancy>
             </redundancyData>
         </frame>
+        <frame id="_4c3c734a-1141-41cf-a532-5186aa94e97d" name="DemoProximity">
+            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1568883038072"/>
+            </additionalInformation>
+            <frame id="_9b234fde-4171-4f07-8664-116c702de925" name="SafePose">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1568883058607"/>
+                </additionalInformation>
+            </frame>
+        </frame>
     </world>
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="" name="Tool">
