@@ -1699,10 +1699,20 @@
                 <info key="LastModificationTime" type="java.lang.Long" value="1568883038072"/>
             </additionalInformation>
             <frame id="_9b234fde-4171-4f07-8664-116c702de925" name="SafePose">
-                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <transformation a="-5.375804404681324E-4" b="0.009607613895366423" c="2.362392993927738" x="3.6554751092993527" y="-107.32856079865878" z="756.6029389019383"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1568883058607"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1568880459684"/>
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="Gimatic/flange" tool="Gimatic" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                        <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
+                    </info>
                 </additionalInformation>
+                <redundancyData>
+                    <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="3" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="27" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.0127010013858672" valueType="java.lang.Double"/>
+                    </redundancy>
+                </redundancyData>
             </frame>
         </frame>
     </world>
