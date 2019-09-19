@@ -96,10 +96,11 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 			
 		Frame left_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,150.0,0.0,0.0,0.0,0.0));
 			
+		Frame right_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,-300.0,0.0,0.0,0.0,0.0));
+		
 		System.out.println("Left pose --> x: " + left_pose.getX() + " y: " + left_pose.getY() + " z: " + left_pose.getZ() + 
 				" A: " + left_pose.getAlphaRad()*(180/Math.PI)+ " B: " + left_pose.getBetaRad()*(180/Math.PI)+ " C: " + left_pose.getGammaRad()*(180/Math.PI));
 		
-		Frame right_pose = current_pose.transform(XyzAbcTransformation.ofRad(0.0,-300.0,0.0,0.0,0.0,0.0));
 		
 		System.out.println("Right pose --> x: " + right_pose.getX() + " y: " + right_pose.getY() + " z: " + right_pose.getZ() + 
 				" A: " + right_pose.getAlphaRad()*(180/Math.PI)+ " B: " + right_pose.getBetaRad()*(180/Math.PI)+ " C: " + right_pose.getGammaRad()*(180/Math.PI));
