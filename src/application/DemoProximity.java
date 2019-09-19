@@ -114,14 +114,9 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		{
 			System.out.println("Left movement");
 			flange.move(lin(left_pose).setCartVelocity(100));
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//System.out.println("Right movement");
-			//flange.move(lin(left_pose).setCartVelocity(100));
+			
+			System.out.println("Right movement");
+			flange.move(lin(left_pose).setCartVelocity(100));
 		}
 	}
 	
