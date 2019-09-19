@@ -42,7 +42,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 	@Override
 	public void initialize() {
 		// initialize your task here
-		initializeCyclic(0, 200, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
+		/*initializeCyclic(0, 200, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
 		
 		try {
 			tcp_client = new TCPClient();
@@ -56,7 +56,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 		} catch (IOException e) {
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
-		}
+		}*/
 	}
 
 	@Override
