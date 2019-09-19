@@ -107,9 +107,9 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 		while(true)
 		{
 			System.out.println("Left movement");
-			flange.move(lin(left_pose).setCartVelocity(50));
+			flange.move(lin(left_pose).setCartVelocity(100));
 			System.out.println("Right movement");
-			flange.move(lin(right_pose).setCartVelocity(50));
+			flange.move(lin(right_pose).setCartVelocity(100));
 		}
 	}
 	
