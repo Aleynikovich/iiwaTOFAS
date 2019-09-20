@@ -68,6 +68,8 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
+		
+		SharedData.sinc_data = true;
 	}
 
 

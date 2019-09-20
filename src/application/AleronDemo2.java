@@ -101,7 +101,6 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 	AtomicBoolean data_received;
 	
 	private TCPServer2 tcp_server_2;
-
 	
 	//Exchanged data info 
 	String operation_type;
