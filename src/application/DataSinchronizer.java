@@ -35,6 +35,9 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 	@Inject
 	private LBR lbr;
 	
+	@Inject
+	private MediaFlangeIOGroup mediaFIO;
+	
 	private TCPClient tcp_client;
 	AtomicBoolean data_received;
 	AtomicBoolean server_connected;
@@ -65,6 +68,8 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 			//TCPClient object
 			
 			System.out.println("runCyclic");
+			mediaFIO.setLEDBlue(true);
+			
 			if(!connection_stablished)
 			{
 				try {
