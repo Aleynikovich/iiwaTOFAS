@@ -64,9 +64,9 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 			}*/
 			//TCPClient object
 			
+			System.out.println("runCyclic");
 			if(!connection_stablished)
 			{
-				connection_stablished = true;
 				try {
 					tcp_client = new TCPClient();
 					tcp_client.addListener(this);
@@ -75,18 +75,29 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 					data_received = new AtomicBoolean(false);
 					server_connected = new AtomicBoolean(true);
 
-							
+					connection_stablished = true;
+					
+					System.out.println("Connection stablished with the server");
+
+		
 				} catch (IOException e) {
 					//TODO Bloque catch generado automáticamente
-					System.err.println("Could not create TCPServer:" +e.getMessage());
+					System.err.println("Could not create TCPClient:" +e.getMessage());
 				}
 			}
-			JointPosition joints = lbr.getCurrentJointPosition();
 			
-			String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
-					joints.get(3) + ";" + joints.get(4) + ";" + joints.get(5) + ";" + joints.get(6) + "\n";
-			
-			tcp_client.sendData(joint_str);
+			if(connection_stablished)
+			{
+				JointPosition joints = lbr.getCurrentJointPosition();
+				
+				String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
+						joints.get(3) + ";" + joints.get(4) + ";" + joints.get(5) + ";" + joints.get(6) + "\n";
+				
+				tcp_client.sendData(joint_str);
+				
+				System.out.println("Joint state sent");
+
+			}
 		
 		}
 	}
