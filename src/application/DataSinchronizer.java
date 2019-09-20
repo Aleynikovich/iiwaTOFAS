@@ -55,6 +55,8 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 	public void runCyclic() {
 		
 		System.out.println("runCyclic ");
+		if(SharedData.sinc_data)
+			mediaFIO.setLEDBlue(true);
 
 		if(SharedData.sinc_data)
 		{	
