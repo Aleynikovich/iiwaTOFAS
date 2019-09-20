@@ -53,6 +53,9 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 
 	@Override
 	public void runCyclic() {
+		
+		System.out.println("runCyclic ");
+
 		if(SharedData.sinc_data)
 		{	
 			/*if(mediaFIO.getOutputX3Pin1())
