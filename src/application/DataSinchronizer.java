@@ -38,25 +38,14 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 	private TCPClient tcp_client;
 	AtomicBoolean data_received;
 	AtomicBoolean server_connected;
+	boolean connection_stablished;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
 		initializeCyclic(0, 200, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
 		
-		try {
-			tcp_client = new TCPClient();
-			tcp_client.addListener(this);
-			tcp_client.enable();
-			
-			data_received = new AtomicBoolean(false);
-			server_connected = new AtomicBoolean(true);
-
-					
-		} catch (IOException e) {
-			//TODO Bloque catch generado automáticamente
-			System.err.println("Could not create TCPServer:" +e.getMessage());
-		}
+		connection_stablished = false;
 	}
 
 	@Override
@@ -75,6 +64,23 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 			}*/
 			//TCPClient object
 			
+			if(!connection_stablished)
+			{
+				connection_stablished = true;
+				try {
+					tcp_client = new TCPClient();
+					tcp_client.addListener(this);
+					tcp_client.enable();
+					
+					data_received = new AtomicBoolean(false);
+					server_connected = new AtomicBoolean(true);
+
+							
+				} catch (IOException e) {
+					//TODO Bloque catch generado automáticamente
+					System.err.println("Could not create TCPServer:" +e.getMessage());
+				}
+			}
 			JointPosition joints = lbr.getCurrentJointPosition();
 			
 			String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
