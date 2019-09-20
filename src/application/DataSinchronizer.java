@@ -46,7 +46,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 	@Override
 	public void initialize() {
 		// initialize your task here
-		initializeCyclic(0, 200, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
+		initializeCyclic(0, 500, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
 		
 		connection_stablished = false;
 	}
