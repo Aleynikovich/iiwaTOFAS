@@ -80,7 +80,7 @@ public class DemoProximity extends RoboticsAPIApplication implements ITCPListene
 						 
 		flange.getFrame("flange").move(ptp(getFrame("/DemoProximity/SafePose")).setJointVelocityRel(0.25));
 		
-		mediaFIO.setLEDBlue(true);
+		//mediaFIO.setLEDBlue(true);
 		
 		JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 
