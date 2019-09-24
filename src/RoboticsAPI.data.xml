@@ -1708,10 +1708,10 @@
                     </redundancy>
                 </redundancyData>
             </frame>
-            <frame id="_156f0f03-c174-4263-8edf-c8a89c683dce" name="P39">
+            <frame id="_156f0f03-c174-4263-8edf-c8a89c683dce" name="CalibrationPoses">
                 <transformation a="3.0993929069318416" b="0.01818330855431432" c="1.5765623054084459" x="46.56470884076411" y="764.6574845876886" z="527.2402523792533"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1569324235129"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1569329269066"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RealSensense/rs_cam_tcp" tool="RealSensense" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="0.0" b="0.0" c="0.0" x="-11.059230087287654" y="-139.45093473294466" z="28.699808495041726"/>
                     </info>
@@ -2086,8 +2086,7 @@
         <toolTemplate class="" name="RealSensense">
             <frames>
                 <frame id="_50b73c2f-1e3a-49b4-80be-2f9528675084" name="rs_cam_tcp">
-                    <transformation a="0.0" b="0.0" c="0.0" x="-11.059230087287654" y="-139.45093473294466" z="28.699808495041726"/>
-                    <measurementTranslation calculationError="1.6800742063027596" method="XYZ4Point" timestamp="1569314288083"/>
+                    <transformation a="0.0" b="0.0" c="-1.57" x="-11.059230087287654" y="-139.45093473294466" z="28.699808495041726"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
