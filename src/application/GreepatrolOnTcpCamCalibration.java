@@ -110,7 +110,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		{
 			
 			//String frame_name = "/DemoCroinspect/calibration/P" + kont;
-			String frame_name = "/Greenpatrol/calibrationPoses/P" + kont;
+			String frame_name = "/Greenpatrol/CalibrationPoses/P" + kont;
 			lbr.move(ptp(getFrame(frame_name)));
 			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
