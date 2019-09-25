@@ -79,7 +79,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		// your application execution starts here
 		//lbr.move(ptpHome());
 		
-		JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
+		/*JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
 		
 		joints.set(0, -90.0*(Math.PI/180));joints.set(1, 0.0*(Math.PI/180));
 		joints.set(2, 0.0*(Math.PI/180));joints.set(3, -90*(Math.PI/180));
@@ -87,7 +87,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		joints.set(6, -90.0*(Math.PI/180));
 		
 		lbr.move(ptp(joints).setJointVelocityRel(0.25));
-		
+		*/
 		
 		/*Frame touch_pose = new Frame(getFrame("/DemoCroinspect"));
 		
