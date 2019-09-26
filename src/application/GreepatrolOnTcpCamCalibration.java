@@ -27,6 +27,7 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
+import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
 
 public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implements ITCPListener{
 	
@@ -111,7 +112,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 				  continue;
 				 }
 				 
-			} catch (IllegalArgumentException e) {
+			} catch (CommandInvalidException e) {
 				//motion is null
 				movementResult.cancel();
 				e.printStackTrace();
