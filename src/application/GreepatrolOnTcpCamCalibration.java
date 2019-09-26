@@ -77,27 +77,15 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 	public void run() {	
 		
 		// your application execution starts here
+		//It may be desirable to move first the robot to an initial safe position. Not used right now
 		//lbr.move(ptpHome());
-		
 		/*JointPosition joints = new JointPosition(0,0,0,0,0,0,0);
-		
 		joints.set(0, -90.0*(Math.PI/180));joints.set(1, 0.0*(Math.PI/180));
 		joints.set(2, 0.0*(Math.PI/180));joints.set(3, -90*(Math.PI/180));
 		joints.set(4, 0.0*(Math.PI/180));joints.set(5, 90.0*(Math.PI/180));
 		joints.set(6, -90.0*(Math.PI/180));
-		
 		lbr.move(ptp(joints).setJointVelocityRel(0.25));
 		*/
-		
-		/*Frame touch_pose = new Frame(getFrame("/DemoCroinspect"));
-		
-		touch_pose.setX(-78.8); touch_pose.setY(-440.79); touch_pose.setZ(0.0);
-		touch_pose.setAlphaRad(0.0); touch_pose.setBetaRad(0.0); touch_pose.setGammaRad(Math.PI);
-		
-		roll_scan.getFrame("Gripper").move(ptp(touch_pose).setJointVelocityRel(0.25));
-
-		getApplicationUI().displayModalDialog(
-				ApplicationDialogType.QUESTION,"OK");*/
 		
 		exit=false;
 		
@@ -108,11 +96,16 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		
 		while(kont < 16)
 		{
-			
-			//String frame_name = "/DemoCroinspect/calibration/P" + kont;
 			String frame_name = "/Greenpatrol/CalibrationPoses/P" + kont;
-			lbr.move(ptp(getFrame(frame_name)));
+			try{
+				lbr.move(ptp(getFrame(frame_name)));
+			} catch (IllegalArgumentException e) {
+				//motion is null
+				e.printStackTrace();
+			}
+			System.out.println(frame_name + " successfully reached");
 			
+			/*
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
 			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
@@ -150,9 +143,9 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 				System.out.println("Calibration process failed");
 				break;
 			}
-			
+			*/
 		}
-		
+		/*
 		if(server_connected.get())
 		{
 			tcp_client.sendData("END@");
@@ -167,6 +160,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}
 	
 	@Override
