@@ -113,9 +113,8 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 				//e.printStackTrace();
 			}
 			System.out.println(frame_name + " successfully reached");
-			kont++;
 			
-			/*
+			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
 			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
@@ -153,9 +152,9 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 				System.out.println("Calibration process failed");
 				break;
 			}
-			*/
+			
 		}
-		/*
+		
 		if(server_connected.get())
 		{
 			tcp_client.sendData("END@");
@@ -170,7 +169,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		
 	}
 	
 	@Override
