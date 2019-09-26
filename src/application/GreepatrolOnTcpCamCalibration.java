@@ -103,19 +103,14 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 			try{
 				
 				movementResult = lbr.move(ptp(getFrame(frame_name)));
-				IFiredConditionInfo firedInfo =  movementResult.getFiredBreakConditionInfo();
-				 
-				 if(firedInfo != null)
-				 {
-				  System.out.println("Not possible to reache desired pose ");
-				  kont++;
-				  continue;
-				 }
-				 
+
 			} catch (CommandInvalidException e) {
 				//motion is null
 				//movementResult.cancel();
-				e.printStackTrace();
+				System.out.println("Not possible to reach desired pose. Continue");
+				kont++;
+				continue;
+				//e.printStackTrace();
 			}
 			System.out.println(frame_name + " successfully reached");
 			kont++;
