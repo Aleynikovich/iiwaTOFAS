@@ -22,7 +22,7 @@ import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
-
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 //import com.kuka.roboticsAPI.sensorModel.ForceSensorData;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
@@ -97,10 +97,13 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		while(kont < 16)
 		{
 			String frame_name = "/Greenpatrol/CalibrationPoses/P" + kont;
+			IMotionContainer movementResult = null;
 			try{
-				lbr.move(ptp(getFrame(frame_name)));
+				
+				movementResult = lbr.move(ptp(getFrame(frame_name)));
 			} catch (IllegalArgumentException e) {
 				//motion is null
+				movementResult.cancel();
 				e.printStackTrace();
 			}
 			System.out.println(frame_name + " successfully reached");
