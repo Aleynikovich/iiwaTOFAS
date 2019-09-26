@@ -1820,18 +1820,18 @@
                     </redundancyData>
                 </frame>
                 <frame id="_277a513b-6121-4be9-b727-0b7468acad2a" name="P7">
-                    <transformation a="-7.031918047210521E-4" b="-0.09386772166439086" c="0.23359391247876962" x="80.9726752402067" y="5.523994695051329" z="69.75194242029124"/>
+                    <transformation a="0.016403698208579454" b="-0.015988505763196013" c="0.20627811247217911" x="85.83819247647128" y="-83.79151273483416" z="56.90633711699468"/>
                     <additionalInformation>
-                        <info key="LastModificationTime" type="java.lang.Long" value="1569477662784"/>
-                        <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RealSense" tool="RealSense" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
-                            <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                        <info key="LastModificationTime" type="java.lang.Long" value="1569326245897"/>
+                        <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="RealSensense/rs_cam_tcp" tool="RealSensense" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                            <tcpTransformation a="0.0" b="0.0" c="0.0" x="-11.059230087287654" y="-139.45093473294466" z="28.699808495041726"/>
                         </info>
                     </additionalInformation>
                     <redundancyData>
                         <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                             <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="5" valueType="java.lang.Integer"/>
                             <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="119" valueType="java.lang.Integer"/>
-                            <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.3899642216648499" valueType="java.lang.Double"/>
+                            <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.3186553869920078" valueType="java.lang.Double"/>
                         </redundancy>
                     </redundancyData>
                 </frame>
