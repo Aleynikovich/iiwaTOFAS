@@ -114,7 +114,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 				 
 			} catch (CommandInvalidException e) {
 				//motion is null
-				movementResult.cancel();
+				//movementResult.cancel();
 				e.printStackTrace();
 			}
 			System.out.println(frame_name + " successfully reached");
