@@ -104,6 +104,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 				e.printStackTrace();
 			}
 			System.out.println(frame_name + " successfully reached");
+			kont++;
 			
 			/*
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
