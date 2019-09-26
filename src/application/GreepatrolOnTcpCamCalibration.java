@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.executionModel.IFiredConditionInfo;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
@@ -101,6 +102,15 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 			try{
 				
 				movementResult = lbr.move(ptp(getFrame(frame_name)));
+				IFiredConditionInfo firedInfo =  movementResult.getFiredBreakConditionInfo();
+				 
+				 if(firedInfo != null)
+				 {
+				  System.out.println("Not possible to reache desired pose ");
+				  kont++;
+				  continue;
+				 }
+				 
 			} catch (IllegalArgumentException e) {
 				//motion is null
 				movementResult.cancel();
