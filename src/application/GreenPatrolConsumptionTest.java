@@ -54,36 +54,14 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 		@Inject
 		private LBR lbr;
 	    private Tool flange;
-	    private Frame up_fr;
-		private Frame down_fr;
-	    boolean exit;
-	    private double[] gripper_tool_xyz = new double[]{0,0,0.26448};
-		private double[] gripper_tool_rpy = new double[]{0.0,0,-Math.PI/2};
-		int forces;
-		String fname;
 		
-	    CartesianImpedanceControlMode impedanceControlMode;
-	    CartesianImpedanceControlMode impedanceControlModeD;
-	    
-		private static final int stiffnessZ = 300;
-		private static final int stiffnessY = 5000;
-		private static final int stiffnessX = 5000;
-		
-		boolean pivota;
-		double select_velocity;
-		double overlap, overlapt;
-		DataRecorder rec;
 		@Override
 		public void initialize() {
 			// initialize your application here
-			overlap=0.06*1000;
-			overlapt=0;
 			flange = createFromTemplate("Flange");
-			//flange.changeFramePosition(flange.getFrame("Gripper"), XyzAbcTransformation.ofRad(gripper_tool_xyz[0]*1000, 
-		    //gripper_tool_xyz[1]*1000, gripper_tool_xyz[2]*1000, gripper_tool_rpy[2], gripper_tool_rpy[1], gripper_tool_rpy[0]));
 			flange.attachTo(lbr.getFlange());
 			
-			System.out.println("Flange scan frame: " + flange.getFrame("Flange(Root)").toString());
+			System.out.println("Flange scan frame: " + flange.getFrame("flange").toString());
 
 			flange.getLoadData().setMass(2.82);
 			flange.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
