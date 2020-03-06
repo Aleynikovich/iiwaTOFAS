@@ -59,8 +59,8 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 		@Override
 		public void initialize() {
 			// initialize your application here
-			flange = createFromTemplate("Flange");
-			flange.attachTo(lbr.getFlange());
+			//flange = createFromTemplate("Flange");
+			//flange.attachTo(lbr.getFlange());
 			roll_scan = createFromTemplate("RollScan");
 			roll_scan.attachTo(lbr.getFlange());
 
