@@ -53,7 +53,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 		@Inject
 		private LBR lbr;
-	    private Tool flange;
+	    //private Tool flange;
 	    private Tool roll_scan;
 		
 		@Override
@@ -64,8 +64,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 			roll_scan = createFromTemplate("RollScan");
 			roll_scan.attachTo(lbr.getFlange());
 
-			
-			System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_scan").toString());
+			System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
 
 			roll_scan.getLoadData().setMass(2.82);
 			roll_scan.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
