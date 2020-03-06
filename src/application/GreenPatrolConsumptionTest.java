@@ -100,9 +100,10 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 			
 			do {
 
-				//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
-				//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
 				counter++;
+				System.out.println(counter );
 
 			} while (counter<10);
 				
