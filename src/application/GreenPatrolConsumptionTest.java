@@ -54,17 +54,21 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 		@Inject
 		private LBR lbr;
 	    private Tool flange;
+	    private Tool roll_scan;
 		
 		@Override
 		public void initialize() {
 			// initialize your application here
 			flange = createFromTemplate("Flange");
 			flange.attachTo(lbr.getFlange());
-			
-			System.out.println("Flange scan frame: " + flange.getFrame("flange").toString());
+			roll_scan = createFromTemplate("RollScan");
+			roll_scan.attachTo(lbr.getFlange());
 
-			flange.getLoadData().setMass(2.82);
-			flange.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
+			
+			System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_scan").toString());
+
+			roll_scan.getLoadData().setMass(2.82);
+			roll_scan.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
 			
 		}
 
@@ -73,19 +77,19 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 			// your application execution starts here
 			//lbr.move(ptpHome());
 			
-			flange.getFrame("Flange(Root)").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 			int counter = 0;
 			
 			do {
 
-				flange.getFrame("Flange(Root)").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
-				flange.getFrame("Flange(Root)").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
+				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
 				counter++;
 				System.out.println(counter );
 
 			} while (counter<10);
 				
-			flange.getFrame("Flange(Root)").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 
 		}
 			
