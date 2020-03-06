@@ -83,7 +83,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 		    //gripper_tool_xyz[1]*1000, gripper_tool_xyz[2]*1000, gripper_tool_rpy[2], gripper_tool_rpy[1], gripper_tool_rpy[0]));
 			flange.attachTo(lbr.getFlange());
 			
-			System.out.println("Roll scan frame: " + flange.getFrame("roll_tcp").toString());
+			System.out.println("Flange scan frame: " + flange.getFrame("Flange(Root)").toString());
 
 			flange.getLoadData().setMass(2.82);
 			flange.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
@@ -95,19 +95,19 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 			// your application execution starts here
 			//lbr.move(ptpHome());
 			
-			flange.getFrame("Flange").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			flange.getFrame("Flange(Root)").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 			int counter = 0;
 			
 			do {
 
-				flange.getFrame("Flange").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
-				flange.getFrame("Flange").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
+				flange.getFrame("Flange(Root)").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
+				flange.getFrame("Flange(Root)").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
 				counter++;
 				System.out.println(counter );
 
 			} while (counter<10);
 				
-			flange.getFrame("Flange").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			flange.getFrame("Flange(Root)").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 
 		}
 			
