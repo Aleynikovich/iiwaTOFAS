@@ -53,7 +53,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 		@Inject
 		private LBR lbr;
-	    private Tool roll_scan;
+	    private Tool flange;
 	    private Frame up_fr;
 		private Frame down_fr;
 	    boolean exit;
@@ -78,15 +78,15 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 			// initialize your application here
 			overlap=0.06*1000;
 			overlapt=0;
-			roll_scan = createFromTemplate("RollScan");
-			//roll_scan.changeFramePosition(roll_scan.getFrame("Gripper"), XyzAbcTransformation.ofRad(gripper_tool_xyz[0]*1000, 
+			flange = createFromTemplate("Flange");
+			//flange.changeFramePosition(flange.getFrame("Gripper"), XyzAbcTransformation.ofRad(gripper_tool_xyz[0]*1000, 
 		    //gripper_tool_xyz[1]*1000, gripper_tool_xyz[2]*1000, gripper_tool_rpy[2], gripper_tool_rpy[1], gripper_tool_rpy[0]));
-			roll_scan.attachTo(lbr.getFlange());
+			flange.attachTo(lbr.getFlange());
 			
-			System.out.println("Roll scan frame: " + roll_scan.getFrame("roll_tcp").toString());
+			System.out.println("Roll scan frame: " + flange.getFrame("roll_tcp").toString());
 
-			roll_scan.getLoadData().setMass(2.82);
-			roll_scan.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
+			flange.getLoadData().setMass(2.82);
+			flange.getLoadData().setCenterOfMass(-0.0076*1000, 0.00473*1000, 0.12047*1000);
 			
 		}
 
@@ -95,144 +95,21 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 			// your application execution starts here
 			//lbr.move(ptpHome());
 			
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			flange.getFrame("Flange").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 			int counter = 0;
 			
 			do {
 
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
-				roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
+				flange.getFrame("Flange").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_up")).setJointVelocityRel(0.75));
+				flange.getFrame("Flange").move(ptp(getFrame("/Greenpatrol/ApplicationPoses/High1_bottom")).setJointVelocityRel(0.75));
 				counter++;
 				System.out.println(counter );
 
 			} while (counter<10);
 				
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
+			flange.getFrame("Flange").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
 
 		}
 			
-			
-		private void UpperZone(){
-			
-			//velocidad movimientos 0.25 para ptp 50  lin
-			//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P1")).setJointVelocityRel(0.25));
-			
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P4")).setJointVelocityRel(0.25));
-			
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P7")).setJointVelocityRel(0.25));
-			
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P10")).setJointVelocityRel(0.25));
-			
-		}
-
-		private void UpperZoneP(){
-			//velocidad movimientos 0.25 para ptp 50  lin
-			//roll_scan.getFrame("Gripper").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P1")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P2")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P3")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P4")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P5")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P6")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P7")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P8")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P9")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P10")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P11")).setJointVelocityRel(0.25));
-			roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P12")).setJointVelocityRel(0.25));
-			
-			
-		}
-		
-
-
-	private void MiddleZone(){
-		
-		//velocidad movimientos 0.25 para ptp 50  lin
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P13")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P16")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P19")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P22")).setJointVelocityRel(0.25));
-		
-		
-			
-	}
-
-	private void MiddleZoneP(){
-		
-		//velocidad movimientos 0.25 para ptp 50  lin
-			//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P13")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P14")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P15")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P16")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P17")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P18")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P19")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P20")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P21")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P22")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P23")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P24")).setJointVelocityRel(0.25));
-			
-	}
-
-	private void DownZone(){
-		
-		//velocidad movimientos 0.25 para ptp 50  lin
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P25")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P28")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P31")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P34")).setJointVelocityRel(0.25));
-		
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P37")).setJointVelocityRel(0.25));
-			
-	}
-
-	private void DownZoneP(){
-	//velocidad movimientos 0.25 para ptp 50  lin
-			//roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/robot_base/SafePos")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P25")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P26")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P27")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P28")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P29")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P30")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P31")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P32")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P33")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P34")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P35")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P36")).setJointVelocityRel(0.25));
-		roll_scan.getFrame("roll_tcp").move(ptp(getFrame("/Greenpatrol/P37")).setJointVelocityRel(0.25));
-			
-	}
-
-
-	private boolean pivotaje(){
-
-			boolean pivot=false;
-		
-		switch (getApplicationUI().displayModalDialog(
-				ApplicationDialogType.QUESTION,"Do you want to pivot during the path?",
-				"YES", "NO")) {
-
-				case 0:
-					pivot=true;
-					break;				
-				case 1:
-					pivot=false;				
-					break;					
-			
-		}
-		return pivot;
-	}
 	}
 	
