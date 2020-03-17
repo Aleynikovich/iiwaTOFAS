@@ -69,7 +69,7 @@ public class RoboDK extends RoboticsAPIApplication {
     //------------- CONFIGURATION SECTION --------------------
     // Set the robot driver port (default is 7000)
     // a different port may be used if the desired port is busy. Check the log
-    static final int DRIVER_PORT = 30000;
+    static final int DRIVER_PORT = 7000;
 
     // refresh rate to monitor the robot position and display it in RoboDK
     // it is recommended to use a value between 10 to 500 Hz (updates / second)
