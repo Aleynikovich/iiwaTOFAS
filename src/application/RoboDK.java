@@ -248,7 +248,7 @@ public class RoboDK extends RoboticsAPIApplication {
 
     public void run() {
         int port = DRIVER_PORT;
-        String ip = "127.0.0.1";
+        String ip = "10.66.171.147";
         Boolean keepAlive = true;
 
         List<Double> values = new ArrayList<Double>();
