@@ -17,7 +17,7 @@ import java.io.*;
 public class BinPicking_TCPServer implements Runnable {
 	
 	private Thread tcpServerThread;
-	private ArrayList<ITCPListener> listeners;
+	private ArrayList<BinPicking_ITCPListener> listeners;
 
 	ServerSocket socket;
 	Socket connectionSocket;
@@ -44,7 +44,7 @@ public class BinPicking_TCPServer implements Runnable {
 	{		
 		socket = new ServerSocket(30001);	
 		connectionSocket = null;
-		listeners = new ArrayList<ITCPListener>();
+		listeners = new ArrayList<BinPicking_ITCPListener>();
 		tcpServerThread = null;
 		response = new AtomicBoolean(false);
 		request = new AtomicBoolean(false);
@@ -77,7 +77,7 @@ public class BinPicking_TCPServer implements Runnable {
 
 	}
 	
-	public void addListener(ITCPListener listener){
+	public void addListener(BinPicking_ITCPListener listener){
 		listeners.add(listener);
 	}
 	
@@ -148,7 +148,7 @@ public class BinPicking_TCPServer implements Runnable {
 							System.out.println("Datagram: " + datagram.toString());
 							
 							//datagram = inFromClient.readUTF();
-							for(ITCPListener l : listeners)
+							for(BinPicking_ITCPListener l : listeners)
 								l.OnTCPMessageReceived(datagram.toString());
 							
 							request.set(true);
