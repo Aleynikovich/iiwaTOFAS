@@ -96,7 +96,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
 		
-		mediaFIO.setLEDBlue(true);
+		
 	}
 
 	@Override
