@@ -75,7 +75,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void initialize() {
 		// initialize your application here
 		controller = getController("KUKA_Sunrise_Cabinet_1");
-
+				
+/*
 		// initialize your application here
 		binpick = createFromTemplate("BinPick_Tool");
 		binpick.attachTo(lbr.getFlange());
@@ -96,7 +97,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
 		
-		
+	/*
+	 * 	
+	 */
 	}
 
 	@Override
