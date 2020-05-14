@@ -64,8 +64,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
    	
 
 	private BinPicking_TCPServer tcp_server;
+	private BinPicking_TCPClient tcp_client;
 	AtomicBoolean data_received;
-	
+	AtomicBoolean server_connected;
 	//Exchanged data info 
 	String operation_type;
 	String time_stamp;
@@ -90,6 +91,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 		MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
 		
+		//Servidor TCP
 		try {
 			tcp_server = new BinPicking_TCPServer();				
 			tcp_server.addListener(this);
@@ -99,6 +101,20 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
+		
+		//Cliente TCP
+		try {
+			tcp_client = new BinPicking_TCPClient();
+			tcp_client.addListener(this);
+			tcp_client.enable();
+					
+					data_received = new AtomicBoolean(false);
+					server_connected = new AtomicBoolean(true);
+							
+			} catch (IOException e) {
+				//TODO Bloque catch generado automáticamente
+				System.err.println("Could not create TCPServer:" +e.getMessage());
+		    }
 		
 
 	}
@@ -121,7 +137,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					"Calibration", "BinPicking Program", "END DO NOTHING")) {
 
 					case 0:
-					
+						calibration();
 				
 
 						break;				
@@ -166,8 +182,55 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	
 	public void calibration(){
 		
+		int cont=1;
+		Frame robot_pose; 
+		String request_str;
 	
+		while(cont <= 15)
+		{
+			
+			String frame_name = "Calibration/P" + cont;
+			lbr.move(ptp(getFrame(frame_name)));
+			
+			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
+			
+			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + "@";
 		
+			System.out.println(frame_name + " -->  " + request_str);
+			
+			if(server_connected.get())
+			{
+				
+				tcp_client.sendData(request_str);
+			
+				while(!data_received.get())
+				{
+					try {
+						Thread.sleep(100);
+						if(!server_connected.get())
+						{
+							System.out.println("Communication with the server has been lost");
+							break;
+						}
+							
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if(!server_connected.get())
+					break;
+				data_received.set(false);
+				cont++;
+			}
+			else
+			{
+				System.out.println("Calibration process failed");
+				break;
+			}
+			
 		
+	}
 	}
 }
