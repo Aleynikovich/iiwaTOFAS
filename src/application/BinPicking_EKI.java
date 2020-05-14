@@ -78,14 +78,14 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 
 		// initialize your application here
-		binpick = createFromTemplate("BinPick_Tool");
-		binpick.attachTo(lbr.getFlange());
+		//binpick = createFromTemplate("BinPick_Tool");
+		//binpick.attachTo(lbr.getFlange());
 		
-		System.out.println("BinPicking Tool frame: " + binpick.getFrame("tcp").toString());
+		//System.out.println("BinPicking Tool frame: " + binpick.getFrame("tcp").toString());
 		
 		//data_received = new AtomicBoolean(false);
 		
-		//MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
+		MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
 		/*
 		try {
 			tcp_server = new BinPicking_TCPServer();				
