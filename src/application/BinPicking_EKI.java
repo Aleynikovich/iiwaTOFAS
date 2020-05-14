@@ -76,12 +76,12 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		// initialize your application here
 		controller = getController("KUKA_Sunrise_Cabinet_1");
 				
-/*
+
 		// initialize your application here
 		binpick = createFromTemplate("BinPick_Tool");
 		binpick.attachTo(lbr.getFlange());
 		
-		System.out.println("Roll scan frame: " + binpick.getFrame("tcp").toString());
+		System.out.println("BinPicking Tool frame: " + binpick.getFrame("tcp").toString());
 		
 		data_received = new AtomicBoolean(false);
 		
