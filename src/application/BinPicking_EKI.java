@@ -163,4 +163,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void calibration(){
+		
+	
+		
+		
+	}
 }
