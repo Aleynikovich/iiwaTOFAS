@@ -170,7 +170,12 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 
 	@Override
 	public void OnTCPMessageReceived(String datagram) {
-		// TODO Auto-generated method stub
+		System.out.println("OnTCPMessageReceived: " + datagram);
+
+		//data_recv = Integer.parseInt(datagram);
+		
+		data_received.set(true);
+		
 		
 	}
 
@@ -292,10 +297,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 
 	public void send_data(String request_str){
 		
-		if(server_connected.get())
-		{
-			
-			tcp_client.sendData(request_str);
+		
+			tcp_server.setResponseData(request_str);
+			//tcp_client.sendData(request_str);
 		
 			while(!data_received.get())
 			{
@@ -320,7 +324,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 	}
 	
-}
+
 
 	
 	
