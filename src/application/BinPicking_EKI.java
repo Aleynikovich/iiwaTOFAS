@@ -94,7 +94,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		//Servidor TCP
 		try {
 			tcp_server = new BinPicking_TCPServer();				
-			//tcp_server.addListener(this);
+			tcp_server.addListener(this);
 			tcp_server.enable();
 					
 		} catch (IOException e) {
