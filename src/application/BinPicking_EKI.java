@@ -117,7 +117,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		do {
 		
 			switch (getApplicationUI().displayModalDialog(
-					ApplicationDialogType.QUESTION,"BIN PICKING API?", 
+					ApplicationDialogType.QUESTION,"BIN PICKING API!!!", 
 					"Calibration", "BinPicking Program", "END DO NOTHING")) {
 
 					case 0:
