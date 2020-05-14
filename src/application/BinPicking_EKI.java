@@ -247,6 +247,47 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		System.out.println(request_str);
 		send_data(request_str);		
 	
+		/*TEST de la calibracion*/
+		
+		lbr.move(ptp(getFrame("Calibration/Test_Calibration")));
+		robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
+		
+		/*POSE X*/
+		request_str = robot_pose.getX() + ";" ;
+		System.out.println(request_str);
+		send_data(request_str);	
+		
+		/*POSE Y*/
+		request_str = robot_pose.getY() + ";" ;
+		System.out.println(request_str);
+		send_data(request_str);	
+		
+		/*POSE Z*/
+		request_str = robot_pose.getZ() + ";" ;
+		System.out.println(request_str);
+		send_data(request_str);	
+		
+		/*POSE A*/
+		request_str = robot_pose.getGammaRad() + ";" ;
+		System.out.println(request_str);
+		send_data(request_str);	
+		
+		/*POSE B*/
+		request_str = robot_pose.getBetaRad() + ";" ;
+		System.out.println(request_str);
+		send_data(request_str);	
+		
+		/*POSE C*/
+		request_str = robot_pose.getAlphaRad() + ";" ;
+		System.out.println(request_str);
+		send_data(request_str);	
+		
+		/*TEST CALIBRATION */
+		request_str = "14";
+		System.out.println(request_str);
+		send_data(request_str);			
+		cont++;	
+		
 }
 
 	public void send_data(String request_str){
