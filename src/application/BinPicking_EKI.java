@@ -2,6 +2,7 @@ package application;
 
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
@@ -15,6 +16,8 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianImpedanceControlMode;
+import com.kuka.roboticsAPI.sensorModel.DataRecorder;
+import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 
 /**
  * Implementation of a robot application.
@@ -103,8 +106,51 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	@Override
 	public void run() {
 		// your application execution starts here
+
+		getLogger().info("****************************");
+		getLogger().info("      Moving HomePos");
+		getLogger().info("****************************");
 		lbr.move(ptpHome());
+	   
+		exit=false;
+		
+		do {
+		
+			switch (getApplicationUI().displayModalDialog(
+					ApplicationDialogType.QUESTION,"BIN PICKING API?", 
+					"Calibration", "BinPicking Program", "END DO NOTHING")) {
+
+					case 0:
+					
+				
+
+						break;				
+					case 1:
+					
+						mediaFIO.setLEDBlue(true);
+						
+				
+				
+						break;					
+		
+					case 2:
+						
+						getLogger().info("App Terminated\n"+"***END***");
+						exit = true;
+						break;
+						
+						
+						
+			}
+		} while (!exit);
+			
 	}
+		
+		
+		
+		
+		
+	
 
 	@Override
 	public void OnTCPMessageReceived(String datagram) {
