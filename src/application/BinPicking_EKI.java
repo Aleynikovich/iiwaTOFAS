@@ -186,10 +186,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		Frame robot_pose; 
 		String request_str;
 		
+		/* CALIBRATION MODE*/
 		request_str="1";
 
 		send_data(request_str);	
-	
+		System.out.println(request_str);
 		while(cont <= 15)
 		{
 			
@@ -198,44 +199,53 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
-			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+			/* EL STRING DE LA POSE JUNTO
+			 * request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
 				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + "@";
 		
+			System.out.println(frame_name + " -->  " + request_str);*/
+			
+			/*POSE X*/
+			request_str = robot_pose.getX() + ";" ;
 			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);	
 			
-			if(server_connected.get())
-			{
-				
-				tcp_client.sendData(request_str);
+			/*POSE Y*/
+			request_str = robot_pose.getY() + ";" ;
+			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);	
 			
-				while(!data_received.get())
-				{
-					try {
-						Thread.sleep(100);
-						if(!server_connected.get())
-						{
-							System.out.println("Communication with the server has been lost");
-							break;
-						}
-							
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				if(!server_connected.get())
-					break;
-				data_received.set(false);
-				cont++;
-			}
-			else
-			{
-				System.out.println("Calibration process failed");
-				break;
-			}
+			/*POSE Z*/
+			request_str = robot_pose.getZ() + ";" ;
+			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);	
 			
-		
+			/*POSE A*/
+			request_str = robot_pose.getGammaRad() + ";" ;
+			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);	
+			
+			/*POSE B*/
+			request_str = robot_pose.getBetaRad() + ";" ;
+			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);	
+			
+			/*POSE C*/
+			request_str = robot_pose.getAlphaRad() + ";" ;
+			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);	
+			
+			/*ADD CALIBRATION POINT*/
+			request_str = "5";
+			System.out.println(frame_name + " -->  " + request_str);
+			send_data(request_str);			
+			cont++;	
 	}
+		
+		/*MANDAMOS CALIBRATE AL SISTEMA DE BINPICKIN*/
+		request_str = "6";
+		System.out.println(request_str);
+		send_data(request_str);		
 	
 }
 
@@ -260,9 +270,15 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				if(!server_connected.get())
+					break;
+				data_received.set(false);
 			}
+			
 		}
+		
 	}
+	
 }
 
 	
