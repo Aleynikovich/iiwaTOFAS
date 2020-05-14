@@ -578,6 +578,12 @@
                     </redundancy>
                 </redundancyData>
             </frame>
+            <frame id="_0be34eda-9b32-466a-8426-7bef139f3fee" name="P1">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440372757"/>
+                </additionalInformation>
+            </frame>
         </frame>
         <frame id="_e87f1d65-b639-4964-a20e-9ab0fab1c659" name="P22">
             <transformation a="1.924738979574369" b="0.6324826695380312" c="-1.7693180725312754" x="-436.9664281058768" y="-470.63578299278055" z="937.6184414332754"/>
@@ -2113,6 +2119,108 @@
                         <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.0127010013858672" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
+            </frame>
+        </frame>
+        <frame id="_68854002-0552-4ae6-9470-198a0b42cd6e" name="Calibration">
+            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1589440361555"/>
+            </additionalInformation>
+            <frame id="_5adffb3c-2f53-4fdd-942a-88e1347596bf" name="P1">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440368069"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_00095072-6399-4380-93f0-300d875e2d5d" name="P2">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440369543"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_7a742742-5628-49ab-ae85-f753ae8f4b5e" name="P3">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440370677"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_4ed9f36b-aee5-4152-864d-f5d0bf0434c1" name="P4">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440371725"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_16cc265e-3829-479c-aa17-123b82833d04" name="P5">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440377337"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_bac48c7d-04a2-4bd4-a353-132576757b0d" name="P6">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440378933"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_d1aff96c-c794-4ed1-b474-5a4a46921b7c" name="P7">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440380155"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_b3aade82-60ea-4788-a2cb-a33d69cb595d" name="P8">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440381615"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_d6190d1d-8908-4306-b2aa-1d614fd34c00" name="P9">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440383051"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_bcab11d0-b67c-41a6-86fd-8a65aca3585b" name="P10">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440384289"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_d33efedf-8b88-45dd-85f9-24c6239df06f" name="P11">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440385559"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_c0072b0e-2d20-4663-b2f0-9e916685a76c" name="P12">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440388405"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_1cb1979d-3c84-4c3c-a59b-1a3edfd9d2fd" name="P13">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440389553"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_518f51b4-1cbe-40f3-8257-ea28094700c2" name="P14">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440391013"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_a177a0bc-65c1-47b8-9aaa-fdbcbabbb60c" name="P15">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440393001"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_e3d0d552-b29b-4ffb-9b8a-1755c901db7e" name="Test_Calibration">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1589440408341"/>
+                </additionalInformation>
             </frame>
         </frame>
     </world>
