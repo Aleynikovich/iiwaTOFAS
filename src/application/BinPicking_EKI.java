@@ -85,7 +85,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 		//data_received = new AtomicBoolean(false);
 		
-		MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
+		//MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
 		/*
 		try {
 			tcp_server = new BinPicking_TCPServer();				
