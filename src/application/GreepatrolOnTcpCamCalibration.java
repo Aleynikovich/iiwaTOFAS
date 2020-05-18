@@ -54,7 +54,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		
 		// initialize your application here
 		//roll_scan = createFromTemplate("RollScan");
-		roll_scan = createFromTemplate("Flange");
+		roll_scan = createFromTemplate("RealSense");
 		roll_scan.attachTo(lbr.getFlange());
 		
 		
