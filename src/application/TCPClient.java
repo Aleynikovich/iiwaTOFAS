@@ -77,7 +77,7 @@ public class TCPClient implements Runnable {
 	
 	public void sendData(String datagram)
 	{
-		try {
+		try { 
 			
 			start_listening.set(true);
 //			datagram="255.015;-476.083;395.091;3.129;0.0;3.135\n";
