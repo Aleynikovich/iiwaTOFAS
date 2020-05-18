@@ -44,6 +44,7 @@ public class TCPClient implements Runnable {
 	@Inject
 	public TCPClient() throws IOException
 	{		
+		System.out.println("New TCP client started. connect to server in 10.66.171.250, 8800");
 		clientSocket = new Socket("10.66.171.250", 8800);
 		System.out.println("Communication with the server started");
 		inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -77,7 +78,7 @@ public class TCPClient implements Runnable {
 	
 	public void sendData(String datagram)
 	{
-		try { 
+		try {
 			
 			start_listening.set(true);
 //			datagram="255.015;-476.083;395.091;3.129;0.0;3.135\n";
