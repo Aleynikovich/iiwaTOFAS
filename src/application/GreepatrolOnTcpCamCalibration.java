@@ -98,7 +98,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		
 		while(kont < 16)
 		{
-			String frame_name = "/Greenpatrol/CalibrationPoses/P" + kont;
+			String frame_name = "/Greenpatrol/CalibrationFront/P" + kont;
 			IMotionContainer movementResult = null;
 			try{
 				
