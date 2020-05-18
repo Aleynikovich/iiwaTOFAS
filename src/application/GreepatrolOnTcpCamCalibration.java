@@ -54,7 +54,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		
 		// initialize your application here
 		//tool = createFromTemplate("RollScan");
-		tool = createFromTemplate("flange");
+		tool = createFromTemplate("Flange");
 		tool.attachTo(lbr.getFlange());
 		
 		System.out.println("Initializing tool and trying to conect to server");
