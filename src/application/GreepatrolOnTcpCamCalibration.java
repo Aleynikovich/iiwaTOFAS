@@ -37,7 +37,7 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
    
 	//Frames
 	Frame robot_pose;
-    private Tool roll_scan;
+    private Tool tool;
 	
 	
 	DataRecorder rec;
@@ -53,9 +53,11 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 	public void initialize() {
 		
 		// initialize your application here
-		//roll_scan = createFromTemplate("RollScan");
-		roll_scan = createFromTemplate("RealSense");
-		roll_scan.attachTo(lbr.getFlange());
+		//tool = createFromTemplate("RollScan");
+		tool = createFromTemplate("flange");
+		tool.attachTo(lbr.getFlange());
+		
+		System.out.println("Initializing tool and trying to conect to server");
 		
 		
 		//TCPClient object
