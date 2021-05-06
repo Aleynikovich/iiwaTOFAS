@@ -92,7 +92,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
 		
 		//Servidor TCP
-		/*try {
+		try {
 			tcp_server = new BinPicking_TCPServer();				
 			tcp_server.addListener(this);
 			tcp_server.enable();
@@ -100,7 +100,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		} catch (IOException e) {
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
-		}*/
+		}
 		
 		//Cliente TCP
 		try {
