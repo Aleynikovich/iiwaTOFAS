@@ -103,7 +103,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		}
 		
 		//Cliente TCP
-		try {
+		/*try {
 			tcp_client = new BinPicking_TCPClient();
 			tcp_client.addListener(this);
 			tcp_client.enable();
@@ -114,7 +114,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			} catch (IOException e) {
 				//TODO Bloque catch generado automáticamente
 				System.err.println("Could not create TCPServer:" +e.getMessage());
-		    }
+		    }*/
 		
 
 	}
