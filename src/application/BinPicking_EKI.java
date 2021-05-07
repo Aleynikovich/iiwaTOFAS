@@ -136,7 +136,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			getLogger().info("      Moving HomePos");
 			getLogger().info("****************************");
 			
-			lbr.move(ptp(getFrame("/HOME_B")));
+			lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
 			
 			exit=false;
 			
@@ -212,7 +212,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		{
 			
 			String frame_name = "/Calibration/P" + cont;
-			lbr.move(ptp(getFrame(frame_name)));
+			lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.25));
 			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
@@ -225,12 +225,13 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			if(server_connected.get())
 			{
-				
+				System.out.println("server_connected");
 				tcp_client.sendData(request_str);
 			
 				while(!data_received.get())
 				{
 					try {
+						System.out.println("data_recived=false");
 						Thread.sleep(100);
 						if(!server_connected.get())
 						{
@@ -243,16 +244,13 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 						e.printStackTrace();
 					}
 				}
+				System.out.println("data_recived=TRUE");
 				if(!server_connected.get())
 					break;
 				data_received.set(false);
 				cont++;
 			}
-			else
-			{
-				System.out.println("Calibration process failed");
-				break;
-			}
+			
 			/*POSE X*/
 			//request_str = robot_pose.getX() + ";" ;
 			//System.out.println(frame_name + " -->  " + request_str);
