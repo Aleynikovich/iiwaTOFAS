@@ -126,47 +126,53 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	@Override
 	public void run() {
 		// your application execution starts here
-		
-
 		getLogger().info("****************************");
-		getLogger().info("      Moving HomePos");
-		getLogger().info("****************************");
-		
-		lbr.move(ptp(getFrame("/HOME_B")));
-		
-		exit=false;
-		
-		do {
-		
-			switch (getApplicationUI().displayModalDialog(
-					ApplicationDialogType.QUESTION,"BIN PICKING API!!!", 
-					"Calibration", "BinPicking Program", "END DO NOTHING")) {
+		getLogger().info("     Sending Run to the BinPicking API...");
+		tcp_client.sendData("101");	
 
-					case 0:
-						calibration();
-				
-
-						break;				
-					case 1:
-					
-						mediaFIO.setLEDBlue(true);
-						
-				
-				
-						break;					
-		
-					case 2:
-						
-						getLogger().info("App Terminated\n"+"***END***");
-						exit = true;
-						break;
-						
-						
-						
-			}
-		} while (!exit);
+			getLogger().info("****************************");
+	
+			getLogger().info("****************************");
+			getLogger().info("      Moving HomePos");
+			getLogger().info("****************************");
 			
-	}
+			lbr.move(ptp(getFrame("/HOME_B")));
+			
+			exit=false;
+			
+			do {
+			
+				switch (getApplicationUI().displayModalDialog(
+						ApplicationDialogType.QUESTION,"BIN PICKING API!!!", 
+						"Calibration", "BinPicking Program", "END DO NOTHING")) {
+	
+						case 0:
+							calibration();
+					
+	
+							break;				
+						case 1:
+						
+							mediaFIO.setLEDBlue(true);
+							
+					
+					
+							break;					
+			
+						case 2:
+							
+							getLogger().info("App Terminated\n"+"***END***");
+							exit = true;
+							break;
+							
+							
+							
+				}
+			} while (!exit);
+	
+		}
+			
+	
 		
 		
 		
