@@ -221,7 +221,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
 		
 			System.out.println(frame_name + " -->  " + request_str);
-			tcp_client.sendData(request_str);
+			
 			
 			if(server_connected.get())
 			{
@@ -248,7 +248,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				data_received.set(false);
 				cont++;
 			}
-			
+			else
+			{
+				System.out.println("Calibration process failed");
+				break;
+			}
 			/*POSE X*/
 			//request_str = robot_pose.getX() + ";" ;
 			//System.out.println(frame_name + " -->  " + request_str);
