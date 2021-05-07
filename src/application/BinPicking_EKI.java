@@ -198,7 +198,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		/* CALIBRATION MODE*/
 		request_str="1";
 
-		send_data(request_str);	
+		tcp_client.sendData(request_str);	
 		System.out.println(request_str);
 		while(cont <= 15)
 		{
