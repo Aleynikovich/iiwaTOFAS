@@ -136,7 +136,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			outToServer.writeBytes(sentence + '\n');
 			modifiedSentence = inFromServer.readLine();
 			System.out.println("FROM SERVER: " + modifiedSentence);
-			//clientSocket.close(); 
+			clientSocket.close(); 
 		} catch (IOException e) {  
 			e.printStackTrace();            
 		}  
