@@ -221,6 +221,33 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
 		
 			System.out.println(frame_name + " -->  " + request_str);
+			tcp_client.sendData(request_str);
+			
+			if(server_connected.get())
+			{
+				
+				tcp_client.sendData(request_str);
+			
+				while(!data_received.get())
+				{
+					try {
+						Thread.sleep(100);
+						if(!server_connected.get())
+						{
+							System.out.println("Communication with the server has been lost");
+							break;
+						}
+							
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if(!server_connected.get())
+					break;
+				data_received.set(false);
+				cont++;
+			}
 			
 			/*POSE X*/
 			//request_str = robot_pose.getX() + ";" ;
@@ -256,7 +283,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			//request_str = "5";
 			//System.out.println(frame_name + " -->  " + request_str);
 			//tcp_client.sendData(request_str);			
-			cont++;	
+			//cont++;	
 	}
 		
 		/*MANDAMOS CALIBRATE AL SISTEMA DE BINPICKIN*/
