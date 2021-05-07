@@ -103,9 +103,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
-		 */
+		 
 		//Cliente TCP
-		
 		try {
 			tcp_client = new BinPicking_TCPClient();
 			tcp_client.addListener(this);
@@ -117,8 +116,23 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			} catch (IOException e) {
 				//TODO Bloque catch generado automáticamente
 				System.err.println("Could not create TCPServer:" +e.getMessage());
-		    }
+		    }*/
 		
+		try {       
+			String sentence;
+			String modifiedSentence;
+			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+			clientSocket = new Socket("10.66.171.250", 30000);
+			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			sentence = "tcp message";
+			outToServer.writeBytes(sentence + '\n');
+			/*modifiedSentence = inFromServer.readLine();
+			System.out.println("FROM SERVER: " + modifiedSentence);
+			clientSocket.close(); */
+		} catch (IOException e) {  
+			e.printStackTrace();            
+		}  
 
 	}
 
@@ -132,7 +146,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		getLogger().info("      Moving HomePos");
 		getLogger().info("****************************");
 		lbr.move(ptpHome());
-		
+	   
 		exit=false;
 		
 		do {
