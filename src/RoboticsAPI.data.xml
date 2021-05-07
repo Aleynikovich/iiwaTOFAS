@@ -2623,10 +2623,10 @@
                 </redundancy>
             </redundancyData>
         </frame>
-        <frame id="_a141df02-4553-48f3-8fbc-950070d26aad" name="P29">
+        <frame id="_a141df02-4553-48f3-8fbc-950070d26aad" name="HOME_B">
             <transformation a="3.106211686441465" b="0.40373025613560265" c="-3.0524359116249413" x="181.02618866838534" y="-27.982455695413343" z="726.3999709145944"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1620370208950"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1620372301494"/>
                 <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="BinPick_Tool/FLANGE" tool="BinPick_Tool" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                     <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 </info>

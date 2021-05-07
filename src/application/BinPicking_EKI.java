@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
+
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
@@ -130,8 +131,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		getLogger().info("****************************");
 		getLogger().info("      Moving HomePos");
 		getLogger().info("****************************");
-		lbr.move(ptpHome());
-	   
+		
+		lbr.move(ptp(getFrame("HOME_B")));
+		
 		exit=false;
 		
 		do {
