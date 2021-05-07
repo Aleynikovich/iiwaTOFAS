@@ -132,7 +132,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		getLogger().info("      Moving HomePos");
 		getLogger().info("****************************");
 		
-		lbr.move(ptp(getFrame("HOME_B")));
+		lbr.move(ptp(getFrame("/HOME_B")));
 		
 		exit=false;
 		
