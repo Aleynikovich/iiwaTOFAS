@@ -1,16 +1,16 @@
 package application;
 
-
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket; 
+import javax.inject.Inject; 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.inject.Inject;
-
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
-
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
@@ -71,7 +71,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	String operation_type;
 	String time_stamp;
 	Frame caltab_robot_fr;
-   	
+	Socket clientSocket = null;
     @Inject
 	private MediaFlangeIOGroup mediaFIO;
     
@@ -91,6 +91,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 		MediaFlangeIOGroup  FlangeIO= new  MediaFlangeIOGroup(controller);
 		
+		
+
 		//Servidor TCP
 		/* try {
 			tcp_server = new BinPicking_TCPServer();				
@@ -101,7 +103,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
-		 */
+		 
 		//Cliente TCP
 		try {
 			tcp_client = new BinPicking_TCPClient();
@@ -114,7 +116,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			} catch (IOException e) {
 				//TODO Bloque catch generado automáticamente
 				System.err.println("Could not create TCPServer:" +e.getMessage());
-		    }
+		    }*/
+		
 		
 
 	}
@@ -122,6 +125,22 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	@Override
 	public void run() {
 		// your application execution starts here
+		try {       
+			String sentence;
+			String modifiedSentence;
+			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+			clientSocket = new Socket("172.31.1.135", 30000);
+			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			sentence = "tcp message";
+			outToServer.writeBytes(sentence + '\n');
+			modifiedSentence = inFromServer.readLine();
+			System.out.println("FROM SERVER: " + modifiedSentence);
+			clientSocket.close(); 
+		} catch (IOException e) {  
+			e.printStackTrace();            
+		}  
+	  
 
 		getLogger().info("****************************");
 		getLogger().info("      Moving HomePos");
