@@ -245,6 +245,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					}
 				}
 				System.out.println("data_recived=TRUE");
+				if (tcp_client.request_str=="ok") {
+						System.out.println(tcp_client.request_str);
+				}
+				else
+					System.out.println(tcp_client.request_str);
 				if(!server_connected.get())
 					break;
 				data_received.set(false);
