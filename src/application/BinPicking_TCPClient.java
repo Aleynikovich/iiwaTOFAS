@@ -44,7 +44,7 @@ public class BinPicking_TCPClient implements Runnable {
 	@Inject
 	public BinPicking_TCPClient() throws IOException
 	{		
-		clientSocket = new Socket("10.66.171.250", 30000);
+		clientSocket = new Socket("10.66.171.250", 30001);
 		System.out.println("Communication with the server started");
 		inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		outToServer = new DataOutputStream(clientSocket.getOutputStream());
