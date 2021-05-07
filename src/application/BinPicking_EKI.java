@@ -205,7 +205,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		while(cont <= 15)
 		{
 			
-			String frame_name = "Calibration/P" + cont;
+			String frame_name = "/Calibration/P" + cont;
 			lbr.move(ptp(getFrame(frame_name)));
 			
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
