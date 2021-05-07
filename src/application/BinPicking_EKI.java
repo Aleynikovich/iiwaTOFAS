@@ -103,7 +103,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			//TODO Bloque catch generado automáticamente
 			System.err.println("Could not create TCPServer:" +e.getMessage());
 		}
-		 
+		 */
 		//Cliente TCP
 		try {
 			tcp_client = new BinPicking_TCPClient();
@@ -116,7 +116,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			} catch (IOException e) {
 				//TODO Bloque catch generado automáticamente
 				System.err.println("Could not create TCPServer:" +e.getMessage());
-		    }*/
+		    }
 		
 
 
@@ -126,7 +126,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void run() {
 		// your application execution starts here
 		
-		try {       
+		/*try {       
 			String sentence;
 			String modifiedSentence;
 			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
@@ -140,7 +140,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			clientSocket.close(); 
 		} catch (IOException e) {  
 			e.printStackTrace();            
-		}  
+		}  */
 
 		getLogger().info("****************************");
 		getLogger().info("      Moving HomePos");
