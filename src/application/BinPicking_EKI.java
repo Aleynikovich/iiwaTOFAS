@@ -126,21 +126,6 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void run() {
 		// your application execution starts here
 		
-		/*try {       
-			String sentence;
-			String modifiedSentence;
-			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-			clientSocket = new Socket("10.66.171.250", 30000);
-			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			sentence = "tcp message";
-			outToServer.writeBytes(sentence + '\n');
-			modifiedSentence = inFromServer.readLine();
-			System.out.println("FROM SERVER: " + modifiedSentence);
-			clientSocket.close(); 
-		} catch (IOException e) {  
-			e.printStackTrace();            
-		}  */
 
 		getLogger().info("****************************");
 		getLogger().info("      Moving HomePos");
