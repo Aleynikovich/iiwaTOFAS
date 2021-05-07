@@ -221,8 +221,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
 		
 			System.out.println(frame_name + " -->  " + request_str);
-			
-			
+			System.out.println("data_recived=false");
+			data_received.set(false);
 			if(server_connected.get())
 			{
 				System.out.println("server_connected");
@@ -231,7 +231,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				while(!data_received.get())
 				{
 					try {
-						System.out.println("data_recived=false");
+						
 						Thread.sleep(100);
 						if(!server_connected.get())
 						{
