@@ -129,7 +129,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			String sentence;
 			String modifiedSentence;
 			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-			clientSocket = new Socket("172.31.1.135", 30000);
+			clientSocket = new Socket("10.66.171.250", 30000);
 			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			sentence = "tcp message";
