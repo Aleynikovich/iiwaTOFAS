@@ -128,7 +128,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		// your application execution starts here
 		getLogger().info("****************************");
 		getLogger().info("     Sending Run to the BinPicking API...");
-		tcp_client.sendData("101");	
+		
 
 			getLogger().info("****************************");
 	
@@ -147,12 +147,13 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 						"Calibration", "BinPicking Program", "END DO NOTHING")) {
 	
 						case 0:
+							mediaFIO.setLEDBlue(true);
 							calibration();
-					
+							mediaFIO.setLEDBlue(false);
 	
 							break;				
 						case 1:
-						
+							tcp_client.sendData("101");	
 							mediaFIO.setLEDBlue(true);
 							
 					
@@ -204,7 +205,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		String request_str;
 		getLogger().info("     Sending Run to the BinPicking API...");
 		//tcp_client.sendData("102");	
-		get_message("102","0");
+		get_message("102","14");
 		
 	
 				
