@@ -369,15 +369,14 @@ public void get_pose_bin(String request_str, String ack_str, Frame pose){
 		String delims = "[,]";
 		String[] tokens = tcp_client.request_str.split(delims);
 
-		
-		StringTokenizer stObj = new StringTokenizer(tcp_client.request_str, delims);
-		
-		pose.setX(Double.parseDouble(tokens[5]));
+		for (int i = 0; i < tokens.length; i++)
+		    System.out.println(tokens[i]);
+		/*pose.setX(Double.parseDouble(tokens[5]));
 		pose.setY(Double.parseDouble(tokens[6]));
 		pose.setZ(Double.parseDouble(tokens[7]));
 		pose.setAlphaRad(Double.parseDouble(tokens[8]));
 		pose.setBetaRad(Double.parseDouble(tokens[9]));
-		pose.setGammaRad(Double.parseDouble(tokens[10]));
+		pose.setGammaRad(Double.parseDouble(tokens[10]));*/
 		
 	
 		System.out.println(pose);
