@@ -205,8 +205,44 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		String request_str;
 		getLogger().info("     Sending Run to the BinPicking API...");
 		//tcp_client.sendData("102");	
-		get_message("102","14");
 		
+		if(server_connected.get())
+		{
+			System.out.println("server_connected");
+			tcp_client.sendData("102");
+		
+			while(!data_received.get())
+			{
+				try {
+					
+					Thread.sleep(100);
+					if(!server_connected.get())
+					{
+						System.out.println("Communication with the server has been lost");
+						break;
+					}
+						
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			System.out.println("data_recived=TRUE");
+			
+			
+			System.out.println("data_receive.toString(): "+ data_received.toString());
+			
+			if (tcp_client.request_str=="14") {
+				System.out.println(tcp_client.request_str);
+				
+			}
+				else{
+					System.out.println(tcp_client.request_str+" NOT THE MESSAGE EXPECTED");
+					
+					}
+			
+		//get_message("102","14");
+		}
 	
 				
 		while(cont <= 15)
@@ -303,7 +339,7 @@ public void get_message(String request_str, String ack_str){
 			}
 		}
 		System.out.println("data_recived=TRUE");
-		tcp_client.request_str=data_received.toString();
+		
 		
 		System.out.println("data_receive.toString(): "+ data_received.toString());
 		
