@@ -227,44 +227,6 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			cont++;
 		}
 				
-			
-			
-			/*POSE X*/
-			//request_str = robot_pose.getX() + ";" ;
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);		
-			
-			/*POSE Y*/
-			//request_str = robot_pose.getY() + ";" ;
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);	
-			
-			/*POSE Z*/
-			//request_str = robot_pose.getZ() + ";" ;
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);	
-			
-			/*POSE A*/
-			//request_str = robot_pose.getGammaRad() + ";" ;
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);	
-			
-			/*POSE B*/
-			//request_str = robot_pose.getBetaRad() + ";" ;
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);	
-			
-			/*POSE C*/
-			//request_str = robot_pose.getAlphaRad() + ";" ;
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);	
-			
-			/*ADD CALIBRATION POINT*/
-			//request_str = "5";
-			//System.out.println(frame_name + " -->  " + request_str);
-			//tcp_client.sendData(request_str);			
-			//cont++;	
-	
 		
 		/*MANDAMOS CALIBRATE AL SISTEMA DE BINPICKIN*/
 		request_str = "6";
@@ -276,41 +238,18 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
 		robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 		
-		/*POSE X*/
-		request_str = robot_pose.getX() + ";" ;
+		request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
+			
 		System.out.println(request_str);
-		tcp_client.sendData(request_str);	
+	  	System.out.println("data_recived=false");
+	  	data_received.set(false);
+		get_message(request_str,"0");
 		
-		/*POSE Y*/
-		request_str = robot_pose.getY() + ";" ;
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);	
-		
-		/*POSE Z*/
-		request_str = robot_pose.getZ() + ";" ;
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);		
-		
-		/*POSE A*/
-		request_str = robot_pose.getGammaRad() + ";" ;
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);	
-		
-		/*POSE B*/
-		request_str = robot_pose.getBetaRad() + ";" ;
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);	
-		
-		/*POSE C*/
-		request_str = robot_pose.getAlphaRad() + ";" ;
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);	
-		
-		/*TEST CALIBRATION */
 		request_str = "14";
 		System.out.println(request_str);
 		tcp_client.sendData(request_str);			
-		cont++;	
+		
 		
 }
 
