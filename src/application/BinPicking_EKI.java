@@ -305,7 +305,7 @@ public void get_message(String request_str, String ack_str){
 	{
 		System.out.println("server_connected");
 		tcp_client.sendData(request_str);
-	
+		data_received.set(false);
 		while(!data_received.get())
 		{
 			try {
