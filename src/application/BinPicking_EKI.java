@@ -153,7 +153,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	
 							break;				
 						case 1:
-							tcp_client.sendData("101");	
+							
 							mediaFIO.setLEDBlue(true);
 							
 					
@@ -207,7 +207,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		//tcp_client.sendData("102");	
 		
 		
-		get_message("102","14");
+		get_message("102","0");
 				
 		while(cont <= 15)
 		{
@@ -280,6 +280,18 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			
 		}
+	
+	public void bin_picking_run(){
+		get_message("101","0");
+		get_message("15;D45L250","0");
+		get_message("2","0");
+		get_message("8","0");
+		get_message("4","0");
+		
+		
+		
+	}
+	
 public void get_message(String request_str, String ack_str){
 	if(server_connected.get())
 	{
