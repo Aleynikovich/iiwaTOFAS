@@ -305,8 +305,8 @@ public void get_message(String request_str, String ack_str){
 		System.out.println("data_recived=TRUE");
 		
 		
-		if (tcp_client.request_str==ack_str) {
-			System.out.println("tcp_client.request_str:"
+		if (tcp_client.request_str.equals(ack_str)) {
+			System.out.println("tcp_client.request_str: "
 					+tcp_client.request_str+" == ack_str: "+ ack_str);
 			
 		}
