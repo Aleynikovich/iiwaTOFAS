@@ -155,7 +155,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 						case 1:
 							
 							mediaFIO.setLEDBlue(true);
-							
+							bin_picking_run();
 					
 					
 							break;					
