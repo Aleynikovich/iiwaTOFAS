@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket; 
 import javax.inject.Inject; 
+
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -50,6 +52,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
     private Frame up_fr;
 	private Frame down_fr;
 	private Frame exit_fr;
+	private Frame bin_pose;
+	private Frame aprox_pos_part;
+	private Frame pos_part;
 	private double[] gripper_tool_xyz = new double[]{0,0,0.26448};
 	private double[] gripper_tool_rpy = new double[]{0.0,0,-Math.PI/2};
 	
@@ -175,12 +180,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	
 		}
 			
-	
-		
-		
-		
-		
-		
+
 	
 
 	@Override
@@ -293,7 +293,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		get_message("2","0");
 		mediaFIO.setLEDBlue(false);
 		
-		get_message("8","0");
+		get_message("3","0");
+		
+		get_pose_bin("8","0",bin_pose);
 		get_message("4","0");
 		
 		
@@ -337,6 +339,107 @@ public void get_message(String request_str, String ack_str){
 		
 	}
 }
+
+public void get_pose_bin(String request_str, String ack_str, Frame pose){
+	int contbin=0;
+	String temp="";
+	if(server_connected.get())
+	{
+		System.out.println("server_connected");
+		tcp_client.sendData(request_str);
+		data_received.set(false);
+		while(!data_received.get())
+		{
+			try {
+				Thread.sleep(100);
+				if(!server_connected.get())
+				{
+					System.out.println("Communication with the server has been lost");
+					break;
+				}
+					
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("data_recived=TRUE");
+		
+		String delims = ",";
+		StringTokenizer stObj = new StringTokenizer(tcp_client.request_str, delims);
+		//Iterating here for the next element
+		
+		while (stObj.hasMoreElements()) {
+		System.out.println("StringTokenizer Output: " + stObj.nextElement());
+		temp=(String) stObj.nextElement();
+		if (contbin==5) {
+			pose.setX(Double.parseDouble(temp));}
+		if (contbin==6)  {
+			pose.setY(Double.parseDouble(temp));}
+		if (contbin==7)  {
+			pose.setZ(Double.parseDouble(temp));}
+		if (contbin==8)  {
+			pose.setZ(Double.parseDouble(temp));}
+		if (contbin==9)  {
+			pose.setZ(Double.parseDouble(temp));}
+		if (contbin==10)  {
+			pose.setZ(Double.parseDouble(temp));}
+		
+		contbin++;
+		}
+		System.out.println(pose);
+		/*if (tcp_client.request_str.equals(ack_str)) {
+			System.out.println("tcp_client.request_str: "
+					+tcp_client.request_str+" == ack_str: "+ ack_str);
+			
+		}
+			else{
+				System.out.println("tcp_client.request_str:"
+						+tcp_client.request_str+" != ack_str: "+ ack_str);
+				
+				}*/
+		
+	}
+}
+
+public void get_pose_part(String request_str, String ack_str){
+	if(server_connected.get())
+	{
+		System.out.println("server_connected");
+		tcp_client.sendData(request_str);
+		data_received.set(false);
+		while(!data_received.get())
+		{
+			try {
+				Thread.sleep(100);
+				if(!server_connected.get())
+				{
+					System.out.println("Communication with the server has been lost");
+					break;
+				}
+					
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("data_recived=TRUE");
+		
+		
+		if (tcp_client.request_str.equals(ack_str)) {
+			System.out.println("tcp_client.request_str: "
+					+tcp_client.request_str+" == ack_str: "+ ack_str);
+			
+		}
+			else{
+				System.out.println("tcp_client.request_str:"
+						+tcp_client.request_str+" != ack_str: "+ ack_str);
+				
+				}
+		
+	}
+}
+
 
 }
 
