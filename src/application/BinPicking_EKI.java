@@ -288,7 +288,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		ThreadUtil.milliSleep(1000);
 		get_message("15;D45L250","0");
 		ThreadUtil.milliSleep(2000);
+		lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
+		
 		get_message("2","0");
+		mediaFIO.setLEDBlue(false);
+		
 		get_message("8","0");
 		get_message("4","0");
 		
