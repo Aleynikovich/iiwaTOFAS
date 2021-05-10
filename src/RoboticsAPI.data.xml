@@ -2879,10 +2879,10 @@
                 </redundancyData>
             </frame>
         </frame>
-        <frame id="_1e35cc16-f38c-49c5-8f51-2a2cb71ef22a" name="P31">
-            <transformation a="3.1061965762595665" b="0.4036936921921832" c="-3.0525058986715905" x="180.98171470800423" y="-27.994681314639852" z="726.3925041347334"/>
+        <frame id="_1e35cc16-f38c-49c5-8f51-2a2cb71ef22a" name="BinPicking">
+            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1620639652446"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1620641788025"/>
                 <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="Flange" tool="Flange" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                     <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 </info>
@@ -2894,6 +2894,18 @@
                     <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.031551827688935254" valueType="java.lang.Double"/>
                 </redundancy>
             </redundancyData>
+            <frame id="_8c549ea5-42de-4223-b36e-0d3ac7d43292" name="P1">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1620641796392"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_4b2a4eef-ede5-4d87-9e7c-3268be2b1f15" name="P2">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1620641799055"/>
+                </additionalInformation>
+            </frame>
         </frame>
     </world>
     <objectTemplates>
