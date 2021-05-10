@@ -206,42 +206,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		getLogger().info("     Sending Run to the BinPicking API...");
 		//tcp_client.sendData("102");	
 		
-		if(server_connected.get())
-		{
-			System.out.println("server_connected");
-			tcp_client.sendData("102");
 		
-			while(!data_received.get())
-			{
-				try {
-					
-					Thread.sleep(100);
-					if(!server_connected.get())
-					{
-						System.out.println("Communication with the server has been lost");
-						break;
-					}
-						
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			System.out.println("data_recived=TRUE");
-			
-
-			if (tcp_client.request_str=="14") {
-				System.out.println(tcp_client.request_str);
-				
-			}
-				else{
-					System.out.println(tcp_client.request_str+" NOT THE MESSAGE EXPECTED");
-					
-					}
-			
-		
-		}
-		//get_message("102","14");
+		get_message("102","14");
 				
 		while(cont <= 15)
 		{
@@ -340,11 +306,13 @@ public void get_message(String request_str, String ack_str){
 		
 		
 		if (tcp_client.request_str==ack_str) {
-			System.out.println(tcp_client.request_str);
+			System.out.println("tcp_client.request_str:"
+					+tcp_client.request_str+" == ack_str: "+ ack_str);
 			
 		}
 			else{
-				System.out.println(tcp_client.request_str+" NOT THE MESSAGE EXPECTED");
+				System.out.println("tcp_client.request_str:"
+						+tcp_client.request_str+" != ack_str: "+ ack_str);
 				
 				}
 		
