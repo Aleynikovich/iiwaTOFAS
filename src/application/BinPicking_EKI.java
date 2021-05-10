@@ -8,6 +8,8 @@ import java.net.Socket;
 import javax.inject.Inject; 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.kuka.common.ThreadUtil;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
@@ -283,7 +285,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	
 	public void bin_picking_run(){
 		get_message("101","0");
+		ThreadUtil.milliSleep(1000);
 		get_message("15;D45L250","0");
+		ThreadUtil.milliSleep(2000);
 		get_message("2","0");
 		get_message("8","0");
 		get_message("4","0");
