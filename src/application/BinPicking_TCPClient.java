@@ -115,6 +115,8 @@ public class BinPicking_TCPClient implements Runnable {
 						System.out.println("Data received from server");
 						for(BinPicking_ITCPListener l : listeners)
 							l.OnTCPMessageReceived(datagram);	
+							request_str=datagram;
+							System.out.println("datagram: "+datagram+ "request_str: "+request_str);	
 					}
 					else
 					{				
