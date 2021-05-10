@@ -365,28 +365,21 @@ public void get_pose_bin(String request_str, String ack_str, Frame pose){
 		}
 		System.out.println("data_recived=TRUE");
 		
-		String delims = ",";
+		
+		String delims = "[ ],";
+		String[] tokens = tcp_client.request_str.split(delims);
+
+		
 		StringTokenizer stObj = new StringTokenizer(tcp_client.request_str, delims);
-		//Iterating here for the next element
 		
-		while (stObj.hasMoreElements()) {
-		System.out.println("StringTokenizer Output: " + stObj.nextElement());
-		temp=(String) stObj.nextElement();
-		if (contbin==5) {
-			pose.setX(Double.parseDouble(temp));}
-		if (contbin==6)  {
-			pose.setY(Double.parseDouble(temp));}
-		if (contbin==7)  {
-			pose.setZ(Double.parseDouble(temp));}
-		if (contbin==8)  {
-			pose.setZ(Double.parseDouble(temp));}
-		if (contbin==9)  {
-			pose.setZ(Double.parseDouble(temp));}
-		if (contbin==10)  {
-			pose.setZ(Double.parseDouble(temp));}
+		pose.setX(Double.parseDouble(tokens[5]));
+		pose.setY(Double.parseDouble(tokens[6]));
+		pose.setZ(Double.parseDouble(tokens[7]));
+		pose.setAlphaRad(Double.parseDouble(tokens[8]));
+		pose.setBetaRad(Double.parseDouble(tokens[9]));
+		pose.setGammaRad(Double.parseDouble(tokens[10]));
 		
-		contbin++;
-		}
+	
 		System.out.println(pose);
 		/*if (tcp_client.request_str.equals(ack_str)) {
 			System.out.println("tcp_client.request_str: "
