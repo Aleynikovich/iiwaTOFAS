@@ -116,6 +116,8 @@ public class TCPClient implements Runnable {
 						System.out.println("Data received from server");
 						for(ITCPListener l : listeners)
 							l.OnTCPMessageReceived(datagram);
+						request_str=datagram;
+						System.out.println("after; "+request_str);
 						
 					}
 					else

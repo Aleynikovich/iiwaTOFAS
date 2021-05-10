@@ -229,9 +229,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			System.out.println("data_recived=TRUE");
 			
-			
-			System.out.println("data_receive.toString(): "+ data_received.toString());
-			
+
 			if (tcp_client.request_str=="14") {
 				System.out.println(tcp_client.request_str);
 				
@@ -241,9 +239,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					
 					}
 			
-		//get_message("102","14");
+		
 		}
-	
+		//get_message("102","14");
 				
 		while(cont <= 15)
 		{
@@ -340,8 +338,6 @@ public void get_message(String request_str, String ack_str){
 		}
 		System.out.println("data_recived=TRUE");
 		
-		
-		System.out.println("data_receive.toString(): "+ data_received.toString());
 		
 		if (tcp_client.request_str==ack_str) {
 			System.out.println(tcp_client.request_str);
