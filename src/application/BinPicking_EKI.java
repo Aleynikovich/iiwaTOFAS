@@ -366,7 +366,7 @@ public void get_pose_bin(String request_str, String ack_str, Frame pose){
 		System.out.println("data_recived=TRUE");
 		
 		
-		String delims = "[ ],";
+		String delims = "[,]";
 		String[] tokens = tcp_client.request_str.split(delims);
 
 		
