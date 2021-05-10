@@ -301,7 +301,7 @@ public void get_message(String request_str, String ack_str){
 		while(!data_received.get())
 		{
 			try {
-				
+				wait ();
 				Thread.sleep(100);
 				if(!server_connected.get())
 				{
