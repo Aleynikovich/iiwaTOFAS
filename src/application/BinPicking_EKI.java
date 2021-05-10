@@ -87,7 +87,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void initialize() {
 		// initialize your application here
 		controller = getController("KUKA_Sunrise_Cabinet_1");
-				
+		
+		bin_pose = new Frame(getFrame("/BinPicking"));
 		bin_pose.setX(1); bin_pose.setY(1); bin_pose.setZ(1); 
 		bin_pose.setAlphaRad(0.0); bin_pose.setBetaRad(0.0); bin_pose.setGammaRad(0.0);
 		// initialize your application here
