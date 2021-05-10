@@ -49,7 +49,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
     private Controller controller;
     private Tool binpick;
     
-    private Frame up_fr;
+    
 	private Frame down_fr;
 	private Frame exit_fr;
 	private Frame bin_pose;
@@ -88,7 +88,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		// initialize your application here
 		controller = getController("KUKA_Sunrise_Cabinet_1");
 				
-
+		bin_pose.setX(1); bin_pose.setY(1); bin_pose.setZ(1); 
+		bin_pose.setAlphaRad(0.0); bin_pose.setBetaRad(0.0); bin_pose.setGammaRad(0.0);
 		// initialize your application here
 		binpick = createFromTemplate("BinPick_Tool");
 		binpick.attachTo(lbr.getFlange());
@@ -371,12 +372,12 @@ public void get_pose_bin(String request_str, String ack_str, Frame pose){
 
 		for (int i = 0; i < tokens.length; i++)
 		    System.out.println(tokens[i]);
-		/*pose.setX(Double.parseDouble(tokens[5]));
+		pose.setX(Double.parseDouble(tokens[5]));
 		pose.setY(Double.parseDouble(tokens[6]));
 		pose.setZ(Double.parseDouble(tokens[7]));
 		pose.setAlphaRad(Double.parseDouble(tokens[8]));
 		pose.setBetaRad(Double.parseDouble(tokens[9]));
-		pose.setGammaRad(Double.parseDouble(tokens[10]));*/
+		pose.setGammaRad(Double.parseDouble(tokens[10]));
 		
 	
 		System.out.println(pose);
