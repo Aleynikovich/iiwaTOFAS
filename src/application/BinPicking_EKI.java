@@ -562,8 +562,8 @@ public boolean get_pose(String request_str, String ack_str, Frame pose){
 		for (int i = 0; i < tokens.length; i++)
 		    System.out.println(tokens[i]);]*/		
 	
-		System.out.println(tokens[0]);
-		System.out.println(pose);
+		System.out.println("tokens[0]: "+ tokens[0]);
+		
 		if ((tokens[0])=="0") {
 			pose.setX(Double.parseDouble(tokens[5]));
 			pose.setY(Double.parseDouble(tokens[6]));
