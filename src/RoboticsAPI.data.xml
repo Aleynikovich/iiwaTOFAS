@@ -2894,16 +2894,16 @@
                     <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.031551827688935254" valueType="java.lang.Double"/>
                 </redundancy>
             </redundancyData>
-            <frame id="_8c549ea5-42de-4223-b36e-0d3ac7d43292" name="P1">
+            <frame id="_8c549ea5-42de-4223-b36e-0d3ac7d43292" name="BinPose">
                 <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1620641796392"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1620716107828"/>
                 </additionalInformation>
             </frame>
-            <frame id="_4b2a4eef-ede5-4d87-9e7c-3268be2b1f15" name="P2">
+            <frame id="_4b2a4eef-ede5-4d87-9e7c-3268be2b1f15" name="PartPose">
                 <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1620641799055"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1620716115814"/>
                 </additionalInformation>
             </frame>
         </frame>
