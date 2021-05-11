@@ -356,7 +356,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		ThreadUtil.milliSleep(1000);
 		ret=false;
 		//Set reference
-		ret=get_message("15;D45L250","0");
+		ret=get_message("15;50878102","0");
 		if (ret){
 			System.out.println("Reference set");
 		}
