@@ -218,7 +218,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		//tcp_client.sendData("102");	
 		
 		
-		ret=get_message("102","0");
+		ret=get_message("102\n","0");
 		if (ret==true){
 			ret=false;
 			
