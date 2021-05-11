@@ -329,7 +329,14 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void bin_picking_run(){
 		
 		int cont_pos_part=0;
+		int cont_pos_bin=0;
 		boolean ret=false;
+		boolean bin_no_located=false;
+		boolean part_located, part_not_located,new_part,part_error;
+		part_located=false;
+		part_not_located=false;
+		new_part=false;
+		part_error=false;
 		//Set Run
 		ret=get_message("101","0");
 		if (ret){
@@ -360,42 +367,126 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 	do{
 		if (cont_pos_part==0) {
-		ret=false;
-		ret=get_message("2","0");
-		mediaFIO.setLEDBlue(true);
-		lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
-		
-		ret=false;
-		ret=get_message("3","0");
-		
-		ret=false;
-		ret=get_pose("8","0",bin_pose);
-		
-		ret=false;
-		ret=get_message("4","0");
-		
-		ret=false;
-		ret=get_pose("9","0",pos_part);
-		}
-		else{
-			
 			ret=false;
-			ret=get_pose("11","0",pos_part);
+			part_located=false;
+			part_not_located=false;
+			new_part=false;
+			part_error=false;
+			//TRIGGER CAMARA
+			ret=get_message("2","0");
+			if (ret){
+				System.out.println("TRIGGER DONE");
+			}
+			else
+			{
+				System.out.println("Trigger not DONE, EXIT");
+				return;
+				
+			}
+			mediaFIO.setLEDBlue(true);
+			lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
+		
+		}
+		//LOCATE BIN
+		if(cont_pos_bin==0 || bin_no_located){
+			ret=false;
+			ret=get_message("3","0");
+			ret=false;
+			//GET LOCATE BIN
+			ret=get_pose("8","0",bin_pose);
+			if (ret){
+				System.out.println("Bin located");
+				bin_no_located=false;
+			}
+			else
+			{
+				System.out.println("Bin not located, EXIT");
+				bin_no_located=true;
+				
+			}
 		}
 		
-		MotionBatch pick_pose;
-		pick_pose  = new MotionBatch(
-				ptp(getFrame("/BinPicking/bin_pose")).setJointVelocityRel(0.25).setBlendingCart(80),
-				ptp(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25).setBlendingCart(80),
-				lin(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25)
-				);
-		motion = binpick.getFrame("TCP").move(pick_pose);
+		if (bin_no_located==false){
+			ret=false;
+			//LOCATE PART
+			ret=get_message("4","0");
+			if (ret){
+				System.out.println("LocatePart_send");
+				part_error=false;
+				}
 				
-		cont_pos_part++;
-		if (cont_pos_part==4) {
-			cont_pos_part=0;
+			else
+			{
+				System.out.println("Locate Part_send_error, EXIT");
+				part_error=true;
+				
 			}
+			
+			//GET LOCATE PART
+			part_not_located=false;
+			part_located=false;
+			ret=false;
+			if (part_error==false && cont_pos_part==0) {
+			
+				ret=get_pose("9","0",pos_part);
+				if (ret){
+					System.out.println("LocatePart_send");
+					part_not_located=false;
+					part_located=true;
+								}
+				else
+				{
+					System.out.println("Locate Part_send_error, EXIT");
+					part_not_located=true;
+					part_located=false;
+					
+				}
+				}
+			
+			else if (part_error==false && cont_pos_part>0){
 				
+				//NEW PART
+				ret=false;
+				ret=get_pose("11","0",pos_part);
+				if (ret){
+					System.out.println("LocatePart_send");
+					part_not_located=false;
+					part_located=true;
+								}
+				else
+				{
+					System.out.println("Locate Part_send_error, EXIT");
+					part_not_located=true;
+					part_located=false;
+					
+				}
+				}
+				
+			if (part_located){
+			MotionBatch pick_pose;
+			pick_pose  = new MotionBatch(
+					ptp(getFrame("/BinPicking/bin_pose")).setJointVelocityRel(0.25).setBlendingCart(80),
+					ptp(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25).setBlendingCart(80),
+					lin(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25)
+					);
+			motion = binpick.getFrame("TCP").move(pick_pose);
+			
+			cont_pos_part++;
+			cont_pos_bin++;
+			part_located=false;
+			part_not_located=false;
+			}
+			if (cont_pos_part==4) {
+				lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
+				cont_pos_part=0;
+				}
+			if (cont_pos_bin==10){
+				lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
+				cont_pos_part=0;
+				cont_pos_bin=0;
+			}
+		}
+	
 	} while (!exit);
 		
 	}
