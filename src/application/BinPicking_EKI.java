@@ -411,7 +411,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 		}
 		
-		if (bin_no_located==false){
+		if (bin_no_located==false && cont_pos_part==0){
 			ret=false;
 			//LOCATE PART
 			ret=get_message("4","0");
