@@ -152,7 +152,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			getLogger().info("****************************");
 			
 			lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
-			
+			tcp_client.sendData("0");
 			exit=false;
 			
 			do {
@@ -218,7 +218,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		//tcp_client.sendData("102");	
 		
 		
-		ret=get_message("0102","0");
+		ret=get_message("102","0");
 		if (ret==true){
 			ret=false;
 			
@@ -343,7 +343,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		new_part=false;
 		part_error=false;
 		//load reference	
-		ret=get_message("015;50878102","0");
+		ret=get_message("15;50878102","0");
 		if (ret){
 			System.out.println("Reference set");
 		}
