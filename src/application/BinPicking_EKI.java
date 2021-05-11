@@ -465,9 +465,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			if (part_located){
 			MotionBatch pick_pose;
 			pick_pose  = new MotionBatch(
-					ptp(getFrame("/BinPicking/bin_pose")).setJointVelocityRel(0.25).setBlendingCart(80),
-					ptp(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25).setBlendingCart(80),
-					lin(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25)
+					ptp(getFrame("/BinPicking/BinPose")).setJointVelocityRel(0.25).setBlendingCart(80),
+					ptp(getFrame("/BinPicking/PartPose")).setJointVelocityRel(0.25).setBlendingCart(80),
+					lin(getFrame("/BinPicking/PartPose")).setJointVelocityRel(0.25)
 					);
 			motion = binpick.getFrame("TCP").move(pick_pose);
 			
