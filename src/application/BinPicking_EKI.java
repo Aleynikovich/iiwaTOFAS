@@ -562,13 +562,25 @@ public boolean get_pose(String request_str, String ack_str, Frame pose){
 		    System.out.println(tokens[i]);]*/		
 		
 		if (tokens[0].equals(ack_str)) {
-			pose.setX(Double.parseDouble(tokens[5]));
-			pose.setY(Double.parseDouble(tokens[6]));
-			pose.setZ(Double.parseDouble(tokens[7]));
-			pose.setAlphaRad(Double.parseDouble(tokens[8]));
-			pose.setBetaRad(Double.parseDouble(tokens[9]));
-			pose.setGammaRad(Double.parseDouble(tokens[10]));
-			System.out.println(pose);
+			if (request_str.equals("8")){
+				pose.setX(Double.parseDouble(tokens[5]));
+				pose.setY(Double.parseDouble(tokens[6]));
+				pose.setZ(Double.parseDouble(tokens[7]));
+				pose.setAlphaRad(Double.parseDouble(tokens[8]));
+				pose.setBetaRad(Double.parseDouble(tokens[9]));
+				pose.setGammaRad(Double.parseDouble(tokens[10]));
+				System.out.println("BIN_POSE: "+pose);
+			}
+			else
+			{
+				pose.setX(Double.parseDouble(tokens[5]));
+				pose.setY(Double.parseDouble(tokens[6]));
+				pose.setZ(Double.parseDouble(tokens[7]));
+				pose.setAlphaRad(Double.parseDouble(tokens[8]));
+				pose.setBetaRad(Double.parseDouble(tokens[9]));
+				pose.setGammaRad(Double.parseDouble(tokens[10]));
+				System.out.println("BIN_POSE: "+pose);
+			}
 			ret=true;
 		}
 			else{
