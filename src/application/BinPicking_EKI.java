@@ -371,7 +371,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
 		
 	do{
-		if (cont_pos_part==0) {
+		if (cont_pos_part==0 || part_not_located==true) {
 			ret=false;
 			part_located=false;
 			part_not_located=false;
@@ -411,9 +411,10 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 		}
 		
-		if (bin_no_located==false && cont_pos_part==0){
+		if (bin_no_located==false){
 			ret=false;
 			//LOCATE PART
+			if (cont_pos_part==0){
 			ret=get_message("4","0");
 			if (ret){
 				System.out.println("LocatePart_send");
@@ -447,7 +448,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					
 				}
 				}
-			
+			}
 			else if (part_error==false && cont_pos_part>0){
 				
 				//NEW PART
