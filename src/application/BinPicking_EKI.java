@@ -152,9 +152,12 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			getLogger().info("****************************");
 			
 			lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
-			tcp_client.sendData("0");
-			exit=false;
 			
+			exit=false;
+			//new borrar
+			tcp_client.sendData("0");
+			data_received.set(false);
+			//borrar
 			do {
 			
 				switch (getApplicationUI().displayModalDialog(
