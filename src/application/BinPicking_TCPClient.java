@@ -11,9 +11,9 @@ import java.io.*;
 /**
  * Implementation of a class that observes a TCP  server input (can be a scanner of safety areas) and
  * reduce the application overrides if the input falls to LOW value .
- * @since 27/06/2017 : Ane.F
+ * @since 27/06/2017 : JPOZO
  * @version 1.0
- * @author Ane.F
+ * @author JPOZO
  */
 
 public class BinPicking_TCPClient implements Runnable {
