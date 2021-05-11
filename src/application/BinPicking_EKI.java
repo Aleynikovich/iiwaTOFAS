@@ -554,16 +554,13 @@ public boolean get_pose(String request_str, String ack_str, Frame pose){
 			}
 		}
 		System.out.println("data_recived=TRUE");
-		
-		
+
 		String delims = "[,]";
 		String[] tokens = tcp_client.request_str.split(delims);
 /*
 		for (int i = 0; i < tokens.length; i++)
 		    System.out.println(tokens[i]);]*/		
-	
-		System.out.println("tokens[0]: "+ tokens[0]);
-		System.out.println("ack_str: "+ ack_str);
+		
 		if (tokens[0].equals(ack_str)) {
 			pose.setX(Double.parseDouble(tokens[5]));
 			pose.setY(Double.parseDouble(tokens[6]));
@@ -572,14 +569,12 @@ public boolean get_pose(String request_str, String ack_str, Frame pose){
 			pose.setBetaRad(Double.parseDouble(tokens[9]));
 			pose.setGammaRad(Double.parseDouble(tokens[10]));
 			System.out.println(pose);
-			
+			ret=true;
 		}
 			else{
 				System.out.println("No more Parts");
 				ret=false;
 				}
-		
-		
 		
 	}
 	return ret;
