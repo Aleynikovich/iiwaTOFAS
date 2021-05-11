@@ -94,6 +94,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		bin_pose.setX(1); bin_pose.setY(1); bin_pose.setZ(1); 
 		bin_pose.setAlphaRad(0.0); bin_pose.setBetaRad(0.0); bin_pose.setGammaRad(0.0);
 		
+		pos_part = new Frame(getFrame("/BinPicking"));
+		pos_part.setX(1); pos_part.setY(1); pos_part.setZ(1); 
+		pos_part.setAlphaRad(0.0); pos_part.setBetaRad(0.0); pos_part.setGammaRad(0.0);
+		
+		
 		binpick = createFromTemplate("BinPick_Tool");
 		binpick.attachTo(lbr.getFlange());
 		System.out.println("BinPicking Tool frame: " + binpick.getFrame("TCP").toString());
