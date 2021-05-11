@@ -20,6 +20,8 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.motionModel.MotionBatch;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianImpedanceControlMode;
 import com.kuka.roboticsAPI.sensorModel.DataRecorder;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
@@ -57,7 +59,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	private Frame pos_part;
 	private double[] gripper_tool_xyz = new double[]{0,0,0.26448};
 	private double[] gripper_tool_rpy = new double[]{0.0,0,-Math.PI/2};
-	
+	IMotionContainer motion;
 	
 	
     boolean exit;
@@ -91,10 +93,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		bin_pose = new Frame(getFrame("/BinPicking"));
 		bin_pose.setX(1); bin_pose.setY(1); bin_pose.setZ(1); 
 		bin_pose.setAlphaRad(0.0); bin_pose.setBetaRad(0.0); bin_pose.setGammaRad(0.0);
-		// initialize your application here
+		
 		binpick = createFromTemplate("BinPick_Tool");
 		binpick.attachTo(lbr.getFlange());
-		
 		System.out.println("BinPicking Tool frame: " + binpick.getFrame("TCP").toString());
 		
 		data_received = new AtomicBoolean(false);
@@ -136,7 +137,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void run() {
 		// your application execution starts here
 		getLogger().info("****************************");
-		getLogger().info("     Sending Run to the BinPicking API...");
+		getLogger().info("     Connecting to the BinPicking API...");
 		
 
 			getLogger().info("****************************");
@@ -204,6 +205,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	
 	public void calibration(){
 		/* CALIBRATION MODE*/
+		boolean ret=false;
 		int cont=1;
 		Frame robot_pose; 
 		String request_str;
@@ -211,49 +213,88 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		//tcp_client.sendData("102");	
 		
 		
-		get_message("102","0");
+		ret=get_message("102","0");
+		if (ret==true){
+			ret=false;
+			
+			while(cont <= 15)
+			{
 				
-		while(cont <= 15)
-		{
-			
-			String frame_name = "/Calibration/P" + cont;
-			lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.25));
-			
-			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
-			
-			/* EL STRING DE LA POSE JUNTO*/
-			  request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
-				robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
-		
-			System.out.println(frame_name + " -->  " + request_str);
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			get_message(request_str,"0");
-			cont++;
-		}
+				String frame_name = "/Calibration/P" + cont;
+				lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.25));
 				
-		
-		/*MANDAMOS CALIBRATE AL SISTEMA DE BINPICKIN*/
-		request_str = "6";
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);			
-	
-		/*TEST de la calibracion*/
-		
-		lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
-		robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
-		
-		request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+				robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
+				
+				/* EL STRING DE LA POSE JUNTO*/
+				  request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
 					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
 			
-		System.out.println(request_str);
-	  	System.out.println("data_recived=false");
-	  	data_received.set(false);
-		get_message(request_str,"0");
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+				
+				ret=false;
+				cont++;
+			}
+					
+			
+			/*MANDAMOS CALIBRATE AL SISTEMA DE BINPICKING*/
+			ret=false;
+			request_str = "6";
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration DONE");
+			}
+			else
+			{
+				System.out.println("Calibration NOT done, EXIT");
+				return;
+				
+			}
 		
-		request_str = "14";
-		System.out.println(request_str);
-		tcp_client.sendData(request_str);			
+			/*TEST de la calibracion*/
+			
+			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
+			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
+			
+			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+						robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
+				
+			System.out.println(request_str);
+		  	System.out.println("data_recived=false");
+		  	data_received.set(false);
+		  	ret=false;
+			ret=get_message(request_str,"0");
+			
+			ret=false;
+			request_str = "14";
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration TEST DONE");
+			}
+			else
+			{
+				System.out.println("Calibration Test NOT done, EXIT");
+				return;
+				
+			}
+		}
+		else
+		{
+			System.out.println("Error setting up calibration mode");
+			return;
+			
+		}
 		
 		
 }
@@ -286,25 +327,81 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		}
 	
 	public void bin_picking_run(){
-		get_message("101","0");
+		
+		int cont_pos_part=0;
+		boolean ret=false;
+		//Set Run
+		ret=get_message("101","0");
+		if (ret){
+			System.out.println("RUN MODE OK");
+		}
+		else
+		{
+			System.out.println("RUN MODE NOT OK, EXIT");
+			return;
+			
+		}
 		ThreadUtil.milliSleep(1000);
-		get_message("15;D45L250","0");
+		ret=false;
+		//Set reference
+		ret=get_message("15;D45L250","0");
+		if (ret){
+			System.out.println("Reference set");
+		}
+		else
+		{
+			System.out.println("Reference NOT set, EXIT");
+			return;
+			
+		}
+		
 		ThreadUtil.milliSleep(2000);
 		lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
 		
-		get_message("2","0");
-		mediaFIO.setLEDBlue(false);
+	do{
+		if (cont_pos_part==0) {
+		ret=false;
+		ret=get_message("2","0");
+		mediaFIO.setLEDBlue(true);
+		lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
 		
-		get_message("3","0");
+		ret=false;
+		ret=get_message("3","0");
 		
-		get_pose_bin("8","0",bin_pose);
-		get_message("4","0");
+		ret=false;
+		ret=get_pose("8","0",bin_pose);
 		
+		ret=false;
+		ret=get_message("4","0");
 		
+		ret=false;
+		ret=get_pose("9","0",pos_part);
+		}
+		else{
+			
+			ret=false;
+			ret=get_pose("11","0",pos_part);
+		}
+		
+		MotionBatch pick_pose;
+		pick_pose  = new MotionBatch(
+				ptp(getFrame("/BinPicking/bin_pose")).setJointVelocityRel(0.25).setBlendingCart(80),
+				ptp(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25).setBlendingCart(80),
+				lin(getFrame("/BinPicking/pos_part")).setJointVelocityRel(0.25)
+				);
+		motion = binpick.getFrame("TCP").move(pick_pose);
+				
+		cont_pos_part++;
+		if (cont_pos_part==4) {
+			cont_pos_part=0;
+			}
+				
+	} while (!exit);
 		
 	}
 	
-public void get_message(String request_str, String ack_str){
+public boolean get_message(String request_str, String ack_str){
+	boolean ret=false;
 	if(server_connected.get())
 	{
 		System.out.println("server_connected");
@@ -331,20 +428,20 @@ public void get_message(String request_str, String ack_str){
 		if (tcp_client.request_str.equals(ack_str)) {
 			System.out.println("tcp_client.request_str: "
 					+tcp_client.request_str+" == ack_str: "+ ack_str);
-			
+					ret=true;
 		}
 			else{
 				System.out.println("tcp_client.request_str:"
 						+tcp_client.request_str+" != ack_str: "+ ack_str);
-				
+				ret=false;
 				}
 		
 	}
+	return ret;
 }
 
-public void get_pose_bin(String request_str, String ack_str, Frame pose){
-	int contbin=0;
-	String temp="";
+public boolean get_pose(String request_str, String ack_str, Frame pose){
+	boolean ret=false;
 	if(server_connected.get())
 	{
 		System.out.println("server_connected");
@@ -370,69 +467,35 @@ public void get_pose_bin(String request_str, String ack_str, Frame pose){
 		
 		String delims = "[,]";
 		String[] tokens = tcp_client.request_str.split(delims);
-
+/*
 		for (int i = 0; i < tokens.length; i++)
-		    System.out.println(tokens[i]);
-		pose.setX(Double.parseDouble(tokens[5]));
-		pose.setY(Double.parseDouble(tokens[6]));
-		pose.setZ(Double.parseDouble(tokens[7]));
-		pose.setAlphaRad(Double.parseDouble(tokens[8]));
-		pose.setBetaRad(Double.parseDouble(tokens[9]));
-		pose.setGammaRad(Double.parseDouble(tokens[10]));
-		
+		    System.out.println(tokens[i]);]*/		
 	
 		System.out.println(pose);
-		/*if (tcp_client.request_str.equals(ack_str)) {
-			System.out.println("tcp_client.request_str: "
-					+tcp_client.request_str+" == ack_str: "+ ack_str);
+		if ((tokens[0])=="0") {
+			pose.setX(Double.parseDouble(tokens[5]));
+			pose.setY(Double.parseDouble(tokens[6]));
+			pose.setZ(Double.parseDouble(tokens[7]));
+			pose.setAlphaRad(Double.parseDouble(tokens[8]));
+			pose.setBetaRad(Double.parseDouble(tokens[9]));
+			pose.setGammaRad(Double.parseDouble(tokens[10]));
+			System.out.println(pose);
 			
 		}
 			else{
-				System.out.println("tcp_client.request_str:"
-						+tcp_client.request_str+" != ack_str: "+ ack_str);
-				
-				}*/
+				System.out.println("No more Parts");
+				ret=false;
+				}
+		
+		
 		
 	}
+	return ret;
 }
 
-public void get_pose_part(String request_str, String ack_str){
-	if(server_connected.get())
-	{
-		System.out.println("server_connected");
-		tcp_client.sendData(request_str);
-		data_received.set(false);
-		while(!data_received.get())
-		{
-			try {
-				Thread.sleep(100);
-				if(!server_connected.get())
-				{
-					System.out.println("Communication with the server has been lost");
-					break;
-				}
-					
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		System.out.println("data_recived=TRUE");
-		
-		
-		if (tcp_client.request_str.equals(ack_str)) {
-			System.out.println("tcp_client.request_str: "
-					+tcp_client.request_str+" == ack_str: "+ ack_str);
-			
-		}
-			else{
-				System.out.println("tcp_client.request_str:"
-						+tcp_client.request_str+" != ack_str: "+ ack_str);
-				
-				}
-		
-	}
-}
+
+
+
 
 
 }
