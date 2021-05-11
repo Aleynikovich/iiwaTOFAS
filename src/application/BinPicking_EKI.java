@@ -342,7 +342,18 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		part_not_located=false;
 		new_part=false;
 		part_error=false;
-		//Set Run
+		//load reference	
+		ret=get_message("15;50878102","0");
+		if (ret){
+			System.out.println("Reference set");
+		}
+		else
+		{
+			System.out.println("Reference NOT set, EXIT");
+			return;
+			
+		}
+		//set status run
 		ret=get_message("101","0");
 		if (ret){
 			System.out.println("RUN MODE OK");
@@ -356,16 +367,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		ThreadUtil.milliSleep(1000);
 		ret=false;
 		//Set reference
-		ret=get_message("15;50878102","0");
-		if (ret){
-			System.out.println("Reference set");
-		}
-		else
-		{
-			System.out.println("Reference NOT set, EXIT");
-			return;
-			
-		}
+
 		
 		ThreadUtil.milliSleep(2000);
 		lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
