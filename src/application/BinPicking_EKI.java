@@ -155,7 +155,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			exit=false;
 			//new borrar
-			tcp_client.sendData("0");
+			//tcp_client.sendData("0");
 			data_received.set(false);
 			//borrar
 			do {
