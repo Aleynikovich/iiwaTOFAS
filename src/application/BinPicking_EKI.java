@@ -346,7 +346,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		new_part=false;
 		part_error=false;
 		//load reference	
-		ret=get_message("15;50878102","0");
+		ret=get_message("15;50878102\n","0");
 		if (ret){
 			System.out.println("Reference set");
 		}
