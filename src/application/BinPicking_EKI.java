@@ -221,7 +221,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		//tcp_client.sendData("102");	
 		
 		
-		ret=get_message("102","0");
+		ret=get_message("102\n","0");
 		if (ret==true){
 			ret=false;
 			
@@ -235,7 +235,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 				/* EL STRING DE LA POSE JUNTO*/
 				  request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
-					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
+					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" + "\n";
 			
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -276,7 +276,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
 			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
-						robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
+						robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" + "\n";
 				
 			System.out.println(request_str);
 		  	System.out.println("data_recived=false");
