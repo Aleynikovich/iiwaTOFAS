@@ -403,6 +403,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			ret=false;
 			ret=get_message("3","0");
 			ret=false;
+			//ThreadUtil.milliSleep(2000);
 			//GET LOCATE BIN
 			ret=get_pose("8","0",bin_pose);
 			if (ret){
