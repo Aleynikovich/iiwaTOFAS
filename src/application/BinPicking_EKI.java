@@ -234,7 +234,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 				
 				/* EL STRING DE LA POSE JUNTO*/
-				  request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+				  request_str = robot_pose.getX()/1000 + ";" + robot_pose.getY()/1000 + ";" + robot_pose.getZ()/1000 + ";" +
 					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" + "\n";
 			
 				System.out.println(frame_name + " -->  " + request_str);
@@ -275,7 +275,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
-			request_str = robot_pose.getX() + ";" + robot_pose.getY() + ";" + robot_pose.getZ() + ";" +
+			request_str = robot_pose.getX()/1000 + ";" + robot_pose.getY()/1000 + ";" + robot_pose.getZ()/1000 + ";" +
 						robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" + "\n";
 				
 			System.out.println(request_str);
@@ -577,9 +577,9 @@ public boolean get_pose(String request_str, String ack_str, Frame pose){
 		
 		if (tokens[0].equals(ack_str)) {
 			if (request_str.equals("8")){
-				pose.setX(Double.parseDouble(tokens[5]));
-				pose.setY(Double.parseDouble(tokens[6]));
-				pose.setZ(Double.parseDouble(tokens[7]));
+				pose.setX(Double.parseDouble(tokens[5])*1000);
+				pose.setY(Double.parseDouble(tokens[6])*1000);
+				pose.setZ(Double.parseDouble(tokens[7])*1000);
 				pose.setAlphaRad(Double.parseDouble(tokens[8]));
 				pose.setBetaRad(Double.parseDouble(tokens[9]));
 				pose.setGammaRad(Double.parseDouble(tokens[10]));
