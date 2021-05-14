@@ -235,7 +235,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 				/* EL STRING DE LA POSE JUNTO*/
 				  request_str = robot_pose.getX()/1000 + ";" + robot_pose.getY()/1000 + ";" + robot_pose.getZ()/1000 + ";" +
-					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" + "\n";
+					robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5";
 			
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -276,7 +276,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
 			request_str = robot_pose.getX()/1000 + ";" + robot_pose.getY()/1000 + ";" + robot_pose.getZ()/1000 + ";" +
-						robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" + "\n";
+						robot_pose.getGammaRad() + ";" + robot_pose.getBetaRad()+ ";" + robot_pose.getAlphaRad() + ";" + "5" ;
 				
 			System.out.println(request_str);
 		  	System.out.println("data_recived=false");
