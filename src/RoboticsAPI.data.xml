@@ -325,8 +325,7 @@
         <frame id="_a38beda4-b294-4dae-8733-19364600ee25" name="aleron">
             <transformation a="-1.6" b="0.0" c="1.5" x="817.03" y="1127.7" z="75.8"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1538399627848"/>
-                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1621259442061"/>
             </additionalInformation>
             <redundancyData>
                 <redundancy transformationProviderName="legacy" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
@@ -447,8 +446,7 @@
         <frame id="_4255cc81-661c-4759-a948-41a62746c42a" name="aleron_java">
             <transformation a="-1.6" b="-2.0E-4" c="1.5" x="811.2" y="662.7" z="141.8"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1538725766051"/>
-                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1621259440060"/>
             </additionalInformation>
             <frame id="_91fd33c6-b6b1-49c3-8742-f724f38ecaf1" name="P5">
                 <transformation a="-1.819477427897473" b="-0.5007880868988319" c="-2.407014302782856" x="1152.265017338114" y="428.7686757294923" z="336.8126309728984"/>
@@ -2508,7 +2506,8 @@
         <frame id="_68854002-0552-4ae6-9470-198a0b42cd6e" name="Calibration">
             <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1589440361555"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1621259436493"/>
+                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <frame id="_5adffb3c-2f53-4fdd-942a-88e1347596bf" name="P1">
                 <transformation a="0.1051764476641231" b="-0.2397108098497122" c="3.031258595082947" x="461.6731649064645" y="-23.481406318503975" z="583.2861291958836"/>
