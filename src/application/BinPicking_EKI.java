@@ -143,7 +143,13 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		// your application execution starts here
 		getLogger().info("****************************");
 		getLogger().info("     Connecting to the BinPicking API...");
+		mediaFIO.setLedGreen(false);
+		mediaFIO.setLEDBlue(false);
+		mediaFIO.setLedRed(false);
 		
+		mediaFIO.setLedGreen(false);
+		mediaFIO.setLEDBlue(true);
+		mediaFIO.setLedRed(true);
 
 			getLogger().info("****************************");
 	
@@ -165,21 +171,30 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 						"Calibration", "BinPicking Program", "END DO NOTHING")) {
 	
 						case 0:
-							mediaFIO.setLEDBlue(true);
-							calibration();
+							mediaFIO.setLedGreen(true);
 							mediaFIO.setLEDBlue(false);
+							mediaFIO.setLedRed(true);
+							
+							calibration();
+							
+							mediaFIO.setLedGreen(false);
+							mediaFIO.setLEDBlue(false);
+							mediaFIO.setLedRed(false);
 	
 							break;				
 						case 1:
 							mediaFIO.setLEDBlue(false);
-							
+							mediaFIO.setLedGreen(true);
 							bin_picking_run();
-					
-					
+							mediaFIO.setLedGreen(false);
+							mediaFIO.setLEDBlue(false);
+							mediaFIO.setLedRed(false);
 							break;					
 			
 						case 2:
-							
+							mediaFIO.setLedGreen(false);
+							mediaFIO.setLEDBlue(false);
+							mediaFIO.setLedRed(false);
 							getLogger().info("App Terminated\n"+"***END***");
 							exit = true;
 							break;
