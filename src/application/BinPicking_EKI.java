@@ -234,8 +234,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 				
 				/* EL STRING DE LA POSE JUNTO*/
-				  request_str = "5" + ";" + robot_pose.getX()/1000 + ";" + robot_pose.getY()/1000 + ";" + robot_pose.getZ()/1000 + ";" +
-					robot_pose.getGammaRad()*180/Math.PI + ";" + robot_pose.getBetaRad()*180/Math.PI+ ";" + robot_pose.getAlphaRad()*180/Math.PI;
+				//add calibration point
+				request_str = "5" ;
 			
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -250,8 +250,130 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					return;
 					
 				}
-				
 				ret=false;
+				/* SEND X*/
+				request_str = String.valueOf(robot_pose.getX()*10);
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+				ret=false;
+				/*SEND Y*/
+				request_str = String.valueOf(robot_pose.getY()*10);
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+				ret=false;
+				/*SEND Z */
+				request_str = String.valueOf(robot_pose.getZ()*10) ;
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+				ret=false;
+				/*SEND A*/
+				request_str = String.valueOf(robot_pose.getAlphaRad()*180/Math.PI);		  
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+								ret=false;
+				/*SEND B*/
+				request_str = String.valueOf(robot_pose.getBetaRad()*180/Math.PI);
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+				ret=false;
+				/*SEND C*/
+				request_str = String.valueOf(robot_pose.getGammaRad()*180/Math.PI);
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}				
+				ret=false;
+				
+				request_str = "14" ;
+				
+				System.out.println(frame_name + " -->  " + request_str);
+				System.out.println("data_recived=false");
+				data_received.set(false);
+				ret=get_message(request_str,"0");
+				if (ret){
+					System.out.println("Calibration Point added");
+				}
+				else
+				{
+					System.out.println("Calibration Point NOT added, EXIT");
+					return;
+					
+				}
+				ret=false;
+				
+				
+				
+				
 				cont++;
 			}
 					
@@ -275,27 +397,133 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
-			request_str = "7" + ";" + robot_pose.getX()/1000 + ";" + robot_pose.getY()/1000 + ";" + robot_pose.getZ()/1000 + ";" +
-						robot_pose.getGammaRad()*180/Math.PI + ";" + robot_pose.getBetaRad()*180/Math.PI+ ";" + robot_pose.getAlphaRad()*180/Math.PI    ;
-				
-			System.out.println(request_str);
-		  	System.out.println("data_recived=false");
-		  	data_received.set(false);
-		  	ret=false;
-			ret=get_message(request_str,"0");
+			request_str = "5" ;
 			
-			ret=false;
-			request_str = "14";
+			System.out.println("data_recived=false");
+			data_received.set(false);
 			ret=get_message(request_str,"0");
 			if (ret){
-				System.out.println("Calibration TEST DONE");
+				System.out.println("Calibration Point added");
 			}
 			else
 			{
-				System.out.println("Calibration Test NOT done, EXIT");
+				System.out.println("Calibration Point NOT added, EXIT");
 				return;
 				
 			}
+			ret=false;
+			/* SEND X*/
+			request_str = String.valueOf(robot_pose.getX()*10);
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}
+			ret=false;
+			/*SEND Y*/
+			request_str = String.valueOf(robot_pose.getY()*10);
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}
+			ret=false;
+			/*SEND Z */
+			request_str = String.valueOf(robot_pose.getZ()*10) ;
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}
+			ret=false;
+			/*SEND A*/
+			request_str = String.valueOf(robot_pose.getAlphaRad()*180/Math.PI);		  
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}
+							ret=false;
+			/*SEND B*/
+			request_str = String.valueOf(robot_pose.getBetaRad()*180/Math.PI);
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}
+			ret=false;
+			/*SEND C*/
+			request_str = String.valueOf(robot_pose.getGammaRad()*180/Math.PI);
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}				
+			ret=false;
+			
+			request_str = "7" ;
+			
+			System.out.println("data_recived=false");
+			data_received.set(false);
+			ret=get_message(request_str,"0");
+			if (ret){
+				System.out.println("Calibration Point added");
+			}
+			else
+			{
+				System.out.println("Calibration Point NOT added, EXIT");
+				return;
+				
+			}
+			ret=false;
 		}
 		else
 		{
