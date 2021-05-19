@@ -77,6 +77,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	private BinPicking_TCPClient tcp_client;
 	AtomicBoolean data_received;
 	AtomicBoolean server_connected;
+	int pose;
 	//Exchanged data info 
 	String operation_type;
 	String time_stamp;
@@ -230,6 +231,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		/* CALIBRATION MODE*/
 		boolean ret=false;
 		int cont=1;
+		int pose=0;
 		Frame robot_pose; 
 		String request_str;
 		getLogger().info("     Sending Run to the BinPicking API...");
@@ -250,7 +252,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 				/* EL STRING DE LA POSE JUNTO*/
 				//add calibration point
-				request_str = "5" ;
+				request_str = "14" ;
 			
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -267,7 +269,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 				ret=false;
 				/* SEND X*/
-				request_str = String.valueOf(robot_pose.getX()*10);
+				pose=(int) (robot_pose.getX()*10);
+				request_str = String.valueOf(pose);
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -284,7 +287,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 				ret=false;
 				/*SEND Y*/
-				request_str = String.valueOf(robot_pose.getY()*10);
+				pose=(int) (robot_pose.getY()*10);
+				request_str = String.valueOf(pose);
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -301,7 +305,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 				ret=false;
 				/*SEND Z */
-				request_str = String.valueOf(robot_pose.getZ()*10) ;
+				pose=(int) (robot_pose.getZ()*10);
+				request_str = String.valueOf(pose);
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -318,7 +323,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 				ret=false;
 				/*SEND A*/
-				request_str = String.valueOf(robot_pose.getAlphaRad()*180/Math.PI);		  
+				pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
+				request_str = String.valueOf(pose);
+				
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -335,7 +342,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 								ret=false;
 				/*SEND B*/
-				request_str = String.valueOf(robot_pose.getBetaRad()*180/Math.PI);
+				pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
+				request_str = String.valueOf(pose);		
+				
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -352,7 +361,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 				ret=false;
 				/*SEND C*/
-				request_str = String.valueOf(robot_pose.getGammaRad()*180/Math.PI);
+				pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
+				request_str = String.valueOf(pose);		
+				
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -369,7 +380,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}				
 				ret=false;
 				
-				request_str = "14" ;
+				request_str = "5" ;
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -412,7 +423,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			
-			request_str = "5" ;
+			request_str = "14" ;
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
@@ -428,7 +439,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			ret=false;
 			/* SEND X*/
-			request_str = String.valueOf(robot_pose.getX()*10);
+			pose=(int) (robot_pose.getX()*10);
+			request_str = String.valueOf(pose);
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
@@ -444,7 +456,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			ret=false;
 			/*SEND Y*/
-			request_str = String.valueOf(robot_pose.getY()*10);
+			pose=(int) (robot_pose.getY()*10);
+			request_str = String.valueOf(pose);
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
@@ -460,7 +473,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			ret=false;
 			/*SEND Z */
-			request_str = String.valueOf(robot_pose.getZ()*10) ;
+			pose=(int) (robot_pose.getZ()*10);
+			request_str = String.valueOf(pose);
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
@@ -476,7 +490,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			ret=false;
 			/*SEND A*/
-			request_str = String.valueOf(robot_pose.getAlphaRad()*180/Math.PI);		  
+			pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
+			request_str = String.valueOf(pose);  
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
@@ -492,8 +507,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 							ret=false;
 			/*SEND B*/
-			request_str = String.valueOf(robot_pose.getBetaRad()*180/Math.PI);
-			
+			pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
+			request_str = String.valueOf(pose);
+							
 			System.out.println("data_recived=false");
 			data_received.set(false);
 			ret=get_message(request_str,"0");
@@ -508,7 +524,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 			ret=false;
 			/*SEND C*/
-			request_str = String.valueOf(robot_pose.getGammaRad()*180/Math.PI);
+			pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
+			request_str = String.valueOf(pose);	
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
