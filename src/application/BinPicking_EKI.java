@@ -257,16 +257,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}
+				tcp_client.sendData(request_str);
+				
 				ret=false;
 				/* SEND X*/
 				pose=(int) (robot_pose.getX()*10);
@@ -275,16 +267,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}
+				tcp_client.sendData(request_str);
+				
 				ret=false;
 				/*SEND Y*/
 				pose=(int) (robot_pose.getY()*10);
@@ -293,16 +277,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}
+				tcp_client.sendData(request_str);
+			
+			
 				ret=false;
 				/*SEND Z */
 				pose=(int) (robot_pose.getZ()*10);
@@ -311,36 +288,21 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}
+				tcp_client.sendData(request_str);
+				
 				ret=false;
 				/*SEND A*/
 				pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
+				
 				request_str = String.valueOf(pose);
 				
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}
-								ret=false;
+				tcp_client.sendData(request_str);
+				
+				ret=false;
 				/*SEND B*/
 				pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
 				request_str = String.valueOf(pose);		
@@ -349,16 +311,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}
+				tcp_client.sendData(request_str);
+				
 				ret=false;
 				/*SEND C*/
 				pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
@@ -368,16 +322,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				ret=get_message(request_str,"0");
-				if (ret){
-					System.out.println("Calibration Point added");
-				}
-				else
-				{
-					System.out.println("Calibration Point NOT added, EXIT");
-					return;
-					
-				}				
+				tcp_client.sendData(request_str);
+				
+						
 				ret=false;
 				
 				request_str = "5" ;
@@ -444,16 +391,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			ret=get_message(request_str,"0");
-			if (ret){
-				System.out.println("Calibration Point added");
-			}
-			else
-			{
-				System.out.println("Calibration Point NOT added, EXIT");
-				return;
-				
-			}
+			tcp_client.sendData(request_str);
+			
 			ret=false;
 			/*SEND Y*/
 			pose=(int) (robot_pose.getY()*10);
@@ -461,16 +400,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			ret=get_message(request_str,"0");
-			if (ret){
-				System.out.println("Calibration Point added");
-			}
-			else
-			{
-				System.out.println("Calibration Point NOT added, EXIT");
-				return;
-				
-			}
+			tcp_client.sendData(request_str);
 			ret=false;
 			/*SEND Z */
 			pose=(int) (robot_pose.getZ()*10);
@@ -478,16 +408,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			ret=get_message(request_str,"0");
-			if (ret){
-				System.out.println("Calibration Point added");
-			}
-			else
-			{
-				System.out.println("Calibration Point NOT added, EXIT");
-				return;
-				
-			}
+			tcp_client.sendData(request_str);
 			ret=false;
 			/*SEND A*/
 			pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
@@ -495,16 +416,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			ret=get_message(request_str,"0");
-			if (ret){
-				System.out.println("Calibration Point added");
-			}
-			else
-			{
-				System.out.println("Calibration Point NOT added, EXIT");
-				return;
-				
-			}
+			tcp_client.sendData(request_str);
 							ret=false;
 			/*SEND B*/
 			pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
@@ -512,16 +424,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 							
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			ret=get_message(request_str,"0");
-			if (ret){
-				System.out.println("Calibration Point added");
-			}
-			else
-			{
-				System.out.println("Calibration Point NOT added, EXIT");
-				return;
-				
-			}
+			tcp_client.sendData(request_str);
 			ret=false;
 			/*SEND C*/
 			pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
@@ -529,16 +432,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			ret=get_message(request_str,"0");
-			if (ret){
-				System.out.println("Calibration Point added");
-			}
-			else
-			{
-				System.out.println("Calibration Point NOT added, EXIT");
-				return;
-				
-			}				
+			tcp_client.sendData(request_str);	
 			ret=false;
 			
 			request_str = "7" ;
