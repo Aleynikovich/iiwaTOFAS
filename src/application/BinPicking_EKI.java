@@ -620,6 +620,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 	do{
 		mediaFIO.setLEDBlue(false);
+		mediaFIO.setLedRed(true);
 		if (cont_pos_part==0 || part_not_located==true) {
 			ret=false;
 			part_located=false;
@@ -719,7 +720,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				}
 				
 			if (part_located){
-			mediaFIO.setLEDBlue(true);
+			mediaFIO.setLedRed(false);
 			MotionBatch pick_pose;
 			pick_pose  = new MotionBatch(
 					ptp(getFrame("/BinPicking/BinPose")).setJointVelocityRel(0.25).setBlendingCart(80),
@@ -734,6 +735,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			part_not_located=false;
 			}
 			if (cont_pos_part==4) {
+				mediaFIO.setLedRed(true);
 				lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
 				cont_pos_part=0;
 				}
