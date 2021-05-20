@@ -373,9 +373,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 			/*TEST de la calibracion*/
 			
-			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")));
+			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")).setJointVelocityRel(0.25));
 			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
-			
+			ThreadUtil.milliSleep(500);
 			request_str = "14" ;
 			
 			System.out.println("data_recived=false");
