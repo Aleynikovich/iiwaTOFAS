@@ -170,11 +170,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 		
 		//nuevo
 		
-		sensibilidadColisión = getApplicationData().getProcessData("sensibilidadColisión").getValue();
-		blandito = new CartesianImpedanceControlMode();
-		blandito.parametrize(CartDOF.ALL).setDamping(1);
-		blandito.parametrize(CartDOF.ROT).setStiffness(100);
-		blandito.parametrize(CartDOF.TRANSL).setStiffness(800);
+		
 		
 		//
 
