@@ -260,7 +260,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				tcp_client.sendData(request_str);
 				
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				/* SEND X*/
 				pose=(int) (robot_pose.getX()*10);
 				request_str = String.valueOf(pose);
@@ -271,7 +271,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				tcp_client.sendData(request_str);
 				
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				/*SEND Y*/
 				pose=(int) (robot_pose.getY()*10);
 				request_str = String.valueOf(pose);
@@ -283,7 +283,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				/*SEND Z */
 				pose=(int) (robot_pose.getZ()*10);
 				request_str = String.valueOf(pose);
@@ -294,7 +294,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				tcp_client.sendData(request_str);
 				
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				/*SEND A*/
 				pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
 				
@@ -307,7 +307,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				tcp_client.sendData(request_str);
 				
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				/*SEND B*/
 				pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
 				request_str = String.valueOf(pose);		
@@ -319,7 +319,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				tcp_client.sendData(request_str);
 				
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				/*SEND C*/
 				pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
 				request_str = String.valueOf(pose);		
@@ -332,7 +332,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 						
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				request_str = "5" ;
 				
 				System.out.println(frame_name + " -->  " + request_str);
@@ -349,7 +349,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 					
 				}
 				ret=false;
-				ThreadUtil.milliSleep(2000);
+				ThreadUtil.milliSleep(200);
 				
 				
 				
@@ -383,7 +383,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			tcp_client.sendData(request_str);
 		
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 			/* SEND X*/
 			pose=(int) (robot_pose.getX()*10);
 			request_str = String.valueOf(pose);
@@ -393,7 +393,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			tcp_client.sendData(request_str);
 			
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 			/*SEND Y*/
 			pose=(int) (robot_pose.getY()*10);
 			request_str = String.valueOf(pose);
@@ -402,7 +402,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			data_received.set(false);
 			tcp_client.sendData(request_str);
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 			/*SEND Z */
 			pose=(int) (robot_pose.getZ()*10);
 			request_str = String.valueOf(pose);
@@ -411,7 +411,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			data_received.set(false);
 			tcp_client.sendData(request_str);
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 			/*SEND A*/
 			pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
 			request_str = String.valueOf(pose);  
@@ -419,8 +419,8 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			System.out.println("data_recived=false");
 			data_received.set(false);
 			tcp_client.sendData(request_str);
-							ret=false;
-							ThreadUtil.milliSleep(2000);
+			ret=false;
+			ThreadUtil.milliSleep(200);
 			/*SEND B*/
 			pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
 			request_str = String.valueOf(pose);
@@ -429,7 +429,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			data_received.set(false);
 			tcp_client.sendData(request_str);
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 			/*SEND C*/
 			pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
 			request_str = String.valueOf(pose);	
@@ -438,7 +438,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			data_received.set(false);
 			tcp_client.sendData(request_str);	
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 			
 			request_str = "7" ;
 			
@@ -455,7 +455,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 			}
 			ret=false;
-			ThreadUtil.milliSleep(2000);
+			ThreadUtil.milliSleep(200);
 		}
 		else
 		{
