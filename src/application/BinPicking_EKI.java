@@ -296,9 +296,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				ret=false;
 				ThreadUtil.milliSleep(200);
 				
-				/*SEND C*/
-				pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
-				request_str = String.valueOf(pose);		
+				/*SEND A*/
+				pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
+				
+				request_str = String.valueOf(pose);
+				
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -307,7 +309,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 				ret=false;
 				ThreadUtil.milliSleep(200);
-				
+								
 				/*SEND B*/
 				pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
 				request_str = String.valueOf(pose);		
@@ -321,11 +323,9 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				ret=false;
 				ThreadUtil.milliSleep(200);
 
-				/*SEND A*/
-				pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
-				
-				request_str = String.valueOf(pose);
-				
+				/*SEND C*/
+				pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
+				request_str = String.valueOf(pose);		
 				
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -415,13 +415,13 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			
-			/*SEND C*/
-			pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
-			request_str = String.valueOf(pose);	
+			/*SEND A*/
+			pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
+			request_str = String.valueOf(pose);  
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData_int(pose);	
+			tcp_client.sendData_int(pose);
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			
@@ -435,15 +435,16 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			ret=false;
 			ThreadUtil.milliSleep(200);
 	
-			/*SEND A*/
-			pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
-			request_str = String.valueOf(pose);  
+			/*SEND C*/
+			pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
+			request_str = String.valueOf(pose);	
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData_int(pose);
+			tcp_client.sendData_int(pose);	
 			ret=false;
 			ThreadUtil.milliSleep(200);
+			
 			request_str = "7" ;
 			
 			System.out.println("data_recived=false");
