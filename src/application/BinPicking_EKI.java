@@ -16,8 +16,13 @@ import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
+import com.kuka.roboticsAPI.conditionModel.ICondition;
+import com.kuka.roboticsAPI.conditionModel.JointTorqueCondition;
 import com.kuka.roboticsAPI.controllerModel.Controller;
+import com.kuka.roboticsAPI.deviceModel.JointEnum;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.executionModel.IFiredConditionInfo;
+import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
@@ -61,6 +66,34 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	private double[] gripper_tool_rpy = new double[]{0.0,0,-Math.PI/2};
 	IMotionContainer motion;
 	
+	
+	//nuevo
+	
+	public static JointTorqueCondition parColisiónJ1 = new JointTorqueCondition(JointEnum.J1, -14, 14);
+	public static JointTorqueCondition parColisiónJ2 = new JointTorqueCondition(JointEnum.J2, -10, 10); 
+	public static JointTorqueCondition parColisiónJ3 = new JointTorqueCondition(JointEnum.J3, -8, 8); 
+	public static JointTorqueCondition parColisiónJ4 = new JointTorqueCondition(JointEnum.J4, -8, 8); 
+	public static JointTorqueCondition parColisiónJ5 = new JointTorqueCondition(JointEnum.J5, -5, 5); 
+	public static JointTorqueCondition parColisiónJ6 = new JointTorqueCondition(JointEnum.J6, -4, 4); 
+	public static JointTorqueCondition parColisiónJ7 = new JointTorqueCondition(JointEnum.J7, -2, 2); 
+	private static int tiempoEsperaTrasColisión = 1500;
+	private static double sensibilidadColisión = 0;
+	
+	public final static int ORDEN_GOLPEDERECHA = 1;
+	public final static int ORDEN_GOLPEIZQUIERDA = 2;
+	public final static int ORDEN_GOLPEARRIBA = 3;
+	public final static int ORDEN_GOLPEABAJO = 4;
+	public final static int ORDEN_GOLPEDELANTE = 5;
+	public final static int ORDEN_GOLPEATRÁS = 6;
+	
+	private static CartesianImpedanceControlMode blandito=new CartesianImpedanceControlMode();
+	
+	private ICondition condColisión = null;
+	private IMotionContainer movimientoSeguro = null;
+	private IFiredConditionInfo colisiónDetectada = null;
+	
+	
+	//nuevo fin
 	
     boolean exit;
     
@@ -135,7 +168,15 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.err.println("Could not create TCPServer:" +e.getMessage());
 		    }
 		
-
+		//nuevo
+		
+		sensibilidadColisión = getApplicationData().getProcessData("sensibilidadColisión").getValue();
+		blandito = new CartesianImpedanceControlMode();
+		blandito.parametrize(CartDOF.ALL).setDamping(1);
+		blandito.parametrize(CartDOF.ROT).setStiffness(100);
+		blandito.parametrize(CartDOF.TRANSL).setStiffness(800);
+		
+		//
 
 	}
 
