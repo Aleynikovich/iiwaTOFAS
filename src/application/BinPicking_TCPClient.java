@@ -95,8 +95,29 @@ public class BinPicking_TCPClient implements Runnable {
 			for(BinPicking_ITCPListener l : listeners)
 				l.OnTCPConnection();
 		}
-		
 	}
+	
+		public void sendData_int(int datagram)
+		{
+			try {
+				start_listening.set(true);
+//				datagram="255.015;-476.083;395.091;3.129;0.0;3.135\n";
+				//outToServer.writeBytes(datagram);
+				
+				outToServer.writeInt(datagram);
+				System.out.println(datagram);
+				System.out.println("Request sended");
+				
+				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("senData --> IO exception");
+				for(BinPicking_ITCPListener l : listeners)
+					l.OnTCPConnection();
+			}
+		
+		}
 	
 	@Override
 	public void run() {

@@ -268,7 +268,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				tcp_client.sendData_int(pose);
 				
 				ret=false;
 				ThreadUtil.milliSleep(200);
@@ -279,7 +279,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				tcp_client.sendData_int(pose);
 			
 			
 				ret=false;
@@ -291,7 +291,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				tcp_client.sendData_int(pose);
 				
 				ret=false;
 				ThreadUtil.milliSleep(200);
@@ -304,7 +304,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				tcp_client.sendData_int(pose);
 				
 				ret=false;
 				ThreadUtil.milliSleep(200);
@@ -316,7 +316,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				tcp_client.sendData_int(pose);
 				
 				ret=false;
 				ThreadUtil.milliSleep(200);
@@ -328,7 +328,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				tcp_client.sendData_int(pose);
 				
 						
 				ret=false;
@@ -390,7 +390,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData(request_str);
+			tcp_client.sendData_int(pose);
 			
 			ret=false;
 			ThreadUtil.milliSleep(200);
@@ -400,7 +400,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData(request_str);
+			tcp_client.sendData_int(pose);
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			/*SEND Z */
@@ -409,7 +409,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData(request_str);
+			tcp_client.sendData_int(pose);
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			/*SEND A*/
@@ -418,7 +418,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData(request_str);
+			tcp_client.sendData_int(pose);
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			/*SEND B*/
@@ -427,7 +427,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 							
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData(request_str);
+			tcp_client.sendData_int(pose);
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			/*SEND C*/
@@ -436,7 +436,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
-			tcp_client.sendData(request_str);	
+			tcp_client.sendData_int(pose);	
 			ret=false;
 			ThreadUtil.milliSleep(200);
 			
