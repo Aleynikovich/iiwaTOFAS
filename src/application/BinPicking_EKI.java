@@ -267,6 +267,7 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 	public void calibration(){
 		/* CALIBRATION MODE*/
 		boolean ret=false;
+		int noenviar=0;
 		int cont=1;
 		int pose=0;
 		Frame robot_pose; 
@@ -287,9 +288,13 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				
 				robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 				
-				/* EL STRING DE LA POSE JUNTO*/
+				/* EL STRING DE LA POSE JUNTO X,Y,Z,GZ,GA,GB*/ 
 				//add calibration point
-				request_str = "14" ;
+				
+				request_str = "14" + ";" + robot_pose.getX()*10 + ";" + robot_pose.getY()*10 + ";" + robot_pose.getZ()*10 + ";" +
+						robot_pose.getGammaRad()*180*1000/Math.PI + ";" + robot_pose.getBetaRad()*180*1000/Math.PI+ ";" 
+						+ robot_pose.getAlphaRad()*180*1000/Math.PI + ";";
+				
 			
 				System.out.println(frame_name + " -->  " + request_str);
 				System.out.println("data_recived=false");
@@ -297,74 +302,11 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 				tcp_client.sendData(request_str);
 				
 				//ret=false;
-				ThreadUtil.milliSleep(200);
-				/* SEND X*/
-				pose=(int) (robot_pose.getX()*10);
-				request_str = String.valueOf(pose);
+				ThreadUtil.milliSleep(500);
 				
-				System.out.println(frame_name + " -->  " + request_str);
-				System.out.println("data_recived=false");
-				//data_received.set(false);
-				tcp_client.sendData_int(pose);
+				
 				
 				//ret=false;
-				ThreadUtil.milliSleep(200);
-				/*SEND Y*/
-				pose=(int) (robot_pose.getY()*10);
-				request_str = String.valueOf(pose);
-				System.out.println(frame_name + " -->  " + request_str);
-				System.out.println("data_recived=false");
-				//data_received.set(false);
-				tcp_client.sendData_int(pose);
-			
-			
-				//ret=false;
-				ThreadUtil.milliSleep(200);
-				/*SEND Z */
-				pose=(int) (robot_pose.getZ()*10);
-				request_str = String.valueOf(pose);
-				System.out.println(frame_name + " -->  " + request_str);
-				System.out.println("data_recived=false");
-				//data_received.set(false);
-				tcp_client.sendData_int(pose);
-				
-				//ret=false;
-				ThreadUtil.milliSleep(200);
-				
-				/*SEND A*/
-				pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
-				request_str = String.valueOf(pose);
-				
-				
-				System.out.println(frame_name + " -->  " + request_str);
-				System.out.println("data_recived=false");
-				//data_received.set(false);
-				tcp_client.sendData_int(pose);
-				
-				//ret=false;
-				ThreadUtil.milliSleep(200);
-								
-				/*SEND B*/
-				pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
-				request_str = String.valueOf(pose);		
-				System.out.println(frame_name + " -->  " + request_str);
-				System.out.println("data_recived=false");
-				//data_received.set(false);
-				tcp_client.sendData_int(pose);
-				
-				//ret=false;
-				ThreadUtil.milliSleep(200);
-
-				/*SEND C*/
-				pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
-				request_str = String.valueOf(pose);		
-				System.out.println(frame_name + " -->  " + request_str);
-				System.out.println("data_recived=false");
-				data_received.set(false);
-				tcp_client.sendData_int(pose);
-				
-				//ret=false;
-				ThreadUtil.milliSleep(200);
 				
 				request_str = "5" ;
 				
@@ -405,76 +347,21 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			}
 		
 			/*TEST de la calibracion*/
-			
-			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")).setJointVelocityRel(0.25));
-			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 			ThreadUtil.milliSleep(500);
-			request_str = "14" ;
+			lbr.move(ptp(getFrame("/Calibration/Test_Calibration")).setJointVelocityRel(0.25));
+			
+			robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
+			
+			request_str = "14" + ";" + robot_pose.getX()*10 + ";" + robot_pose.getY()*10 + ";" + robot_pose.getZ()*10 + ";" +
+					robot_pose.getGammaRad()*180*1000/Math.PI + ";" + robot_pose.getBetaRad()*180*1000/Math.PI+ ";" 
+					+ robot_pose.getAlphaRad()*180*1000/Math.PI + ";";
+			System.out.println(request_str);
 			
 			System.out.println("data_recived=false");
 			data_received.set(false);
 			tcp_client.sendData(request_str);
-		
-			ret=false;
-			ThreadUtil.milliSleep(200);
-			/* SEND X*/
-			pose=(int) (robot_pose.getX()*10);
-			request_str = String.valueOf(pose);
 			
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			tcp_client.sendData_int(pose);
-			
-			ret=false;
-			ThreadUtil.milliSleep(200);
-			/*SEND Y*/
-			pose=(int) (robot_pose.getY()*10);
-			request_str = String.valueOf(pose);
-			
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			tcp_client.sendData_int(pose);
-			ret=false;
-			ThreadUtil.milliSleep(200);
-			/*SEND Z */
-			pose=(int) (robot_pose.getZ()*10);
-			request_str = String.valueOf(pose);
-			
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			tcp_client.sendData_int(pose);
-			ret=false;
-			ThreadUtil.milliSleep(200);
-			
-			/*SEND A*/
-			pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
-			request_str = String.valueOf(pose);  
-			
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			tcp_client.sendData_int(pose);
-			ret=false;
-			ThreadUtil.milliSleep(200);
-			
-			/*SEND B*/
-			pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
-			request_str = String.valueOf(pose);
-							
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			tcp_client.sendData_int(pose);
-			ret=false;
-			ThreadUtil.milliSleep(200);
-	
-			/*SEND C*/
-			pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
-			request_str = String.valueOf(pose);	
-			
-			System.out.println("data_recived=false");
-			data_received.set(false);
-			tcp_client.sendData_int(pose);	
-			ret=false;
-			ThreadUtil.milliSleep(200);
+			ThreadUtil.milliSleep(500);
 			
 			request_str = "7" ;
 			
@@ -498,6 +385,77 @@ public class BinPicking_EKI extends RoboticsAPIApplication implements BinPicking
 			System.out.println("Error setting up calibration mode");
 			return;
 			
+		}
+		
+		
+		if (noenviar==1) 
+		{
+		/*POSE EN TROZOS*/
+		
+		/* SEND X*/
+		pose=(int) (robot_pose.getX()*10);
+		request_str = String.valueOf(pose);
+		
+		//System.out.println(frame_name + " -->  " + request_str);
+		System.out.println("data_recived=false");
+		//data_received.set(false);
+		tcp_client.sendData_int(pose);
+		
+		//ret=false;
+		ThreadUtil.milliSleep(200);
+		/*SEND Y*/
+		pose=(int) (robot_pose.getY()*10);
+		request_str = String.valueOf(pose);
+		//System.out.println(frame_name + " -->  " + request_str);
+		System.out.println("data_recived=false");
+		//data_received.set(false);
+		tcp_client.sendData_int(pose);
+	
+	
+		//ret=false;
+		ThreadUtil.milliSleep(200);
+		/*SEND Z */
+		pose=(int) (robot_pose.getZ()*10);
+		request_str = String.valueOf(pose);
+		//System.out.println(frame_name + " -->  " + request_str);
+		System.out.println("data_recived=false");
+		//data_received.set(false);
+		tcp_client.sendData_int(pose);
+		
+		//ret=false;
+		ThreadUtil.milliSleep(200);
+		
+		/*SEND A*/
+		pose=(int) ((robot_pose.getAlphaRad()*180/Math.PI)*1000);
+		request_str = String.valueOf(pose);
+		
+		
+		//System.out.println(frame_name + " -->  " + request_str);
+		System.out.println("data_recived=false");
+		//data_received.set(false);
+		tcp_client.sendData_int(pose);
+		
+		//ret=false;
+		ThreadUtil.milliSleep(200);
+						
+		/*SEND B*/
+		pose=(int) ((robot_pose.getBetaRad()*180/Math.PI)*1000);
+		request_str = String.valueOf(pose);		
+		//System.out.println(frame_name + " -->  " + request_str);
+		System.out.println("data_recived=false");
+		//data_received.set(false);
+		tcp_client.sendData_int(pose);
+		
+		//ret=false;
+		ThreadUtil.milliSleep(200);
+
+		/*SEND C*/
+		pose=(int) ((robot_pose.getGammaRad()*180/Math.PI)*1000);
+		request_str = String.valueOf(pose);		
+		//System.out.println(frame_name + " -->  " + request_str);
+		System.out.println("data_recived=false");
+		data_received.set(false);
+		tcp_client.sendData_int(pose);
 		}
 		
 		
