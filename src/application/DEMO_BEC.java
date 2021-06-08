@@ -296,13 +296,13 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				
 				
 				ret=false;
-				
+				cont++;
 				
 			}
 	
 				
 				
-				cont++;
+				
 			}
 		
 		
