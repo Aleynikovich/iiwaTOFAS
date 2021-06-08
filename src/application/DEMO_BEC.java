@@ -269,8 +269,8 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 		
 		
 			ret=false;
-			while (true) {
-			while(cont <= 14)
+			
+			while(cont <= 15)
 			{
 				
 				String frame_name = "/Calibration/P" + cont;
@@ -290,7 +290,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				tcp_client.sendData(request_str);
 				
 				//ret=false;
-				ThreadUtil.milliSleep(3000);
+				ThreadUtil.milliSleep(7000);
 				
 				
 				
@@ -303,7 +303,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				
 				cont++;
 			}
-		}
+		
 		
 			
 			
