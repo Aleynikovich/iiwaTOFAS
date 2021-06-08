@@ -274,6 +274,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 			{
 				
 				String frame_name = "/Calibration/P" + cont;
+				
 				lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.1));
 				
 				robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
@@ -294,7 +295,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				
 				
 				
-				//ret=false;
+				ret=false;
 				
 				
 			}
