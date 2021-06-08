@@ -221,7 +221,13 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 	
 							break;				
 						
-							
+						case 1:
+							mediaFIO.setLedGreen(false);
+							mediaFIO.setLEDBlue(false);
+							mediaFIO.setLedRed(false);
+							getLogger().info("App Terminated\n"+"***END***");
+							exit = true;
+							break;
 							
 							
 				}
@@ -284,7 +290,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				tcp_client.sendData(request_str);
 				
 				//ret=false;
-				ThreadUtil.milliSleep(5000);
+				ThreadUtil.milliSleep(3000);
 				
 				
 				
