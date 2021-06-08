@@ -287,7 +287,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				System.out.println(request_str);
 				System.out.println("data_recived=false");
 				data_received.set(false);
-				tcp_client.sendData(request_str);
+				//tcp_client.sendData(request_str);
 				
 				//ret=false;
 				ThreadUtil.milliSleep(7000);
