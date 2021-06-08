@@ -270,7 +270,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 		
 			ret=false;
 			while (true) {
-			while(cont <= 15)
+			while(cont <= 14)
 			{
 				
 				String frame_name = "/Calibration/P" + cont;
