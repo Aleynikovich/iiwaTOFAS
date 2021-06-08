@@ -269,7 +269,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 		
 		
 			ret=false;
-			
+			while (true) {
 			while(cont <= 15)
 			{
 				
@@ -297,7 +297,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 				//ret=false;
 				
 				
-				
+			}
 	
 				
 				
