@@ -272,7 +272,10 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 			
 			while(cont <= 15)
 			{
-				
+				if (cont==15)
+				{
+					cont=1;
+				}
 				String frame_name = "/Calibration/P" + cont;
 				System.out.println(frame_name);
 				lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.1));
