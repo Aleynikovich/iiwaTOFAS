@@ -195,7 +195,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 			getLogger().info("      Moving HomePos");
 			getLogger().info("****************************");
 			
-			lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.25));
+			lbr.move(ptp(getFrame("/HOME_B")).setJointVelocityRel(0.10));
 			
 			exit=false;
 			//new borrar
@@ -268,7 +268,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 			{
 				
 				String frame_name = "/Calibration/P" + cont;
-				lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.25));
+				lbr.move(ptp(getFrame(frame_name)).setJointVelocityRel(0.1));
 				
 				robot_pose = lbr.getCurrentCartesianPosition(lbr.getFlange());
 				
