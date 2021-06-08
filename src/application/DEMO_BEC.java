@@ -206,7 +206,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 			
 				switch (getApplicationUI().displayModalDialog(
 						ApplicationDialogType.QUESTION,"BIN PICKING API!!!", 
-						"Calibration", "BinPicking Program", "END DO NOTHING")) {
+						"DEMO BEC", "END DO NOTHING")) {
 	
 						case 0:
 							mediaFIO.setLedGreen(true);
@@ -261,8 +261,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 		//tcp_client.sendData("102");	
 		
 		
-		ret=get_message("102","0");
-		if (ret==true){
+		
 			ret=false;
 			
 			while(cont <= 15)
@@ -307,7 +306,7 @@ public class DEMO_BEC extends RoboticsAPIApplication implements BinPicking_ITCPL
 		
 		
 		
-}
+
 
 	public void send_data(String request_str){
 		
