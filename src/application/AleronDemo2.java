@@ -922,7 +922,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		copy_caltab_robot_fr.setRedundancyInformation(lbr, redundancyInfo);
 		
 		//roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
-		tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(5).setMode(impedanceControlMode).setBlendingCart(0));
+		tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(20).setMode(impedanceControlMode).setBlendingCart(0));
 		
 		//Robot in contact with the aileron, notify to NDT system
 		mediaFIO.setOutputX3Pin1(true);
@@ -1017,7 +1017,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 								" A: " + copy_caltab_robot_fr.getAlphaRad()*(180/Math.PI) + " B: " + copy_caltab_robot_fr.getBetaRad()*(180/Math.PI) + " C: " + copy_caltab_robot_fr.getGammaRad()*(180/Math.PI) );
 				
 						//IMotionContainer motion_cmd = roll_scan.getFrame("Gripper").move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0));
-						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(10).setMode(impedanceControlMode).setBlendingCart(0.0));
+						IMotionContainer motion_cmd = tool_frame.move(lin(copy_caltab_robot_fr).setCartVelocity(20).setMode(impedanceControlMode).setBlendingCart(0.0));
 						motion_list.add(motion_cmd);
 												
 						IFiredConditionInfo firedInfo =  motion_cmd.getFiredBreakConditionInfo();
@@ -1223,6 +1223,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			}
 		}
 		
+		System.out.println("Trajector point: " + i);
+		
 		if(i>=x.size())
 			move_cont.set(0);
 		
@@ -1280,6 +1282,7 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 			
 			roll_scan.getFrame("Gripper").move(ptp(getFrame("/DemoCroinspect/Aprox3")).setJointVelocityRel(0.25));
 			*/
+			
 		}
 			
 		data_received.set(true);
