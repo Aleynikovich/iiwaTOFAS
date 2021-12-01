@@ -1123,6 +1123,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 								String response_data = frame_id + ";" + operation_type + ";1" ;
 								tcp_server.setResponseData(response_data);
 								
+								i++;
+								
 								break;
 							 }
 							
