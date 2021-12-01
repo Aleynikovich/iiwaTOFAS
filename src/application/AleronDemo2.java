@@ -1225,7 +1225,8 @@ public class AleronDemo2 extends RoboticsAPIApplication implements ITCPListener,
 		}
 		
 		System.out.println("Trajectory point: " + i);
-		
+		System.out.println("X size: " + x.size());
+
 		if(i>=x.size())
 		{
 			System.out.println("Move cont set to 0");
