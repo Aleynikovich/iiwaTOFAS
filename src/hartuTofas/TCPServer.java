@@ -31,12 +31,12 @@ public class TCPServer extends RoboticsAPIApplication {
                 try {
                     clientSocket = serverSocket.accept();
                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    
 
                     getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
                     String response = handleMessage("aaaa");
                     
-                    
+                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String inputLine;
                     inputLine = in.readLine();
                     getLogger().info("Received message: " + inputLine);
