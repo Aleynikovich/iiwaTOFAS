@@ -34,13 +34,15 @@ public class TCPServer extends RoboticsAPIApplication {
                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                     getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
-
+                    String response = handleMessage("aaaa");
+                    
+                    
                     String inputLine;
                     inputLine = in.readLine();
                     getLogger().info("Received message: " + inputLine);
                     ThreadUtil.milliSleep(500);
                     getLogger().info("tras espera 500ms");
-                    String response = handleMessage(inputLine);
+                    //String response = handleMessage(inputLine);
                     out.println(response);
                     
                 } catch (IOException e) {
