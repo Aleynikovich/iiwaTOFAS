@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
+import com.kuka.common.ThreadUtil;
 
 public class TCPServer extends RoboticsAPIApplication {
     private LBR robot;
@@ -37,6 +38,8 @@ public class TCPServer extends RoboticsAPIApplication {
                     String inputLine;
                     inputLine = in.readLine();
                     getLogger().info("Received message: " + inputLine);
+                    ThreadUtil.milliSleep(500);
+                    getLogger().info("tras espera 500ms");
                     String response = handleMessage(inputLine);
                     out.println(response);
                     
