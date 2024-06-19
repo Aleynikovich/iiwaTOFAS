@@ -21,7 +21,7 @@ public class TCPServer extends RoboticsAPIApplication {
     public void run() {
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(6400);
+            serverSocket = new ServerSocket(30001);
             getLogger().info("Server started. Listening on port 6400...");
 
             while (true) {
