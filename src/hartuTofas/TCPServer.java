@@ -30,20 +30,21 @@ public class TCPServer extends RoboticsAPIApplication {
                 Socket clientSocket = null;
                 try {
                     clientSocket = serverSocket.accept();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                     
 
                     getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
                     String response = handleMessage("aaaa");
                     
-                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    
                     String inputLine;
                     inputLine = in.readLine();
                     getLogger().info("Received message: " + inputLine);
-                    ThreadUtil.milliSleep(500);
+                    ThreadUtil.milliSleep(1500);
                     getLogger().info("tras espera 500ms");
                     //String response = handleMessage(inputLine);
-                    out.println(response);
+                    //out.println(response);
                     
                 } catch (IOException e) {
                     getLogger().error("Exception in client connection: " + e.getMessage());
