@@ -35,7 +35,7 @@ public class TCPServer extends RoboticsAPIApplication {
                     getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
 
                     String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
+                    while ((inputLine = in.readLine()) == null) {
                         getLogger().info("Received message: " + inputLine);
                         String response = handleMessage(inputLine);
                         out.println(response);
