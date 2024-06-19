@@ -1,4 +1,4 @@
-package stdio;
+package hartuTofas;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class TCPServer extends RoboticsAPIApplication {
     private LBR robot;
+    private boolean isBusy = false;
 
     @Override
     public void initialize() {
@@ -21,8 +22,8 @@ public class TCPServer extends RoboticsAPIApplication {
     public void run() {
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(30001);
-            getLogger().info("Server started. Listening on port 6400...");
+            serverSocket = new ServerSocket(65432);
+            getLogger().info("Server started. Listening on port 65432...");
 
             while (true) {
                 Socket clientSocket = null;
@@ -36,7 +37,8 @@ public class TCPServer extends RoboticsAPIApplication {
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         getLogger().info("Received message: " + inputLine);
-                        handleMessage(inputLine);
+                        String response = handleMessage(inputLine);
+                        out.println(response);
                     }
                 } catch (IOException e) {
                     getLogger().error("Exception in client connection: " + e.getMessage());
@@ -63,12 +65,30 @@ public class TCPServer extends RoboticsAPIApplication {
         }
     }
 
-    private void handleMessage(String message) {
-        if (message.equals("asd")) {
-            getLogger().info("Executing example command");
-        } else {
-            getLogger().warn("Unknown command: " + message);
+    private String handleMessage(String message) {
+        if (isBusy) {
+            return "Robot is busy";
         }
+
+        isBusy = true;
+        getLogger().info("Robot state: busy");
+
+        String response;
+        switch (1) {
+            case 1:
+                getLogger().info("Executing example command");
+                // Perform the action for the command, e.g., move the robot
+                response = "Command executed: example_command";
+                break;
+            default:
+                getLogger().warn("Unknown command: " + message);
+                response = "Unknown command: " + message;
+        }
+
+        isBusy = false;
+        getLogger().info("Robot state: free");
+
+        return response;
     }
 
     public static void main(String[] args) {
