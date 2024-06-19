@@ -35,11 +35,11 @@ public class TCPServer extends RoboticsAPIApplication {
                     getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
 
                     String inputLine;
-                    while ((inputLine = in.readLine()) == null) {
-                        getLogger().info("Received message: " + inputLine);
-                        String response = handleMessage(inputLine);
-                        out.println(response);
-                    }
+                    inputLine = in.readLine();
+                    getLogger().info("Received message: " + inputLine);
+                    String response = handleMessage(inputLine);
+                    out.println(response);
+                    
                 } catch (IOException e) {
                     getLogger().error("Exception in client connection: " + e.getMessage());
                 } finally {
