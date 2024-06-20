@@ -1,12 +1,28 @@
 package hartuTofas;
 
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.motionModel.BasicMotions;
+import com.kuka.roboticsAPI.geometricModel.Frame;
+import com.kuka.roboticsAPI.geometricModel.math.Transformation;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class MessageHandler {
 
     private LBR robot;
+
+    // Move types
+    public static final int PTP_AXIS = 0;
+    public static final int PTP_FRAME = 1;
+    public static final int LIN_AXIS = 2;
+    public static final int LIN_FRAME = 3;
+    public static final int CIRC_AXIS = 4;
+    public static final int CIRC_FRAME = 5;
+    public static final int PTP_AXIS_C = 6;
+    public static final int PTP_FRAME_C = 7;
+    public static final int LIN_FRAME_C = 8;
+    public static final int ACTIVATE_IO = 9;
 
     public MessageHandler(LBR robot) {
         this.robot = robot;
@@ -29,7 +45,7 @@ public class MessageHandler {
             return "Invalid message format";
         }
 
-        String moveType = parts[0];
+        int moveType = Integer.parseInt(parts[0]);
         int numPoints = Integer.parseInt(parts[1]);
         String targetPoints = parts[2];
         String ioPoint = parts[3];
@@ -39,45 +55,108 @@ public class MessageHandler {
         String base = parts[7];
 
         // Handle the moveType
-        if ("1".equals(moveType)) {
-            return handleMoveType1(numPoints, targetPoints, ioPoint, ioPin, ioState, tool, base);
-        } else if ("2".equals(moveType)) {
-            return handleMoveType2(numPoints, targetPoints);
-        } else {
-            return "Unknown move type: " + moveType;
+        switch (moveType) {
+            case PTP_AXIS:
+                return handlePTPAxis(numPoints, targetPoints, ioPoint, ioPin, ioState, tool, base);
+            case PTP_FRAME:
+                return handlePTPFrame(numPoints, targetPoints, ioPoint, ioPin, ioState, tool, base);
+            case LIN_AXIS:
+                return handleLINAxis(numPoints, targetPoints, ioPoint, ioPin, ioState, tool, base);
+            case LIN_FRAME:
+                return handleLINFrame(numPoints, targetPoints, ioPoint, ioPin, ioState, tool, base);
+            // Add other cases for different move types as needed
+            default:
+                return "Unknown move type: " + moveType;
         }
     }
 
-    private String handleMoveType1(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
-        // Process the moveType 1 command
-        // Example: Parse the target points and perform the movement
+    private String handlePTPAxis(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
+        // Process the PTP_AXIS command
+        List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
+        double[] jointValues = new double[jointPositions.size()];
+        for (int i = 0; i < jointPositions.size(); i++) {
+            jointValues[i] = Double.parseDouble(jointPositions.get(i));
+        }
+        robot.move(BasicMotions.ptp(jointValues));
+        handleIOOperations(ioPoint, ioPin, ioState);
+        configureToolAndBase(tool, base);
+        return "PTP_AXIS command executed";
+    }
+
+    private String handlePTPFrame(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
+        // Process the PTP_FRAME command
         List<String> points = Arrays.asList(targetPoints.split(","));
         for (String point : points) {
             List<String> coordinates = Arrays.asList(point.split(";"));
-            // Process each coordinate: x, y, z, roll, pitch, yaw
-            // Implement your robot movement logic here
+            double x = Double.parseDouble(coordinates.get(0));
+            double y = Double.parseDouble(coordinates.get(1));
+            double z = Double.parseDouble(coordinates.get(2));
+            double roll = Double.parseDouble(coordinates.get(3));
+            double pitch = Double.parseDouble(coordinates.get(4));
+            double yaw = Double.parseDouble(coordinates.get(5));
+            Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
+            robot.move(BasicMotions.ptp(targetFrame));
         }
-        
-        // Handle IO operations if provided
-        if (!ioPoint.isEmpty() && !ioPin.isEmpty() && !ioState.isEmpty()) {
-            // Implement IO operations
-        }
-
-        // Handle tool and base configuration if provided
-        if (!tool.isEmpty() && !base.isEmpty()) {
-            // Implement tool and base configuration
-        }
-
-        return "MoveType 1 command executed";
+        handleIOOperations(ioPoint, ioPin, ioState);
+        configureToolAndBase(tool, base);
+        return "PTP_FRAME command executed";
     }
 
-    private String handleMoveType2(int numPoints, String targetPoints) {
-        // Process the moveType 2 command
-        // Example: Parse the joint positions and perform the movement
+    private String handleLINAxis(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
+        // Process the LIN_AXIS command
         List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
-        // Process each joint position
-        // Implement your robot joint movement logic here
+        double[] jointValues = new double[jointPositions.size()];
+        for (int i = 0; i < jointPositions.size(); i++) {
+            jointValues[i] = Double.parseDouble(jointPositions.get(i));
+        }
+        // robot.move(BasicMotions.lin(robot.getCurrentJointPosition().set(jointValues)));
+        handleIOOperations(ioPoint, ioPin, ioState);
+        configureToolAndBase(tool, base);
+        return "LIN_AXIS command executed";
+    }
 
-        return "MoveType 2 command executed";
+    private String handleLINFrame(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
+        // Process the LIN_FRAME command
+        List<String> points = Arrays.asList(targetPoints.split(","));
+        for (String point : points) {
+            List<String> coordinates = Arrays.asList(point.split(";"));
+            double x = Double.parseDouble(coordinates.get(0));
+            double y = Double.parseDouble(coordinates.get(1));
+            double z = Double.parseDouble(coordinates.get(2));
+            double roll = Double.parseDouble(coordinates.get(3));
+            double pitch = Double.parseDouble(coordinates.get(4));
+            double yaw = Double.parseDouble(coordinates.get(5));
+            Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
+            robot.move(BasicMotions.lin(targetFrame));
+        }
+        handleIOOperations(ioPoint, ioPin, ioState);
+        configureToolAndBase(tool, base);
+        return "LIN_FRAME command executed";
+    }
+
+    private void handleIOOperations(String ioPoint, String ioPin, String ioState) {
+        // Implement IO operations based on ioPoint, ioPin, and ioState
+        // Example: Set the state of a digital output
+        if (!ioPoint.isEmpty() && !ioPin.isEmpty() && !ioState.isEmpty()) {
+            int point = Integer.parseInt(ioPoint);
+            int pin = Integer.parseInt(ioPin);
+            boolean state = Boolean.parseBoolean(ioState);
+            // Use robot API to set the IO state
+            // Example: robot.getIOInterface().setOutput(pin, state);
+        }
+    }
+
+    private void configureToolAndBase(String tool, String base) {
+        // Implement tool and base configuration based on tool and base strings
+        if (!tool.isEmpty()) {
+            int toolId = Integer.parseInt(tool);
+            // Use robot API to set the tool
+            // Example: robot.getFlange().attach(toolId);
+        }
+        if (!base.isEmpty()) {
+            int baseId = Integer.parseInt(base);
+            // Use robot API to set the base
+            // Example: robot.getBaseFrame().setBase(baseId);
+        }
     }
 }
