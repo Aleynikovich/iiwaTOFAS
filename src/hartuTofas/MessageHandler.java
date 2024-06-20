@@ -4,7 +4,6 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.motionModel.BasicMotions;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,8 +28,10 @@ public class MessageHandler {
     }
 
     public String handleMessage(String message) {
+        System.out.println("Received message: " + message);
         // Check if the message ends with #
         if (!message.endsWith("#")) {
+            System.out.println("Message does not end with '#'");
             return "Invalid message format";
         }
 
@@ -40,13 +41,25 @@ public class MessageHandler {
         // Split the message by |
         String[] parts = message.split("\\|");
 
+        // Log the parts
+        System.out.println("Parsed parts: " + Arrays.toString(parts));
+
         // Parse the parts of the message
         if (parts.length < 8) {
+            System.out.println("Message does not have 8 parts");
             return "Invalid message format";
         }
 
-        int moveType = Integer.parseInt(parts[0]);
-        int numPoints = Integer.parseInt(parts[1]);
+        int moveType;
+        int numPoints;
+        try {
+            moveType = Integer.parseInt(parts[0]);
+            numPoints = Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid moveType or numPoints");
+            return "Invalid message format";
+        }
+
         String targetPoints = parts[2];
         String ioPoint = parts[3];
         String ioPin = parts[4];
@@ -66,16 +79,22 @@ public class MessageHandler {
                 return handleLINFrame(numPoints, targetPoints, ioPoint, ioPin, ioState, tool, base);
             // Add other cases for different move types as needed
             default:
+                System.out.println("Unknown move type: " + moveType);
                 return "Unknown move type: " + moveType;
         }
     }
 
     private String handlePTPAxis(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
         // Process the PTP_AXIS command
-        List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
+        List jointPositions = Arrays.asList(targetPoints.split(";"));
         double[] jointValues = new double[jointPositions.size()];
-        for (int i = 0; i < jointPositions.size(); i++) {
-            jointValues[i] = Double.parseDouble(jointPositions.get(i));
+        try {
+            for (int i = 0; i < jointPositions.size(); i++) {
+                jointValues[i] = Double.parseDouble((String) jointPositions.get(i));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid joint position values");
+            return "Invalid joint position values";
         }
         robot.move(BasicMotions.ptp(jointValues));
         handleIOOperations(ioPoint, ioPin, ioState);
@@ -85,17 +104,26 @@ public class MessageHandler {
 
     private String handlePTPFrame(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
         // Process the PTP_FRAME command
-        List<String> points = Arrays.asList(targetPoints.split(","));
-        for (String point : points) {
-            List<String> coordinates = Arrays.asList(point.split(";"));
-            double x = Double.parseDouble(coordinates.get(0));
-            double y = Double.parseDouble(coordinates.get(1));
-            double z = Double.parseDouble(coordinates.get(2));
-            double roll = Double.parseDouble(coordinates.get(3));
-            double pitch = Double.parseDouble(coordinates.get(4));
-            double yaw = Double.parseDouble(coordinates.get(5));
-            Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
-            robot.move(BasicMotions.ptp(targetFrame));
+        List points = Arrays.asList(targetPoints.split(","));
+        try {
+            for (int i = 0; i < points.size(); i++) {
+                String point = (String) points.get(i);
+                List coordinates = Arrays.asList(point.split(";"));
+                double x = Double.parseDouble((String) coordinates.get(0));
+                double y = Double.parseDouble((String) coordinates.get(1));
+                double z = Double.parseDouble((String) coordinates.get(2));
+                double roll = Double.parseDouble((String) coordinates.get(3));
+                double pitch = Double.parseDouble((String) coordinates.get(4));
+                double yaw = Double.parseDouble((String) coordinates.get(5));
+                Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
+                robot.move(BasicMotions.ptp(targetFrame));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid coordinate values");
+            return "Invalid coordinate values";
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Coordinate values are incomplete");
+            return "Coordinate values are incomplete";
         }
         handleIOOperations(ioPoint, ioPin, ioState);
         configureToolAndBase(tool, base);
@@ -104,12 +132,17 @@ public class MessageHandler {
 
     private String handleLINAxis(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
         // Process the LIN_AXIS command
-        List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
+        List jointPositions = Arrays.asList(targetPoints.split(";"));
         double[] jointValues = new double[jointPositions.size()];
-        for (int i = 0; i < jointPositions.size(); i++) {
-            jointValues[i] = Double.parseDouble(jointPositions.get(i));
+        try {
+            for (int i = 0; i < jointPositions.size(); i++) {
+                jointValues[i] = Double.parseDouble((String) jointPositions.get(i));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid joint position values");
+            return "Invalid joint position values";
         }
-        // robot.move(BasicMotions.lin(robot.getCurrentJointPosition().set(jointValues)));
+        //robot.move(BasicMotions.lin(jointValues));
         handleIOOperations(ioPoint, ioPin, ioState);
         configureToolAndBase(tool, base);
         return "LIN_AXIS command executed";
@@ -117,17 +150,26 @@ public class MessageHandler {
 
     private String handleLINFrame(int numPoints, String targetPoints, String ioPoint, String ioPin, String ioState, String tool, String base) {
         // Process the LIN_FRAME command
-        List<String> points = Arrays.asList(targetPoints.split(","));
-        for (String point : points) {
-            List<String> coordinates = Arrays.asList(point.split(";"));
-            double x = Double.parseDouble(coordinates.get(0));
-            double y = Double.parseDouble(coordinates.get(1));
-            double z = Double.parseDouble(coordinates.get(2));
-            double roll = Double.parseDouble(coordinates.get(3));
-            double pitch = Double.parseDouble(coordinates.get(4));
-            double yaw = Double.parseDouble(coordinates.get(5));
-            Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
-            robot.move(BasicMotions.lin(targetFrame));
+        List points = Arrays.asList(targetPoints.split(","));
+        try {
+            for (int i = 0; i < points.size(); i++) {
+                String point = (String) points.get(i);
+                List coordinates = Arrays.asList(point.split(";"));
+                double x = Double.parseDouble((String) coordinates.get(0));
+                double y = Double.parseDouble((String) coordinates.get(1));
+                double z = Double.parseDouble((String) coordinates.get(2));
+                double roll = Double.parseDouble((String) coordinates.get(3));
+                double pitch = Double.parseDouble((String) coordinates.get(4));
+                double yaw = Double.parseDouble((String) coordinates.get(5));
+                Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
+                robot.move(BasicMotions.lin(targetFrame));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid coordinate values");
+            return "Invalid coordinate values";
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Coordinate values are incomplete");
+            return "Coordinate values are incomplete";
         }
         handleIOOperations(ioPoint, ioPin, ioState);
         configureToolAndBase(tool, base);
