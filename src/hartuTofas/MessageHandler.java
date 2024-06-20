@@ -38,8 +38,8 @@ public class MessageHandler {
         // Remove the trailing #
         message = message.substring(0, message.length() - 1);
 
-        // Split the message by |
-        String[] parts = message.split("\\|");
+        // Split the message by | and keep empty parts
+        String[] parts = message.split("\\|", -1);
 
         // Log the parts
         System.out.println("Parsed parts: " + Arrays.toString(parts));
@@ -142,7 +142,7 @@ public class MessageHandler {
             System.out.println("Invalid joint position values");
             return "Invalid joint position values";
         }
-        //robot.move(BasicMotions.lin(jointValues));
+       // robot.move(BasicMotions.lin(jointValues));
         handleIOOperations(ioPoint, ioPin, ioState);
         configureToolAndBase(tool, base);
         return "LIN_AXIS command executed";
