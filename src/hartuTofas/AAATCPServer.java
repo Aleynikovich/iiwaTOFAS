@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public class TCPServer extends RoboticsAPIApplication {
+public class AAATCPServer extends RoboticsAPIApplication {
     private LBR robot;
     private boolean isBusy = false;
     private final Object lock = new Object();
@@ -118,7 +118,7 @@ public class TCPServer extends RoboticsAPIApplication {
     }
 
     public static void main(String[] args) {
-        TCPServer app = new TCPServer();
+        AAATCPServer app = new AAATCPServer();
         app.runApplication();
     }
 }
