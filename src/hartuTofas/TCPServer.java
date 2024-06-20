@@ -8,24 +8,40 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 public class TCPServer extends RoboticsAPIApplication {
     private LBR robot;
     private boolean isBusy = false;
     private final Object lock = new Object();
     private MessageHandler messageHandler;
+    private ServerSocket serverSocket = null;
 
     @Override
     public void initialize() {
         robot = getContext().getDeviceFromType(LBR.class);
         messageHandler = new MessageHandler(robot);
+
+        // Adding a shutdown hook to ensure the server socket is closed properly
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                if (serverSocket != null && !serverSocket.isClosed()) {
+                    try {
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        getLogger().error("Exception closing server socket: " + e.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void run() {
-        ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(30001);
+            serverSocket = new ServerSocket();
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new InetSocketAddress(30001));
             getLogger().info("Server started. Listening on port 30001...");
 
             while (true) {
@@ -36,7 +52,7 @@ public class TCPServer extends RoboticsAPIApplication {
         } catch (IOException e) {
             getLogger().error("Exception in server: " + e.getMessage());
         } finally {
-            if (serverSocket != null) {
+            if (serverSocket != null && !serverSocket.isClosed()) {
                 try {
                     serverSocket.close();
                 } catch (IOException e) {
