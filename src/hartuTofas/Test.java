@@ -37,7 +37,7 @@ public class Test extends RoboticsAPIApplication {
 	public void run() {
 		// your application execution starts here
 		iiwa.move(ptpHome());
-		iiwa.move(ptp(0,0,0,0,0,0,0));
+		iiwa.move(ptp(0,0,30,0,0,0,0));
 		
 	}
 }
