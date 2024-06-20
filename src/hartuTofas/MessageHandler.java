@@ -1,5 +1,7 @@
 package hartuTofas;
 
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
+
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.motionModel.BasicMotions;
 
@@ -77,7 +79,7 @@ public class MessageHandler {
             return "Invalid joint position values";
         }
 
-        robot.move(BasicMotions.ptp(jointValues));
+        robot.move(ptp(jointValues));
         return "PTP_AXIS command executed";
     }
 }
