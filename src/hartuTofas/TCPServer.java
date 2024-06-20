@@ -8,15 +8,17 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
-import com.kuka.common.ThreadUtil;
 
 public class TCPServer extends RoboticsAPIApplication {
     private LBR robot;
     private boolean isBusy = false;
+    private final Object lock = new Object();
+    private MessageHandler messageHandler;
 
     @Override
     public void initialize() {
         robot = getContext().getDeviceFromType(LBR.class);
+        messageHandler = new MessageHandler(robot);
     }
 
     @Override
@@ -27,36 +29,9 @@ public class TCPServer extends RoboticsAPIApplication {
             getLogger().info("Server started. Listening on port 30001...");
 
             while (true) {
-                Socket clientSocket = null;
-                try {
-                    clientSocket = serverSocket.accept();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                    
-
-                    getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
-                    String response = handleMessage("aaaa");
-                    
-                    
-                    String inputLine;
-                    inputLine = in.readLine();
-                    getLogger().info("Received message: " + inputLine);
-                    ThreadUtil.milliSleep(1500);
-                    getLogger().info("tras espera 500ms");
-                    //String response = handleMessage(inputLine);
-                    //out.println(response);
-                    
-                } catch (IOException e) {
-                    getLogger().error("Exception in client connection: " + e.getMessage());
-                } finally {
-                    if (clientSocket != null) {
-                        try {
-                            clientSocket.close();
-                        } catch (IOException e) {
-                            getLogger().error("Exception closing client socket: " + e.getMessage());
-                        }
-                    }
-                }
+                final Socket clientSocket = serverSocket.accept();
+                getLogger().info("Connected to client: " + clientSocket.getRemoteSocketAddress());
+                new Thread(new ClientHandler(clientSocket)).start();
             }
         } catch (IOException e) {
             getLogger().error("Exception in server: " + e.getMessage());
@@ -71,30 +46,59 @@ public class TCPServer extends RoboticsAPIApplication {
         }
     }
 
-    private String handleMessage(String message) {
-        if (isBusy) {
-            return "Robot is busy";
+    private class ClientHandler implements Runnable {
+        private Socket clientSocket;
+
+        public ClientHandler(Socket socket) {
+            this.clientSocket = socket;
         }
 
-        isBusy = true;
-        getLogger().info("Robot state: busy");
+        public void run() {
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-        String response;
-        switch (1) {
-            case 1:
-                getLogger().info("Executing example command");
-                // Perform the action for the command, e.g., move the robot
-                response = "Command executed: example_command";
-                break;
-            default:
-                getLogger().warn("Unknown command: " + message);
-                response = "Unknown command: " + message;
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    getLogger().info("Received message: " + inputLine);
+                    String response = handleClientMessage(inputLine);
+                    out.println(response);
+                }
+            } catch (IOException e) {
+                getLogger().error("Exception in client connection: " + e.getMessage());
+            } finally {
+                if (clientSocket != null) {
+                    try {
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        getLogger().error("Exception closing client socket: " + e.getMessage());
+                    }
+                }
+            }
         }
 
-        isBusy = false;
-        getLogger().info("Robot state: free");
+        private String handleClientMessage(String message) {
+            synchronized (lock) {
+                if (isBusy) {
+                    return "Robot is busy";
+                }
+                isBusy = true;
+            }
 
-        return response;
+            getLogger().info("Robot state: busy");
+            String response;
+
+            try {
+                response = messageHandler.handleMessage(message);
+            } finally {
+                synchronized (lock) {
+                    isBusy = false;
+                }
+                getLogger().info("Robot state: free");
+            }
+
+            return response;
+        }
     }
 
     public static void main(String[] args) {
