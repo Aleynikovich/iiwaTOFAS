@@ -1,5 +1,7 @@
 package hartuTofas;
 
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
+
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.motionModel.BasicMotions;
 import com.kuka.roboticsAPI.geometricModel.Frame;
@@ -182,6 +184,7 @@ public class MessageHandler {
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5)));  // Convert degrees to radians
                 Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
                 robot.move(BasicMotions.lin(targetFrame));
+                robot.move(lin(targetFrame));
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid coordinate values");
