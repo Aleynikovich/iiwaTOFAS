@@ -184,8 +184,9 @@ public class MessageHandler {
                 double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4)));  // Convert degrees to radians
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5)));  // Convert degrees to radians
                 Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
-                robot.move(BasicMotions.lin(targetFrame));
-                robot.move(lin(targetFrame));
+                Frame targetFrameVirgin = new Frame (x,y,z,roll,pitch,yaw);
+                //robot.move(BasicMotions.lin(targetFrame));
+                robot.move(lin(targetFrameVirgin));
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid coordinate values");
