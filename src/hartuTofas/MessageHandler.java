@@ -130,7 +130,7 @@ public class MessageHandler {
                 double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4)));  // Convert degrees to radians
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5)));  // Convert degrees to radians
                 Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
-                Frame targetFrameVirgin = new Frame (x,y,z,roll,pitch,yaw);
+                Frame targetFrameVirgin = new Frame (World.Current.getRootFrame(),x,y,z,roll,pitch,yaw);
                 robot.move(BasicMotions.ptp(targetFrameVirgin));
             }
         } catch (NumberFormatException e) {
