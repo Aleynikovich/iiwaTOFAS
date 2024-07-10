@@ -77,8 +77,6 @@ public class MessageHandler {
                 return handlePTPAxis(numPoints, targetPoints);
             case PTP_FRAME:
                 return handlePTPFrame(numPoints, targetPoints);
-            case LIN_AXIS:
-                return handleLINAxis(numPoints, targetPoints);
             case LIN_FRAME:
                 return handleLINFrame(numPoints, targetPoints);
             // Add other cases for different move types as needed
@@ -141,34 +139,6 @@ public class MessageHandler {
             return "Coordinate values are incomplete";
         }
         return "PTP_FRAME command executed";
-    }
-
-    private String handleLINAxis(int numPoints, String targetPoints) {
-        // Process the LIN_AXIS command
-        List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
-        if (jointPositions.size() != 7) {
-            System.out.println("Invalid number of joint positions");
-            return "Invalid number of joint positions";
-        }
-
-        double[] jointValues = new double[jointPositions.size()];
-        try {
-            for (int i = 0; i < jointPositions.size(); i++) {
-                double jointValueDeg = Double.parseDouble(jointPositions.get(i));
-                double jointValueRad = Math.toRadians(jointValueDeg);  // Convert degrees to radians
-                if (!isWithinLimits(i, jointValueRad)) {
-                    System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad);
-                    return "Joint " + (i + 1) + " value out of limits: " + jointValueRad;
-                }
-                jointValues[i] = jointValueRad;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid joint position values");
-            return "Invalid joint position values";
-        }
-
-        //robot.move(BasicMotions.lin(jointValues));
-        return "LIN_AXIS command executed";
     }
 
     private String handleLINFrame(int numPoints, String targetPoints) {
