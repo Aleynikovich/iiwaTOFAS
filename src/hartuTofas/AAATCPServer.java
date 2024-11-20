@@ -2,6 +2,7 @@ package hartuTofas;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -64,31 +65,47 @@ public class AAATCPServer extends RoboticsAPIApplication {
 
     private class ClientHandler implements Runnable {
         private Socket clientSocket;
+        private PrintWriter out;
 
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
         }
 
         public void run() {
+            BufferedReader in = null;
+            PrintWriter out = null;
+
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+                this.out = out; // Store PrintWriter for sending "FREE"
 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     getLogger().info("Received message: " + inputLine);
+
+                    // Handle the client's message
                     String response = handleClientMessage(inputLine);
+
+                    // Send response to the client
                     out.println(response);
                 }
             } catch (IOException e) {
                 getLogger().error("Exception in client connection: " + e.getMessage());
             } finally {
-                if (clientSocket != null) {
-                    try {
-                        clientSocket.close();
-                    } catch (IOException e) {
-                        getLogger().error("Exception closing client socket: " + e.getMessage());
+                try {
+                    if (in != null) {
+                        in.close();
                     }
+                    if (out != null) {
+                        out.close();
+                    }
+                    if (clientSocket != null) {
+                        clientSocket.close();
+                    }
+                } catch (IOException e) {
+                    getLogger().error("Exception closing client resources: " + e.getMessage());
                 }
             }
         }
@@ -105,12 +122,23 @@ public class AAATCPServer extends RoboticsAPIApplication {
             String response;
 
             try {
+                // Simulate handling the message or performing a task
                 response = messageHandler.handleMessage(message);
+                Thread.sleep(2000); // Simulate task delay
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                response = "Error: Task interrupted";
             } finally {
                 synchronized (lock) {
-                    isBusy = false;
+                    isBusy = false; // Mark the robot as free
                 }
+
                 getLogger().info("Robot state: free");
+
+                // Notify the client that the robot is now free
+                if (out != null) {
+                    out.println("FREE");
+                }
             }
 
             return response;
