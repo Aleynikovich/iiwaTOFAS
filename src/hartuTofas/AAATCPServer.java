@@ -137,7 +137,7 @@ public class AAATCPServer extends RoboticsAPIApplication {
 
                 // Notify the client that the robot is now free
                 if (out != null) {
-                    out.println("FREE");
+                    out.println("FREE#");
                 }
             }
 
