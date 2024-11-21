@@ -87,10 +87,11 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
                     // Process the message using MessageHandler
                     String response = messageHandler.handleMessage(message);
+                    System.out.print("Sending initial response: " + response);
 
                     // Extract the request ID from the message
                     String requestId = extractRequestId(message);
-
+                    
                     // Send the appropriate response
                     if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
                         String errorResponse = "ERROR|" + requestId + "#";
