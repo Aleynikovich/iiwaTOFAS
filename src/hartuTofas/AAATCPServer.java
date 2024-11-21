@@ -79,7 +79,7 @@ public class AAATCPServer extends RoboticsAPIApplication {
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                this.out = out; // Store PrintWriter for sending "FREE"
+                this.out = out; 
 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
@@ -122,20 +122,20 @@ public class AAATCPServer extends RoboticsAPIApplication {
             String response;
 
             try {
-                // Simulate handling the message or performing a task
+                
                 response = messageHandler.handleMessage(message);
-                Thread.sleep(2000); // Simulate task delay
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 response = "Error: Task interrupted";
             } finally {
                 synchronized (lock) {
-                    isBusy = false; // Mark the robot as free
+                    isBusy = false; 
                 }
 
                 getLogger().info("Robot state: free");
 
-                // Notify the client that the robot is now free
+                
                 if (out != null) {
                     out.println("FREE#");
                 }
