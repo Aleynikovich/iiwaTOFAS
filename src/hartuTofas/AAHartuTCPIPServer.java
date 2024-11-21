@@ -60,14 +60,20 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
         PrintWriter out = null;
 
         try {
+            // Prepare streams for communication
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            // Send initial FREE message to indicate readiness
-            out.println("FREE|0#");
+            // Send initial FREE message
+            String initialResponse = "FREE|0#";
+            System.out.println("Sending initial response: " + initialResponse);
+            out.println(initialResponse);
 
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            // Log that the robot is waiting for a message
+            System.out.println("Waiting for a message from the client...");
+
+            // Wait for and process incoming messages
             String message;
-
             while ((message = in.readLine()) != null) {
                 System.out.println("Received: " + message);
 
@@ -79,11 +85,19 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
                 // Send response to client
                 if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
-                    out.println("ERROR|" + requestId + "#");
+                    String errorResponse = "ERROR|" + requestId + "#";
+                    System.out.println("Sending error response: " + errorResponse);
+                    out.println(errorResponse);
                 } else {
-                    out.println("FREE|" + requestId + "#");
+                    String successResponse = "FREE|" + requestId + "#";
+                    System.out.println("Sending success response: " + successResponse);
+                    out.println(successResponse);
                 }
+
+                // Log that the robot is ready for the next message
+                System.out.println("Waiting for the next message from the client...");
             }
+
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
         } finally {
