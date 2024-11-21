@@ -149,7 +149,7 @@ public class MessageHandler {
     }
 
     private String handleLINFrame(int numPoints, String targetPoints, String id) {
-        // Process the LIN_FRAME command
+        // Process the LIN_FRAME commands
         List<String> points = Arrays.asList(targetPoints.split(","));
         try {
             for (int i = 0; i < points.size(); i++) {
