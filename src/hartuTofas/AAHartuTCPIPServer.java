@@ -38,6 +38,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
                 System.out.println("Waiting for a client...");
                 Socket clientSocket = serverSocket.accept(); // Accept client connection
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
+                
 
                 // Handle client communication
                 handleClient(clientSocket);
@@ -58,11 +59,11 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     private void handleClient(Socket clientSocket) {
         BufferedReader in = null;
         PrintWriter out = null;
-
+        
         try {
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
-
+            out.println("FREE|0#");
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String message;
             while ((message = in.readLine()) != null) { // Read client messages
                 System.out.println("Received: " + message);
