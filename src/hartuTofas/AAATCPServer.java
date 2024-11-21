@@ -23,7 +23,6 @@ public class AAATCPServer extends RoboticsAPIApplication {
         robot = getContext().getDeviceFromType(LBR.class);
         messageHandler = new MessageHandler(robot);
 
-        // Adding a shutdown hook to ensure the server socket is closed properly
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 if (serverSocket != null && !serverSocket.isClosed()) {
@@ -85,10 +84,7 @@ public class AAATCPServer extends RoboticsAPIApplication {
                 while ((inputLine = in.readLine()) != null) {
                     getLogger().info("Received message: " + inputLine);
 
-                    // Handle the client's message
                     String response = handleClientMessage(inputLine);
-
-                    // Send response to the client
                     out.println(response);
                 }
             } catch (IOException e) {
@@ -135,9 +131,8 @@ public class AAATCPServer extends RoboticsAPIApplication {
 
                 getLogger().info("Robot state: free");
 
-                
                 if (out != null) {
-                    out.println("FREE#");
+                    out.println("FREE|12#");
                 }
             }
 
