@@ -74,7 +74,9 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
             // Wait for and process incoming messages
             String message;
-            while ((message = in.readLine()) != null) {
+            message = in.readLine();
+            System.out.println("Current message: " + message);
+            while (message  != null) {
                 System.out.println("Received: " + message);
 
                 // Process the message using MessageHandler
