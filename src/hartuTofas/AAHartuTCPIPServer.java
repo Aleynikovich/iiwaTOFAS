@@ -60,61 +60,58 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
         PrintWriter out = null;
 
         try {
-            // Prepare streams for communication
+            // Prepare input and output streams
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            // Send initial FREE message
+            // Send the initial FREE message
             String initialResponse = "FREE|0#";
             System.out.println("Sending initial response: " + initialResponse);
             out.println(initialResponse);
 
-            // Log that the robot is waiting for a message
             System.out.println("Waiting for a message from the client...");
-            	
-            // Wait for and process incoming messages
-            String message;
-            message = in.readLine();
-            
-            while (message == null){
-            	try {
-					Thread.sleep(3000);
-					message = in.readLine();
-					System.out.println("Waiting for a message from the client...");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-            
-            System.out.println("Current message: " + message);
-            while (message  != null) {
-                System.out.println("Received: " + message);
 
-                // Process the message using MessageHandler
-                String response = messageHandler.handleMessage(message);
+            // Read and process messages
+            StringBuilder messageBuilder = new StringBuilder();
+            int charInt;
+            while ((charInt = in.read()) != -1) {
+                char currentChar = (char) charInt;
 
-                // Extract the request ID (last field in the message)
-                String requestId = extractRequestId(message);
+                // Append character to the message buffer
+                messageBuilder.append(currentChar);
 
-                // Send response to client
-                if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
-                    String errorResponse = "ERROR|" + requestId + "#";
-                    System.out.println("Sending error response: " + errorResponse);
-                    out.println(errorResponse);
-                } else {
-                    String successResponse = "FREE|" + requestId + "#";
-                    System.out.println("Sending success response: " + successResponse);
-                    out.println(successResponse);
+                // Check if we've received the complete message (terminated by #)
+                if (currentChar == '#') {
+                    String message = messageBuilder.toString();
+                    System.out.println("Received: " + message);
+
+                    // Process the message using MessageHandler
+                    String response = messageHandler.handleMessage(message);
+
+                    // Extract the request ID from the message
+                    String requestId = extractRequestId(message);
+
+                    // Send the appropriate response
+                    if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
+                        String errorResponse = "ERROR|" + requestId + "#";
+                        System.out.println("Sending error response: " + errorResponse);
+                        out.println(errorResponse);
+                    } else {
+                        String successResponse = "FREE|" + requestId + "#";
+                        System.out.println("Sending success response: " + successResponse);
+                        out.println(successResponse);
+                    }
+
+                    // Clear the message buffer for the next message
+                    messageBuilder.setLength(0);
+
+                    System.out.println("Waiting for the next message...");
                 }
-
-                // Log that the robot is ready for the next message
-                System.out.println("Waiting for the next message from the client...");
             }
-
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
         } finally {
+            // Clean up resources
             try {
                 if (in != null) in.close();
                 if (out != null) out.close();
@@ -124,6 +121,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
             }
         }
     }
+
 
     private String extractRequestId(String message) {
         // Ensure message ends with # and remove it
