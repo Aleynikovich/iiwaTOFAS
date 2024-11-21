@@ -7,6 +7,7 @@ import com.kuka.roboticsAPI.motionModel.BasicMotions;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.World;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,18 +50,20 @@ public class MessageHandler {
         System.out.println("Parsed parts: " + Arrays.toString(parts));
 
         // Parse the parts of the message
-        if (parts.length < 8) {
-            System.out.println("Message does not have 8 parts");
+        if (parts.length < 9) { // Adjust to 9 parts to include ID
+            System.out.println("Message does not have 9 parts");
             return "Invalid message format";
         }
 
         int moveType;
         int numPoints;
+        String id;
         try {
             moveType = Integer.parseInt(parts[0]);
             numPoints = Integer.parseInt(parts[1]);
+            id = parts[8]; // Extract the ID from the last part
         } catch (NumberFormatException e) {
-            System.out.println("Invalid moveType or numPoints");
+            System.out.println("Invalid moveType, numPoints, or ID");
             return "Invalid message format";
         }
 
@@ -71,14 +74,17 @@ public class MessageHandler {
         String tool = parts[6];
         String base = parts[7];
 
+        // Log the extracted ID
+        System.out.println("Extracted ID: " + id);
+
         // Handle the moveType
         switch (moveType) {
             case PTP_AXIS:
-                return handlePTPAxis(numPoints, targetPoints);
+                return handlePTPAxis(numPoints, targetPoints, id);
             case PTP_FRAME:
-                return handlePTPFrame(numPoints, targetPoints);
+                return handlePTPFrame(numPoints, targetPoints, id);
             case LIN_FRAME:
-                return handleLINFrame(numPoints, targetPoints);
+                return handleLINFrame(numPoints, targetPoints, id);
             // Add other cases for different move types as needed
             default:
                 System.out.println("Unknown move type: " + moveType);
@@ -86,11 +92,11 @@ public class MessageHandler {
         }
     }
 
-    private String handlePTPAxis(int numPoints, String targetPoints) {
+    private String handlePTPAxis(int numPoints, String targetPoints, String id) {
         // Process the PTP_AXIS command
         List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
         if (jointPositions.size() != 7) {
-            System.out.println("Invalid number of joint positions");
+            System.out.println("Invalid number of joint positions for ID: " + id);
             return "Invalid number of joint positions";
         }
 
@@ -98,23 +104,24 @@ public class MessageHandler {
         try {
             for (int i = 0; i < jointPositions.size(); i++) {
                 double jointValueDeg = Double.parseDouble(jointPositions.get(i));
-                double jointValueRad = Math.toRadians(jointValueDeg);  // Convert degrees to radians
+                double jointValueRad = Math.toRadians(jointValueDeg); // Convert degrees to radians
                 if (!isWithinLimits(i, jointValueRad)) {
-                    System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad);
-                    return "Joint " + (i + 1) + " value out of limits: " + jointValueRad;
+                    System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad + " for ID: " + id);
+                    return "Joint " + (i + 1) + " value out of limits";
                 }
                 jointValues[i] = jointValueRad;
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid joint position values");
+            System.out.println("Invalid joint position values for ID: " + id);
             return "Invalid joint position values";
         }
 
         robot.move(BasicMotions.ptp(jointValues));
+        System.out.println("PTP_AXIS command executed for ID: " + id);
         return "PTP_AXIS command executed";
     }
 
-    private String handlePTPFrame(int numPoints, String targetPoints) {
+    private String handlePTPFrame(int numPoints, String targetPoints, String id) {
         // Process the PTP_FRAME command
         List<String> points = Arrays.asList(targetPoints.split(","));
         try {
@@ -124,24 +131,24 @@ public class MessageHandler {
                 double x = Double.parseDouble(coordinates.get(0));
                 double y = Double.parseDouble(coordinates.get(1));
                 double z = Double.parseDouble(coordinates.get(2));
-                double roll = Math.toRadians(Double.parseDouble(coordinates.get(3)));  // Convert degrees to radians
-                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4)));  // Convert degrees to radians
-                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5)));  // Convert degrees to radians
-                Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
-                Frame targetFrameVirgin = new Frame (World.Current.getRootFrame(),x,y,z,roll,pitch,yaw);
+                double roll = Math.toRadians(Double.parseDouble(coordinates.get(3))); // Convert degrees to radians
+                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); // Convert degrees to radians
+                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); // Convert degrees to radians
+                Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
                 robot.move(BasicMotions.ptp(targetFrameVirgin));
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid coordinate values");
+            System.out.println("Invalid coordinate values for ID: " + id);
             return "Invalid coordinate values";
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Coordinate values are incomplete");
+            System.out.println("Coordinate values are incomplete for ID: " + id);
             return "Coordinate values are incomplete";
         }
+        System.out.println("PTP_FRAME command executed for ID: " + id);
         return "PTP_FRAME command executed";
     }
 
-    private String handleLINFrame(int numPoints, String targetPoints) {
+    private String handleLINFrame(int numPoints, String targetPoints, String id) {
         // Process the LIN_FRAME command
         List<String> points = Arrays.asList(targetPoints.split(","));
         try {
@@ -151,21 +158,20 @@ public class MessageHandler {
                 double x = Double.parseDouble(coordinates.get(0));
                 double y = Double.parseDouble(coordinates.get(1));
                 double z = Double.parseDouble(coordinates.get(2));
-                double roll = Math.toRadians(Double.parseDouble(coordinates.get(3)));  // Convert degrees to radians
-                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4)));  // Convert degrees to radians
-                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5)));  // Convert degrees to radians
-                Frame targetFrame = robot.getCurrentCartesianPosition(robot.getFlange()).transform(Transformation.ofDeg(x, y, z, roll, pitch, yaw));
-                Frame targetFrameVirgin = new Frame (World.Current.getRootFrame(),x,y,z,roll,pitch,yaw);
-                //robot.move(BasicMotions.lin(targetFrame));
+                double roll = Math.toRadians(Double.parseDouble(coordinates.get(3))); // Convert degrees to radians
+                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); // Convert degrees to radians
+                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); // Convert degrees to radians
+                Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
                 robot.move(lin(targetFrameVirgin));
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid coordinate values");
+            System.out.println("Invalid coordinate values for ID: " + id);
             return "Invalid coordinate values";
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Coordinate values are incomplete");
+            System.out.println("Coordinate values are incomplete for ID: " + id);
             return "Coordinate values are incomplete";
         }
+        System.out.println("LIN_FRAME command executed for ID: " + id);
         return "LIN_FRAME command executed";
     }
 
