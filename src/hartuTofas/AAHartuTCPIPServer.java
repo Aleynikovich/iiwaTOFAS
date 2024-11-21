@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.*;
 
 /**
- * Implementation of a robot application.
+ * Robot TCP/IP Server Implementation.
  */
 public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     @Inject
@@ -17,17 +17,17 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
     @Override
     public void initialize() {
-        // Initialization logic here (if needed)
+        // Initialization logic, if needed
     }
 
     @Override
     public void run() {
-        // Start the robot in the home position
+        // Move robot to home position at startup
         lBR_iiwa_14_R820_1.move(ptpHome());
         System.out.println("Robot moved to home position.");
 
-        // Start the TCP/IP server
-        int port = 30001; // Define the port number for the server
+        // Start the TCP server
+        int port = 30001; // Listening port
         ServerSocket serverSocket = null;
 
         try {
@@ -36,7 +36,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
             while (true) {
                 System.out.println("Waiting for a client...");
-                Socket clientSocket = serverSocket.accept(); // Accept a client connection
+                Socket clientSocket = serverSocket.accept(); // Accept client connection
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
                 // Handle client communication
@@ -47,7 +47,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
         } finally {
             if (serverSocket != null) {
                 try {
-                    serverSocket.close(); // Ensure server socket is closed
+                    serverSocket.close();
                 } catch (IOException e) {
                     System.err.println("Error closing server socket: " + e.getMessage());
                 }
@@ -67,12 +67,34 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
             while ((message = in.readLine()) != null) { // Read client messages
                 System.out.println("Received: " + message);
 
-                // Simple acknowledgment response
-                if (message.equals("FREE")) {
-                    out.println("Robot is FREE");
-                } else {
-                    out.println("Unknown command");
+                // Parse the incoming message
+                String[] parts = message.split("\\|");
+                if (parts.length != 9) {
+                    System.err.println("Invalid message format");
+                    out.println("ERROR|0#"); // Respond with error if format is incorrect
+                    continue;
                 }
+
+                // Extract fields
+                String moveType = parts[0].trim();
+                String numPoints = parts[1].trim();
+                String targetPoints = parts[2].trim();
+                String ioPoint = parts[3].trim();
+                String ioPin = parts[4].trim();
+                String ioState = parts[5].trim();
+                String tool = parts[6].trim();
+                String base = parts[7].trim();
+                String requestId = parts[8].replace("#", "").trim(); // Remove '#' from the ID
+
+                System.out.println("Parsed Request ID: " + requestId);
+
+                // Perform robot actions here based on moveType, numPoints, etc.
+                // (For now, we'll skip motion handling and just respond with FREE.)
+
+                // Respond with the state and request ID
+                String response = "FREE|" + requestId + "#";
+                System.out.println("Sending response: " + response);
+                out.println(response);
             }
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
