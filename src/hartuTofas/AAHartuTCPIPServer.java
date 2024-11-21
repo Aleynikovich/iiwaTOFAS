@@ -71,10 +71,22 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
             // Log that the robot is waiting for a message
             System.out.println("Waiting for a message from the client...");
-
+            	
             // Wait for and process incoming messages
             String message;
             message = in.readLine();
+            
+            while (message == null){
+            	try {
+					Thread.sleep(3000);
+					message = in.readLine();
+					System.out.println("Waiting for a message from the client...");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+            
             System.out.println("Current message: " + message);
             while (message  != null) {
                 System.out.println("Received: " + message);
