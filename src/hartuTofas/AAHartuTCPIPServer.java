@@ -99,7 +99,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
                     } else {
                         String successResponse = "FREE|" + requestId + "#";
                         System.out.println("Sending success response: " + successResponse);
-                        out.print(successResponse);
+                        out.println(successResponse);
                     }
 
                     // Clear the message buffer for the next message
