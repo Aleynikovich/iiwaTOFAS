@@ -67,7 +67,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
             // Send the initial FREE message
             String initialResponse = "FREE|0#";
             System.out.println("Sending initial response: " + initialResponse);
-            out.print(initialResponse);
+            out.println(initialResponse);
 
             System.out.println("Waiting for a message from the client...");
 
