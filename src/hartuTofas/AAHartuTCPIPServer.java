@@ -67,7 +67,8 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
             // Send the initial FREE message
             String initialResponse = "FREE|0#";
             System.out.println("Sending initial response: " + initialResponse);
-            out.println(initialResponse);
+            out.print(initialResponse);
+            out.flush();
 
             System.out.println("Waiting for a message from the client...");
 
@@ -95,10 +96,12 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
                     if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
                         String errorResponse = "ERROR|" + requestId + "#";
                         System.out.println("Sending error response: " + errorResponse);
-                        out.println(errorResponse);
+                        out.print(errorResponse);
+                        out.flush();
                     } else {
                         String successResponse = "FREE|" + requestId + "#";
-                        out.println(successResponse);
+                        out.print(successResponse);
+                        out.flush();
                         System.out.println("Sending success response: " + successResponse);
                     }
 
