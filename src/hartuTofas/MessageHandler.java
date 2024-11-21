@@ -80,6 +80,7 @@ public class MessageHandler {
         // Handle the moveType
         switch (moveType) {
             case PTP_AXIS:
+            	System.out.println("Doing PTP AXIS");
                 return handlePTPAxis(numPoints, targetPoints, id);
             case PTP_FRAME:
                 return handlePTPFrame(numPoints, targetPoints, id);
