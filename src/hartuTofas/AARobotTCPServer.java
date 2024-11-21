@@ -3,7 +3,7 @@ package hartuTofas;
 import java.io.*;
 import java.net.*;
 
-public class AAARobotTCPServer {
+public class AARobotTCPServer {
     public static void main(String[] args) {
         int port = 30001; // Listening port
         ServerSocket serverSocket = null;
