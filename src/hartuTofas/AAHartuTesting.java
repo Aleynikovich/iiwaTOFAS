@@ -39,8 +39,8 @@ public class AAHartuTesting extends RoboticsAPIApplication {
 		// your application execution starts here
 		iiwa.move(ptpHome());
 		for (int i = 0; i <10; i++){
-			iiwa.moveAsync(BasicMotions.ptp(0.75049, 0.59341, 0.92502, 0.59341, 0.40143, 0.59341, 0.75049));
-			iiwa.moveAsync(BasicMotions.ptp(0.40143, 1.30899, 0.59341, 0.36652, 0.92502, 0.05236, 0.05236));
+			iiwa.moveAsync(BasicMotions.ptp(getApplicationData().getFrame("/P31")));
+			iiwa.moveAsync(BasicMotions.ptp(getApplicationData().getFrame("/P32")));
 
 		}
 	}
