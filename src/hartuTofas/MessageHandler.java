@@ -47,7 +47,7 @@ public class MessageHandler {
         String[] parts = message.split("\\|", -1);
 
         // Log the parts
-        System.out.println("Parsed parts: " + Arrays.toString(parts));
+        // System.out.println("Parsed parts: " + Arrays.toString(parts));
 
         // Parse the parts of the message
         if (parts.length < 9) { // Adjust to 9 parts to include ID
@@ -79,9 +79,9 @@ public class MessageHandler {
 
         // Handle the moveType
         switch (moveType) {
-            case PTP_AXIS:
-                return handlePTPAxis(numPoints, targetPoints, id);
-            case PTP_FRAME:
+            case PTP_AXIS: case PTP_AXIS_C:
+                return handlePTPAxis(moveType, numPoints, targetPoints, id);
+            case PTP_FRAME: case PTP_FRAME_C:
                 return handlePTPFrame(numPoints, targetPoints, id);
             case LIN_FRAME:
                 return handleLINFrame(numPoints, targetPoints, id);
@@ -92,34 +92,59 @@ public class MessageHandler {
         }
     }
 
-    private String handlePTPAxis(int numPoints, String targetPoints, String id) {
-        // Process the PTP_AXIS command
-        List<String> jointPositions = Arrays.asList(targetPoints.split(";"));
-        if (jointPositions.size() != 7) {
-            System.out.println("Invalid number of joint positions for ID: " + id);
-            return "Invalid number of joint positions";
+    private String handlePTPAxis(int moveType, int numPoints, String targetPoints, String id) {
+        // Process the PTP_AXIS or PTP_AXIS_C command
+        List<String> jointPositionGroups = Arrays.asList(targetPoints.split(","));
+        
+        if (jointPositionGroups.size() != numPoints) {
+            System.out.println("Invalid number of point groups for ID: " + id);
+            return "Invalid number of point groups";
         }
 
-        double[] jointValues = new double[jointPositions.size()];
         try {
-            for (int i = 0; i < jointPositions.size(); i++) {
-                double jointValueDeg = Double.parseDouble(jointPositions.get(i));
-                double jointValueRad = Math.toRadians(jointValueDeg); // Convert degrees to radians
-                if (!isWithinLimits(i, jointValueRad)) {
-                    System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad + " for ID: " + id);
-                    return "Joint " + (i + 1) + " value out of limits";
+            for (String jointPositions : jointPositionGroups) {
+                List<String> jointValuesStr = Arrays.asList(jointPositions.split(";"));
+                
+                if (jointValuesStr.size() != 7) {
+                    System.out.println("Invalid number of joint positions in a group for ID: " + id);
+                    return "Invalid number of joint positions";
                 }
-                jointValues[i] = jointValueRad;
+
+                double[] jointValues = new double[7];
+                for (int i = 0; i < jointValuesStr.size(); i++) {
+                    double jointValueDeg = Double.parseDouble(jointValuesStr.get(i));
+                    double jointValueRad = Math.toRadians(jointValueDeg); // Convert degrees to radians
+                    
+                    if (!isWithinLimits(i, jointValueRad)) {
+                        System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad + " for ID: " + id);
+                        return "Joint " + (i + 1) + " value out of limits";
+                    }
+
+                    jointValues[i] = jointValueRad;
+                }
+
+                if (moveType == PTP_AXIS) {
+                    // Execute synchronous PTP motion
+                    robot.move(BasicMotions.ptp(jointValues));
+                } else if (moveType == PTP_AXIS_C) {
+                    // Execute asynchronous PTP motion for each point
+                    robot.moveAsync(BasicMotions.ptp(jointValues));
+                }
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid joint position values for ID: " + id);
             return "Invalid joint position values";
         }
 
-        robot.move(BasicMotions.ptp(jointValues));
-        System.out.println("PTP_AXIS command executed for ID: " + id);
-        return "PTP_AXIS command executed";
+        if (moveType == PTP_AXIS) {
+            System.out.println("PTP_AXIS command executed for ID: " + id);
+            return "PTP_AXIS command executed";
+        } else {
+            System.out.println("PTP_AXIS_C command executed for ID: " + id);
+            return "PTP_AXIS_C command executed";
+        }
     }
+
 
     private String handlePTPFrame(int numPoints, String targetPoints, String id) {
         // Process the PTP_FRAME command
