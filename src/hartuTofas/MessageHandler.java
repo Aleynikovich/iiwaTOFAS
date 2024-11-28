@@ -32,7 +32,7 @@ public class MessageHandler {
     }
 
     public String handleMessage(String message) {
-        System.out.println("Received message: " + message);
+        //System.out.println("Received message: " + message);
 
         // Check if the message ends with #
         if (!message.endsWith("#")) {
@@ -73,9 +73,6 @@ public class MessageHandler {
         String ioState = parts[5];
         String tool = parts[6];
         String base = parts[7];
-
-        // Log the extracted ID
-        System.out.println("Extracted ID: " + id);
 
         // Handle the moveType
         switch (moveType) {
