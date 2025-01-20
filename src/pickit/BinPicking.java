@@ -27,7 +27,7 @@ public class BinPicking {
   private DataOutputStream to_pickit;
   private DataInputStream from_pickit;
   private byte[] to_pickit_data = new byte[12 * 4];
-  private byte[] from_pickit_data = new byte[16 * 4];
+  private byte[] from_pickit_data = new byte[16 * 4]; //asd
 
   /// Pickit object types ///
   public static final int PICKIT_TYPE_SURFACE = 31;
