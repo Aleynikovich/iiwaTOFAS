@@ -44,6 +44,54 @@
         <DigitalIO Name="MediaFlange.OutputX3Pin12" Type="OUTPUT" Scope="USER_IO" StartBit="12915" BitSize="1" Signed="false">
           <Description />
         </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange1" Type="INPUT" Scope="USER_IO" StartBit="576" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange2" Type="INPUT" Scope="USER_IO" StartBit="577" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange3" Type="INPUT" Scope="USER_IO" StartBit="578" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange4" Type="INPUT" Scope="USER_IO" StartBit="579" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange5" Type="INPUT" Scope="USER_IO" StartBit="580" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange6" Type="INPUT" Scope="USER_IO" StartBit="581" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange7" Type="INPUT" Scope="USER_IO" StartBit="582" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DI_Flange8" Type="INPUT" Scope="USER_IO" StartBit="583" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange1" Type="OUTPUT" Scope="USER_IO" StartBit="12928" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange2" Type="OUTPUT" Scope="USER_IO" StartBit="12929" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange3" Type="OUTPUT" Scope="USER_IO" StartBit="12930" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange4" Type="OUTPUT" Scope="USER_IO" StartBit="12931" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange5" Type="OUTPUT" Scope="USER_IO" StartBit="12932" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange6" Type="OUTPUT" Scope="USER_IO" StartBit="12933" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange7" Type="OUTPUT" Scope="USER_IO" StartBit="12934" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="IOFlange.DO_Flange8" Type="OUTPUT" Scope="USER_IO" StartBit="12935" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
       </IOList>
     </Bus>
     <Bus BusDriverName="ECatIODriver" BusInstanceName="SYS-X44">
