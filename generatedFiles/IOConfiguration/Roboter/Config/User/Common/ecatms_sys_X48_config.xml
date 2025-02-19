@@ -11,7 +11,7 @@
          </Info>
          <MailboxStates>
             <StartAddr>150994944</StartAddr>
-            <Count>2</Count>
+            <Count>3</Count>
          </MailboxStates>
          <InitCmds>
             <InitCmd>
@@ -2873,6 +2873,916 @@
             <PhysAddr>1001</PhysAddr>
          </PreviousPort>
       </Slave>
+      <Slave>
+         <Info>
+            <!--EP2316-0003 (1003)-->
+            <Name><![CDATA[EP2316-0003]]></Name>
+            <PhysAddr>1003</PhysAddr>
+            <AutoIncAddr>65534</AutoIncAddr>
+            <Physics>YY</Physics>
+            <VendorId>2</VendorId>
+            <ProductCode>151797842</ProductCode>
+            <RevisionNo>1245187</RevisionNo>
+            <SerialNo>0</SerialNo>
+         </Info>
+         <ProcessData>
+            <Send>
+               <BitStart>560</BitStart>
+               <BitLength>32</BitLength>
+            </Send>
+            <Recv>
+               <BitStart>560</BitStart>
+               <BitLength>48</BitLength>
+            </Recv>
+            <Sm2>
+               <Type>Outputs</Type>
+               <DefaultSize>4</DefaultSize>
+               <StartAddress>4352</StartAddress>
+               <ControlByte>36</ControlByte>
+               <Enable>1</Enable>
+               <Pdo>5632</Pdo>
+               <Pdo>5633</Pdo>
+            </Sm2>
+            <Sm3>
+               <Type>Inputs</Type>
+               <DefaultSize>6</DefaultSize>
+               <StartAddress>4480</StartAddress>
+               <ControlByte>32</ControlByte>
+               <Enable>1</Enable>
+               <Pdo>6656</Pdo>
+               <Pdo>6657</Pdo>
+               <Pdo>6658</Pdo>
+            </Sm3>
+            <TxPdo Fixed="1" Sm="3">
+               <Index>#x1a00</Index>
+               <Name>Inputs</Name>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>1</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 1</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>2</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 2</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>3</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 3</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>4</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 4</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>5</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 5</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>6</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 6</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>7</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 7</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>8</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Input 8</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>5</BitLen>
+               </Entry>
+               <Entry>
+                  <Index>#x6000</Index>
+                  <SubIndex>14</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Sync error</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>2</BitLen>
+               </Entry>
+            </TxPdo>
+            <TxPdo Fixed="1" Sm="3">
+               <Index>#x1a01</Index>
+               <Name>DIG Diag Inputs</Name>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>1</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 1</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>2</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 2</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>3</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 3</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>4</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 4</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>5</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 5</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>6</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 6</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>7</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 7</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x6001</Index>
+                  <SubIndex>8</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Diag Input 8</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>8</BitLen>
+               </Entry>
+            </TxPdo>
+            <TxPdo Fixed="1" Mandatory="1" Sm="3">
+               <Index>#x1a02</Index>
+               <Name>Inputs Device</Name>
+               <Entry>
+                  <Index>#xf600</Index>
+                  <SubIndex>1</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Safe state active</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#xf600</Index>
+                  <SubIndex>2</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Error channel 1</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#xf600</Index>
+                  <SubIndex>3</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Error channel 2</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>10</BitLen>
+               </Entry>
+               <Entry>
+                  <Index>#xf600</Index>
+                  <SubIndex>14</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Sync error</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>1</BitLen>
+               </Entry>
+               <Entry>
+                  <Index>#xf600</Index>
+                  <SubIndex>16</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>TxPDO Toggle</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+            </TxPdo>
+            <RxPdo Fixed="1" Mandatory="1" Sm="2">
+               <Index>#x1600</Index>
+               <Name>Outputs</Name>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>1</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 1</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>2</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 2</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>3</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 3</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>4</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 4</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>5</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 5</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>6</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 6</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>7</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 7</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x7000</Index>
+                  <SubIndex>8</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Output 8</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>8</BitLen>
+               </Entry>
+            </RxPdo>
+            <RxPdo Fixed="1" Mandatory="1" Sm="2">
+               <Index>#x1601</Index>
+               <Name>Outputs Device</Name>
+               <Entry>
+                  <Index>#xf700</Index>
+                  <SubIndex>1</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Set safe state</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#xf700</Index>
+                  <SubIndex>2</SubIndex>
+                  <BitLen>1</BitLen>
+                  <Name>Reset outputs</Name>
+                  <DataType>BOOL</DataType>
+               </Entry>
+               <Entry>
+                  <Index>#x0</Index>
+                  <BitLen>14</BitLen>
+               </Entry>
+            </RxPdo>
+         </ProcessData>
+         <Mailbox DataLinkLayer="true">
+            <Send>
+               <Start>4096</Start>
+               <Length>128</Length>
+            </Send>
+            <Recv>
+               <Start>4224</Start>
+               <Length>128</Length>
+               <StatusBitAddr>2</StatusBitAddr>
+            </Recv>
+            <BootStrap>
+               <Send>
+                  <Start>4096</Start>
+                  <Length>244</Length>
+               </Send>
+               <Recv>
+                  <Start>4340</Start>
+                  <Length>244</Length>
+               </Recv>
+            </BootStrap>
+            <Protocol>CoE</Protocol>
+            <Protocol>FoE</Protocol>
+            <CoE>
+               <InitCmds>
+                  <InitCmd Fixed="1">
+                     <Transition>PS</Transition>
+                     <Comment><![CDATA[clear sm pdos (0x1C12)]]></Comment>
+                     <Timeout>0</Timeout>
+                     <Ccs>1</Ccs>
+                     <Index>7186</Index>
+                     <SubIndex>0</SubIndex>
+                     <Data>00</Data>
+                  </InitCmd>
+                  <InitCmd Fixed="1">
+                     <Transition>PS</Transition>
+                     <Comment><![CDATA[clear sm pdos (0x1C13)]]></Comment>
+                     <Timeout>0</Timeout>
+                     <Ccs>1</Ccs>
+                     <Index>7187</Index>
+                     <SubIndex>0</SubIndex>
+                     <Data>00</Data>
+                  </InitCmd>
+                  <InitCmd Fixed="1" CompleteAccess="1">
+                     <Transition>PS</Transition>
+                     <Comment><![CDATA[download pdo 0x1C12 index]]></Comment>
+                     <Timeout>0</Timeout>
+                     <Ccs>1</Ccs>
+                     <Index>7186</Index>
+                     <SubIndex>0</SubIndex>
+                     <Data>020000160116</Data>
+                  </InitCmd>
+                  <InitCmd Fixed="1" CompleteAccess="1">
+                     <Transition>PS</Transition>
+                     <Comment><![CDATA[download pdo 0x1C13 index]]></Comment>
+                     <Timeout>0</Timeout>
+                     <Ccs>1</Ccs>
+                     <Index>7187</Index>
+                     <SubIndex>0</SubIndex>
+                     <Data>0300001a011a021a</Data>
+                  </InitCmd>
+               </InitCmds>
+            </CoE>
+         </Mailbox>
+         <InitCmds>
+            <InitCmd>
+               <Transition>PI</Transition>
+               <Transition>BI</Transition>
+               <Transition>SI</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[set device state to INIT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>288</Ado>
+               <Data>1100</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PI</Transition>
+               <Transition>SI</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[check device state for INIT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>1</Cmd>
+               <Adp>65534</Adp>
+               <Ado>304</Ado>
+               <Data>0000</Data>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>0100</Data>
+                  <DataMask>0f00</DataMask>
+                  <Timeout>5000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>BI</Transition>
+               <Comment><![CDATA[check device state for INIT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>1</Cmd>
+               <Adp>65534</Adp>
+               <Ado>304</Ado>
+               <Data>0000</Data>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>0100</Data>
+                  <DataMask>0f00</DataMask>
+                  <Timeout>10000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[set device state to INIT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>288</Ado>
+               <Data>1100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[check device state for INIT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>1</Cmd>
+               <Adp>65534</Adp>
+               <Ado>304</Ado>
+               <Data>0000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>0100</Data>
+                  <DataMask>0f00</DataMask>
+                  <Timeout>3000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[assign EEPROM to ECAT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1280</Ado>
+               <Data>00</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check vendor id]]></Comment>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1282</Ado>
+               <Data>000108000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check vendor id]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>1</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1288</Ado>
+               <Data>00000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>02000000</Data>
+                  <Timeout>100</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check product code]]></Comment>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1282</Ado>
+               <Data>00010a000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check product code]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>1</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1288</Ado>
+               <Data>00000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>52400c09</Data>
+                  <Timeout>100</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check revision number (lo word)]]></Comment>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1282</Ado>
+               <Data>00010c000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check revision number (lo word)]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>1</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1288</Ado>
+               <Data>0000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>0300</Data>
+                  <Timeout>100</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[set physical address]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>16</Ado>
+               <Data>eb03</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>IB</Transition>
+               <Transition>PI</Transition>
+               <Transition>SI</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[clear sm 0/1 (mailbox out/in)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2048</Ado>
+               <Data>00000000000000000000000000000000</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>BI</Transition>
+               <Comment><![CDATA[clear sm 0/1 (mailbox out/in)]]></Comment>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>2048</Ado>
+               <Data>00000000000000000000000000000000</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[set sm 0 (mailbox out)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2048</Ado>
+               <Data>0010800026000100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[set sm 1 (mailbox in)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2056</Ado>
+               <Data>8010800022000100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[set sm 0 (bootstrap out)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2048</Ado>
+               <Data>0010f40026000100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[set sm 1 (bootstrap in)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2056</Ado>
+               <Data>f410f40022000100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>SP</Transition>
+               <Transition>OP</Transition>
+               <Comment><![CDATA[set device state to PREOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>288</Ado>
+               <Data>1200</Data>
+               <Retries>300</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>SP</Transition>
+               <Transition>SI</Transition>
+               <Transition>OP</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[clear sms]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2064</Ado>
+               <DataLength>16</DataLength>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PS</Transition>
+               <Comment><![CDATA[set sm 2 (outputs)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2064</Ado>
+               <Data>0011040024000100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PS</Transition>
+               <Comment><![CDATA[set sm 3 (inputs)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>2072</Ado>
+               <Data>8011060020000100</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PS</Transition>
+               <Comment><![CDATA[set fmmu 0 (outputs)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1536</Ado>
+               <Data>28000010040000070011000201000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PS</Transition>
+               <Comment><![CDATA[set fmmu 1 (inputs)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1552</Ado>
+               <Data>28000010060000078011000101000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[set fmmu 2 (mailbox state)]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1568</Ado>
+               <Data>00000009010002020d08000101000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>OS</Transition>
+               <Comment><![CDATA[set device state to SAFEOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>288</Ado>
+               <Data>0400</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>SP</Transition>
+               <Transition>SI</Transition>
+               <Transition>OP</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[clear fmmu 0]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1536</Ado>
+               <Data>00000000000000000000000000000000</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>SP</Transition>
+               <Transition>SI</Transition>
+               <Transition>OP</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[clear fmmu 1]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1552</Ado>
+               <Data>00000000000000000000000000000000</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PI</Transition>
+               <Transition>BI</Transition>
+               <Transition>SI</Transition>
+               <Transition>OI</Transition>
+               <Comment><![CDATA[clear fmmu 2]]></Comment>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1568</Ado>
+               <Data>00000000000000000000000000000000</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>SP</Transition>
+               <Transition>OP</Transition>
+               <Comment><![CDATA[check device state for PREOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>4</Cmd>
+               <Adp>1003</Adp>
+               <Ado>304</Ado>
+               <Data>000000000000</Data>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>020000000000</Data>
+                  <DataMask>0f0000000000</DataMask>
+                  <Timeout>5000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[assign EEPROM to PDI]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>1280</Ado>
+               <Data>01</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>II</Transition>
+               <Comment><![CDATA[assign EEPROM back to ECAT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1280</Ado>
+               <Data>00</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[set device state to PREOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>288</Ado>
+               <Data>1200</Data>
+               <Cnt>1</Cnt>
+               <Retries>300</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Comment><![CDATA[check device state for PREOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>4</Cmd>
+               <Adp>1003</Adp>
+               <Ado>304</Ado>
+               <Data>000000000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>020000000000</Data>
+                  <DataMask>1f0000000000</DataMask>
+                  <Timeout>3000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IP</Transition>
+               <Transition>BI</Transition>
+               <Comment><![CDATA[assign EEPROM back to ECAT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>2</Cmd>
+               <Adp>65534</Adp>
+               <Ado>1280</Ado>
+               <Data>00</Data>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[set device state to BOOT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>288</Ado>
+               <Data>1300</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>IB</Transition>
+               <Comment><![CDATA[check device state for BOOT]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>4</Cmd>
+               <Adp>1003</Adp>
+               <Ado>304</Ado>
+               <Data>000000000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>030000000000</Data>
+                  <DataMask>1f0000000000</DataMask>
+                  <Timeout>3000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PS</Transition>
+               <Comment><![CDATA[set device state to SAFEOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>288</Ado>
+               <Data>0400</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>PS</Transition>
+               <Comment><![CDATA[check device state for SAFEOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>4</Cmd>
+               <Adp>1003</Adp>
+               <Ado>304</Ado>
+               <Data>000000000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>040000000000</Data>
+                  <DataMask>1f0000000000</DataMask>
+                  <Timeout>10000</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>OS</Transition>
+               <Comment><![CDATA[check device state for SAFEOP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>4</Cmd>
+               <Adp>1003</Adp>
+               <Ado>304</Ado>
+               <Data>000000000000</Data>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>040000000000</Data>
+                  <DataMask>0f0000000000</DataMask>
+                  <Timeout>200</Timeout>
+               </Validate>
+            </InitCmd>
+            <InitCmd>
+               <Transition>SO</Transition>
+               <Comment><![CDATA[set device state to OP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>5</Cmd>
+               <Adp>1003</Adp>
+               <Ado>288</Ado>
+               <Data>0800</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+            </InitCmd>
+            <InitCmd>
+               <Transition>SO</Transition>
+               <Comment><![CDATA[check device state for OP]]></Comment>
+               <Requires>cycle</Requires>
+               <Cmd>4</Cmd>
+               <Adp>1003</Adp>
+               <Ado>304</Ado>
+               <Data>000000000000</Data>
+               <Cnt>1</Cnt>
+               <Retries>3</Retries>
+               <Validate>
+                  <Data>080000000000</Data>
+                  <DataMask>1f0000000000</DataMask>
+                  <Timeout>10000</Timeout>
+               </Validate>
+            </InitCmd>
+         </InitCmds>
+         <PreviousPort Selected="1">
+            <Port>B</Port>
+            <PhysAddr>1002</PhysAddr>
+         </PreviousPort>
+      </Slave>
       <Cyclic>
          <CycleTime>1000</CycleTime>
          <Frame>
@@ -2882,8 +3792,8 @@
                <Comment><![CDATA[PD; LRW;]]></Comment>
                <Cmd>12</Cmd>
                <Addr>268435456</Addr>
-               <DataLength>40</DataLength>
-               <Cnt>6</Cnt>
+               <DataLength>46</DataLength>
+               <Cnt>9</Cnt>
                <InputOffs>20</InputOffs>
                <OutputOffs>20</OutputOffs>
             </Cmd>
@@ -2895,8 +3805,8 @@
                <Cmd>10</Cmd>
                <Addr>150994944</Addr>
                <DataLength>1</DataLength>
-               <InputOffs>72</InputOffs>
-               <OutputOffs>72</OutputOffs>
+               <InputOffs>78</InputOffs>
+               <OutputOffs>78</OutputOffs>
             </Cmd>
             <Cmd>
                <State>PREOP</State>
@@ -2907,9 +3817,9 @@
                <Adp>0</Adp>
                <Ado>304</Ado>
                <DataLength>2</DataLength>
-               <Cnt>2</Cnt>
-               <InputOffs>85</InputOffs>
-               <OutputOffs>85</OutputOffs>
+               <Cnt>3</Cnt>
+               <InputOffs>91</InputOffs>
+               <OutputOffs>91</OutputOffs>
             </Cmd>
          </Frame>
       </Cyclic>
@@ -3558,6 +4468,138 @@
                <BitSize>1</BitSize>
                <BitOffs>559</BitOffs>
             </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 1</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>560</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 2</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>561</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 3</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>562</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 4</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>563</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 5</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>564</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 6</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>565</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 7</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>566</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Input 8</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>567</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs.Sync error</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>573</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 1</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>576</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 2</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>577</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 3</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>578</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 4</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>579</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 5</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>580</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 6</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>581</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 7</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>582</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.DIG Diag Inputs.Diag Input 8</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>583</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs Device.Safe state active</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>592</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs Device.Error channel 1</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>593</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs Device.Error channel 2</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>594</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs Device.Sync error</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>605</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Inputs Device.TxPDO Toggle</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>607</BitOffs>
+            </Variable>
          </Inputs>
          <Outputs>
             <ByteSize>1536</ByteSize>
@@ -4172,6 +5214,66 @@
                <DataType>BOOL</DataType>
                <BitSize>1</BitSize>
                <BitOffs>559</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 1</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>560</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 2</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>561</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 3</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>562</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 4</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>563</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 5</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>564</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 6</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>565</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 7</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>566</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs.Output 8</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>567</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs Device.Set safe state</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>576</BitOffs>
+            </Variable>
+            <Variable>
+               <Name>EP2316-0003.Outputs Device.Reset outputs</Name>
+               <DataType>BOOL</DataType>
+               <BitSize>1</BitSize>
+               <BitOffs>577</BitOffs>
             </Variable>
          </Outputs>
       </ProcessImage>
