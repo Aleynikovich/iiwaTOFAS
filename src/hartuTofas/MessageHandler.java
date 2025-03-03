@@ -154,8 +154,8 @@ public class MessageHandler {
                 double y = Double.parseDouble(coordinates.get(1));
                 double z = Double.parseDouble(coordinates.get(2));
                 double roll = Math.toRadians(Double.parseDouble(coordinates.get(3))); // Convert degrees to radians
-                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); // Convert degrees to radians
-                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); // Convert degrees to radians
+                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); 
+                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
                 robot.move(BasicMotions.ptp(targetFrameVirgin));
             }
@@ -181,8 +181,8 @@ public class MessageHandler {
                 double y = Double.parseDouble(coordinates.get(1));
                 double z = Double.parseDouble(coordinates.get(2));
                 double roll = Math.toRadians(Double.parseDouble(coordinates.get(3))); // Convert degrees to radians
-                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); // Convert degrees to radians
-                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); // Convert degrees to radians
+                double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); 
+                double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
                 robot.move(lin(targetFrameVirgin));
             }
