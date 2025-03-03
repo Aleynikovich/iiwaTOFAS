@@ -56,5 +56,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 		ThreadUtil.milliSleep(1000);
 		flangeBeckhoffIO.setDO_Flange7(true);
 		
+		
+		
 	}
 }
