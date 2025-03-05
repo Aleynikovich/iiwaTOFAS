@@ -37,7 +37,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 	private LBR iiwa;
 	
 	@Inject
-	private Tool gimaticIxtur,IxturPlato;
+	private Tool tool;
 
 	@Inject
 	private IOFlangeIOGroup flangeBeckhoffIO;
@@ -61,7 +61,8 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Override
 	public void run() {
 		// your application execution starts here
-		gimaticIxtur.attachTo(iiwa.getFlange());
+		tool = createFromTemplate("GimaticIxtur");
+		tool.attachTo(iiwa.getFlange());
 		iiwa.move(ptpHome());
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P1")));
@@ -69,8 +70,9 @@ public class AApickPlace extends RoboticsAPIApplication {
 		X44BeckhoffIO.setOutput1(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput1(false);
-		gimaticIxtur.detach();
-		IxturPlato.attachTo(iiwa.getFlange());
+		tool.detach();
+		tool = createFromTemplate("IxturPlatoGrande");
+		tool.attachTo(iiwa.getFlange());
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P3")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P4")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P5")));
