@@ -80,6 +80,9 @@ public class AApickPlace extends RoboticsAPIApplication {
 		X44BeckhoffIO.setOutput2(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput2(false);
+		tool.detach();
+		tool = createFromTemplate("GimaticIxtur");
+		tool.attachTo(iiwa.getFlange());
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P7")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P8")));
 	}
