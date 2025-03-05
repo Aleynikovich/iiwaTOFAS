@@ -35,6 +35,9 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
+	
+	@Inject
+	private Tool gimaticIxtur,IxturPlato;
 
 	@Inject
 	private IOFlangeIOGroup flangeBeckhoffIO;
@@ -46,8 +49,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 	private Ethercat_x44IOGroup X44BeckhoffIO;
 	
 	
-	private Tool gimaticIxtur;
-	private Tool IxturPlato;	
+	
 	
 	
 	@Override
