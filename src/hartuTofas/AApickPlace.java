@@ -35,22 +35,10 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
-	
-	@Inject
 	private Tool tool;
-
-	@Inject
 	private IOFlangeIOGroup flangeBeckhoffIO;
-	
-	@Inject
 	private MediaFlangeIOGroup mediaFlangeIO;
-	
-	@Inject
 	private Ethercat_x44IOGroup X44BeckhoffIO;
-	
-	
-	
-	
 	
 	@Override
 	public void initialize() {
