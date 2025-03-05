@@ -33,7 +33,7 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 
 public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
-	private LBR lBR_iiwa_14_R820_1;
+	private LBR iiwa;
 
 	@Inject
 	private IOFlangeIOGroup flangeBeckhoffIO;
@@ -52,11 +52,24 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Override
 	public void run() {
 		// your application execution starts here
-		lBR_iiwa_14_R820_1.move(ptpHome());
+		iiwa.move(ptpHome());
 		ThreadUtil.milliSleep(1000);
-		flangeBeckhoffIO.setDO_Flange7(true);
 		
+		//iiwa.move(ptp(getApplicationData().getFrame("/P1")));
 		
-		
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P2")));
+		X44BeckhoffIO.setOutput1(true);
+		ThreadUtil.milliSleep(200);
+		X44BeckhoffIO.setOutput1(false);
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P3")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P4")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P5")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P6")));
+		X44BeckhoffIO.setOutput2(true);
+		ThreadUtil.milliSleep(200);
+		X44BeckhoffIO.setOutput2(false);
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P7")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P8")));
 	}
 }
