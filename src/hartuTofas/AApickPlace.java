@@ -53,17 +53,14 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Override
 	public void initialize() {
 		// initialize your application here
-		gimaticIxtur.attachTo(iiwa.getFlange());
+		
 	}
 
 	@Override
 	public void run() {
 		// your application execution starts here
+		gimaticIxtur.attachTo(iiwa.getFlange());
 		iiwa.move(ptpHome());
-		ThreadUtil.milliSleep(1000);
-		
-		//iiwa.move(ptp(getApplicationData().getFrame("/P1")));
-		
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P1")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P2")));
