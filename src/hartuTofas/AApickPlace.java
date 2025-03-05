@@ -45,7 +45,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private Ethercat_x44IOGroup X44BeckhoffIO;
 	
-	@Inject
+	
 	private Tool gimaticIxtur;
 	private Tool IxturPlato;	
 	
