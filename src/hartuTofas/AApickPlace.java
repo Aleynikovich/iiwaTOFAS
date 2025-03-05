@@ -58,6 +58,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 		//iiwa.move(ptp(getApplicationData().getFrame("/P1")));
 		
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P1")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P2")));
 		X44BeckhoffIO.setOutput1(true);
 		ThreadUtil.milliSleep(200);
