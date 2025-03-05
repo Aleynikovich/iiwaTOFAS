@@ -36,8 +36,8 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
 	private Tool tool;
-	private IOFlangeIOGroup flangeBeckhoffIO;
-	private MediaFlangeIOGroup mediaFlangeIO;
+	
+	@Inject
 	private Ethercat_x44IOGroup X44BeckhoffIO;
 	
 	@Override
