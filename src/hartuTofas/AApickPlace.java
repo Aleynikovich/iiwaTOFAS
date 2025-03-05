@@ -10,6 +10,7 @@ import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 
 /**
  * Implementation of a robot application.
@@ -44,9 +45,17 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private Ethercat_x44IOGroup X44BeckhoffIO;
 	
+	@Inject
+	private Tool gimaticIxtur;
+	
+	@Inject
+	private Tool IxturPlato;
+	
+	
 	@Override
 	public void initialize() {
 		// initialize your application here
+		gimaticIxtur.attachTo(iiwa.getFlange());
 	}
 
 	@Override
@@ -63,6 +72,8 @@ public class AApickPlace extends RoboticsAPIApplication {
 		X44BeckhoffIO.setOutput1(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput1(false);
+		gimaticIxtur.detach();
+		IxturPlato.attachTo(iiwa.getFlange());
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P3")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P4")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P5")));
