@@ -47,9 +47,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 	
 	@Inject
 	private Tool gimaticIxtur;
-	
-	@Inject
-	private Tool IxturPlato;
+	private Tool IxturPlato;	
 	
 	
 	@Override
