@@ -56,6 +56,7 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
 	private SunriseExecutionService executionServiceLbr;
 	private Controller sunrise;
     private Tool roll_scan;
+    private Tool roll;
     private Frame up_fr;
 	private Frame down_fr;
 	private Frame exit_fr;
