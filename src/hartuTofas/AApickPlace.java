@@ -35,7 +35,7 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
-	private Tool tool,tool1;
+	private Tool gimaticIxtur,IxturPlato;
 	
 	@Inject
 	private Ethercat_x44IOGroup X44BeckhoffIO;
@@ -43,15 +43,15 @@ public class AApickPlace extends RoboticsAPIApplication {
 	@Override
 	public void initialize() {
 		// initialize your application here
-		
+		gimaticIxtur = createFromTemplate("GimaticIxtur");
+		IxturPlato = createFromTemplate("IxturPlatoGrande"); 
 	}
 
 	@Override
 	public void run() {
 		// your application execution starts here
-		tool = createFromTemplate("GimaticIxtur");
-		tool1 = createFromTemplate("RollScan"); 
-		tool.attachTo(iiwa.getFlange());
+
+		gimaticIxtur.attachTo(iiwa.getFlange());
 		iiwa.move(ptpHome());
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P1")));
@@ -59,9 +59,8 @@ public class AApickPlace extends RoboticsAPIApplication {
 		X44BeckhoffIO.setOutput1(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput1(false);
-		tool.detach();
-		tool = createFromTemplate("IxturPlatoGrande");
-		tool.attachTo(iiwa.getFlange());
+		gimaticIxtur.detach();
+		IxturPlato.attachTo(iiwa.getFlange());
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P3")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P4")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P5")));
@@ -69,9 +68,8 @@ public class AApickPlace extends RoboticsAPIApplication {
 		X44BeckhoffIO.setOutput2(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput2(false);
-		tool.detach();
-		tool = createFromTemplate("GimaticIxtur");
-		tool.attachTo(iiwa.getFlange());
+		IxturPlato.detach();
+		gimaticIxtur.attachTo(iiwa.getFlange());
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P7")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P8")));
 	}
