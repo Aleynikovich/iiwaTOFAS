@@ -35,7 +35,7 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 public class AApickPlace extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
-	private Tool tool;
+	private Tool tool,tool1;
 	
 	@Inject
 	private Ethercat_x44IOGroup X44BeckhoffIO;
@@ -50,6 +50,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 	public void run() {
 		// your application execution starts here
 		tool = createFromTemplate("GimaticIxtur");
+		tool1 = createFromTemplate("RollScan"); 
 		tool.attachTo(iiwa.getFlange());
 		iiwa.move(ptpHome());
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
