@@ -53,24 +53,26 @@ public class AApickPlace extends RoboticsAPIApplication {
 
 		gimaticIxtur.attachTo(iiwa.getFlange());
 		iiwa.move(ptpHome());
-		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/Prepick")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P1")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P2")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P2")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P3")));
 		X44BeckhoffIO.setOutput1(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput1(false);
 		gimaticIxtur.detach();
 		IxturPlato.attachTo(iiwa.getFlange());
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P3")));
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P4")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P5")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P6")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P5")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P6")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P7")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P8")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P9")));
 		X44BeckhoffIO.setOutput2(true);
 		ThreadUtil.milliSleep(200);
 		X44BeckhoffIO.setOutput2(false);
 		IxturPlato.detach();
 		gimaticIxtur.attachTo(iiwa.getFlange());
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P7")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P8")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickPlace/P10")));
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PickPlace/P11")));
 	}
 }
