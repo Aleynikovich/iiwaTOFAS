@@ -49,7 +49,7 @@ public class AApickPlace extends RoboticsAPIApplication {
 
 	@Override
 	public void run() {
-		// your application execution starts here
+		// your application execution starts heref
 
 		gimaticIxtur.attachTo(iiwa.getFlange());
 		iiwa.move(ptpHome());
