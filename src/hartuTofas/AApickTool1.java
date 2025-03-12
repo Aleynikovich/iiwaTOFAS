@@ -9,6 +9,7 @@ import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
+
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 
@@ -50,15 +51,15 @@ public class AApickTool1 extends RoboticsAPIApplication {
 	public void run() {
 		// your application execution starts here
 		gimaticIxtur.attachTo(iiwa.getFlange());
-		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/P6")));
-		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/P7")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P8")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P9")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P14")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P15")));
+		iiwa.move(ptpHome());
 		gimaticIO.setDO_Flange7(true);
 		ThreadUtil.milliSleep(200);
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P10")));
-
+		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PrepickTool")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickTool")));
+		gimaticIO.setDO_Flange7(false);
+		ThreadUtil.milliSleep(200);
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P11")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P12")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P13")));
 	}
 }
