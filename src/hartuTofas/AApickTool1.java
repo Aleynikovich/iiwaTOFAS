@@ -51,15 +51,16 @@ public class AApickTool1 extends RoboticsAPIApplication {
 	public void run() {
 		// your application execution starts here
 		gimaticIxtur.attachTo(iiwa.getFlange());
-		iiwa.move(ptpHome());
 		gimaticIO.setDO_Flange7(true);
 		ThreadUtil.milliSleep(200);
 		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/PrepickTool")));
 		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickTool")));
 		gimaticIO.setDO_Flange7(false);
 		ThreadUtil.milliSleep(200);
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P11")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P12")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P13")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickToolFrames/P1")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickToolFrames/P2")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickToolFrames/P3")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PickToolFrames/P4")));
+
 	}
 }

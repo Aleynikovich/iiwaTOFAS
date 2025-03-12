@@ -51,16 +51,17 @@ public class AAplaceTool1 extends RoboticsAPIApplication {
 	public void run() {
 		// your application execution starts here
 		gimaticIxtur.attachTo(iiwa.getFlange());
-		iiwa.move(ptpHome());
-		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/P6")));
-		iiwa.move(ptp(getApplicationData().getFrame("/ATOFAS/P7")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P8")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P9")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P14")));
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P15")));
+
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P1")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P2")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P3")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P4")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P5")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P6")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P7")));
 		gimaticIO.setDO_Flange7(true);
 		ThreadUtil.milliSleep(200);
-		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/P10")));
+		iiwa.move(lin(getApplicationData().getFrame("/ATOFAS/PlaceToolFrames/P8")));
 
 	}
 }
