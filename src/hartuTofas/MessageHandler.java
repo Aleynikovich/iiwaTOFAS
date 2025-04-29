@@ -76,23 +76,6 @@ public class MessageHandler {
                 throw new IllegalArgumentException("Invalid number format in input: " + e.getMessage());
             }
         }
-
-        @Override
-        public String toString() {
-            return "Command{" +
-                    "actionType=" + actionType +
-                    ", programCall=" + programCall +
-                    ", numPoints=" + numPoints +
-                    ", ioPoint=" + ioPoint +
-                    ", ioPin=" + ioPin +
-                    ", ioState=" + ioState +
-                    ", tool=" + tool +
-                    ", base=" + base +
-                    ", speedOverride=" + speedOverride +
-                    ", targetPoints='" + targetPoints + '\'' +
-                    ", id='" + id + '\'' +
-                    '}';
-        }
     }
 
     public String handleMessage(String message) {
