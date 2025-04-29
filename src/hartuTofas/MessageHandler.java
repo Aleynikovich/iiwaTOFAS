@@ -15,7 +15,7 @@ public class MessageHandler {
 
     private LBR robot;
 
-    // Move types
+    // Action types
     public static final int PTP_AXIS = 0;
     public static final int PTP_FRAME = 1;
     public static final int LIN_AXIS = 2;
@@ -26,98 +26,122 @@ public class MessageHandler {
     public static final int PTP_FRAME_C = 7;
     public static final int LIN_FRAME_C = 8;
     public static final int ACTIVATE_IO = 9;
+    //100+ = program call with ID actiontype-100
 
     public MessageHandler(LBR robot) {
         this.robot = robot;
     }
+    
+    public class Command {
+        public int actionType;
+        public int numPoints;
+        public int ioPoint;
+        public int ioPin;
+        public int ioState;
+        public int tool;
+        public int base;
+        public int speedOverride;
+
+        public boolean programCall;
+        public String targetPoints;
+        public String id;
+
+        public Command(String[] parts) {
+            if (parts.length < 10) {
+                throw new IllegalArgumentException("Invalid number of parameters. Expected at least 10, got " + parts.length);
+            }
+
+            try {
+                int rawActionType = Integer.parseInt(parts[0]);
+
+                if (rawActionType > 100) {
+                    this.programCall = true;
+                    this.actionType = rawActionType - 100; // normalize to actual program ID
+                } else {
+                    this.programCall = false;
+                    this.actionType = rawActionType;
+                }
+
+                this.numPoints     = Integer.parseInt(parts[1]);
+                this.targetPoints  = parts[2];
+                this.ioPoint       = Integer.parseInt(parts[3]);
+                this.ioPin         = Integer.parseInt(parts[4]);
+                this.ioState       = Integer.parseInt(parts[5]);
+                this.tool          = Integer.parseInt(parts[6]);
+                this.base          = Integer.parseInt(parts[7]);
+                this.speedOverride = Integer.parseInt(parts[8]);
+                this.id            = parts[9];
+
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid number format in input: " + e.getMessage());
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Command{" +
+                    "actionType=" + actionType +
+                    ", programCall=" + programCall +
+                    ", numPoints=" + numPoints +
+                    ", ioPoint=" + ioPoint +
+                    ", ioPin=" + ioPin +
+                    ", ioState=" + ioState +
+                    ", tool=" + tool +
+                    ", base=" + base +
+                    ", speedOverride=" + speedOverride +
+                    ", targetPoints='" + targetPoints + '\'' +
+                    ", id='" + id + '\'' +
+                    '}';
+        }
+    }
 
     public String handleMessage(String message) {
-        //System.out.println("Received message: " + message);
-
-        // Check if the message ends with #
         if (!message.endsWith("#")) {
             System.out.println("Message does not end with '#'");
             return "Invalid message format";
         }
 
-        // Remove the trailing #
         message = message.substring(0, message.length() - 1);
+        String[] parts = message.split("\\|");
 
-        // Split the message by | and keep empty parts
-        String[] parts = message.split("\\|", -10);
-
-        // Log the parts
         System.out.println("Parsed parts: " + Arrays.toString(parts));
 
-        // Parse the parts of the message
-        int messagePartAmount = 10;
-        if (parts.length != messagePartAmount) {
-            System.out.println("Message does not have" + messagePartAmount + "parts");
-            return "Invalid message format";
-        }
-
-        int 	moveType,
-        		numPoints,
-        		ioPoint,
-        		ioPin,
-        		ioState,
-        		tool,
-        		base,
-        		speedOveride;
-        
-        Boolean programCall;
-        
-        String 	targetPoints,
-        		id;
-        
         try {
-            if (Integer.parseInt(parts[0]) < 100){
-            	moveType	= Integer.parseInt(parts[0]);
-            	programCall = false;
-            }
-            else{
-            	moveType	= Integer.parseInt(parts[0]) - 100;
-            	programCall = true;
-            }
-        	numPoints		= Integer.parseInt(parts[1]);
-            targetPoints	= parts[2];
-            ioPoint			= Integer.parseInt(parts[3]);
-            ioPin			= Integer.parseInt(parts[4]);
-    		ioState			= Integer.parseInt(parts[5]);
-    		tool			= Integer.parseInt(parts[6]);
-    		base			= Integer.parseInt(parts[7]);
-    		speedOveride	= Integer.parseInt(parts[8]);
-            id 				= parts[9];
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid message format");
-            return "Invalid message format";
-        }
+            Command cmd = new Command(parts);
 
-        // Handle the moveType
-        if (programCall == false){
-	        switch (moveType) {
-	            case PTP_AXIS: case PTP_AXIS_C:
-	                return handlePTPAxis(moveType, numPoints, targetPoints, id);
-	            case PTP_FRAME: case PTP_FRAME_C:
-	                return handlePTPFrame(numPoints, targetPoints, id);
-	            case LIN_FRAME:
-	                return handleLINFrame(numPoints, targetPoints, id);
-	            // Add other cases for different move types as needed
-	            default:
-	                System.out.println("Unknown move type: " + moveType);
-	                return "Unknown move type: " + moveType;
-	        }
+            if (!cmd.programCall) {
+                switch (cmd.actionType) {
+                    case PTP_AXIS:
+                    case PTP_AXIS_C:
+                        return handlePTPAxis(cmd.actionType, cmd.numPoints, cmd.targetPoints, cmd.id);
+                    case PTP_FRAME:
+                    case PTP_FRAME_C:
+                        return handlePTPFrame(cmd.numPoints, cmd.targetPoints, cmd.id);
+                    case LIN_FRAME:
+                        return handleLINFrame(cmd.numPoints, cmd.targetPoints, cmd.id);
+                    default:
+                        System.out.println("Unknown move type: " + cmd.actionType);
+                        return "Unknown move type: " + cmd.actionType;
+                }
+            } else {
+                // Now cmd.actionType is the real program ID
+                switch (cmd.actionType) {
+                    case 1:
+                        return "Program 1 called";
+                    case 2:
+                        return "Program 2 called";
+                    default:
+                        return "Program " + cmd.actionType + " not found.";
+                }
+            }
+
+        } catch (Exception e) {
+            return "Failed to parse command: " + e.getMessage();
         }
-        else {
-        	switch (moveType){
-        	case 1:
-        		return "Program 1 called";
-    		default:
-    			return "Program " + moveType + " not found.";
-        	}
-        }
-        
     }
+
+    
+  
 
     private String handlePTPAxis(int moveType, int numPoints, String targetPoints, String id) {
         // Process the PTP_AXIS or PTP_AXIS_C command
