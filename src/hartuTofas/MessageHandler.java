@@ -1,13 +1,12 @@
 package hartuTofas;
 
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
 
 import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.motionModel.BasicMotions;
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.World;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
-
+import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,12 +112,12 @@ public class MessageHandler {
                     case PTP_AXIS:
                     case PTP_AXIS_C:
                     	System.out.println("Entered PTP AXIS");
-                        return handlePTPAxis(cmd.actionType, cmd.numPoints, cmd.targetPoints, cmd.id);
+                        return handlePTPAxis(cmd);
                     case PTP_FRAME:
                     case PTP_FRAME_C:
-                        return handlePTPFrame(cmd.numPoints, cmd.targetPoints, cmd.id);
+                        return handlePTPFrame(cmd);
                     case LIN_FRAME:
-                        return handleLINFrame(cmd.numPoints, cmd.targetPoints, cmd.id);
+                        return handleLINFrame(cmd);
                     default:
                         System.out.println("Unknown move type: " + cmd.actionType);
                         return "Unknown move type: " + cmd.actionType;
@@ -144,12 +143,12 @@ public class MessageHandler {
     
   
 
-    private String handlePTPAxis(int moveType, int numPoints, String targetPoints, String id) {
+    private String handlePTPAxis(Command cmd) {
         // Process the PTP_AXIS or PTP_AXIS_C command
-        List<String> jointPositionGroups = Arrays.asList(targetPoints.split(","));
+        List<String> jointPositionGroups = Arrays.asList(cmd.targetPoints.split(","));
         
-        if (jointPositionGroups.size() != numPoints) {
-            System.out.println("Invalid number of point groups for ID: " + id);
+        if (jointPositionGroups.size() != cmd.numPoints) {
+            System.out.println("Invalid number of point groups for ID: " + cmd.id);
             return "Invalid number of point groups";
         }
 
@@ -158,7 +157,7 @@ public class MessageHandler {
                 List<String> jointValuesStr = Arrays.asList(jointPositions.split(";"));
                 
                 if (jointValuesStr.size() != 7) {
-                    System.out.println("Invalid number of joint positions in a group for ID: " + id);
+                    System.out.println("Invalid number of joint positions in a group for ID: " + cmd.id);
                     return "Invalid number of joint positions";
                 }
 
@@ -168,39 +167,39 @@ public class MessageHandler {
                     double jointValueRad = Math.toRadians(jointValueDeg); // Convert degrees to radians
                     
                     if (!isWithinLimits(i, jointValueRad)) {
-                        System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad + " for ID: " + id);
+                        System.out.println("Joint " + (i + 1) + " value out of limits: " + jointValueRad + " for ID: " + cmd.id);
                         return "Joint " + (i + 1) + " value out of limits";
                     }
 
                     jointValues[i] = jointValueRad;
                 }
 
-                if (moveType == PTP_AXIS) {
+                if (cmd.actionType == PTP_AXIS) {
                     // Execute synchronous PTP motion
-                    robot.move(BasicMotions.ptp(jointValues));
-                } else if (moveType == PTP_AXIS_C) {
+                    robot.move(ptp(jointValues));
+                } else if (cmd.actionType == PTP_AXIS_C) {
                     // Execute asynchronous PTP motion for each point
-                    robot.moveAsync(BasicMotions.ptp(jointValues));
+                    robot.moveAsync(ptp(jointValues).setBlendingRel(1));
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid joint position values for ID: " + id);
+            System.out.println("Invalid joint position values for ID: " + cmd.id);
             return "Invalid joint position values";
         }
 
-        if (moveType == PTP_AXIS) {
-            System.out.println("PTP_AXIS command executed for ID: " + id);
+        if (cmd.actionType == PTP_AXIS) {
+            System.out.println("PTP_AXIS command executed for ID: " + cmd.id);
             return "PTP_AXIS command executed";
         } else {
-            System.out.println("PTP_AXIS_C command executed for ID: " + id);
+            System.out.println("PTP_AXIS_C command executed for ID: " + cmd.id);
             return "PTP_AXIS_C command executed";
         }
     }
 
 
-    private String handlePTPFrame(int numPoints, String targetPoints, String id) {
+    private String handlePTPFrame(Command cmd) {
         // Process the PTP_FRAME command
-        List<String> points = Arrays.asList(targetPoints.split(","));
+        List<String> points = Arrays.asList(cmd.targetPoints.split(","));
         try {
             for (int i = 0; i < points.size(); i++) {
                 String point = points.get(i);
@@ -212,22 +211,22 @@ public class MessageHandler {
                 double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); 
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
-                robot.move(BasicMotions.ptp(targetFrameVirgin));
+                robot.move(ptp(targetFrameVirgin));
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid coordinate values for ID: " + id);
+            System.out.println("Invalid coordinate values for ID: " + cmd.id);
             return "Invalid coordinate values";
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Coordinate values are incomplete for ID: " + id);
+            System.out.println("Coordinate values are incomplete for ID: " + cmd.id);
             return "Coordinate values are incomplete";
         }
-        System.out.println("PTP_FRAME command executed for ID: " + id);
+        System.out.println("PTP_FRAME command executed for ID: " + cmd.id);
         return "PTP_FRAME command executed";
     }
 
-    private String handleLINFrame(int numPoints, String targetPoints, String id) {
+    private String handleLINFrame(Command cmd) {
         // Process the LIN_FRAME commands
-        List<String> points = Arrays.asList(targetPoints.split(","));
+        List<String> points = Arrays.asList(cmd.targetPoints.split(","));
         try {
             for (int i = 0; i < points.size(); i++) {
                 String point = points.get(i);
@@ -242,13 +241,13 @@ public class MessageHandler {
                 robot.move(lin(targetFrameVirgin));
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid coordinate values for ID: " + id);
+            System.out.println("Invalid coordinate values for ID: " + cmd.id);
             return "Invalid coordinate values";
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Coordinate values are incomplete for ID: " + id);
+            System.out.println("Coordinate values are incomplete for ID: " + cmd.id);
             return "Coordinate values are incomplete";
         }
-        System.out.println("LIN_FRAME command executed for ID: " + id);
+        System.out.println("LIN_FRAME command executed for ID: " + cmd.id);
         return "LIN_FRAME command executed";
     }
 

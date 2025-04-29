@@ -330,7 +330,7 @@ public class AleronCADTest extends RoboticsAPIApplication {
 				//" A: " + new_point.getAlphaRad() + " B: " + new_point.getBetaRad() + " C: " + new_point.getGammaRad());
 		
 			if(i<x.size()-1)
-				roll_scan.getFrame("roll_tcp").moveAsync(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(10));
+				roll_scan.getFrame("roll_tcp").moveAsync(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 			else
 				roll_scan.getFrame("roll_tcp").moveAsync(lin(point).setCartVelocity(velocidad).setMode(impedanceControlMode).setBlendingCart(0));
 
