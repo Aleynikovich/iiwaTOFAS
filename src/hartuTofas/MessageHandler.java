@@ -47,10 +47,10 @@ public class MessageHandler {
         String[] parts = message.split("\\|", -1);
 
         // Log the parts
-        // System.out.println("Parsed parts: " + Arrays.toString(parts));
+        System.out.println("Parsed parts: " + Arrays.toString(parts));
 
         // Parse the parts of the message
-        if (parts.length < 9) { // Adjust to 9 parts to include ID
+        if (parts.length != 9) { // Adjust to 9 parts to include ID
             System.out.println("Message does not have 9 parts");
             return "Invalid message format";
         }
