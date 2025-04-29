@@ -47,6 +47,7 @@ public class MessageHandler {
         public String id;
 
         public Command(String[] parts) {
+        	System.out.println("Generating command");
             if (parts.length < 10) {
                 throw new IllegalArgumentException("Invalid number of parameters. Expected at least 10, got " + parts.length);
             }
