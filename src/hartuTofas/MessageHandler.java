@@ -4,6 +4,7 @@ package hartuTofas;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.geometricModel.Frame;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.World;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
@@ -13,6 +14,7 @@ import java.util.List;
 public class MessageHandler {
 
     private LBR robot;
+    private Tool flexTool;
 
     // Action types
     public static final int PTP_AXIS = 0;
@@ -25,6 +27,9 @@ public class MessageHandler {
     public static final int PTP_FRAME_C = 7;
     public static final int LIN_FRAME_C = 8;
     public static final int ACTIVATE_IO = 9;
+    public static final int LIN_REL_TOOL=10;
+	public static final int LIN_REL_BASE=11;
+
     //100+ = program call with ID actiontype-100
 
     public MessageHandler(LBR robot) {
@@ -116,8 +121,12 @@ public class MessageHandler {
                     case PTP_FRAME:
                     case PTP_FRAME_C:
                         return handlePTPFrame(cmd);
-                    case LIN_FRAME:
+                    case LIN_FRAME: 
+                    case LIN_FRAME_C:
                         return handleLINFrame(cmd);
+                    case LIN_REL_TOOL:
+                    case LIN_REL_BASE:
+                    	
                     default:
                         System.out.println("Unknown move type: " + cmd.actionType);
                         return "Unknown move type: " + cmd.actionType;
@@ -179,7 +188,7 @@ public class MessageHandler {
                     robot.move(ptp(jointValues));
                 } else if (cmd.actionType == PTP_AXIS_C) {
                     // Execute asynchronous PTP motion for each point
-                    robot.moveAsync(ptp(jointValues).setBlendingRel(1));
+                    robot.moveAsync(ptp(jointValues).setBlendingRel(0.5));
                 }
             }
         } catch (NumberFormatException e) {
@@ -211,7 +220,13 @@ public class MessageHandler {
                 double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); 
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
-                robot.move(ptp(targetFrameVirgin));
+                if (cmd.actionType == PTP_FRAME){
+                	robot.move(ptp(targetFrameVirgin));
+                }
+                else if (cmd.actionType == PTP_FRAME_C) {
+	                // Execute asynchronous PTP motion for each point
+	            	robot.moveAsync(ptp(targetFrameVirgin).setBlendingRel(0.5));
+                }
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid coordinate values for ID: " + cmd.id);
@@ -238,7 +253,13 @@ public class MessageHandler {
                 double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); 
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
-                robot.move(lin(targetFrameVirgin));
+                if (cmd.actionType == LIN_FRAME){
+                	robot.move(lin(targetFrameVirgin));
+                }
+                else if (cmd.actionType == LIN_FRAME_C){
+                	robot.moveAsync(lin(targetFrameVirgin).setBlendingRel(0.5));
+                }
+                
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid coordinate values for ID: " + cmd.id);
@@ -249,6 +270,31 @@ public class MessageHandler {
         }
         System.out.println("LIN_FRAME command executed for ID: " + cmd.id);
         return "LIN_FRAME command executed";
+    }
+    
+    private String handleLINREL(Command cmd){
+    	 List<String> relFrames = Arrays.asList(cmd.targetPoints.split(","));
+         for (int i = 0; i < relFrames.size(); i++) {
+             String point = relFrames.get(i);
+             List<String> coordinates = Arrays.asList(point.split(";"));
+             double x = Double.parseDouble(coordinates.get(0));
+             double y = Double.parseDouble(coordinates.get(1));
+             double z = Double.parseDouble(coordinates.get(2));
+             double roll = Math.toRadians(Double.parseDouble(coordinates.get(3))); // Convert degrees to radians
+             double pitch = Math.toRadians(Double.parseDouble(coordinates.get(4))); 
+             double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
+             if (cmd.actionType == LIN_REL_TOOL){
+            	flexTool.attachTo(robot.getFlange());
+            	//flexTool.
+             	//robot.move(linRel(x,y,z,roll,pitch,yaw,getApplicationData().getBase));
+             }
+             else if (cmd.actionType == LIN_REL_BASE){
+             	//robot.move(lin());
+             }  
+         }
+         System.out.println("LIN_REL command executed for ID: " + cmd.id);
+         return "LIN_REL command executed";
+  
     }
 
     private boolean isWithinLimits(int jointIndex, double jointValue) {
