@@ -44,7 +44,7 @@ public class MessageHandler {
         message = message.substring(0, message.length() - 1);
 
         // Split the message by | and keep empty parts
-        String[] parts = message.split("\\|", -1);
+        String[] parts = message.split("|", -10);
 
         // Log the parts
         System.out.println("Parsed parts: " + Arrays.toString(parts));
