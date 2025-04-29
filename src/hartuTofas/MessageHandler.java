@@ -76,6 +76,22 @@ public class MessageHandler {
                 throw new IllegalArgumentException("Invalid number format in input: " + e.getMessage());
             }
         }
+
+        public void printCommand() {
+            System.out.println( "Command{" +
+                    "actionType=" + actionType +
+                    ", programCall=" + programCall +
+                    ", numPoints=" + numPoints +
+                    ", ioPoint=" + ioPoint +
+                    ", ioPin=" + ioPin +
+                    ", ioState=" + ioState +
+                    ", tool=" + tool +
+                    ", base=" + base +
+                    ", speedOverride=" + speedOverride +
+                    ", targetPoints='" + targetPoints + '\'' +
+                    ", id='" + id + '\'' +
+                    '}');
+        }
     }
 
     public String handleMessage(String message) {
@@ -91,7 +107,7 @@ public class MessageHandler {
 
         try {
             Command cmd = new Command(parts);
-
+            cmd.printCommand();
             if (!cmd.programCall) {
             	System.out.println("Entered Movetype");
                 switch (cmd.actionType) {
