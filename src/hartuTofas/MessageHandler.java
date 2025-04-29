@@ -50,43 +50,73 @@ public class MessageHandler {
         System.out.println("Parsed parts: " + Arrays.toString(parts));
 
         // Parse the parts of the message
-        if (parts.length != 9) { // Adjust to 9 parts to include ID
-            System.out.println("Message does not have 9 parts");
+        int messagePartAmount = 10;
+        if (parts.length != messagePartAmount) {
+            System.out.println("Message does not have" + messagePartAmount + "parts");
             return "Invalid message format";
         }
 
-        int moveType;
-        int numPoints;
-        String id;
+        int 	moveType,
+        		numPoints,
+        		ioPoint,
+        		ioPin,
+        		ioState,
+        		tool,
+        		base,
+        		speedOveride;
+        
+        Boolean programCall;
+        
+        String 	targetPoints,
+        		id;
+        
         try {
-            moveType = Integer.parseInt(parts[0]);
-            numPoints = Integer.parseInt(parts[1]);
-            id = parts[9]; // Extract the ID from the last part
+            if (Integer.parseInt(parts[0]) < 100){
+            	moveType	= Integer.parseInt(parts[0]);
+            	programCall = false;
+            }
+            else{
+            	moveType	= Integer.parseInt(parts[0]) - 100;
+            	programCall = true;
+            }
+        	numPoints		= Integer.parseInt(parts[1]);
+            targetPoints	= parts[2];
+            ioPoint			= Integer.parseInt(parts[3]);
+            ioPin			= Integer.parseInt(parts[4]);
+    		ioState			= Integer.parseInt(parts[5]);
+    		tool			= Integer.parseInt(parts[6]);
+    		base			= Integer.parseInt(parts[7]);
+    		speedOveride	= Integer.parseInt(parts[8]);
+            id 				= parts[9];
         } catch (NumberFormatException e) {
-            System.out.println("Invalid moveType, numPoints, or ID");
+            System.out.println("Invalid message format");
             return "Invalid message format";
         }
-
-        String targetPoints = parts[2];
-        String ioPoint = parts[3];
-        String ioPin = parts[4];
-        String ioState = parts[5];
-        String tool = parts[6];
-        String base = parts[7];
 
         // Handle the moveType
-        switch (moveType) {
-            case PTP_AXIS: case PTP_AXIS_C:
-                return handlePTPAxis(moveType, numPoints, targetPoints, id);
-            case PTP_FRAME: case PTP_FRAME_C:
-                return handlePTPFrame(numPoints, targetPoints, id);
-            case LIN_FRAME:
-                return handleLINFrame(numPoints, targetPoints, id);
-            // Add other cases for different move types as needed
-            default:
-                System.out.println("Unknown move type: " + moveType);
-                return "Unknown move type: " + moveType;
+        if (programCall == false){
+	        switch (moveType) {
+	            case PTP_AXIS: case PTP_AXIS_C:
+	                return handlePTPAxis(moveType, numPoints, targetPoints, id);
+	            case PTP_FRAME: case PTP_FRAME_C:
+	                return handlePTPFrame(numPoints, targetPoints, id);
+	            case LIN_FRAME:
+	                return handleLINFrame(numPoints, targetPoints, id);
+	            // Add other cases for different move types as needed
+	            default:
+	                System.out.println("Unknown move type: " + moveType);
+	                return "Unknown move type: " + moveType;
+	        }
         }
+        else {
+        	switch (moveType){
+        	case 1:
+        		return "Program 1 called";
+    		default:
+    			return "Program " + moveType + " not found.";
+        	}
+        }
+        
     }
 
     private String handlePTPAxis(int moveType, int numPoints, String targetPoints, String id) {
