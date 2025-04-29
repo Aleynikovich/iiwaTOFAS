@@ -134,6 +134,6 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
         // Split by | and return the last part (request ID)
         String[] parts = message.split("\\|");
-        return parts.length >= 9 ? parts[8] : "0";
+        return parts.length >= 9 ? parts[9] : "0";
     }
 }
