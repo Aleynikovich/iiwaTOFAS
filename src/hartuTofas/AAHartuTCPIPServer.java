@@ -94,11 +94,13 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
                     
                     // Send the appropriate response
                     if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
+                    	System.out.println(response);
                         String errorResponse = "FREE|" + requestId + "#";
                         System.out.println("Sending error response: " + errorResponse);
                         out.print(errorResponse);
                         out.flush();
                     } else {
+                    	System.out.println(response);
                         String successResponse = "FREE|" + requestId + "#";
                         out.print(successResponse);
                         out.flush();
