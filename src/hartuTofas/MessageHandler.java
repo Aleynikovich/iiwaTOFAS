@@ -61,7 +61,7 @@ public class MessageHandler {
         try {
             moveType = Integer.parseInt(parts[0]);
             numPoints = Integer.parseInt(parts[1]);
-            id = parts[8]; // Extract the ID from the last part
+            id = parts[9]; // Extract the ID from the last part
         } catch (NumberFormatException e) {
             System.out.println("Invalid moveType, numPoints, or ID");
             return "Invalid message format";
