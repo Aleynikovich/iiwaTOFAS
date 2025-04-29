@@ -449,7 +449,7 @@
         <frame id="_56f1fd44-f799-4bce-a729-b16f5d13302e" name="ATOFAS">
             <transformation a="1.961678041782496" b="5.174262485121786E-4" c="3.1286843608555803" x="-29.954994307630123" y="751.5857048111598" z="220.19228172559568"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1741779092274"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1745933836802"/>
                 <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="Flange" tool="Flange" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                     <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 </info>
@@ -1059,13 +1059,13 @@
         <toolTemplate class="" name="IxturPlatoGrande">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="7.1366834531178025" cogY="54.629448323165775" cogZ="183.46380369306698" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="9.921096286987034"/>
         </toolTemplate>
-        <toolTemplate class="" name="Gimatic">
+        <toolTemplate class="" name="GimaticCamera">
             <frames>
                 <frame id="_bc1a0aef-760a-4d80-9963-96888d89d033" name="GimaticTCP">
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="150.0" cogY="50.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="9.0"/>
         </toolTemplate>
     </objectTemplates>
     <processDataContainer>
