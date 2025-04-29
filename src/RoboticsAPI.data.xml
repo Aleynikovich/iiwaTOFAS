@@ -1066,7 +1066,7 @@
                     <measurementRotation method="ABCWorld6D" timestamp="1357070202786"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="50.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="5.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="50.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="3.0"/>
         </toolTemplate>
     </objectTemplates>
     <processDataContainer>
