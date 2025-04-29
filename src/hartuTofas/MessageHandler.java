@@ -45,34 +45,34 @@ public class MessageHandler {
         public boolean programCall;
         public String targetPoints;
         public String id;
-
+        
+        private String get(String[] parts, int index, String defaultValue) {
+            return (index < parts.length && parts[index] != null && !parts[index].trim().isEmpty())
+                    ? parts[index].trim()
+                    : defaultValue;
+        }
+        
         public Command(String[] parts) {
-        	System.out.println("Generating command");
+            System.out.println("Generating command");
 
             try {
-                int rawActionType = Integer.parseInt(parts[0]);
-
-                if (rawActionType > 100) {
-                    this.programCall = true;
-                    this.actionType = rawActionType - 100; // normalize to actual program ID
-                } else {
-                    this.programCall = false;
-                    this.actionType = rawActionType;
-                }
-
-                this.numPoints     = Integer.parseInt(parts[1]);
-                this.targetPoints  = parts[2];
-                //this.ioPoint       = Integer.parseInt(parts[3]);
-                //this.ioPin         = Integer.parseInt(parts[4]);
-                //this.ioState       = Integer.parseInt(parts[5]);
-                //this.tool          = Integer.parseInt(parts[6]);
-                //this.base          = Integer.parseInt(parts[7]);
-                //this.speedOverride = Integer.parseInt(parts[8]);
-                this.id            = parts[9];
+                int rawActionType = Integer.parseInt(get(parts, 0, "999"));
+                this.programCall = rawActionType > 100;
+                this.actionType = this.programCall ? rawActionType - 100 : rawActionType;
+                this.numPoints     = Integer.parseInt(get(parts, 1, "0"));
+                this.targetPoints  = get(parts, 2, "");
+                this.ioPoint       = Integer.parseInt(get(parts, 3, "0"));
+                this.ioPin         = Integer.parseInt(get(parts, 4, "0"));
+                this.ioState       = Integer.parseInt(get(parts, 5, "0"));
+                this.tool          = Integer.parseInt(get(parts, 6, "0"));
+                this.base          = Integer.parseInt(get(parts, 7, "0"));
+                this.speedOverride = Integer.parseInt(get(parts, 8, "100"));
+                this.id            = get(parts, 9, "N/A");
 
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid number format in input: " + e.getMessage());
             }
+
             printCommand();
         }
 
