@@ -110,9 +110,11 @@ public class MessageHandler {
             Command cmd = new Command(parts);
 
             if (!cmd.programCall) {
+            	System.out.println("Entered Movetype");
                 switch (cmd.actionType) {
                     case PTP_AXIS:
                     case PTP_AXIS_C:
+                    	System.out.println("Entered PTP AXIS");
                         return handlePTPAxis(cmd.actionType, cmd.numPoints, cmd.targetPoints, cmd.id);
                     case PTP_FRAME:
                     case PTP_FRAME_C:
@@ -124,8 +126,9 @@ public class MessageHandler {
                         return "Unknown move type: " + cmd.actionType;
                 }
             } else {
-                // Now cmd.actionType is the real program ID
-                switch (cmd.actionType) {
+            	System.out.println("Entered Programcall");
+                switch (cmd.actionType){
+               
                     case 1:
                         return "Program 1 called";
                     case 2:
