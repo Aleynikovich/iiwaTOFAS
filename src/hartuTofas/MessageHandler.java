@@ -76,6 +76,7 @@ public class MessageHandler {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid number format in input: " + e.getMessage());
             }
+            printCommand();
         }
 
         public void printCommand() {
