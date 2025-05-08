@@ -52,18 +52,23 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void runCyclic() {
         // your task execution starts here
-        try {
-            // 1. Send the joint positions using the HartuCommLib.
-            HartuCommLib.sendJointStateData(iiwa, tcpClient);
-
-        } catch (Exception e) {
-            getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
-            //  Important: Handle exceptions in SPS tasks!  Do NOT throw them out of runCyclic.
-            //  Consider:
-            //  - Logging the error
-            //  - Setting a robot status flag
-            //  - Attempting to recover (if possible)
+    	if (tcpClient.isConnected())
+    	{
+	        try {
+	            // 1. Send the joint positions using the HartuCommLib.
+	            HartuCommLib.sendJointStateData(iiwa, tcpClient);
+	
+	        } catch (Exception e) {
+	            getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
+	            //  Important: Handle exceptions in SPS tasks!  Do NOT throw them out of runCyclic.
+	            //  Consider:
+	            //  - Logging the error
+	            //  - Setting a robot status flag
+	            //  - Attempting to recover (if possible)
         }
+        }
+        
+        
     }
 
 
