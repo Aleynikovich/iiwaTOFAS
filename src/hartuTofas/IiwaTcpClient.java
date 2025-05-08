@@ -1,244 +1,112 @@
 package hartuTofas;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.net.SocketException;
+import java.net.ConnectException;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * A TCP client for communicating with a KUKA IIWA robot.
- * This class provides functionality to connect to the robot, send commands,
- * receive responses, and handle communication timeouts.
- * It is designed to be used within the KUKA Sunrise Workbench environment.
+ * IiwaTcpClient class to manage TCP communication with a server.
  */
 public class IiwaTcpClient {
 
-    private String serverAddress;
-    private int serverPort;
+    private final String serverIp;
+    private final int serverPort;
     private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
-    private static final int DEFAULT_TIMEOUT_MS = 5000; // Default timeout
-    private int timeoutMs; // Configurable timeout
-    private boolean isConnected = false;
+    private OutputStream outputStream;
+    private static final int CONNECT_TIMEOUT = 5000; // 5 seconds timeout for connection
 
     /**
-     * Constructor for the IiwaTcpClient class. Uses the default timeout.
+     * Constructor for IiwaTcpClient.
      *
-     * @param serverAddress The IP address of the KUKA robot controller.
-     * @param serverPort    The port number for the TCP connection on the robot controller.
+     * @param serverIp The IP address of the server.
+     * @param serverPort The port number of the server.
      */
-    public IiwaTcpClient(String serverAddress, int serverPort) {
-        this(serverAddress, serverPort, DEFAULT_TIMEOUT_MS);
-    }
-
-    /**
-     * Constructor for the IiwaTcpClient class with a configurable timeout.
-     *
-     * @param serverAddress The IP address of the KUKA robot controller.
-     * @param serverPort    The port number for the TCP connection on the robot controller.
-     * @param timeoutMs     The timeout in milliseconds for socket operations.
-     */
-    public IiwaTcpClient(String serverAddress, int serverPort, int timeoutMs) {
-        this.serverAddress = serverAddress;
+    public IiwaTcpClient(String serverIp, int serverPort) {
+        this.serverIp = serverIp;
         this.serverPort = serverPort;
-        this.timeoutMs = timeoutMs;
     }
 
     /**
-     * Establishes a TCP connection with the KUKA robot controller.
+     * Establishes a connection to the server.
      *
-     * @throws IOException           If an error occurs during the connection process.
-     * @throws TimeoutException      If the connection attempt times out.
+     * @throws IOException If an I/O error occurs during the connection attempt.
+     * @throws TimeoutException If the connection attempt times out.
      */
     public void connect() throws IOException, TimeoutException {
-        final CountDownLatch connectionLatch = new CountDownLatch(1);
-        final AtomicReference<IOException> connectionError = new AtomicReference<>();
-
-        // Use a separate thread for the connection to handle the timeout
-        Thread connectionThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socket = new Socket(serverAddress, serverPort);
-                    socket.setSoTimeout(timeoutMs); // Apply the timeout to the socket
-                    out = new PrintWriter(socket.getOutputStream(), true);
-                    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    isConnected = true;
-                    connectionLatch.countDown(); // Signal successful connection
-                } catch (IOException e) {
-                    connectionError.set(e);
-                    connectionLatch.countDown(); // Signal connection failure
-                }
-            }
-        });
-        connectionThread.start();
-
         try {
-            // Wait for the connection to be established or the timeout to occur
-            if (!connectionLatch.await(timeoutMs, TimeUnit.MILLISECONDS)) {
-                // If the latch didn't count down, it means the timeout occurred
-                connectionThread.interrupt(); // Attempt to interrupt the connection thread
-                closeConnection(); // Clean up resources
-                throw new TimeoutException("Connection to " + serverAddress + ":" + serverPort + " timed out after " + timeoutMs + "ms");
+            socket = new Socket(serverIp, serverPort);
+            socket.setSoTimeout(CONNECT_TIMEOUT); // Set timeout for the connection
+            outputStream = socket.getOutputStream();
+        } catch (ConnectException e) {
+            throw new ConnectException("Failed to connect to " + serverIp + ":" + serverPort + ".  " + e.getMessage()); //wrap
+        } catch (SocketException e) {
+            if (e.getMessage().contains("connect timed out")) {
+                throw new TimeoutException("Connection to " + serverIp + ":" + serverPort + " timed out.");
+            } else {
+                throw e; // Re-throw other SocketExceptions
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore the interrupted status
-            closeConnection();
-            throw new IOException("Connection attempt was interrupted", e); // Wrap in IOException
-        }
-
-        // Check for any exceptions that occurred in the connection thread
-        if (connectionError.get() != null) {
-            closeConnection(); // Clean up resources
-            throw connectionError.get(); // Throw the exception that occurred in the thread
         }
     }
 
     /**
-     * Sends a command to the KUKA robot controller and waits for a response.
+     * Sends a string message to the server.
      *
-     * @param command The command string to send.
-     * @return The response string from the robot controller.
-     * @throws IOException           If an error occurs during sending or receiving data.
-     * @throws TimeoutException      If no response is received within the timeout period.
-     * @throws IllegalStateException If the client is not connected.
+     * @param message The string message to send.
+     * @throws IOException If an I/O error occurs while sending the message.
      */
-    public String sendCommand(final String command) throws IOException, TimeoutException, IllegalStateException {
-        if (!isConnected()) {
-            throw new IllegalStateException("Not connected to the robot. Call connect() first.");
+    public void send(String message) throws IOException {
+        if (outputStream != null) {
+            outputStream.write(message.getBytes());
+            outputStream.flush();
+        } else {
+            throw new IOException("Output stream is not initialized.  Call connect() first.");
         }
-
-        final CountDownLatch responseLatch = new CountDownLatch(1);
-        final AtomicReference<String> receivedResponse = new AtomicReference<>();
-        final AtomicReference<IOException> sendError = new AtomicReference<>();
-
-        // Use a separate thread for sending and receiving
-        Thread sendReceiveThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    out.println(command);
-                    out.flush();
-                    String response = in.readLine(); // This will block until a line is received
-                    if (response != null) {
-                        receivedResponse.set(response);
-                    } else {
-                        sendError.set(new IOException("Received null response from server"));
-                    }
-                    responseLatch.countDown();
-                } catch (IOException e) {
-                    sendError.set(e);
-                    responseLatch.countDown();
-                }
-            }
-        });
-        sendReceiveThread.start();
-
-        try {
-            // Wait for the response or timeout
-            if (!responseLatch.await(timeoutMs, TimeUnit.MILLISECONDS)) {
-                sendReceiveThread.interrupt();
-                throw new TimeoutException("Timeout waiting for response after sending command: " + command + " after " + timeoutMs + "ms");
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IOException("Interrupted while waiting for response", e);
-        }
-
-        if (sendError.get() != null) {
-            throw sendError.get(); // Throw any errors from the send/receive thread
-        }
-        return receivedResponse.get();
     }
 
-    /**
-     * Sends a command to the KUKA robot controller without waiting for a response.
-     * This is useful for scenarios where the server does not send a reply.
+     /**
+     * Sends a string message to the server without waiting for a reply.  This is
+     * generally more efficient for high-frequency data like joint states.
      *
-     * @param command The command string to send.
-     * @throws IOException           If an error occurs during sending data.
-     * @throws IllegalStateException If the client is not connected.
+     * @param message The string message to send.
+     * @throws IOException If an I/O error occurs while sending the message.
      */
-    public void sendOnly(final String command) throws IOException, IllegalStateException {
-        if (!isConnected()) {
-            throw new IllegalStateException("Not connected to the robot. Call connect() first.");
+    public void sendOnly(String message) throws IOException {
+        if (outputStream != null) {
+            outputStream.write(message.getBytes());
+            outputStream.flush();
+        } else {
+            throw new IOException("Output stream is not initialized. Call connect() first.");
         }
-        out.println(command);
-        out.flush();
     }
 
     /**
-     * Closes the TCP connection to the KUKA robot controller.
-     * This method should be called when communication is no longer needed
-     * to release resources.
+     * Closes the connection to the server.
      */
     public void closeConnection() {
-        if (isConnected()) {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-                if (socket != null) {
-                    socket.close();
-                }
-            } catch (IOException e) {
-                // Log the error (important!) -  DON'T throw from close(), may mask original error
-                System.err.println("Error closing connection: " + e.getMessage());
-            } finally {
-                // Ensure that the connection status is updated.
-                isConnected = false;
-                in = null;
-                out = null;
-                socket = null;
+        try {
+            if (outputStream != null) {
+                outputStream.close();
             }
+            if (socket != null) {
+                socket.close();
+            }
+            outputStream = null;
+            socket = null;
+        } catch (IOException e) {
+            // Log the error.  It's usually safe to ignore it, as we're closing anyway.
+            System.err.println("Error closing connection: " + e.getMessage());
         }
     }
 
     /**
-     * Checks if the client is currently connected to the server.
-     *
-     * @return true if the client is connected, false otherwise.
+     * Checks if the socket is connected.
+     * @return true if the socket is connected, false otherwise
      */
     public boolean isConnected() {
-        return isConnected;
+        return socket != null && socket.isConnected() && !socket.isClosed();
     }
-
-    /**
-     * Gets the connection timeout value.
-     *
-     * @return The timeout in milliseconds.
-     */
-    public int getTimeoutMs() {
-        return timeoutMs;
-    }
-
-    /**
-     * Sets the connection timeout value.
-     *
-     * @param timeoutMs The timeout in milliseconds.
-     */
-    public void setTimeoutMs(int timeoutMs) {
-        this.timeoutMs = timeoutMs;
-        if (socket != null) {
-            try {
-                socket.setSoTimeout(timeoutMs); // Update the timeout on the existing socket
-            } catch (IOException e) {
-                System.err.println("Error setting timeout: " + e.getMessage());
-                // Consider if you want to throw an exception here.  It might be better to
-                // just log it and allow the program to continue, as a timeout change
-                // isn't usually a critical error.
-            }
-        }
-    }
-
 }
+
