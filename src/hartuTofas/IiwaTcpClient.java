@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -158,6 +159,22 @@ public class IiwaTcpClient {
     }
 
     /**
+     * Sends a command to the KUKA robot controller without waiting for a response.
+     * This is useful for scenarios where the server does not send a reply.
+     *
+     * @param command The command string to send.
+     * @throws IOException           If an error occurs during sending data.
+     * @throws IllegalStateException If the client is not connected.
+     */
+    public void sendOnly(String command) throws IOException, IllegalStateException {
+        if (!isConnected()) {
+            throw new IllegalStateException("Not connected to the robot. Call connect() first.");
+        }
+        out.println(command);
+        out.flush();
+    }
+
+    /**
      * Closes the TCP connection to the KUKA robot controller.
      * This method should be called when communication is no longer needed
      * to release resources.
@@ -196,8 +213,9 @@ public class IiwaTcpClient {
         return isConnected;
     }
 
-     /**
+    /**
      * Gets the connection timeout value.
+     *
      * @return The timeout in milliseconds.
      */
     public int getTimeoutMs() {
@@ -206,6 +224,7 @@ public class IiwaTcpClient {
 
     /**
      * Sets the connection timeout value.
+     *
      * @param timeoutMs The timeout in milliseconds.
      */
     public void setTimeoutMs(int timeoutMs) {
@@ -221,4 +240,5 @@ public class IiwaTcpClient {
             }
         }
     }
+
 }
