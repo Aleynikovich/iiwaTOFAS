@@ -57,7 +57,8 @@ public class OnTcpCamCalibration extends RoboticsAPIApplication implements ITCPL
 		
 		//TCPClient object
 		try {
-			tcp_client = new TCPClient();
+			//PONER LA IP Y PUERTO QUE TOCA
+			tcp_client = new TCPClient("127.0.0.1", 9000);
 			tcp_client.addListener(this);
 			tcp_client.enable();
 			
