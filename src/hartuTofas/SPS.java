@@ -48,8 +48,9 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     private void connectToServer() {
         try {
             if (tcpClient == null || !tcpClient.isConnected()) { // Check if client is null or not connected
-                if(tcpClient != null){
+                if (tcpClient != null) {
                     tcpClient.closeConnection();
+                    tcpClient = null; // Ensure tcpClient is null after closing
                 }
                 tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
                 tcpClient.connect();
@@ -62,7 +63,7 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
         } catch (IOException | TimeoutException e) {
             getLogger().error("Error initializing TCP connection: " + e.getMessage());
             connected = false;
-        } 
+        }
     }
 
     @Override
@@ -85,7 +86,7 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
         }  catch (Exception e) {
             getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
             connected = false; // Reset connection status
-            connectToServer(); //attempt to reconnect
+            connectToServer(); // attempt to reconnect
         }
     }
 
