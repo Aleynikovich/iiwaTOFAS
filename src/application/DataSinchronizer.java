@@ -35,6 +35,9 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 	@Inject
 	private LBR lbr;
 	
+	private String server_ip = "10.66.171.69";
+	private int server_port = 30002;
+	
 	@Inject
 	private MediaFlangeIOGroup mediaFIO;
 	
@@ -78,7 +81,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 			if(!connection_stablished)
 			{
 				try {
-					tcp_client = new TCPClient();
+					tcp_client = new TCPClient(server_ip, server_port);
 					tcp_client.addListener(this);
 					tcp_client.enable();
 					
@@ -98,6 +101,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 			
 			if(connection_stablished)
 			{
+				
 				JointPosition joints = lbr.getCurrentJointPosition();
 				
 				String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 

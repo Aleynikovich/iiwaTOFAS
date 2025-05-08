@@ -30,29 +30,33 @@ public class TCPClient implements Runnable {
 	AtomicBoolean request;
 	AtomicBoolean start_listening;
 	
-	/**
-	 * Constructor.
-	 * <p>
-	 * <code>public OverrideReduction(LBR iiwa, IApplicationControl appControl, ObserverManager observerManager, double reducedOverride)</code>
-	 * <p>
-	 * @param iiwa - KUKA lightweight robot.
-	 * @param appControl - Interface for application controls. IApplicationControl instance.
-	 * @param observerManager - ObserverManager instance.
-	 * @param reducedOverride - The desired reduced override.
-	 * @throws IOException 
-	 */
+	private String serverIP;
+	private int serverPort;
+
+	
 	@Inject
-	public TCPClient() throws IOException
-	{		
-		System.out.println("New TCP client started. connect to server in 10.66.171.69, 30002");
-		clientSocket = new Socket("10.66.171.69", 30002);
-		System.out.println("Communication with the server started");
-		inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		listeners = new ArrayList<ITCPListener>();
-		tcpClientThread = new Thread(this);
-		request = new AtomicBoolean(false);
-		start_listening = new AtomicBoolean(false);
+	public TCPClient(String ip, int port)throws IOException {
+	    this.serverIP = ip;
+	    this.serverPort = port;
+
+	    listeners = new ArrayList<ITCPListener>();
+	    tcpClientThread = new Thread(this);
+	    request = new AtomicBoolean(false);
+	    start_listening = new AtomicBoolean(false);
+	}
+	
+	private boolean connect() {
+	    try {
+	        System.out.println("Attempting to connect to " + serverIP + ":" + serverPort + "...");
+	        clientSocket = new Socket(serverIP, serverPort);
+	        inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	        outToServer = new DataOutputStream(clientSocket.getOutputStream());
+	        System.out.println("Connected to server.");
+	        return true;
+	    } catch (IOException e) {
+	        System.err.println("Connection failed: " + e.getMessage());
+	        return false;
+	    }
 	}
 
 	public void enable(){
@@ -99,59 +103,55 @@ public class TCPClient implements Runnable {
 	
 	@Override
 	public void run() {
-		
-		String datagram = "";
-		Timer start_time; ;
-		try {
-			while(true){
-				
-				if(Thread.currentThread().isInterrupted()) throw new InterruptedException();
-				
-				if(start_listening.get())
-				{
-					
-					start_listening.set(false);
-					if((datagram = inFromServer.readLine()) != null)
-					{	
-						System.out.println("Data received from server");
-						for(ITCPListener l : listeners)
-							l.OnTCPMessageReceived(datagram);
-						request_str=datagram;
-						System.out.println("after; "+request_str);
-						
-					}
-					else
-					{				
-						System.out.println("Server disconnected");
-						for(ITCPListener l : listeners)
-							l.OnTCPConnection();
-					
-						break;
-					}
-				}
-			}
-		}catch(java.net.SocketTimeoutException e)
-		{
-			System.out.println("Socket time-out exception");
-			for(ITCPListener l : listeners)
-				l.OnTCPConnection();
-			
-		}catch (InterruptedException e) {
-			
-			System.out.println("Interruption exception");
+	    String datagram;
 
-		} catch (IOException e) {
-			
-			System.out.println("IO exception");
-			//e.printStackTrace();
-		}
-		
-		try {
-			clientSocket.close();
-			
-		} catch (IOException e) {
-			System.out.println("Socket close method IO exception");
-		}
-		System.out.println("Finish TCP Client Run ");
+	    while (!Thread.currentThread().isInterrupted()) {
+	        try {
+	            // Si no hay conexión, intenta conectar cada 5 segundos
+	            while (!connect()) {
+	                Thread.sleep(1000);
+	            }
+
+	            while (!Thread.currentThread().isInterrupted()) {
+	                if (start_listening.get()) {
+	                    start_listening.set(false);
+	                    datagram = inFromServer.readLine();
+
+	                    if (datagram != null) {
+	                        System.out.println("Data received from server");
+	                        for (ITCPListener l : listeners)
+	                            l.OnTCPMessageReceived(datagram);
+	                        request_str = datagram;
+	                        System.out.println("after: " + request_str);
+	                    } else {
+	                        System.out.println("Server disconnected cleanly");
+	                        break; // salir del bucle interno para reconectar
+	                    }
+	                }
+
+	                Thread.sleep(10); // evitar CPU al 100%
+	            }
+	        } catch (IOException e) {
+	            System.out.println("IOException during communication: " + e.getMessage());
+	        } catch (InterruptedException e) {
+	            System.out.println("Thread interrupted. Exiting...");
+	            break;
+	        } finally {
+	            for (ITCPListener l : listeners)
+	                l.OnTCPConnection();
+
+	            try {
+	                if (clientSocket != null && !clientSocket.isClosed())
+	                    clientSocket.close();
+	            } catch (IOException e) {
+	                System.out.println("Error closing socket: " + e.getMessage());
+	            }
+	        }
+
+	        System.out.println("Disconnected. Reconnecting...");
+	    }
+
+	    System.out.println("Finish TCP Client Run");
 	}
+
 }

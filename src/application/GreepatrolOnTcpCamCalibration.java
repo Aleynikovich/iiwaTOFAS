@@ -60,7 +60,8 @@ public class GreepatrolOnTcpCamCalibration extends RoboticsAPIApplication implem
 		
 		//TCPClient object
 		try {
-			tcp_client = new TCPClient();
+			//Modificar IP 
+			tcp_client = new TCPClient("127.0.0.1", 9000);
 			tcp_client.addListener(this);
 			tcp_client.enable();
 			
