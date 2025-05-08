@@ -78,7 +78,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 			
 			System.out.println("runCyclic");
 			mediaFIO.setLEDBlue(true);
-			connection_established = tcp_client.is_connected.get();
+			
 			if(!connection_established)
 			{
 				try {
@@ -87,9 +87,9 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 					tcp_client.enable();
 					
 					data_received = new AtomicBoolean(false);
-					server_connected = new AtomicBoolean(true);
+					
 
-					//connection_established = tcp_client.is_connected.get();
+					connection_established = tcp_client.is_connected.get();
 					
 					System.out.println("Connection stablished with the server");
 
@@ -100,9 +100,10 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 				}
 			}
 			
+			connection_established = tcp_client.is_connected.get();
 			if(connection_established)
 			{
-				
+	
 				JointPosition joints = lbr.getCurrentJointPosition();
 				
 				String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
