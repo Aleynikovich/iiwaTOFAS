@@ -34,7 +34,7 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     private IiwaTcpClient tcpClient; // Declare the TCP client here.
     private static final String SERVER_IP = "10.66.171.69";
     private static final int SERVER_PORT = 30002;
-
+    private static final int RECONNECT_DELAY_MS = 1000; // Add a constant for the delay
 
     @Override
     public void initialize() {
@@ -44,34 +44,50 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
             tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
             tcpClient.connect();
         } catch (IOException | TimeoutException e) {
-             getLogger().error("Error initializing TCP connection: " + e.getMessage(), e);
-             throw new RuntimeException("Failed to connect to the server.", e);
+            getLogger().error("Error initializing TCP connection: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to connect to the server.", e);
         }
-        finally{
-        	initialize();
-        }
+
     }
 
     @Override
     public void runCyclic() {
         // your task execution starts here
-    	if (tcpClient.isConnected())
-    	{
-	        try {
-	            // 1. Send the joint positions using the HartuCommLib.
-	            HartuCommLib.sendJointStateData(iiwa, tcpClient);
-	
-	        } catch (Exception e) {
-	            getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
-	            //  Important: Handle exceptions in SPS tasks!  Do NOT throw them out of runCyclic.
-	            //  Consider:
-	            //  - Logging the error
-	            //  - Setting a robot status flag
-	            //  - Attempting to recover (if possible)
+        if (tcpClient != null && tcpClient.isConnected())
+        {
+            try {
+                // 1. Send the joint positions using the HartuCommLib.
+                HartuCommLib.sendJointStateData(iiwa, tcpClient);
+
+            } catch (Exception e) {
+                getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
+                //  Important: Handle exceptions in SPS tasks!  Do NOT throw them out of runCyclic.
+                //  Consider:
+                //  - Logging the error
+                //  - Setting a robot status flag
+                //  - Attempting to recover (if possible)
+                try {
+                    Thread.sleep(RECONNECT_DELAY_MS); // Introduce the delay here
+                } catch (InterruptedException ex) {
+                    // Restore the interrupted status
+                    Thread.currentThread().interrupt();
+                    getLogger().error("Interrupted while waiting to reconnect: " + ex.getMessage(), ex);
+                }
+                initialize(); // Attempt to reconnect
+            }
         }
+        else{
+            try {
+                Thread.sleep(RECONNECT_DELAY_MS); // Introduce the delay here
+            } catch (InterruptedException ex) {
+                // Restore the interrupted status
+                Thread.currentThread().interrupt();
+                getLogger().error("Interrupted while waiting to reconnect: " + ex.getMessage(), ex);
+            }
+            initialize();
         }
-        
-        
+
+
     }
 
 
