@@ -138,4 +138,11 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
         String[] parts = message.split("\\|");
         return parts.length >= 9 ? parts[9] : "0";
     }
+    
+    @Override
+    public void dispose() {
+        System.out.println("Program was cancelled.");
+        
+        // Código para cerrar recursos, detener movimientos, etc.
+    }
 }
