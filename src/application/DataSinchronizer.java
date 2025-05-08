@@ -88,7 +88,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 					data_received = new AtomicBoolean(false);
 					server_connected = new AtomicBoolean(true);
 
-					//connection_established = tcp_client.is_connected.get();
+					connection_established = tcp_client.is_connected.get();
 					
 					System.out.println("Connection stablished with the server");
 
@@ -98,7 +98,7 @@ public class DataSinchronizer extends RoboticsAPICyclicBackgroundTask  implement
 					System.err.println("Could not create TCPClient:" +e.getMessage());
 				}
 			}
-			
+			connection_established = tcp_client.is_connected.get();
 			if(connection_established)
 			{
 				
