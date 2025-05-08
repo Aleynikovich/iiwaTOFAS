@@ -44,8 +44,8 @@ public class TCPClient implements Runnable {
 	@Inject
 	public TCPClient() throws IOException
 	{		
-		System.out.println("New TCP client started. connect to server in 10.66.171.250, 8800");
-		clientSocket = new Socket("10.66.171.250", 8800);
+		System.out.println("New TCP client started. connect to server in 10.66.171.69, 30002");
+		clientSocket = new Socket("10.66.171.69", 30002);
 		System.out.println("Communication with the server started");
 		inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		outToServer = new DataOutputStream(clientSocket.getOutputStream());
