@@ -45,14 +45,14 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 	private TCPClient tcp_client;
 	AtomicBoolean data_received;
 	AtomicBoolean server_connected;
-	boolean connection_stablished;
+	boolean connection_established;
 	
 	@Override
 	public void initialize() {
 		// initialize your task here
+		//(0, 50, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
 		
-		
-		connection_stablished = false;
+		connection_established = false;
 	}
 
 	@Override
@@ -78,8 +78,8 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 			
 			System.out.println("runCyclic");
 			mediaFIO.setLEDBlue(true);
-			
-			if(!connection_stablished)
+			connection_established = tcp_client.is_connected.get();
+			if(!connection_established)
 			{
 				try {
 					tcp_client = new TCPClient(server_ip, server_port);
@@ -89,7 +89,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 					data_received = new AtomicBoolean(false);
 					server_connected = new AtomicBoolean(true);
 
-					connection_stablished = true;
+					//connection_established = tcp_client.is_connected.get();
 					
 					System.out.println("Connection stablished with the server");
 
@@ -100,7 +100,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 				}
 			}
 			
-			if(connection_stablished)
+			if(connection_established)
 			{
 				
 				JointPosition joints = lbr.getCurrentJointPosition();
