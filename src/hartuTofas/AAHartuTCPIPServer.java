@@ -11,6 +11,8 @@ import java.net.*;
 public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     @Inject
     private LBR lBR_iiwa_14_R820_1;
+    
+    private ServerSocket serverSocket = null;
 
     private MessageHandler messageHandler;
 
@@ -28,7 +30,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
         // Start the TCP server
         int port = 30001; // Listening port
-        ServerSocket serverSocket = null;
+        
 
         try {
             serverSocket = new ServerSocket(port);
@@ -142,6 +144,14 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     @Override
     public void dispose() {
         System.out.println("Program was cancelled.");
+        
+        if (serverSocket != null) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                System.err.println("Error closing server socket: " + e.getMessage());
+            }
+        }
         
         // Código para cerrar recursos, detener movimientos, etc.
     }
