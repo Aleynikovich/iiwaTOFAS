@@ -144,6 +144,7 @@ public class TCPClient implements Runnable {
 	        } catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				break;
 			} finally {
 	            for (ITCPListener l : listeners)
 	                l.OnTCPConnection();
