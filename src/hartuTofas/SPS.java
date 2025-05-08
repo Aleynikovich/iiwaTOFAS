@@ -41,6 +41,9 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
         // initialize your task here
         initializeCyclic(0, 10, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         try {
+        	if (tcpClient != null) {
+                tcpClient.closeConnection();
+            }
             tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
             tcpClient.connect();
         } catch (IOException | TimeoutException e) {
