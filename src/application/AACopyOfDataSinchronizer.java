@@ -54,7 +54,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 	
 	@Override
 	public void run() {
-		
+		SharedData.sinc_data = true;
 		System.out.println("run ");
 		if(SharedData.sinc_data)
 			mediaFIO.setLEDBlue(true);
