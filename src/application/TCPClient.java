@@ -38,7 +38,7 @@ public class TCPClient implements Runnable {
 	public TCPClient(String ip, int port)throws IOException {
 	    this.serverIP = ip;
 	    this.serverPort = port;
-	    this.is_connected.set(false);
+	    this.is_connected = new AtomicBoolean(false);
 	    listeners = new ArrayList<ITCPListener>();
 	    tcpClientThread = new Thread(this);
 	    request = new AtomicBoolean(false);
