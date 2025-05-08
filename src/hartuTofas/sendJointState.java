@@ -42,34 +42,23 @@ public class sendJointState extends RoboticsAPIApplication {
     public void run() {
         // Main application method. Called after initialize().
         try {
-            while (true) {
-                // 1. Get the current joint positions of the robot.
-                JointPosition joints = iiwa.getCurrentJointPosition();
+            // 1. Get the current joint positions of the robot.
+            JointPosition joints = iiwa.getCurrentJointPosition();
 
-                // 2. Format the joint positions into a string.
-                String jointStr = formatJointPosition(joints);
+            // 2. Format the joint positions into a string.
+            String jointStr = formatJointPosition(joints);
 
-                // 3. Send the string to the server via the TCP connection.
-                tcpClient.sendCommand(jointStr);
-                getLogger().info("Sending joint state: " + jointStr);
+            // 3. Send the string to the server via the TCP connection.
+            tcpClient.sendCommand(jointStr);
+            getLogger().info("Sending joint state: " + jointStr);
 
-                // 4. Wait for a short period before sending the next state.
-                //    This is important to avoid flooding the server with data.
-                try {
-                    Thread.sleep(100); // Wait 100 milliseconds (adjust as needed)
-                } catch (InterruptedException e) {
-                    getLogger().warn("Interruption during wait.", e);
-                    Thread.currentThread().interrupt(); // Re-interrupt the thread
-                    break; // Exit the while loop
-                }
-            }
         } catch (IOException | TimeoutException e) {
             getLogger().error("Error during communication with the server: " + e.getMessage(), e);
             // Handle the exception here. Possible actions: reconnect, terminate the application, etc.
             // Here, we terminate the program.
         } finally {
-            // 5. Close the connection in a finally block to ensure it's closed
-            //    even if exceptions occur.
+            // 5.  Close the connection in a finally block to ensure it's closed
+            //     even if exceptions occur.
             if (tcpClient != null) {
                 tcpClient.closeConnection();
                 getLogger().info("TCP connection closed.");
