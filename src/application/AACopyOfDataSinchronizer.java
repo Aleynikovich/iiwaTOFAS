@@ -102,7 +102,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 				JointPosition joints = lbr.getCurrentJointPosition();
 				
 				String joint_str = joints.get(0) + ";" + joints.get(1) + ";" + joints.get(2) + ";" + 
-						joints.get(3) + ";" + joints.get(4) + ";" + joints.get(5) + ";" + joints.get(6) + "\n";
+						joints.get(3) + ";" + joints.get(4) + ";" + joints.get(5) + ";" + joints.get(6) + "#";
 				
 				tcp_client.sendData(joint_str);
 				
