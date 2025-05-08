@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
-import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.controllerModel.Controller;
@@ -30,7 +29,7 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
  * @see UseRoboticsAPIContext
  * 
  */
-public class DataSinchronizer extends RoboticsAPIApplication  implements ITCPListener{
+public class AACopyOfDataSinchronizer extends RoboticsAPICyclicBackgroundTask  implements ITCPListener{
 	
 	
 	@Inject
@@ -50,13 +49,13 @@ public class DataSinchronizer extends RoboticsAPIApplication  implements ITCPLis
 	@Override
 	public void initialize() {
 		// initialize your task here
-		
+		initializeCyclic(0, 50, TimeUnit.MILLISECONDS,CycleBehavior.Strict);
 		
 		connection_stablished = false;
 	}
 
 	@Override
-	public void run() {
+	public void runCyclic() {
 		SharedData.sinc_data = true;
 		System.out.println("runCyclic ");
 		if(SharedData.sinc_data)
