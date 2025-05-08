@@ -46,8 +46,10 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     }
 
     private void connectToServer() {
-         try {
-            tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
+        try {
+            if (tcpClient == null) {
+                 tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
+            }
             tcpClient.connect();
             getLogger().info("TCP connection established with server: " + SERVER_IP + ":" + SERVER_PORT);
             connected = true; // Set the flag to true on successful connection
@@ -76,8 +78,11 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
             // 1. Send the joint positions using the HartuCommLib.
             HartuCommLib.sendJointStateData(iiwa, tcpClient);
 
-        } catch (Exception e) {
+        }  catch (Exception e) {
             getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
+            if (e instanceof IOException) {
+                connected = false;
+            }
             //  Important: Handle exceptions in SPS tasks!  Do NOT throw them out of runCyclic.
             //  Consider:
             //  - Logging the error
