@@ -47,6 +47,9 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
              getLogger().error("Error initializing TCP connection: " + e.getMessage(), e);
              throw new RuntimeException("Failed to connect to the server.", e);
         }
+        finally{
+        	initialize();
+        }
     }
 
     @Override
