@@ -108,7 +108,7 @@ public class TCPClient implements Runnable {
 	@Override
 	public void run() {
 	    String datagram;
-
+	    while (true){
 	    while (!Thread.currentThread().isInterrupted()) {
 	        try {
 	            // Si no hay conexión, intenta conectar cada 5 segundos
@@ -161,5 +161,5 @@ public class TCPClient implements Runnable {
 
 	    System.out.println("Finish TCP Client Run");
 	}
-
+	}
 }
