@@ -8,6 +8,7 @@ import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import java.io.IOException;
+import java.net.ConnectException; // Import ConnectException
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -42,23 +43,26 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
         initializeCyclic(0, 10, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         // Attempt to connect in initialize as well
         connectToServer();
-
     }
 
     private void connectToServer() {
         try {
-            if (tcpClient == null) {
-                 tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
+            if (tcpClient == null || !tcpClient.isConnected()) { // Check if client is null or not connected
+                if(tcpClient != null){
+                    tcpClient.closeConnection();
+                }
+                tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
+                tcpClient.connect();
+                getLogger().info("TCP connection established with server: " + SERVER_IP + ":" + SERVER_PORT);
+                connected = true; // Set the flag to true on successful connection
             }
-            tcpClient.connect();
-            getLogger().info("TCP connection established with server: " + SERVER_IP + ":" + SERVER_PORT);
-            connected = true; // Set the flag to true on successful connection
+        } catch (ConnectException e) { // Catch ConnectException specifically
+            getLogger().error("Connection refused: " + e.getMessage());
+            connected = false;
         } catch (IOException | TimeoutException e) {
             getLogger().error("Error initializing TCP connection: " + e.getMessage());
-            //  Do NOT throw an exception here.  The SPS should keep running.
-            //  We will attempt to reconnect in runCyclic().
             connected = false;
-        }
+        } 
     }
 
     @Override
@@ -80,14 +84,8 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
 
         }  catch (Exception e) {
             getLogger().error("Error in SPS cyclic task: " + e.getMessage(), e);
-            if (e instanceof IOException) {
-                connected = false;
-            }
-            //  Important: Handle exceptions in SPS tasks!  Do NOT throw them out of runCyclic.
-            //  Consider:
-            //  - Logging the error
-            //  - Setting a robot status flag
-            //  - Attempting to recover (if possible)
+            connected = false; // Reset connection status
+            connectToServer(); //attempt to reconnect
         }
     }
 
