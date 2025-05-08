@@ -13,6 +13,8 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     private LBR lBR_iiwa_14_R820_1;
     
     private ServerSocket serverSocket = null;
+    
+    private Socket clientSocket = null;
 
     private MessageHandler messageHandler;
 
@@ -38,7 +40,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
             while (true) {
                 System.out.println("Waiting for a client...");
-                Socket clientSocket = serverSocket.accept(); // Accept client connection
+                clientSocket = serverSocket.accept(); // Accept client connection
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
                 // Handle client communication
@@ -145,9 +147,21 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     public void dispose() {
         System.out.println("Program was cancelled.");
         
-        if (serverSocket != null) {
+        // Cierra el socket del cliente si está activo
+        if (clientSocket != null && !clientSocket.isClosed()) {
+            try {
+                clientSocket.close();
+                System.out.println("Client socket closed.");
+            } catch (IOException e) {
+                System.err.println("Error closing client socket: " + e.getMessage());
+            }
+        }
+
+        // Cierra el socket del servidor
+        if (serverSocket != null && !serverSocket.isClosed()) {
             try {
                 serverSocket.close();
+                System.out.println("Server socket closed.");
             } catch (IOException e) {
                 System.err.println("Error closing server socket: " + e.getMessage());
             }
