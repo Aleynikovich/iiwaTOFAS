@@ -3,6 +3,8 @@ package application;
 import javax.inject.Inject;
 import javax.swing.Timer;
 
+import com.kuka.common.ThreadUtil;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.net.*;
@@ -111,7 +113,8 @@ public class TCPClient implements Runnable {
 	        try {
 	            // Si no hay conexión, intenta conectar cada 5 segundos
 	            while (!connect()) {
-	                Thread.sleep(1000);
+	                //Thread.sleep(1000);
+	            	ThreadUtil.milliSleep(1000);
 	            }
         		
 	            while (!Thread.currentThread().isInterrupted()) {
@@ -130,16 +133,13 @@ public class TCPClient implements Runnable {
 	                        break; // salir del bucle interno para reconectar
 	                    }
 	                }
-
-	                Thread.sleep(10); // evitar CPU al 100%
+	                ThreadUtil.milliSleep(10);
+	                //Thread.sleep(10); // evitar CPU al 100%
 	            }
 	        } catch (IOException e) {
 	            System.out.println("IOException during communication: " + e.getMessage());
 	            this.is_connected.set(false);
-	        } catch (InterruptedException e) {
-	            System.out.println("Thread interrupted. Exiting...");
-	            this.is_connected.set(false);
-	            break;
+
 	        } finally {
 	            for (ITCPListener l : listeners)
 	                l.OnTCPConnection();
