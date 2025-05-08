@@ -73,7 +73,7 @@ public class TCPClient implements Runnable {
 		
 		System.out.println("dispose"); //cont=false;
 
-		//tcpClientThread.interrupt();
+		tcpClientThread.interrupt();
 		tcpClientThread.join();
 		//IOException exception;
 		
