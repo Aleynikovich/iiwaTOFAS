@@ -113,8 +113,9 @@ public class TCPClient implements Runnable {
 	        try {
 	            // Si no hay conexión, intenta conectar cada 5 segundos
 	            while (!connect()) {
-	                //Thread.sleep(1000);
-	            	Thread.currentThread().sleep(1000);
+	                Thread.currentThread();
+					//Thread.sleep(1000);
+	            	Thread.sleep(1000);
 	           
 	            }
         		
@@ -134,7 +135,8 @@ public class TCPClient implements Runnable {
 	                        break; // salir del bucle interno para reconectar
 	                    }
 	                }
-	                Thread.currentThread().sleep(10);
+	                Thread.currentThread();
+					Thread.sleep(10);
 	                //Thread.sleep(10); // evitar CPU al 100%
 	            }
 	        } catch (IOException e) {
@@ -144,7 +146,6 @@ public class TCPClient implements Runnable {
 	        } catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				break;
 			} finally {
 	            for (ITCPListener l : listeners)
 	                l.OnTCPConnection();
