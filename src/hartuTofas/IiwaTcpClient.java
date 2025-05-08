@@ -166,7 +166,7 @@ public class IiwaTcpClient {
      * @throws IOException           If an error occurs during sending data.
      * @throws IllegalStateException If the client is not connected.
      */
-    public void sendOnly(String command) throws IOException, IllegalStateException {
+    public void sendOnly(final String command) throws IOException, IllegalStateException {
         if (!isConnected()) {
             throw new IllegalStateException("Not connected to the robot. Call connect() first.");
         }

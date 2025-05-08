@@ -48,11 +48,11 @@ public class sendJointState extends RoboticsAPIApplication {
             // 2. Format the joint positions into a string.
             String jointStr = formatJointPosition(joints);
 
-            // 3. Send the string to the server via the TCP connection.
-            tcpClient.sendCommand(jointStr);
+            // 3. Send the string to the server via the TCP connection.  Do not wait for reply
+            tcpClient.sendOnly(jointStr);
             getLogger().info("Sending joint state: " + jointStr);
 
-        } catch (IOException | TimeoutException e) {
+        } catch (IOException e) {
             getLogger().error("Error during communication with the server: " + e.getMessage(), e);
             // Handle the exception here. Possible actions: reconnect, terminate the application, etc.
             // Here, we terminate the program.
