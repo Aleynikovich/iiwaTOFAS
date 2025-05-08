@@ -126,6 +126,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 			}
 		
 		}
+		ThreadUtil.milliSleep(50);
 		}
 	}
 
