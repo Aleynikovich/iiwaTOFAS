@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.kuka.common.ThreadUtil;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
@@ -92,6 +93,13 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 					
 
 					connection_established = tcp_client.is_connected.get();
+					
+					while (!connection_established)
+					{
+						System.out.println("Waiting...");
+						ThreadUtil.milliSleep(1000);
+						connection_established = tcp_client.is_connected.get();
+					}
 					
 					//System.out.println("Connection stablished with the server");
 
