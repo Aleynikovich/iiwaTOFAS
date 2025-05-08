@@ -34,24 +34,44 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     private IiwaTcpClient tcpClient; // Declare the TCP client here.
     private static final String SERVER_IP = "10.66.171.69";
     private static final int SERVER_PORT = 30002;
-
+    private boolean connected = false; // Add a connection status flag
 
     @Override
     public void initialize() {
         // initialize your task here
         initializeCyclic(0, 10, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
-        try {
+        // Attempt to connect in initialize as well
+        connectToServer();
+
+    }
+
+    private void connectToServer() {
+         try {
             tcpClient = new IiwaTcpClient(SERVER_IP, SERVER_PORT);
             tcpClient.connect();
+            getLogger().info("TCP connection established with server: " + SERVER_IP + ":" + SERVER_PORT);
+            connected = true; // Set the flag to true on successful connection
         } catch (IOException | TimeoutException e) {
-             getLogger().error("Error initializing TCP connection: " + e.getMessage(), e);
-             throw new RuntimeException("Failed to connect to the server.", e);
+            getLogger().error("Error initializing TCP connection: " + e.getMessage());
+            //  Do NOT throw an exception here.  The SPS should keep running.
+            //  We will attempt to reconnect in runCyclic().
+            connected = false;
         }
     }
 
     @Override
     public void runCyclic() {
         // your task execution starts here
+        if (!connected) {
+            // Attempt to reconnect only if not connected
+            connectToServer();
+            if (!connected) {
+                // If still not connected, wait and try again in the next cycle
+                return; // Exit the current cycle and try again later.
+            }
+        }
+
+        // If we get here, we are connected (or have reconnected)
         try {
             // 1. Send the joint positions using the HartuCommLib.
             HartuCommLib.sendJointStateData(iiwa, tcpClient);
