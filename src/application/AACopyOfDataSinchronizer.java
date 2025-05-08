@@ -57,11 +57,13 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 
 	@Override
 	public void run() {
+		while(true)
+		{	
 		SharedData.sinc_data = true;
 		System.out.println("runCyclic ");
 		if(SharedData.sinc_data)
 			mediaFIO.setLEDBlue(true);
-
+		
 		if(SharedData.sinc_data)
 		{	
 			/*if(mediaFIO.getOutputX3Pin1())
@@ -91,7 +93,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 
 					connection_established = tcp_client.is_connected.get();
 					
-					System.out.println("Connection stablished with the server");
+					//System.out.println("Connection stablished with the server");
 
 		
 				} catch (IOException e) {
@@ -115,6 +117,7 @@ public class AACopyOfDataSinchronizer extends RoboticsAPIApplication  implements
 
 			}
 		
+		}
 		}
 	}
 
