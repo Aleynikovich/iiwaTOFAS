@@ -29,7 +29,7 @@ public class TCPClient implements Runnable {
 	String request_str;
 	AtomicBoolean request;
 	AtomicBoolean start_listening;
-	
+	public AtomicBoolean is_connected;
 	private String serverIP;
 	private int serverPort;
 
@@ -38,7 +38,7 @@ public class TCPClient implements Runnable {
 	public TCPClient(String ip, int port)throws IOException {
 	    this.serverIP = ip;
 	    this.serverPort = port;
-
+	    this.is_connected.set(false);
 	    listeners = new ArrayList<ITCPListener>();
 	    tcpClientThread = new Thread(this);
 	    request = new AtomicBoolean(false);
@@ -52,9 +52,11 @@ public class TCPClient implements Runnable {
 	        inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	        outToServer = new DataOutputStream(clientSocket.getOutputStream());
 	        System.out.println("Connected to server.");
+	        this.is_connected.set(true);
 	        return true;
 	    } catch (IOException e) {
 	        System.err.println("Connection failed: " + e.getMessage());
+	        this.is_connected.set(false);
 	        return false;
 	    }
 	}
@@ -111,7 +113,7 @@ public class TCPClient implements Runnable {
 	            while (!connect()) {
 	                Thread.sleep(1000);
 	            }
-
+        		
 	            while (!Thread.currentThread().isInterrupted()) {
 	                if (start_listening.get()) {
 	                    start_listening.set(false);
@@ -133,8 +135,10 @@ public class TCPClient implements Runnable {
 	            }
 	        } catch (IOException e) {
 	            System.out.println("IOException during communication: " + e.getMessage());
+	            this.is_connected.set(false);
 	        } catch (InterruptedException e) {
 	            System.out.println("Thread interrupted. Exiting...");
+	            this.is_connected.set(false);
 	            break;
 	        } finally {
 	            for (ITCPListener l : listeners)
