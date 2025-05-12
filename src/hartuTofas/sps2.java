@@ -38,7 +38,7 @@ public class sps2 extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void initialize() {
         // initialize your task here
-        initializeCyclic(0, 500, TimeUnit.MILLISECONDS,
+        initializeCyclic(0, 10, TimeUnit.MILLISECONDS,
                 CycleBehavior.BestEffort);
         
         try {
@@ -57,7 +57,7 @@ public class sps2 extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void runCyclic() {
         // your task execution starts here
-        if (lbr != null) {
+        if (true) {
             JointPosition currentPosition = lbr.getCurrentJointPosition();
             String message = formatJointPosition(currentPosition);
             try {
