@@ -66,7 +66,7 @@ public class sps2 extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void runCyclic() {
         // your task execution starts here
-        if (lbr != null) {
+        if (true) {
             JointPosition currentPosition = lbr.getCurrentJointPosition();
             String message = formatJointPosition(currentPosition);
             try {
