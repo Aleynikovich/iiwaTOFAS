@@ -10,6 +10,7 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Implementation of a cyclic background task.
@@ -34,48 +35,66 @@ public class sps2 extends RoboticsAPICyclicBackgroundTask {
     private OutputStream outputStream;
     private static final String SERVER_IP = "10.66.171.69";
     private static final int SERVER_PORT = 30002;
+    private boolean connectionEstablished = false; // Flag to track connection status
 
     @Override
     public void initialize() {
         // initialize your task here
-        initializeCyclic(0, 10, TimeUnit.MILLISECONDS,
+        initializeCyclic(0, 500, TimeUnit.MILLISECONDS,
                 CycleBehavior.BestEffort);
-        
+        lbr = getContext().getDeviceFromType(LBR.class);
+        connectToServer(); // Call connectToServer in initialize
+    }
+
+    private void connectToServer() {
         try {
             // Create socket connection in initialize
             socket = new Socket(SERVER_IP, SERVER_PORT);
             outputStream = socket.getOutputStream();
+            connectionEstablished = true; // Set flag on successful connection
+            getLogger().info("Successfully connected to server at " + SERVER_IP + ":" + SERVER_PORT);
         } catch (IOException e) {
             getLogger().error("Error creating socket connection: ", e);
             // Consider how to handle this error.  Possible solutions:
-            // 1.  Stop the task.
-            // 2.  Attempt to reconnect in runCyclic().
-            // 3.  Set a flag and don't send data.
+            // 1.  Stop the task. -  Not recommended in initialize for a cyclic task.
+            // 2.  Attempt to reconnect in runCyclic().  <- Preferred approach.
+            // 3.  Set a flag and don't send data.  <- Implemented with connectionEstablished
+            connectionEstablished = false; // Ensure flag is false on failure
         }
     }
 
     @Override
     public void runCyclic() {
         // your task execution starts here
-        if (true) {
+        if (lbr != null) {
             JointPosition currentPosition = lbr.getCurrentJointPosition();
             String message = formatJointPosition(currentPosition);
             try {
-                if (outputStream != null) {
+                if (connectionEstablished && outputStream != null) { // Check connection and stream
                     outputStream.write(message.getBytes());
                     outputStream.flush(); // Ensure data is sent immediately.
                     getLogger().info("Sent: " + message); // Log the sent message
-                }
-                else
-                {
-                   getLogger().warn("Output stream is null. Not sending data.");
+                } else {
+                    if (!connectionEstablished) {
+                         getLogger().warn("Not connected to server. Attempting to reconnect...");
+                         connectToServer(); // Attempt to reconnect
+                    }
+                    else
+                    {
+                        getLogger().warn("Output stream is null.  Skipping send.");
+                    }
+
                 }
 
             } catch (IOException e) {
                 getLogger().error("Error sending data: ", e);
+                if (e instanceof SocketException) {
+                    connectionEstablished = false; //reset flag to attempt a new connection
+                    getLogger().warn("Socket error detected.  Will attempt to reconnect.");
+                }
                 // Consider how to handle this error:
-                // 1. Attempt to reconnect?
-                // 2.  Set a flag to stop sending.
+                // 1. Attempt to reconnect?  <- Implemented, with a delay.
+                // 2.  Set a flag to stop sending. <- Implemented with connectionEstablished
                 // 3.  Log and continue.
             }
         }
@@ -93,7 +112,7 @@ public class sps2 extends RoboticsAPICyclicBackgroundTask {
         return sb.toString();
     }
 
-     @Override
+    @Override
     public void dispose() {
         super.dispose();
         // Close the socket and output stream in dispose()
@@ -106,6 +125,10 @@ public class sps2 extends RoboticsAPICyclicBackgroundTask {
             }
         } catch (IOException e) {
             getLogger().error("Error closing socket: ", e);
+        } finally {
+            outputStream = null;
+            socket = null; //explicitly null the variables
+            connectionEstablished = false;
         }
     }
 }
