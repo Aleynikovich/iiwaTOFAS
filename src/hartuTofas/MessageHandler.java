@@ -185,10 +185,10 @@ public class MessageHandler {
 
                 if (cmd.actionType == PTP_AXIS) {
                     // Execute synchronous PTP motion
-                    robot.move(ptp(jointValues));
+                    robot.move(ptp(jointValues).setJointVelocityRel(0.25));
                 } else if (cmd.actionType == PTP_AXIS_C) {
                     // Execute asynchronous PTP motion for each point
-                    robot.moveAsync(ptp(jointValues).setBlendingRel(0.5));
+                    robot.moveAsync(ptp(jointValues).setJointVelocityRel(0.25).setBlendingRel(0.5));
                 }
             }
         } catch (NumberFormatException e) {

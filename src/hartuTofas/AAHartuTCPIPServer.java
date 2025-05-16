@@ -27,7 +27,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     @Override
     public void run() {
         // Move robot to home position at startup
-        lBR_iiwa_14_R820_1.move(ptpHome());
+        lBR_iiwa_14_R820_1.move(ptpHome().setJointVelocityRel(0.25));
         System.out.println("Robot moved to home position.");
 
         // Start the TCP server
