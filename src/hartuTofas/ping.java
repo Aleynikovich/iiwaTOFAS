@@ -47,7 +47,7 @@ public class ping extends RoboticsAPIApplication {
     public void run() {
         // application execution starts here
         if (lbr != null) {
-            JointPosition currentPosition = lbr.getCurrentJointPosition();
+            JointPosition currentPosition = lbr.getCurrentJointPosition(); 
             String message = formatJointPosition(currentPosition);
             try {
                 if (connectionEstablished && outputStream != null) { // Check connection and stream
