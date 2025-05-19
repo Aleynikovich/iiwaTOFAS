@@ -44,7 +44,7 @@ public class MessageHandler {
         public int ioState;
         public int tool;
         public int base;
-        public float speedOverride;
+        public double speedOverride;
 
         public boolean programCall;
         public String targetPoints;
@@ -70,7 +70,7 @@ public class MessageHandler {
                 this.ioState       = Integer.parseInt(get(parts, 5, "0"));
                 this.tool          = Integer.parseInt(get(parts, 6, "0"));
                 this.base          = Integer.parseInt(get(parts, 7, "0"));
-                this.speedOverride = Integer.parseInt(get(parts, 8, "100"))/100;
+                this.speedOverride = Double.parseDouble(get(parts, 8, "100.0"))/100.0;
                 this.id            = get(parts, 9, "N/A");
 
             } catch (NumberFormatException e) {
