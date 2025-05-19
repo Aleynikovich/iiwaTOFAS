@@ -36,7 +36,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	private IOFlangeIOGroup gimatic;
 	
 	@Named("GimaticCamera")
-	private Tool GimaticCamera;
+	private Tool imaticamera;
 	@Override
 	public void initialize() {
 		// initialize your application here
@@ -47,7 +47,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 		// your application execution starts here
 		
 		//Tool 1
-		GimaticCamera.attachTo(iiwa.getFlange());
+		imaticamera.attachTo(iiwa.getFlange());
 		gimatic.setDO_Flange7(true); //Open
 		try {
 			Thread.sleep(500);
