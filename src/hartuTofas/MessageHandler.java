@@ -44,7 +44,7 @@ public class MessageHandler {
         public int ioState;
         public int tool;
         public int base;
-        public int speedOverride;
+        public float speedOverride;
 
         public boolean programCall;
         public String targetPoints;
