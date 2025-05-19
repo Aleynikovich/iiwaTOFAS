@@ -7,6 +7,7 @@ import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 
 
 
@@ -32,6 +33,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
 	private IOFlangeIOGroup gimatic;
+	private Tool gimaticCamera;
 	@Override
 	public void initialize() {
 		// initialize your application here
@@ -40,8 +42,9 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	@Override
 	public void run() {
 		// your application execution starts here
-
+		
 		//Tool 1
+		gimaticCamera.attachTo(iiwa.getFlange());
 		gimatic.setDO_Flange7(true); //Open
 		try {
 			Thread.sleep(500);

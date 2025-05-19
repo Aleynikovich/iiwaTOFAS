@@ -563,7 +563,7 @@
         <toolTemplate class="" name="IxturPlatoGrande">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="7.1366834531178025" cogY="54.629448323165775" cogZ="183.46380369306698" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="9.921096286987034"/>
         </toolTemplate>
-        <toolTemplate class="" name="GimaticCamera">
+        <toolTemplate class="" defaultMotionFrameRef="/GimaticTCP" name="GimaticCamera">
             <frames>
                 <frame id="_bc1a0aef-760a-4d80-9963-96888d89d033" name="GimaticTCP">
                     <transformation a="1.471862487799839" b="-1.5674945873561101" c="2.0991933818887087" x="0.0" y="0.0" z="65.0"/>
