@@ -32,8 +32,6 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
         // Start the TCP server
         int port = 30001; // Listening port
-        
-        
 
         try {
             serverSocket = new ServerSocket(port);
