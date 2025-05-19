@@ -70,7 +70,7 @@ public class MessageHandler {
                 this.ioState       = Integer.parseInt(get(parts, 5, "0"));
                 this.tool          = Integer.parseInt(get(parts, 6, "0"));
                 this.base          = Integer.parseInt(get(parts, 7, "0"));
-                this.speedOverride = Integer.parseInt(get(parts, 8, "100"));
+                this.speedOverride = Integer.parseInt(get(parts, 8, "100"))/100;
                 this.id            = get(parts, 9, "N/A");
 
             } catch (NumberFormatException e) {
@@ -185,10 +185,10 @@ public class MessageHandler {
 
                 if (cmd.actionType == PTP_AXIS) {
                     // Execute synchronous PTP motion
-                    robot.move(ptp(jointValues).setJointVelocityRel(cmd.speedOverride/10));
+                    robot.move(ptp(jointValues).setJointVelocityRel(cmd.speedOverride));
                 } else if (cmd.actionType == PTP_AXIS_C) {
                     // Execute asynchronous PTP motion for each point
-                    robot.moveAsync(ptp(jointValues).setJointVelocityRel(cmd.speedOverride/10).setBlendingRel(0.5));
+                    robot.moveAsync(ptp(jointValues).setJointVelocityRel(cmd.speedOverride).setBlendingRel(0.5));
                 }
             }
         } catch (NumberFormatException e) {
@@ -221,11 +221,11 @@ public class MessageHandler {
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
                 if (cmd.actionType == PTP_FRAME){
-                	robot.move(ptp(targetFrameVirgin).setJointVelocityRel(cmd.speedOverride/10));
+                	robot.move(ptp(targetFrameVirgin).setJointVelocityRel(cmd.speedOverride));
                 }
                 else if (cmd.actionType == PTP_FRAME_C) {
 	                // Execute asynchronous PTP motion for each point
-	            	robot.moveAsync(ptp(targetFrameVirgin).setBlendingRel(0.5).setJointVelocityRel(cmd.speedOverride/10));
+	            	robot.moveAsync(ptp(targetFrameVirgin).setBlendingRel(0.5).setJointVelocityRel(cmd.speedOverride));
                 }
             }
         } catch (NumberFormatException e) {
@@ -254,10 +254,10 @@ public class MessageHandler {
                 double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5))); 
                 Frame targetFrameVirgin = new Frame(World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
                 if (cmd.actionType == LIN_FRAME){
-                	robot.move(lin(targetFrameVirgin).setJointVelocityRel(cmd.speedOverride/10));
+                	robot.move(lin(targetFrameVirgin).setJointVelocityRel(cmd.speedOverride));
                 }
                 else if (cmd.actionType == LIN_FRAME_C){
-                	robot.moveAsync(lin(targetFrameVirgin).setJointVelocityRel(cmd.speedOverride/10).setBlendingRel(0.5));
+                	robot.moveAsync(lin(targetFrameVirgin).setJointVelocityRel(cmd.speedOverride).setBlendingRel(0.5));
                 }
                 
             }
