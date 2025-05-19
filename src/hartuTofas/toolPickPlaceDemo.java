@@ -2,9 +2,13 @@ package hartuTofas;
 
 
 import javax.inject.Inject;
+
+import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+
+
 
 /**
  * Implementation of a robot application.
@@ -26,8 +30,8 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
  */
 public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	@Inject
-	private LBR lBR_iiwa_14_R820_1;
-
+	private LBR iiwa;
+	private IOFlangeIOGroup gimatic;
 	@Override
 	public void initialize() {
 		// initialize your application here
@@ -36,7 +40,105 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	@Override
 	public void run() {
 		// your application execution starts here
-		lBR_iiwa_14_R820_1.move(ptpHome());
+
+		//Tool 1
+		gimatic.setDO_Flange7(true); //Open
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P10"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P1"))));
+		gimatic.setDO_Flange7(false); //Close
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P2"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P3"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P4"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P5"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P4"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P3"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P2"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P1"))));
+		gimatic.setDO_Flange7(true); //Open
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P10"))));
+		
+		//Tool 2
+		gimatic.setDO_Flange7(true); //Open
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool2/P10"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool2/P1"))));
+		gimatic.setDO_Flange7(false); //Close
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool2/P2"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool2/P3"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool2/P2"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool2/P1"))));
+		gimatic.setDO_Flange7(true); //Open
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool1/P10"))));
+		
+		//Tool 3
+		
+		gimatic.setDO_Flange7(true); //Open
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P10"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P1"))));
+		gimatic.setDO_Flange7(false); //Close
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P2"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P3"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P2"))));
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P1"))));
+		gimatic.setDO_Flange7(true); //Open
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		iiwa.move(lin((getApplicationData().getFrame("TofasBase/Kitting/Tool3/P10"))));
+		
 		
 		
 	}
