@@ -2,6 +2,7 @@ package hartuTofas;
 
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
@@ -33,7 +34,9 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
 	private IOFlangeIOGroup gimatic;
-	private Tool gimaticCamera;
+	
+	@Named("GimaticCamera")
+	private Tool GimaticCamera;
 	@Override
 	public void initialize() {
 		// initialize your application here
@@ -44,7 +47,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 		// your application execution starts here
 		
 		//Tool 1
-		gimaticCamera.attachTo(iiwa.getFlange());
+		GimaticCamera.attachTo(iiwa.getFlange());
 		gimatic.setDO_Flange7(true); //Open
 		try {
 			Thread.sleep(500);
