@@ -39,7 +39,7 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void initialize() {
         // initialize your task here
-        initializeCyclic(0, 500, TimeUnit.MILLISECONDS,
+        initializeCyclic(0, 10, TimeUnit.MILLISECONDS,
                 CycleBehavior.BestEffort);
         lbr = getContext().getDeviceFromType(LBR.class);
         connectToServer(); // Call connectToServer in initialize
