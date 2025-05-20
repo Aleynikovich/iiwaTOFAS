@@ -33,6 +33,7 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	@Inject
 	private LBR iiwa;
+	@Inject
 	private IOFlangeIOGroup gimatic;
 	
 	@Named("GimaticCamera")
