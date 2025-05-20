@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
-import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import java.io.IOException;
@@ -65,7 +64,6 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void runCyclic() {
         // your task execution starts here
-        if (true) {
             JointPosition currentPosition = lbr.getCurrentJointPosition();
             String message = formatJointPosition(currentPosition);
             try {
@@ -96,7 +94,6 @@ public class SPS extends RoboticsAPICyclicBackgroundTask {
                 // 2.  Set a flag to stop sending. <- Implemented with connectionEstablished
                 // 3.  Log and continue.
             }
-        }
     }
 
     private static String formatJointPosition(JointPosition joints) {
