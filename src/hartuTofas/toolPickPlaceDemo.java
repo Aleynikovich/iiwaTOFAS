@@ -41,12 +41,13 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 	public void initialize() {
 		// initialize your application here
 		GimaticCamera = createFromTemplate("GimaticCamera");
+		
 	}
 
 	@Override
 	public void run() {
 		// your application execution starts here
-		
+		GimaticCamera = createFromTemplate("GimaticCamera");
 		//Tool 1
 		GimaticCamera.attachTo(iiwa.getFlange());
 		gimatic.setDO_Flange7(true); //Open
