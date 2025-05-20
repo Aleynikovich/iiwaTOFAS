@@ -458,6 +458,108 @@
                 </frame>
             </frame>
         </frame>
+        <frame id="_8fd21848-588d-43c7-8cf6-d721fa83bdde" name="Calibracion">
+            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1747749165815"/>
+            </additionalInformation>
+            <frame id="_eeaa975c-d881-4bfc-9c7c-347fc0768a74" name="P1">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749172160"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_35b9fdac-a597-46c3-aa42-98f4c23e5ec6" name="P2">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749173465"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_8b8e06be-e22b-4d10-baa3-7776c8362a4b" name="P3">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749174379"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_287d0475-32eb-4308-b394-daa1eb8d9a4f" name="P4">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749176649"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_c320058e-5f60-4cc1-a3e7-d756cae2cd5b" name="P5">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749177657"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_1219fba0-3824-4dae-a1d4-2a5c3a828280" name="P6">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749178609"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_c9a02361-600f-45c2-807a-35a1ed2bd160" name="P7">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749179824"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_f35724ce-52cb-40d2-937f-b39ff3c3895e" name="P8">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749180735"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_0c003692-266b-46fd-bffc-f6203a19c496" name="P9">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749181664"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_7488ae8f-b512-4628-beec-24137f14293d" name="P10">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749182501"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_fe7fc417-e299-41c9-b952-571b219877dd" name="P11">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749183368"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_21e75c39-5399-4fc1-8b45-829988efc0fa" name="P12">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749184272"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_29168570-2fb0-4cfe-a853-44ee022dfca7" name="P13">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749185177"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_026b2be1-18e1-4554-a22a-693a4ac98b99" name="P14">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749186072"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_31facaf4-6559-4b15-a8fc-d25330d99e53" name="P15">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749187112"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_f9338217-0f70-49aa-99ab-b99c70011ec6" name="P16">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1747749195328"/>
+                </additionalInformation>
+            </frame>
+        </frame>
     </world>
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="" name="Tool">
