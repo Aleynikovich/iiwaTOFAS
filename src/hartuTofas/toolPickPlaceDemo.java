@@ -59,7 +59,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			e.printStackTrace();
 		}
 		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P1"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P1"))));
 		gimatic.setDO_Flange7(false); //Close
 		try {
 			Thread.sleep(500);
@@ -67,14 +67,14 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P2"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P3"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P4"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P5"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P4"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P3"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P2"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P1"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P2"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P3"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P4"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P5"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P4"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P3"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P2"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P1"))));
 		gimatic.setDO_Flange7(true); //Open
 		try {
 			Thread.sleep(500);
@@ -83,7 +83,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			e.printStackTrace();
 		}
 		
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
 		
 		//Tool 2
 		gimatic.setDO_Flange7(true); //Open
@@ -93,8 +93,8 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P10"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P1"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P10"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P1"))));
 		gimatic.setDO_Flange7(false); //Close
 		try {
 			Thread.sleep(500);
@@ -102,10 +102,10 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P2"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P3"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P2"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P1"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P2"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P3"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P2"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P1"))));
 		gimatic.setDO_Flange7(true); //Open
 		try {
 			Thread.sleep(500);
@@ -114,7 +114,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			e.printStackTrace();
 		}
 		
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
 		
 		//Tool 3
 		
@@ -125,8 +125,8 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P10"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P1"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P10"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P1"))));
 		gimatic.setDO_Flange7(false); //Close
 		try {
 			Thread.sleep(500);
@@ -134,10 +134,10 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P2"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P3"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P2"))));
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P1"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P2"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P3"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P2"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P1"))));
 		gimatic.setDO_Flange7(true); //Open
 		try {
 			Thread.sleep(500);
@@ -146,7 +146,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			e.printStackTrace();
 		}
 		
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P10"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool3/P10"))));
 		
 		
 		
