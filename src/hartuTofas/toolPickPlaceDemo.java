@@ -114,7 +114,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			e.printStackTrace();
 		}
 		
-		GimaticCamera.getFrame("GimaticTCP").move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
+		GimaticCamera.getFrame("GimaticTCP").move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool2/P10"))));
 		
 		//Tool 3
 		
