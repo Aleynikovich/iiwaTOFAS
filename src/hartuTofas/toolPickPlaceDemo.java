@@ -58,7 +58,7 @@ public class toolPickPlaceDemo extends RoboticsAPIApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
+		GimaticCamera.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P10"))));
 		iiwa.move(lin((getApplicationData().getFrame("/TofasBase/Kitting/Tool1/P1"))));
 		gimatic.setDO_Flange7(false); //Close
 		try {
