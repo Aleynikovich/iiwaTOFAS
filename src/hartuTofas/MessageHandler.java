@@ -335,10 +335,11 @@ public class MessageHandler {
 		case 1:
 			gimatic.setDO_Flange7(cmd.ioState);
 		case 2:
+			IOs.setOutput2(!cmd.ioState);
 			IOs.setOutput1(cmd.ioState);
 		case 3:
+			IOs.setOutput1(!cmd.ioState);
 			IOs.setOutput2(cmd.ioState);
-
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
