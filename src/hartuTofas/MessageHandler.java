@@ -50,7 +50,7 @@ public class MessageHandler {
 		public int numPoints;
 		public int ioPoint;
 		public int ioPin;
-		public int ioState;
+		public boolean ioState;
 		public int tool;
 		public int base;
 		public double speedOverride;
@@ -76,7 +76,7 @@ public class MessageHandler {
 				this.targetPoints = get(parts, 2, "");
 				this.ioPoint = Integer.parseInt(get(parts, 3, "0"));
 				this.ioPin = Integer.parseInt(get(parts, 4, "0"));
-				this.ioState = Integer.parseInt(get(parts, 5, "0"));
+				this.ioState = Boolean.parseBoolean(get(parts, 5, "false"));
 				this.tool = Integer.parseInt(get(parts, 6, "0"));
 				this.base = Integer.parseInt(get(parts, 7, "0"));
 				this.speedOverride = Double.parseDouble(get(parts, 8, "100.0")) / 100.0;
@@ -333,15 +333,11 @@ public class MessageHandler {
 	private String handleActivateIO(Command cmd) {
 		switch (cmd.ioPin) {
 		case 1:
-			gimatic.setDO_Flange7(true);
+			gimatic.setDO_Flange7(cmd.ioState);
 		case 2:
-			gimatic.setDO_Flange7(false);
+			IOs.setOutput1(cmd.ioState);
 		case 3:
-			IOs.setOutput1(false);
-			IOs.setOutput2(true);
-		case 4:
-			IOs.setOutput1(true);
-			IOs.setOutput2(false);
+			IOs.setOutput2(cmd.ioState);
 
 			try {
 				Thread.sleep(100);
