@@ -1,6 +1,9 @@
 package hartuTofas;
 
 import javax.inject.Inject;
+
+import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
+import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -15,14 +18,20 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     private ServerSocket serverSocket = null;
     
     private Socket clientSocket = null;
+    
+	@Inject
+	public IOFlangeIOGroup gimatic; // Out 7 True=Unlock False = Lock
+	@Inject
+	public Ethercat_x44IOGroup IOs; // Out 1 = Pick Out 2 = Place [raise]
 
     private MessageHandler messageHandler;
 
     @Override
     public void initialize() {
-        // Initialize the MessageHandler with the robot instance
-        messageHandler = new MessageHandler(lBR_iiwa_14_R820_1);
+    	// Pass robot and I/O groups to the handler explicitly
+    	messageHandler = new MessageHandler(lBR_iiwa_14_R820_1, gimatic, IOs);
     }
+
 
     @Override
     public void run() {
