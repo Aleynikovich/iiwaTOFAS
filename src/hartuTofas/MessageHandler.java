@@ -20,9 +20,9 @@ public class MessageHandler {
 	private Tool flexTool;
 
 	@Inject
-	private IOFlangeIOGroup gimatic; // Out 7 True=Unlock False = Lock
+	public IOFlangeIOGroup gimatic; // Out 7 True=Unlock False = Lock
 	@Inject
-	private Ethercat_x44IOGroup IOs; // Out 1 = Pick Out 2 = Place [raise]
+	public Ethercat_x44IOGroup IOs; // Out 1 = Pick Out 2 = Place [raise]
 
 	// Action types
 	// <ACTION_TYPE>|<NUM_POINTS>|<POINTS>|<OUTPUT_POINTS>|<OUTPUT_PINS>|<OUTPUT_STATES>|<TOOL_ID>|<BASE_ID>|<OVERRIDE>|<UUID>#
