@@ -331,6 +331,7 @@ public class MessageHandler {
 	}
 
 	private String handleActivateIO(Command cmd) {
+		System.out.println("Entered handleActivateIO");
 		switch (cmd.ioPin) {
 		case 1:
 			gimatic.setDO_Flange7(cmd.ioState);
