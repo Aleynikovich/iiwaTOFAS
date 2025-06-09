@@ -814,8 +814,7 @@
         <toolTemplate class="" name="GimaticIxtur">
             <frames>
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.1795106276975958" y="0.2521821634326065" z="207.65994112828548"/>
-                    <measurementTranslation calculationError="9.848640264449674" method="XYZ4Point" timestamp="1356995378445"/>
+                    <transformation a="0.3" b="0.0" c="0.0" x="0.0" y="0.0" z="230.0222"/>
                 </frame>
                 <frame id="_d49cdb5c-3a5b-4e0d-b777-fd7506418d1e" name="flange">
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
