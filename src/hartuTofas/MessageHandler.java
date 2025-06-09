@@ -331,11 +331,12 @@ public class MessageHandler {
 	}
 
 	private String handleActivateIO(Command cmd) {
-		System.out.println("Entered handleActivateIO");
+		System.out.println(cmd.ioPin);
 		switch (cmd.ioPin) {
 		case 1:
 			gimatic.setDO_Flange7(cmd.ioState);
 		case 2:
+			System.out.println("Entered case 2");
 			IOs.setOutput2(!cmd.ioState);
 			IOs.setOutput1(cmd.ioState);
 		case 3:
