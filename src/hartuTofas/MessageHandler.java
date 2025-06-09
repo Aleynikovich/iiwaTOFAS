@@ -339,13 +339,10 @@ public class MessageHandler  {
 				gimatic.setDO_Flange7(cmd.ioState);
 				break;
 			case 2:
-				System.out.println("Entered case 2");
-				IOs.setOutput2(!cmd.ioState);
-				IOs.setOutput1(cmd.ioState);
+				IOs.setOutput2(cmd.ioState);
 				break;
 			case 3:
-				IOs.setOutput1(!cmd.ioState);
-				IOs.setOutput2(cmd.ioState);
+				IOs.setOutput1(cmd.ioState);
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
