@@ -14,15 +14,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class MessageHandler {
+public class MessageHandler  {
 
 	private LBR robot;
+	private IOFlangeIOGroup gimatic;
+	private Ethercat_x44IOGroup IOs;
+
 	private Tool flexTool;
 
-	@Inject
-	public IOFlangeIOGroup gimatic; // Out 7 True=Unlock False = Lock
-	@Inject
-	public Ethercat_x44IOGroup IOs; // Out 1 = Pick Out 2 = Place [raise]
+
 
 	// Action types
 	// <ACTION_TYPE>|<NUM_POINTS>|<POINTS>|<OUTPUT_POINTS>|<OUTPUT_PINS>|<OUTPUT_STATES>|<TOOL_ID>|<BASE_ID>|<OVERRIDE>|<UUID>#
@@ -41,8 +41,10 @@ public class MessageHandler {
 
 	// 100+ = program call with ID actiontype-100
 
-	public MessageHandler(LBR robot) {
+	public MessageHandler(LBR robot, IOFlangeIOGroup gimatic, Ethercat_x44IOGroup IOs) {
 		this.robot = robot;
+		this.gimatic = gimatic;
+		this.IOs = IOs;
 	}
 
 	public class Command {
@@ -333,24 +335,29 @@ public class MessageHandler {
 	private String handleActivateIO(Command cmd) {
 		System.out.println(cmd.ioPin);
 		switch (cmd.ioPin) {
-		case 1:
-			gimatic.setDO_Flange7(cmd.ioState);
-		case 2:
-			System.out.println("Entered case 2");
-			IOs.setOutput2(!cmd.ioState);
-			IOs.setOutput1(cmd.ioState);
-		case 3:
-			IOs.setOutput1(!cmd.ioState);
-			IOs.setOutput2(cmd.ioState);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			case 1:
+				gimatic.setDO_Flange7(cmd.ioState);
+				break;
+			case 2:
+				System.out.println("Entered case 2");
+				IOs.setOutput2(!cmd.ioState);
+				IOs.setOutput1(cmd.ioState);
+				break;
+			case 3:
+				IOs.setOutput1(!cmd.ioState);
+				IOs.setOutput2(cmd.ioState);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break;
+			default:
+				System.out.println("Invalid IO pin: " + cmd.ioPin);
 		}
 		return "ACTIVATE_IO command executed for ID: " + cmd.id;
 	}
+
 
 	private boolean isWithinLimits(int jointIndex, double jointValue) {
 		switch (jointIndex) {
