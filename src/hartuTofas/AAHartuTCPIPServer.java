@@ -1,6 +1,7 @@
+// File: AAHartuTCPIPServer.java
 package hartuTofas;
 
-import javax.inject.Inject;
+import javax.inject.Inject; // Required for @Inject annotations
 
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
@@ -12,35 +13,47 @@ import java.io.*;
 import java.net.*;
 
 public class AAHartuTCPIPServer extends RoboticsAPIApplication {
+    // Injected robot instance
     @Inject
     private LBR lBR_iiwa_14_R820_1;
     
+    // Server and client sockets for TCP communication
     private ServerSocket serverSocket = null;
-    
     private Socket clientSocket = null;
     
-	@Inject
-	public IOFlangeIOGroup gimatic; // Out 7 True=Unlock False = Lock
-	@Inject
-	public Ethercat_x44IOGroup IOs; // Out 1 = Pick Out 2 = Place [raise]
+    // Injected I/O groups
+    @Inject
+    public IOFlangeIOGroup gimatic;
+    @Inject
+    public Ethercat_x44IOGroup IOs;
 
-    private MessageHandler messageHandler;
+    // The MessageHandler instance will be automatically injected by the KUKA framework.
+    // This removes the need for manual instantiation in initialize().
+    @Inject
+    private MessageHandler messageHandler; 
 
+    /**
+     * Called once when the application starts.
+     * Used to initialize injected components and other application-wide settings.
+     */
     @Override
     public void initialize() {
-    	// Pass robot and I/O groups to the handler explicitly
-    	messageHandler = new MessageHandler(lBR_iiwa_14_R820_1, gimatic, IOs);
+        // No manual instantiation of messageHandler is needed here due to @Inject.
+        // It's automatically created and its own @Inject fields are filled.
+        System.out.println("AAHartuTCPIPServer initialized. MessageHandler injected.");
     }
 
-
+    /**
+     * The main execution loop of the robot application.
+     * Sets the robot to home position and starts the TCP server to listen for client connections.
+     */
     @Override
     public void run() {
         // Move robot to home position at startup
         lBR_iiwa_14_R820_1.move(ptpHome().setJointVelocityRel(0.25));
         System.out.println("Robot moved to home position.");
 
-        // Start the TCP server
-        int port = 30001; // Listening port
+        int port = 30001; // The port on which the server will listen
 
         try {
             serverSocket = new ServerSocket(port);
@@ -48,35 +61,39 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
             while (true) {
                 System.out.println("Waiting for a client...");
-                clientSocket = serverSocket.accept(); // Accept client connection
+                clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
-                // Handle client communication
                 handleClient(clientSocket);
             }
         } catch (IOException e) {
-            System.err.println("Error starting server: " + e.getMessage());
+            System.err.println("Error starting or running server: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             if (serverSocket != null) {
                 try {
                     serverSocket.close();
+                    System.out.println("Server socket closed in finally block.");
                 } catch (IOException e) {
-                    System.err.println("Error closing server socket: " + e.getMessage());
+                    System.err.println("Error closing server socket in finally block: " + e.getMessage());
                 }
             }
         }
     }
 
+    /**
+     * Handles communication with a single connected client.
+     * Reads messages, processes them using MessageHandler, and sends responses.
+     * @param clientSocket The socket connected to the client.
+     */
     private void handleClient(Socket clientSocket) {
         BufferedReader in = null;
         PrintWriter out = null;
 
         try {
-            // Prepare input and output streams
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            // Send the initial FREE message
             String initialResponse = "FREE|0#";
             System.out.println("Sending initial response: " + initialResponse);
             out.print(initialResponse);
@@ -84,97 +101,82 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
 
             System.out.println("Waiting for a message from the client...");
 
-            // Read and process messages
             StringBuilder messageBuilder = new StringBuilder();
             int charInt;
             while ((charInt = in.read()) != -1) {
                 char currentChar = (char) charInt;
-
-                // Append character to the message buffer
                 messageBuilder.append(currentChar);
 
-                // Check if we've received the complete message (terminated by #)
                 if (currentChar == '#') {
-                    String message = messageBuilder.toString();
-                    System.out.println("Received: " + message);
+                    String receivedMessage = messageBuilder.toString();
+                    System.out.println("Received: " + receivedMessage);
 
-                    // Process the message using MessageHandler
-                    String response = messageHandler.handleMessage(message);
+                    String handlerResponse = messageHandler.handleMessage(receivedMessage);
 
-                    // Extract the request ID from the message
-                    String requestId = extractRequestId(message);
+                    String requestId = extractRequestId(receivedMessage);
                     
-                    // Send the appropriate response
-                    if (response.startsWith("Invalid") || response.startsWith("Unknown")) {
-                    	System.out.println(response);
-                        String errorResponse = "FREE|" + requestId + "#";
-                        System.out.println("Sending error response: " + errorResponse);
-                        out.print(errorResponse);
-                        out.flush();
+                    String responseToSend;
+                    if (handlerResponse.startsWith("Invalid") || handlerResponse.startsWith("Unknown") || handlerResponse.startsWith("Error") || handlerResponse.startsWith("Failed")) {
+                        System.out.println("Handler reported error: " + handlerResponse);
+                        responseToSend = "ERROR|" + requestId + "#";
                     } else {
-                    	System.out.println(response);
-                        String successResponse = "FREE|" + requestId + "#";
-                        out.print(successResponse);
-                        out.flush();
-                        System.out.println("Sending success response: " + successResponse);
+                        System.out.println("Handler reported success: " + handlerResponse);
+                        responseToSend = "FREE|" + requestId + "#";
                     }
 
-                    // Clear the message buffer for the next message
-                    messageBuilder.setLength(0);
+                    out.print(responseToSend);
+                    out.flush();
+                    System.out.println("Sent response: " + responseToSend);
 
+                    messageBuilder.setLength(0);
                     System.out.println("Waiting for the next message...");
                 }
             }
+            System.out.println("Client disconnected or end of stream reached.");
         } catch (IOException e) {
-            System.err.println("Error handling client: " + e.getMessage());
+            System.err.println("Error handling client communication: " + e.getMessage());
         } finally {
-            // Clean up resources
             try {
                 if (in != null) in.close();
                 if (out != null) out.close();
-                clientSocket.close();
+                if (clientSocket != null) clientSocket.close();
+                System.out.println("Client resources closed.");
             } catch (IOException e) {
                 System.err.println("Error closing client resources: " + e.getMessage());
             }
         }
     }
 
-
     private String extractRequestId(String message) {
-        // Ensure message ends with # and remove it
         if (message.endsWith("#")) {
             message = message.substring(0, message.length() - 1);
         }
 
-        // Split by | and return the last part (request ID)
         String[] parts = message.split("\\|");
-        return parts.length >= 9 ? parts[9] : "0";
+        // The ID is expected to be the 10th part (index 9) based on your format.
+        return parts.length >= 10 ? parts[9] : "0";
     }
     
     @Override
     public void dispose() {
-        System.out.println("Program was cancelled.");
+        System.out.println("Program was cancelled. Disposing resources.");
         
-        // Cierra el socket del cliente si está activo
         if (clientSocket != null && !clientSocket.isClosed()) {
             try {
                 clientSocket.close();
-                System.out.println("Client socket closed.");
+                System.out.println("Client socket closed during dispose.");
             } catch (IOException e) {
-                System.err.println("Error closing client socket: " + e.getMessage());
+                System.err.println("Error closing client socket during dispose: " + e.getMessage());
             }
         }
 
-        // Cierra el socket del servidor
         if (serverSocket != null && !serverSocket.isClosed()) {
             try {
                 serverSocket.close();
-                System.out.println("Server socket closed.");
+                System.out.println("Server socket closed during dispose.");
             } catch (IOException e) {
-                System.err.println("Error closing server socket: " + e.getMessage());
+                System.err.println("Error closing server socket during dispose: " + e.getMessage());
             }
         }
-        
-        // Código para cerrar recursos, detener movimientos, etc.
     }
 }

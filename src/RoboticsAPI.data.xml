@@ -1051,7 +1051,7 @@
             </additionalInformation>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-9.286296384229951" cogY="-16.509902307272725" cogZ="83.44272938441216" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.697908246530612"/>
         </toolTemplate>
-        <toolTemplate class="" name="GimaticIxtur">
+        <toolTemplate class="" defaultMotionFrameRef="/flange2gimatic" name="GimaticIxtur">
             <frames>
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
                     <transformation a="0.345" b="0.0" c="0.0" x="0.0" y="0.0" z="230.0222"/>
@@ -1062,14 +1062,14 @@
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="17.64448912333996" cogY="11.31147424235794" cogZ="87.91762326859212" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="4.207947468891694"/>
         </toolTemplate>
-        <toolTemplate class="" name="sphere">
+        <toolTemplate class="" defaultMotionFrameRef="/gripper2flange" name="GimaticGripperV">
             <frames>
-                <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="sphere2flange">
+                <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="gripper2flange">
                     <transformation a="0.0" b="0.0" c="0.0" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     <measurementTranslation calculationError="12.370181947472895" method="XYZ4Point" timestamp="1361072220163"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.0"/>
         </toolTemplate>
         <toolTemplate class="" name="TrackerTool">
             <frames>
