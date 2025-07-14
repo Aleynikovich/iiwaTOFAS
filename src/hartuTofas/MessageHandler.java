@@ -127,23 +127,17 @@ public class MessageHandler {
             // --- CRITICAL CHANGE: UNCOMMENT AND MODIFY THIS LINE ---
             // 1. Map the tool ID from the message to the WorkVisual tool name.
             String toolNameToLoad = cmd.tool;
-            //if (toolNameToLoad == null) {
-               // System.err.println("Unknown tool ID received: " + cmd.tool + ". Cannot load tool.");
-               // return "Error: Unknown tool ID '" + cmd.tool + "'.";
-            //}
-
-            // 2. Load the tool using createFromTemplate and the 'application' instance.
-            flexTool = application.createFromTemplate(toolNameToLoad); 
-
-            if (flexTool == null) {
-                System.err.println("Failed to load tool '" + toolNameToLoad + "' from WorkVisual templates. " +
-                                   "Ensure the tool name is correct and the tool is assigned to your robot in WorkVisual.");
-                return "Error: Tool '" + toolNameToLoad + "' not found or cannot be loaded.";
+            if (toolNameToLoad == null || toolNameToLoad ==  "0") {
+                System.err.println("Unknown tool ID received: " + cmd.tool + ". Cannot load tool.");
+                //return "Error: Unknown tool ID '" + cmd.tool + "'.";
             }
-            // --- END CRITICAL CHANGE ---
-
-            // This line will now work because flexTool is initialized
-			flexTool.attachTo(robot.getFlange());
+            
+            else {
+            	 // 2. Load the tool using createFromTemplate and the 'application' instance.
+                flexTool = application.createFromTemplate(toolNameToLoad); 
+                // This line will now work because flexTool is initialized
+                flexTool.attachTo(robot.getFlange());
+            }
 
 			if (!cmd.programCall) {
 				System.out.println("Entered Movetype");
