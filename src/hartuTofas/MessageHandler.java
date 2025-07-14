@@ -126,8 +126,8 @@ public class MessageHandler {
 
             // --- CRITICAL CHANGE: UNCOMMENT AND MODIFY THIS LINE ---
             // 1. Map the tool ID from the message to the WorkVisual tool name.
-            String toolNameToLoad = cmd.tool;
-            if (toolNameToLoad == null || toolNameToLoad ==  "0") {
+            String toolNameToLoad = mapToolIdToWorkVisualName(cmd.tool);
+            if (toolNameToLoad == null) {
                 System.err.println("Unknown tool ID received: " + cmd.tool + ". Cannot load tool.");
                 //return "Error: Unknown tool ID '" + cmd.tool + "'.";
             }
