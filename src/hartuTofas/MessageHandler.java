@@ -126,14 +126,14 @@ public class MessageHandler {
 
             // --- CRITICAL CHANGE: UNCOMMENT AND MODIFY THIS LINE ---
             // 1. Map the tool ID from the message to the WorkVisual tool name.
-            String toolNameToLoad = mapToolIdToWorkVisualName(cmd.tool);
-            if (toolNameToLoad == null) {
-                System.err.println("Unknown tool ID received: " + cmd.tool + ". Cannot load tool.");
-                return "Error: Unknown tool ID '" + cmd.tool + "'.";
-            }
+            String toolNameToLoad = cmd.tool;
+            //if (toolNameToLoad == null) {
+               // System.err.println("Unknown tool ID received: " + cmd.tool + ". Cannot load tool.");
+               // return "Error: Unknown tool ID '" + cmd.tool + "'.";
+            //}
 
             // 2. Load the tool using createFromTemplate and the 'application' instance.
-            flexTool = application.createFromTemplate(toolNameToLoad); 
+            flexTool = application.createFromTemplate(cmd.tool); 
 
             if (flexTool == null) {
                 System.err.println("Failed to load tool '" + toolNameToLoad + "' from WorkVisual templates. " +
@@ -200,7 +200,7 @@ public class MessageHandler {
             case "2": return "BinPick_Tool";    // "BinPick_Tool" from your image
             case "3": return "GimaticCamera";   // "GimaticCamera" from your image
             case "4": return "GimaticGripperV"; // "GimaticGripperV" from your image
-            case "5": return "Gimaticlxtur";    // "Gimaticlxtur" from your image
+            case "5": return "GimaticIxtur";    // "Gimaticlxtur" from your image
             case "6": return "lxturPlatoGrande"; // "lxturPlatoGrande" from your image
             case "7": return "RealSense";       // "RealSense" from your image
             case "8": return "Roldana";         // "Roldana" from your image
