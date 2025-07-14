@@ -1,4 +1,3 @@
-// File: MessageHandler.java
 package hartuTofas;
 
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
@@ -9,27 +8,23 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.World;
 import com.kuka.roboticsAPI.geometricModel.math.Transformation;
-import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication; // --- NEW IMPORT ---
+import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import java.util.Arrays;
 import java.util.List;
-import java.lang.Math;
 
 import javax.inject.Inject;
-
-public class MessageHandler {
+public class CopyOfMessageHandler  {
 
 	private LBR robot;
 	private IOFlangeIOGroup gimatic;
 	private Ethercat_x44IOGroup IOs;
-
-    // --- NEW FIELD ---
-    // This field will store the RoboticsAPIApplication instance passed from AAHartuTCPIPServer.
 	private RoboticsAPIApplication application; 
-
 	private Tool flexTool;
 
 
+
 	// Action types
+	// <ACTION_TYPE>|<NUM_POINTS>|<POINTS>|<OUTPUT_POINTS>|<OUTPUT_PINS>|<OUTPUT_STATES>|<TOOL_ID>|<BASE_ID>|<OVERRIDE>|<UUID>#
 	public static final int PTP_AXIS = 0;
 	public static final int PTP_FRAME = 1;
 	public static final int LIN_AXIS = 2;
@@ -45,13 +40,11 @@ public class MessageHandler {
 
 	// 100+ = program call with ID actiontype-100
 
-    // --- MODIFIED CONSTRUCTOR ---
-    // It now accepts RoboticsAPIApplication as the fourth parameter and stores it.
-	public MessageHandler(LBR robot, IOFlangeIOGroup gimatic, Ethercat_x44IOGroup IOs, RoboticsAPIApplication application) {
+	public CopyOfMessageHandler(LBR robot, IOFlangeIOGroup gimatic, Ethercat_x44IOGroup IOs, RoboticsAPIApplication application) {
 		this.robot = robot;
 		this.gimatic = gimatic;
 		this.IOs = IOs;
-		this.application = application; // Store the application instance
+		this.application = application;
 	}
 
 	public class Command {
@@ -123,28 +116,8 @@ public class MessageHandler {
 		try {
 			Command cmd = new Command(parts);
 			cmd.printCommand();
-
-            // --- CRITICAL CHANGE: UNCOMMENT AND MODIFY THIS LINE ---
-            // 1. Map the tool ID from the message to the WorkVisual tool name.
-            String toolNameToLoad = mapToolIdToWorkVisualName(cmd.tool);
-            if (toolNameToLoad == null) {
-                System.err.println("Unknown tool ID received: " + cmd.tool + ". Cannot load tool.");
-                return "Error: Unknown tool ID '" + cmd.tool + "'.";
-            }
-
-            // 2. Load the tool using createFromTemplate and the 'application' instance.
-            flexTool = application.createFromTemplate(toolNameToLoad); 
-
-            if (flexTool == null) {
-                System.err.println("Failed to load tool '" + toolNameToLoad + "' from WorkVisual templates. " +
-                                   "Ensure the tool name is correct and the tool is assigned to your robot in WorkVisual.");
-                return "Error: Tool '" + toolNameToLoad + "' not found or cannot be loaded.";
-            }
-            // --- END CRITICAL CHANGE ---
-
-            // This line will now work because flexTool is initialized
+			//flexTool = createFromTemplate(cmd.tool);
 			flexTool.attachTo(robot.getFlange());
-
 			if (!cmd.programCall) {
 				System.out.println("Entered Movetype");
 				switch (cmd.actionType) {
@@ -160,9 +133,7 @@ public class MessageHandler {
 					return handleLINFrame(cmd);
 				case LIN_REL_TOOL:
 				case LIN_REL_BASE:
-                    // --- MODIFIED: Ensure LIN_REL_TOOL and LIN_REL_BASE are handled by handleLINREL ---
-                    return handleLINREL(cmd); // Added this line to call the handler
-                // --- END MODIFIED ---
+
 				case ACTIVATE_IO:
 					System.out.println("Entered Activate IO");
 					return handleActivateIO(cmd);
@@ -184,37 +155,12 @@ public class MessageHandler {
 			}
 
 		} catch (Exception e) {
-            e.printStackTrace(); // Print stack trace for debugging
 			return "Failed to parse command: " + e.getMessage();
 		}
 	}
 
-    // --- NEW HELPER METHOD ---
-    // This maps your incoming tool IDs to the exact WorkVisual tool template names.
-    // You MUST ensure these names are EXACTLY as they appear in WorkVisual (case-sensitive)
-    // based on the image you provided previously.
-    private String mapToolIdToWorkVisualName(String toolId) {
-        switch (toolId) {
-            case "0": return "Tool";            // Generic "Tool" in your image
-            case "1": return "RollScan";        // "RollScan" from your image
-            case "2": return "BinPick_Tool";    // "BinPick_Tool" from your image
-            case "3": return "GimaticCamera";   // "GimaticCamera" from your image
-            case "4": return "GimaticGripperV"; // "GimaticGripperV" from your image
-            case "5": return "Gimaticlxtur";    // "Gimaticlxtur" from your image
-            case "6": return "lxturPlatoGrande"; // "lxturPlatoGrande" from your image
-            case "7": return "RealSense";       // "RealSense" from your image
-            case "8": return "Roldana";         // "Roldana" from your image
-            case "9": return "ToolTemplate";    // "ToolTemplate" from your image
-            case "10": return "TrackerTool";    // "TrackerTool" from your image
-            default:
-                System.err.println("Tool ID '" + toolId + "' not recognized in mapToolIdToWorkVisualName.");
-                return null; // Return null if the ID does not map to a known tool name
-        }
-    }
-
-    // --- Movement Handler Methods ---
-
 	private String handlePTPAxis(Command cmd) {
+		// Process the PTP_AXIS or PTP_AXIS_C command
 		List<String> jointPositionGroups = Arrays.asList(cmd.targetPoints
 				.split(","));
 
@@ -322,13 +268,7 @@ public class MessageHandler {
 	private String handleLINFrame(Command cmd) {
 		// Process the LIN_FRAME commands
 		List<String> points = Arrays.asList(cmd.targetPoints.split(","));
-
-        // --- MODIFIED: Add a null check for flexTool ---
-        if (flexTool == null) {
-            System.err.println("Error: flexTool is null for LIN_FRAME command. Tool was not loaded correctly. ID: " + cmd.id);
-            return "Error: Tool not initialized for LIN_FRAME.";
-        }
-        // --- END MODIFIED ---
+		// Tool mngmt
 
 		try {
 			for (int i = 0; i < points.size(); i++) {
@@ -346,13 +286,11 @@ public class MessageHandler {
 				Frame targetFrameVirgin = new Frame(
 						World.Current.getRootFrame(), x, y, z, roll, pitch, yaw);
 				if (cmd.actionType == LIN_FRAME) {
-                    // --- MODIFIED: Use flexTool for the move ---
-					flexTool.move(lin(targetFrameVirgin).setCartVelocity(
-							cmd.speedOverride * 200)); // Assuming max 200mm/s
+					flexTool.move(lin(targetFrameVirgin).setJointVelocityRel(
+							cmd.speedOverride));
 				} else if (cmd.actionType == LIN_FRAME_C) {
-                    // --- MODIFIED: Use flexTool for the move ---
-					flexTool.moveAsync(lin(targetFrameVirgin).setCartVelocity(
-							cmd.speedOverride * 200).setBlendingRel(0.5));
+					flexTool.moveAsync(lin(targetFrameVirgin).setJointVelocityRel(
+							cmd.speedOverride).setBlendingRel(0.5));
 				}
 
 			}
@@ -368,48 +306,35 @@ public class MessageHandler {
 		return "LIN_FRAME command executed";
 	}
 
-    // --- MODIFIED handleLINREL method ---
 	private String handleLINREL(Command cmd) {
-		List<String> offsetData = Arrays.asList(cmd.targetPoints.split(";"));
-		try {
-            if (offsetData.size() != 6) {
-                System.out.println("Incomplete offset values for LIN_REL command for ID: " + cmd.id + ". Expected 6, got " + offsetData.size());
-                return "Incomplete offset values for LIN_REL";
-            }
-			double xOffset = Double.parseDouble(offsetData.get(0));
-			double yOffset = Double.parseDouble(offsetData.get(1));
-			double zOffset = Double.parseDouble(offsetData.get(2));
-			double aOffset = Math.toRadians(Double.parseDouble(offsetData.get(3)));
-			double bOffset = Math.toRadians(Double.parseDouble(offsetData.get(4)));
-			double cOffset = Math.toRadians(Double.parseDouble(offsetData.get(5)));
-
-            Transformation offsetTransformation = Transformation.ofRad(xOffset, yOffset, zOffset, aOffset, bOffset, cOffset);
-
+		List<String> relFrames = Arrays.asList(cmd.targetPoints.split(","));
+		for (int i = 0; i < relFrames.size(); i++) {
+			String point = relFrames.get(i);
+			List<String> coordinates = Arrays.asList(point.split(";"));
+			double x = Double.parseDouble(coordinates.get(0));
+			double y = Double.parseDouble(coordinates.get(1));
+			double z = Double.parseDouble(coordinates.get(2));
+			double roll = Math
+					.toRadians(Double.parseDouble(coordinates.get(3))); // Convert
+																		// degrees
+																		// to
+																		// radians
+			double pitch = Math
+					.toRadians(Double.parseDouble(coordinates.get(4)));
+			double yaw = Math.toRadians(Double.parseDouble(coordinates.get(5)));
 			if (cmd.actionType == LIN_REL_TOOL) {
-                // --- MODIFIED: Add null check and use flexTool ---
-                if (flexTool == null) {
-                    System.err.println("Error: flexTool is null for LIN_REL_TOOL command. Tool was not loaded correctly. ID: " + cmd.id);
-                    return "Error: Tool not initialized for LIN_REL_TOOL.";
-                }
-				flexTool.move(linRel(offsetTransformation, flexTool.getFrame(flexTool.getDefaultMotionFrame().getName()))
-                        .setCartVelocity(cmd.speedOverride * 200));
+				flexTool.attachTo(robot.getFlange());
+				// flexTool.
+				// robot.move(linRel(x,y,z,roll,pitch,yaw,getApplicationData().getBase));
 			} else if (cmd.actionType == LIN_REL_BASE) {
-                // --- MODIFIED: Use robot for base-relative move ---
-				robot.move(linRel(offsetTransformation)
-                        .setCartVelocity(cmd.speedOverride * 200));
+				// robot.move(lin());
 			}
-		} catch (NumberFormatException e) {
-            System.out.println("Invalid offset values for LIN_REL command for ID: " + cmd.id + ". Error: " + e.getMessage());
-            return "Invalid offset values for LIN_REL";
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Incomplete offset values for LIN_REL command for ID: " + cmd.id + ". Error: " + e.getMessage());
-            return "Incomplete offset values for LIN_REL";
-        }
+		}
 		System.out.println("LIN_REL command executed for ID: " + cmd.id);
 		return "LIN_REL command executed for ID: " + cmd.id;
+
 	}
 
-    // --- IO Handling Method (UNMODIFIED from your last provided code) ---
 	private String handleActivateIO(Command cmd) {
 		System.out.println(cmd.ioPin);
 		switch (cmd.ioPin) {
@@ -433,7 +358,7 @@ public class MessageHandler {
 		return "ACTIVATE_IO command executed for ID: " + cmd.id;
 	}
 
-    // --- Joint Limit Check Helper (UNMODIFIED from your last provided code) ---
+
 	private boolean isWithinLimits(int jointIndex, double jointValue) {
 		switch (jointIndex) {
 		case 0:
