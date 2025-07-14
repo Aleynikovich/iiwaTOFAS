@@ -133,7 +133,7 @@ public class MessageHandler {
             //}
 
             // 2. Load the tool using createFromTemplate and the 'application' instance.
-            flexTool = application.createFromTemplate(cmd.tool); 
+            flexTool = application.createFromTemplate(toolNameToLoad); 
 
             if (flexTool == null) {
                 System.err.println("Failed to load tool '" + toolNameToLoad + "' from WorkVisual templates. " +
