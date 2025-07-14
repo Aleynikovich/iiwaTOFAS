@@ -1054,7 +1054,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/flange2gimatic" name="GimaticIxtur">
             <frames>
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
-                    <transformation a="0.345" b="0.0" c="0.0" x="0.0" y="0.0" z="230.0222"/>
+                    <transformation a="0.345" b="0.0" c="0.0" x="0.0" y="0.0" z="210.0"/>
                 </frame>
                 <frame id="_d49cdb5c-3a5b-4e0d-b777-fd7506418d1e" name="flange">
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
