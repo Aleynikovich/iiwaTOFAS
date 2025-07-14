@@ -29,7 +29,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     @Override
     public void initialize() {
     	// Pass robot and I/O groups to the handler explicitly
-    	//messageHandler = new MessageHandler(lBR_iiwa_14_R820_1, gimatic, IOs);
+    	messageHandler = new MessageHandler(lBR_iiwa_14_R820_1, gimatic, IOs, this); 
     }
 
 

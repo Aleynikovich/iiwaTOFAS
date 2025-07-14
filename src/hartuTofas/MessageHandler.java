@@ -18,7 +18,7 @@ public class MessageHandler  {
 	private LBR robot;
 	private IOFlangeIOGroup gimatic;
 	private Ethercat_x44IOGroup IOs;
-
+	private RoboticsAPIApplication application; 
 	private Tool flexTool;
 
 
@@ -40,10 +40,11 @@ public class MessageHandler  {
 
 	// 100+ = program call with ID actiontype-100
 
-	public MessageHandler(LBR robot, IOFlangeIOGroup gimatic, Ethercat_x44IOGroup IOs) {
+	public MessageHandler(LBR robot, IOFlangeIOGroup gimatic, Ethercat_x44IOGroup IOs, RoboticsAPIApplication application) {
 		this.robot = robot;
 		this.gimatic = gimatic;
 		this.IOs = IOs;
+		this.application = application;
 	}
 
 	public class Command {
