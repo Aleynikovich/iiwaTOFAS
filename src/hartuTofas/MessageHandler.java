@@ -192,8 +192,6 @@ public class MessageHandler {
 
     // --- Helper Method for Tool Mapping (MODIFIED/FOCUSED PART) ---
     private String mapToolIdToWorkVisualName(String toolId) {
-        // IMPORTANT: These names MUST EXACTLY MATCH the "Template Group for Tools" names in your WorkVisual project.
-        // The mapping is arbitrary; adjust the numerical IDs ("0", "1", etc.) as per your client's convention.
         switch (toolId) {
             case "0": return "Tool";            // Generic "Tool" in your image
             case "1": return "RollScan";        // "RollScan" from your image
