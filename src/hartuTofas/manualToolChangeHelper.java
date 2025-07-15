@@ -43,9 +43,9 @@ public class manualToolChangeHelper extends RoboticsAPICyclicBackgroundTask {
 	@Override
 	public void runCyclic() {
 		// your task execution starts here
-		if (gimatic.getDO_Flange8()){
+		if (gimatic.getDO_Flange8() && !gimatic.getDO_Flange7()){
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -53,14 +53,15 @@ public class manualToolChangeHelper extends RoboticsAPICyclicBackgroundTask {
 			gimatic.setDO_Flange7(true);
 		}
 		
-		if (!gimatic.getDO_Flange8()){
+		if (!gimatic.getDO_Flange8() && gimatic.getDO_Flange7()){
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			gimatic.setDO_Flange7(false);
-		}		
+		}
+				
 	}
 }

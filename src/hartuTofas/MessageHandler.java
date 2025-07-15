@@ -170,6 +170,7 @@ public class MessageHandler {
 				switch (cmd.actionType) {
 
 				case 1:
+					System.out.println("Called demo");
 					Demo();
 					return "Program demo called";
 				case 2:
