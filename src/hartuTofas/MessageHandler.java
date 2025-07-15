@@ -5,6 +5,7 @@ import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
+
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.geometricModel.World;
@@ -169,6 +170,7 @@ public class MessageHandler {
 				switch (cmd.actionType) {
 
 				case 1:
+					Demo();
 					return "Program 1 called";
 				case 2:
 					return "Program 2 called";
@@ -195,7 +197,7 @@ public class MessageHandler {
             case "3": return "GimaticCamera";   // "GimaticCamera" from your image
             case "4": return "GimaticGripperV"; // "GimaticGripperV" from your image
             case "5": return "GimaticIxtur";    // "Gimaticlxtur" from your image
-            case "6": return "lxturPlatoGrande"; // "lxturPlatoGrande" from your image
+            case "6": return "IxturPlatoGrande"; // "lxturPlatoGrande" from your image
             case "7": return "RealSense";       // "RealSense" from your image
             case "8": return "Roldana";         // "Roldana" from your image
             case "9": return "ToolTemplate";    // "ToolTemplate" from your image
@@ -454,5 +456,91 @@ public class MessageHandler {
 		default:
 			return false;
 		}
+	}
+	
+	private String Demo(){
+		flexTool = application.createFromTemplate("GimaticIxtur");
+		flexTool.attachTo(robot.getFlange());
+		
+		flexTool.move(ptp(application.getApplicationData().getFrame("/Demo/AfterPick")));
+		flexTool.move(ptp(application.getApplicationData().getFrame("/Demo/PrePlace")));
+		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/PlacePos")));
+		
+		//PLACE///////////////////////// SHIT CODE WARNING
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Place
+		IOs.setOutput2(true);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		IOs.setOutput2(false);
+		////////////////////////////////////
+		
+		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/PrePlace")));
+		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/ToolChangePos")));
+		
+		while(!gimatic.getDO_Flange8()){
+			System.out.println("Activate GIMATIC DO 8, tool will fall after 5 seconds");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		gimatic.setDO_Flange7(true);
+		
+		while(gimatic.getDO_Flange8()){
+			System.out.println("Deactivate GIMATIC DO 8, tool will grip after 5 seconds");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		gimatic.setDO_Flange7(false);
+		
+		flexTool = application.createFromTemplate("GimaticGripperV");
+		flexTool.attachTo(robot.getFlange());
+		
+		flexTool.move(ptp(application.getApplicationData().getFrame("/Demo/PrePick1")));
+		flexTool.move(ptp(application.getApplicationData().getFrame("/Demo/PrePick2")));
+		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/PickGripp")));
+		
+		//PICK///////////////////////// SHIT CODE WARNING
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Pick
+		IOs.setOutput1(true);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		IOs.setOutput1(false);
+		////////////////////////////////////
+		
+		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/AfterGripp")));
+		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/AfterGripp2")));
+		
+		
+		
+		return "Demo executed";
 	}
 }
