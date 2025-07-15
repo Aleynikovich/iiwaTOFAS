@@ -171,7 +171,7 @@ public class MessageHandler {
 
 				case 1:
 					Demo();
-					return "Program 1 called";
+					return "Program demo called";
 				case 2:
 					return "Program 2 called";
 				default:
