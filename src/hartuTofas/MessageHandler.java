@@ -462,6 +462,7 @@ public class MessageHandler {
 		flexTool = application.createFromTemplate("GimaticIxtur");
 		flexTool.attachTo(robot.getFlange());
 		
+		flexTool.move(linRel(0, 0, -100));
 		flexTool.move(ptp(application.getApplicationData().getFrame("/Demo/AfterPick")));
 		flexTool.move(ptp(application.getApplicationData().getFrame("/Demo/PrePlace")));
 		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/PlacePos")));
