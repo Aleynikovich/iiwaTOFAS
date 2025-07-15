@@ -486,6 +486,7 @@ public class MessageHandler {
 		IOs.setOutput2(false);
 		////////////////////////////////////
 		
+		flexTool.move(linRel(0, 0, -30));
 		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/PrePlace")));
 		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/ToolChangePos")));
 		
@@ -499,8 +500,6 @@ public class MessageHandler {
 			}
 		}
 		
-		gimatic.setDO_Flange7(true);
-		
 		while(gimatic.getDO_Flange8()){
 			System.out.println("Deactivate GIMATIC DO 8, tool will grip after 5 seconds");
 			try {
@@ -510,8 +509,6 @@ public class MessageHandler {
 				e.printStackTrace();
 			}
 		}
-		
-		gimatic.setDO_Flange7(false);
 		
 		flexTool = application.createFromTemplate("GimaticGripperV");
 		flexTool.attachTo(robot.getFlange());
@@ -537,7 +534,6 @@ public class MessageHandler {
 		}
 		IOs.setOutput1(false);
 		////////////////////////////////////
-		
 		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/AfterGripp")));
 		flexTool.move(lin(application.getApplicationData().getFrame("/Demo/AfterGripp2")));
 		
