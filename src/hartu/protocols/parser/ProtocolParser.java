@@ -1,6 +1,7 @@
 package hartu.protocols.parser;
 
-import hartu.protocols.constants.ActionTypes;
+import hartu.protocols.constants.ActionTypes; // Import ActionTypes for the constant
+import hartu.protocols.constants.MessagePartIndex;
 import hartu.protocols.definitions.MessageProtocol;
 import hartu.protocols.definitions.io.IOAction;
 import hartu.protocols.definitions.movement.MovementMessage;
@@ -22,9 +23,11 @@ public class ProtocolParser {
             throw new IllegalArgumentException("Raw message parts cannot be null or empty.");
         }
 
-        int rawActionIntValue = Integer.parseInt(rawParts[0].trim());
-        boolean isProgramCall = rawActionIntValue > 100;
-        ActionTypes actionType = ActionTypes.fromValue(isProgramCall ? rawActionIntValue - 100 : rawActionIntValue);
+        int rawActionIntValue = Integer.parseInt(rawParts[MessagePartIndex.ACTION_TYPE.getIndex()].trim());
+
+        // Use the constant PROGRAM_CALL_OFFSET
+        boolean isProgramCall = rawActionIntValue > ActionTypes.PROGRAM_CALL_OFFSET;
+        ActionTypes actionType = ActionTypes.fromValue(isProgramCall ? rawActionIntValue - ActionTypes.PROGRAM_CALL_OFFSET : rawActionIntValue);
 
         MessageProtocol parsedMessage;
         switch (actionType) {
