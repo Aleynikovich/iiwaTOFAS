@@ -48,7 +48,6 @@ public class LogServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
                         logServer.start();
                     } catch (Exception e) {
                         System.err.println("LogServerBackgroundTask: Error during LogServer.start(): " + e.getMessage());
-                        e.printStackTrace();
                     }
                 }
             }, "LogServerListenThread");

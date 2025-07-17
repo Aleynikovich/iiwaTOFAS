@@ -28,7 +28,6 @@ public class LogClientHandler extends Thread {
         }
     }
 
-    // NEW METHOD
     public boolean isClientConnected() {
         return clientSocket != null && clientSocket.isConnected() && !clientSocket.isClosed();
     }
