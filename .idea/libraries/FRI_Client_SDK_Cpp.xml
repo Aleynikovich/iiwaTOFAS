@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="FRI-Client-SDK_Cpp">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/FastRobotInterface_Client_Source/FRI-Client-SDK_Cpp.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

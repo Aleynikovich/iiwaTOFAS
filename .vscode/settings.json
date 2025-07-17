@@ -1,0 +1,29 @@
+{
+    "java.jdt.ls.java.home": "/usr/lib/jvm/java-24-openjdk",
+
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-1.7",
+            "path": "/usr/lib/jvm/java-7-jdk",
+            "default": true
+        },
+        {
+            "name": "JavaSE-24",
+            "path": "/usr/lib/jvm/java-24-openjdk"
+        }
+    ],
+
+    "java.project.sourcePaths": ["src"],
+
+    "java.project.referencedLibraries": [
+        // This glob pattern assumes KUKA_Java.lib is directly in your project root
+        // and contains all the necessary KUKA JARs.
+        // Adjust the path if KUKA_Java.lib is located elsewhere relative to your project root.
+        "${workspaceFolder}/KUKAJavaLib/**/*.jar"
+    ],
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "[java]": {
+        "editor.detectIndentation": true
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

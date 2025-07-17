@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="FRI-Client-SDK_Java">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/FastRobotInterface_Client_Source/FRI-Client-SDK_Java/com.kuka.connectivity.fastRobotInterface.clientSDK_1.15.1.Con1-11-0_5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/FastRobotInterface_Client_Source/FRI-Client-SDK_Java/com.kuka.connectivity.fastRobotInterface.clientSDK_1.15.1.Con1-11-0_5-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/FastRobotInterface_Client_Source/FRI-Client-SDK_Java/protobuf-java-2.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

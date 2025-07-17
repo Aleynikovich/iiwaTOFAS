@@ -38,7 +38,8 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
         // Move robot to home position at startup
         lBR_iiwa_14_R820_1.move(ptpHome().setJointVelocityRel(0.25));
         System.out.println("Robot moved to home position.");
-
+        
+        
         // Start the TCP server
         int port = 30001; // Listening port
 
@@ -155,7 +156,7 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
     public void dispose() {
         System.out.println("Program was cancelled.");
         
-        // Cierra el socket del cliente si está activo
+        // Cierra el socket del cliente si estï¿½ activo
         if (clientSocket != null && !clientSocket.isClosed()) {
             try {
                 clientSocket.close();
@@ -175,6 +176,6 @@ public class AAHartuTCPIPServer extends RoboticsAPIApplication {
             }
         }
         
-        // Código para cerrar recursos, detener movimientos, etc.
+        // Cï¿½digo para cerrar recursos, detener movimientos, etc.
     }
 }
