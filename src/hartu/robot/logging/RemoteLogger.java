@@ -39,7 +39,7 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
     public void initialize() {
         // Initialize the cyclic behavior for this background task
         initializeCyclic(0, 200, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
-        log("RemoteLogger: Initializing background task.");
+        //log("RemoteLogger: Initializing background task.");
     }
 
     public void log(String message) {
