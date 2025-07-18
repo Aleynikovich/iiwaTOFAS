@@ -38,6 +38,8 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
         initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
 
         try {
+            Thread.sleep(2000);
+
             getLogger().info("HartuServerBackgroundTask: Attempting to get LogServer instance from LogServerBackgroundTask.");
             LogServer protocolLogServerInstance = logServerBackgroundTask.getLogServer();
             if (protocolLogServerInstance == null) {
@@ -47,8 +49,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             getLogger().info("HartuServerBackgroundTask: LogServer instance obtained. Proceeding to connect protocol logger client.");
 
             getLogger().info("HartuServerBackgroundTask: Sleeping for 2 seconds to allow LogServer to fully start.");
-            Thread.sleep(2000);
-
+ 
             getLogger().info("HartuServerBackgroundTask: Creating Protocol Logger Client for port " + PROTOCOL_LOG_PORT + ".");
             protocolLoggerClient = new LoggerClient(LOG_SERVER_ADDRESS, PROTOCOL_LOG_PORT);
             getLogger().info("HartuServerBackgroundTask: Attempting to connect Protocol Logger Client.");
