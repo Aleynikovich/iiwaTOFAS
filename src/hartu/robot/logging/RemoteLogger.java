@@ -12,10 +12,22 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
     private static final String UBUNTU_IP = "10.66.171.69";
     private static final int LOGGING_PORT = 30003;
 
-    private static RemoteLogger instance;
-    private Socket socket;
-    private volatile boolean connectionAttempted = false; // Flag to indicate an attempt has been made
+    // Initialization-on-demand holder idiom for thread-safe lazy singleton
+    private static class LoggerHolder {
+        private static final RemoteLogger INSTANCE = new RemoteLogger();
+    }
 
+    private Socket socket;
+    private volatile boolean connectionAttempted = false;
+
+    // Private constructor to enforce singleton pattern
+    private RemoteLogger() {
+        // Constructor is now private and only called once by LoggerHolder
+    }
+
+    public static RemoteLogger getInstance() {
+        return LoggerHolder.INSTANCE;
+    }
 
     @Override
     public void initialize() {
@@ -25,14 +37,10 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
         // Attempt to connect immediately in initialize
         try {
             socket = new Socket(UBUNTU_IP, LOGGING_PORT);
-            // If connection is successful, set a flag. We can't log remotely yet.
             connectionAttempted = true; // Indicates success
         } catch (IOException e) {
-            // If connection fails, connectionAttempted remains false.
-            // No System.out.println or getLogger() as per your instruction.
             connectionAttempted = false;
         } catch (Exception e) {
-            // Catch any other unexpected errors during connection attempt
             connectionAttempted = false;
         }
     }
@@ -54,7 +62,7 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
             // No logging here
         } finally {
             socket = null;
-            instance = null; // Clear singleton instance
+            // No need to nullify 'instance' as it's managed by LoggerHolder
         }
     }
 
