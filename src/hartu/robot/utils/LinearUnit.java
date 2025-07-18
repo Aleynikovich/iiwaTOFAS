@@ -1,4 +1,4 @@
-package hartu.protocols.constants;
+package hartu.robot.utils;
 
 public enum LinearUnit {
     MM(1.0),       // Millimeters (base unit for conversions)
