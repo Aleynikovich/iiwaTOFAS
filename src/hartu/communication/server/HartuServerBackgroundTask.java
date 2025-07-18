@@ -39,11 +39,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
         try {
             getLogger().info("HartuServerBackgroundTask: Attempting to get LogServer instance from LogServerBackgroundTask.");
-            LogServer protocolLogServerInstance = logServerBackgroundTask.getLogServer();
-            if (protocolLogServerInstance == null) {
-                getLogger().error("HartuServerBackgroundTask: CRITICAL ERROR: LogServer instance is null from LogServerBackgroundTask. Cannot establish protocol logger. Check LogServerBackgroundTask initialization.");
-                throw new IllegalStateException("LogServer not initialized by LogServerBackgroundTask.");
-            }
+
             getLogger().info("HartuServerBackgroundTask: LogServer instance obtained. Proceeding to connect protocol logger client.");
 
             getLogger().info("HartuServerBackgroundTask: Sleeping for 2 seconds to allow LogServer to fully start.");
