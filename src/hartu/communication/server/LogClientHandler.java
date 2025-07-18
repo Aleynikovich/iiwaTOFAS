@@ -12,15 +12,15 @@ import java.net.Socket;
  */
 public class LogClientHandler extends Thread {
     private Socket clientSocket;
-    private LogServer server;
+    private LogServer server; // Reference to the LogServer to access formatLogMessage
     private PrintWriter out;
     private BufferedReader in;
-    private volatile boolean clientConnected; // Indicates if the client is still actively connected
+    private volatile boolean clientConnected;
 
     public LogClientHandler(Socket clientSocket, LogServer server) {
         this.clientSocket = clientSocket;
         this.server = server;
-        this.clientConnected = true; // Assume connected upon creation
+        this.clientConnected = true;
     }
 
     @Override
@@ -29,28 +29,29 @@ public class LogClientHandler extends Thread {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            // --- Send Greeting Message on Connection ---
-            sendMessage("LogServer: Welcome! You are connected to the " + server.getServerName() + ".");
+            // --- Send Greeting Message on Connection, now formatted by the server's method ---
+            // Use the server's formatLogMessage to ensure consistency
+            String greeting = server.formatLogMessage("Welcome! You are connected to the " + server.getServerName() + ".");
+            sendMessage(greeting);
 
             String inputLine;
             while (clientConnected && (inputLine = in.readLine()) != null) {
-                // For a LogServer, clients typically only send messages to be published.
-                // This handler receives them and passes them to the server's publish method.
                 System.out.println("LogClientHandler received from " + getClientAddress() + ": " + inputLine);
-                server.publish(inputLine); // Publish the received message to all other connected clients
+                server.publish(inputLine);
             }
         } catch (IOException e) {
-            if (clientConnected) { // Only log if not intentionally disconnected
+            if (clientConnected) {
                 System.err.println("LogClientHandler error for " + getClientAddress() + ": " + e.getMessage());
             }
         } finally {
-            disconnect(); // Ensure disconnection on loop exit or error
-            server.removeHandler(this); // Notify server to remove this handler
+            disconnect();
+            server.removeHandler(this);
         }
     }
 
     /**
-     * Sends a message to this specific client.
+     * Sends a raw message to this specific client.
+     * The message is assumed to be already formatted (e.g., timestamped).
      * @param message The message string to send.
      */
     public void sendMessage(String message) {
@@ -66,7 +67,7 @@ public class LogClientHandler extends Thread {
      */
     public void disconnect() {
         if (!clientConnected) {
-            return; // Already disconnected
+            return;
         }
         clientConnected = false;
         try {

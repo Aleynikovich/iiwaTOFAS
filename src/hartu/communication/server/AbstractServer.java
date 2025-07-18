@@ -4,92 +4,70 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat; // Import SimpleDateFormat
+import java.util.Date; // Import Date
 
-public abstract class AbstractServer implements IServer
+/**
+ * Abstract base class for server implementations.
+ * Provides common server functionalities like port management, running status,
+ * and a template for starting, stopping, and handling client connections.
+ * Also includes common logging utilities like timestamping.
+ */
+public abstract class AbstractServer
 {
-
     protected int port;
     protected ServerSocket serverSocket;
-    protected volatile boolean isRunning;
+    protected volatile boolean isRunning; // Use volatile for thread visibility
+    protected final SimpleDateFormat dateFormat; // Date format for logging
 
-    public AbstractServer(int port) {
-        if (port < 0 || port > 65535) {
-            throw new IllegalArgumentException("Port number must be between 0 and 65535.");
-        }
+    public AbstractServer(int port)
+    {
         this.port = port;
         this.isRunning = false;
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // Initialize date format
     }
 
-    @Override
-    public void start() {
-        if (isRunning) {
-            System.out.println(getServerName() + " is already running on port " + port);
-            return;
-        }
+    /**
+     * Gets the name of the server implementation.
+     * @return The server's name.
+     */
+    protected abstract String getServerName();
 
-        try {
-            serverSocket = new ServerSocket(port);
-            isRunning = true;
-            System.out.println(getServerName() + " started on port " + port + " (" + getInetAddress().getHostAddress() + ")");
+    /**
+     * Starts the server, making it listen for incoming client connections.
+     */
+    public abstract void start();
 
-            while (isRunning) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected to " + getServerName() + " from: " + clientSocket.getInetAddress().getHostAddress());
-                handleClient(clientSocket);
-            }
+    /**
+     * Stops the server, closing the server socket and any active connections.
+     */
+    public abstract void stop();
 
-        } catch (IOException e) {
-            if (isRunning) {
-                System.err.println(getServerName() + " error: " + e.getMessage());
-            } else {
-                System.out.println(getServerName() + " shut down normally.");
-            }
-        } finally {
-            stop();
-        }
-    }
-
-    @Override
-    public void stop() {
-        if (!isRunning) {
-            System.out.println(getServerName() + " is not running.");
-            return;
-        }
-        isRunning = false;
-        try {
-            if (serverSocket != null && !serverSocket.isClosed()) {
-                serverSocket.close();
-                System.out.println(getServerName() + " stopped.");
-            }
-        } catch (IOException e) {
-            System.err.println("Error closing " + getServerName() + " socket: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    @Override
-    public int getPort() {
-        return port;
-    }
-
-    @Override
-    public InetAddress getInetAddress() {
-        if (serverSocket != null && !serverSocket.isClosed()) {
-            return serverSocket.getInetAddress();
-        }
-        try {
-            return InetAddress.getLocalHost();
-        } catch (java.net.UnknownHostException e) {
-            System.err.println("Could not determine local host address: " + e.getMessage());
-            return null;
-        }
-    }
-
+    /**
+     * Handles a new client connection.
+     * @param clientSocket The socket representing the new client connection.
+     */
     protected abstract void handleClient(Socket clientSocket);
 
-    protected abstract String getServerName();
+    /**
+     * Retrieves the InetAddress of the server socket.
+     * @return The InetAddress of the server.
+     * @throws UnknownHostException If the local host name could not be resolved into an address.
+     */
+    protected InetAddress getInetAddress() throws UnknownHostException
+    {
+        // Get local host address if serverSocket is not yet bound
+        return (serverSocket != null && serverSocket.isBound()) ? serverSocket.getInetAddress() : InetAddress.getLocalHost();
+    }
+
+    /**
+     * Formats a raw log message by prepending a timestamp and the server's name.
+     * This method is intended to be called by subclasses before publishing a message.
+     * @param rawMessage The original message string.
+     * @return The timestamped and formatted message string.
+     */
+    protected String formatLogMessage(String rawMessage) {
+        return dateFormat.format(new Date()) + " [" + getServerName() + "] " + rawMessage;
+    }
 }

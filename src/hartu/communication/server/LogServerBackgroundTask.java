@@ -1,4 +1,3 @@
-// File: hartu/communication/server/LogServerBackgroundTask.java
 package hartu.communication.server;
 
 import javax.inject.Inject;
@@ -22,24 +21,24 @@ public class LogServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
         initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
 
         logServer = new LogServer(LOG_SERVER_PORT);
-        System.out.println("LogServerBackgroundTask: LogServer instance created.");
+        System.out.println("LogServerBackgroundTask: LogServer instance created on port " + LOG_SERVER_PORT + ".");
     }
 
     @Override
     public void runCyclic() {
-        if (serverListenThread == null || !serverListenThread.isAlive() || !logServer.isRunning()) {
-            System.out.println("LogServerBackgroundTask: LogServer thread not running or server stopped. Attempting restart...");
+        if (serverListenThread == null || !serverListenThread.isAlive()) {
+            System.out.println("LogServerBackgroundTask: LogServer listening thread is not running. Attempting to (re)start...");
 
-            if (serverListenThread != null && serverListenThread.isAlive()) {
-                serverListenThread.interrupt(); // Try to interrupt if it's stuck
+            if (serverListenThread != null) {
+                serverListenThread.interrupt();
                 try {
-                    serverListenThread.join(1000); // Give it a moment to die
+                    serverListenThread.join(1000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    System.err.println("LogServerBackgroundTask: Interrupted while waiting for old LogServer thread to stop: " + e.getMessage());
                 }
             }
 
-            // Create a new thread to run the blocking server start method
             serverListenThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -52,21 +51,22 @@ public class LogServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             }, "LogServerListenThread");
 
             serverListenThread.start();
-            System.out.println("LogServerBackgroundTask: LogServer listening thread (re)started on port " + LOG_SERVER_PORT);
+            System.out.println("LogServerBackgroundTask: LogServer listening thread (re)started.");
         }
     }
 
     @Override
     public void dispose() {
         System.out.println("LogServerBackgroundTask: dispose() called. Stopping LogServer...");
-        if (logServer != null && logServer.isRunning()) {
+
+        if (logServer != null) {
             logServer.stop();
 
             try {
                 if (serverListenThread != null) {
                     serverListenThread.join(5000);
                     if (serverListenThread.isAlive()) {
-                        System.err.println("LogServerBackgroundTask: LogServer thread did not terminate within timeout.");
+                        System.err.println("LogServerBackgroundTask: LogServer thread did not terminate within timeout. Forcing interrupt.");
                         serverListenThread.interrupt();
                     }
                 }
