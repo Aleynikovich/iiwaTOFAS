@@ -50,16 +50,18 @@ public class HartuServer extends AbstractServer {
             return;
         }
 
+        // Set isRunning to true BEFORE attempting to bind the socket.
+        // If binding fails, it will be set to false in the catch block.
+        isRunning = true;
+        
         try {
-            // Set SO_REUSEADDR to allow binding to a port in TIME_WAIT state
             serverSocket = new ServerSocket(port);
-            serverSocket.setReuseAddress(true); // <--- ADDED THIS LINE
-            
-            isRunning = true;
+            serverSocket.setReuseAddress(true); // Crucial for rapid restarts
+
             protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " started on port " + port + " (" + getInetAddress().getHostAddress() + ")"));
 
-            while (isRunning) {
-                Socket clientSocket = serverSocket.accept();
+            while (isRunning) { // This loop keeps the server alive
+                Socket clientSocket = serverSocket.accept(); // This call blocks until a client connects
                 protocolLoggerClient.sendMessage(formatLogMessage("Client connected to " + getServerName() + " from: " + clientSocket.getInetAddress().getHostAddress()));
                 HartuClientHandler handler = new HartuClientHandler(clientSocket, this);
                 connectedHandlers.add(handler);
@@ -68,14 +70,15 @@ public class HartuServer extends AbstractServer {
 
         } catch (IOException e) {
             // This catch block handles exceptions that cause the server's main loop to exit.
-            // If `isRunning` is still true here, it means an unexpected error caused the loop to break.
-            // If `isRunning` is false, it means `stop()` was called from another thread, closing the socket.
-            if (isRunning) { // Only log as an error if the server was expected to be running
+            // If `isRunning` is true here, it means the server was actively trying to run
+            // and an error occurred (e.g., Address already in use, or socket closed externally).
+            if (isRunning) { // If isRunning is true, it means an error caused the server to stop
                 protocolLoggerClient.sendMessage(formatLogMessage("ERROR: " + getServerName() + " encountered I/O error: " + e.getMessage()));
                 System.err.println(getServerName() + " encountered I/O error: " + e.getMessage());
+                isRunning = false; // Explicitly set to false on error to signal shutdown
             } else {
-                // This path is for when stop() is called and closes the socket,
-                // causing serverSocket.accept() to throw an IOException. This is normal shutdown.
+                // This path is for when stop() is called from another thread, which closes the socket,
+                // causing serverSocket.accept() to throw an IOException. This is a normal shutdown.
                 protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " shut down normally due to socket close."));
                 System.out.println(getServerName() + " shut down normally due to socket close.");
             }
