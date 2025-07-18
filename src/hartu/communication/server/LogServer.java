@@ -1,4 +1,3 @@
-// File: hartu/communication/server/LogServer.java
 package hartu.communication.server;
 
 import java.io.IOException;
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-
+import java.util.concurrent.TimeUnit; // Import TimeUnit
 
 public class LogServer extends AbstractServer
 {
@@ -91,6 +90,7 @@ public class LogServer extends AbstractServer
             if (dispatcherThread != null)
             {
                 dispatcherThread.interrupt();
+                dispatcherThread.join(1000); // Wait for dispatcher to finish
             }
             if (serverSocket != null && !serverSocket.isClosed())
             {
@@ -105,6 +105,9 @@ public class LogServer extends AbstractServer
         } catch (IOException e)
         {
             System.err.println("Error closing " + getServerName() + " socket: " + e.getMessage());
+        } catch (InterruptedException e) { // Catch InterruptedException for join
+            Thread.currentThread().interrupt();
+            System.err.println("LogServer: Interruption during dispatcher thread join: " + e.getMessage());
         }
     }
 
@@ -116,13 +119,20 @@ public class LogServer extends AbstractServer
         handler.start();
     }
 
+    /**
+     * Publishes a message to all connected clients, prepending a timestamp.
+     * Messages received from clients via LogClientHandler are also published here.
+     * @param message The raw message to publish.
+     */
     public void publish(String message)
     {
         if (isRunning)
         {
             try
             {
-                logMessageQueue.put(message);
+                // Use the formatLogMessage method from AbstractServer
+                String timestampedMessage = formatLogMessage(message);
+                logMessageQueue.put(timestampedMessage);
             } catch (InterruptedException e)
             {
                 Thread.currentThread().interrupt();
@@ -140,16 +150,16 @@ public class LogServer extends AbstractServer
         {
             try
             {
-                String message = logMessageQueue.take();
+                String message = logMessageQueue.take(); // Blocks until a message is available
                 for (LogClientHandler handler : connectedHandlers)
                 {
-                    // Check if handler is still active before sending
-                    if (handler.isAlive() && !handler.isInterrupted() && handler.isClientConnected())
-                    { // Added isClientConnected check
+                    // Check if handler is still active and connected before sending
+                    if (handler.isClientConnected())
+                    {
                         handler.sendMessage(message);
                     } else
                     {
-                        // Remove handler if it's no longer alive or connected
+                        // Remove disconnected handlers to avoid trying to send to them
                         connectedHandlers.remove(handler);
                         System.out.println("LogServer: Cleaned up disconnected handler for client: " + handler.getClientAddress());
                     }
