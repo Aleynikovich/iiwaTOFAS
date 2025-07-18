@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
 
     private static final String UBUNTU_IP = "10.66.171.69";
-    private static final int LOGGING_PORT = 30003;
+    private static final int LOGGING_PORT = 30002;
 
     private static RemoteLogger instance;
     private Socket socket;
