@@ -1,6 +1,6 @@
 package hartu.communication.server;
 
-import hartu.communication.client.LoggerClient; // For HartuServer's own logging
+import hartu.communication.client.LoggerClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,32 +8,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * The server responsible solely for receiving raw protocol commands from clients.
- * It handles client connections and places received raw messages into a BlockingQueue
- * for further processing by another component.
- * It uses a LoggerClient for its own operational logging (e.g., connection events).
- */
 public class HartuServer extends AbstractServer {
 
-    private final LoggerClient protocolLoggerClient; // For logging HartuServer's own operations
-    private final BlockingQueue<String> rawMessageQueue; // Queue to pass raw messages to the processing component
+    private final LoggerClient protocolLoggerClient;
+    private final BlockingQueue<String> rawMessageQueue;
 
-    // Executor service for handling client connections
+    private final List<HartuClientHandler> connectedHandlers;
     private ExecutorService clientHandlerExecutor;
 
-    /**
-     * Constructs the HartuServer.
-     * @param port The port to listen on.
-     * @param protocolLoggerClient Logger for HartuServer's own operations (connects to protocol log server).
-     * @param rawMessageQueue The BlockingQueue where received raw messages will be placed.
-     */
     public HartuServer(int port, LoggerClient protocolLoggerClient, BlockingQueue<String> rawMessageQueue) {
         super(port);
         if (protocolLoggerClient == null || rawMessageQueue == null) {
@@ -41,8 +31,9 @@ public class HartuServer extends AbstractServer {
         }
         this.protocolLoggerClient = protocolLoggerClient;
         this.rawMessageQueue = rawMessageQueue;
+        this.connectedHandlers = new CopyOnWriteArrayList<>();
 
-        this.clientHandlerExecutor = Executors.newCachedThreadPool(); // Use a cached thread pool for client handlers
+        this.clientHandlerExecutor = Executors.newCachedThreadPool();
 
         protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " initialized. Raw message queue ready."));
     }
@@ -67,20 +58,21 @@ public class HartuServer extends AbstractServer {
             while (isRunning) {
                 Socket clientSocket = serverSocket.accept();
                 protocolLoggerClient.sendMessage(formatLogMessage("Client connected to " + getServerName() + " from: " + clientSocket.getInetAddress().getHostAddress()));
-                // Submit client handling to the executor service
-                clientHandlerExecutor.submit(new HartuClientHandler(clientSocket, this));
+                HartuClientHandler handler = new HartuClientHandler(clientSocket, this);
+                connectedHandlers.add(handler);
+                clientHandlerExecutor.submit(handler);
             }
 
         } catch (IOException e) {
             if (isRunning) {
                 protocolLoggerClient.sendMessage(formatLogMessage("ERROR: " + getServerName() + " error: " + e.getMessage()));
-                System.err.println(getServerName() + " error: " + e.getMessage()); // Also print to console for server process
+                System.err.println(getServerName() + " error: " + e.getMessage());
             } else {
-                protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " shut down normally."));
-                System.out.println(getServerName() + " shut down normally.");
+                protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " stopped due to IOException: " + e.getMessage()));
+                System.out.println(getServerName() + " stopped due to IOException.");
             }
         } finally {
-            stop(); // Ensure server resources are cleaned up
+            // No explicit stop() call here.
         }
     }
 
@@ -91,42 +83,43 @@ public class HartuServer extends AbstractServer {
             return;
         }
         isRunning = false;
+
         try {
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
-                protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " stopped."));
-                System.out.println(getServerName() + " stopped.");
+                protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " server socket closed."));
+                System.out.println(getServerName() + " server socket closed.");
             }
         } catch (IOException e) {
-            protocolLoggerClient.sendMessage(formatLogMessage("ERROR: Error closing " + getServerName() + " socket: " + e.getMessage()));
-            System.err.println("Error closing " + getServerName() + " socket: " + e.getMessage());
+            protocolLoggerClient.sendMessage(formatLogMessage("ERROR: Error closing " + getServerName() + " server socket: " + e.getMessage()));
+            System.err.println("Error closing " + getServerName() + " server socket: " + e.getMessage());
         } finally {
-            // Shut down the client handler executor
+            for (HartuClientHandler handler : connectedHandlers) {
+                handler.disconnect();
+            }
+            connectedHandlers.clear();
+
             clientHandlerExecutor.shutdown();
             try {
                 if (!clientHandlerExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
                     clientHandlerExecutor.shutdownNow();
-                    protocolLoggerClient.sendMessage(formatLogMessage("WARNING: HartuServer client handler executor did not terminate cleanly."));
+                    protocolLoggerClient.sendMessage(formatLogMessage("WARNING: HartuServer client handler executor did not terminate cleanly. Forced shutdown."));
                 }
             } catch (InterruptedException e) {
                 clientHandlerExecutor.shutdownNow();
                 Thread.currentThread().interrupt();
-                protocolLoggerClient.sendMessage(formatLogMessage("WARNING: HartuServer client handler executor interrupted during shutdown."));
+                protocolLoggerClient.sendMessage(formatLogMessage("WARNING: HartuServer client handler executor interrupted during shutdown. Forced shutdown."));
             }
+            protocolLoggerClient.sendMessage(formatLogMessage(getServerName() + " stopped."));
+            System.out.println(getServerName() + " stopped.");
         }
     }
 
     @Override
     protected void handleClient(Socket clientSocket) {
-        // This method is now implicitly handled by the clientHandlerExecutor.submit(new HartuClientHandler(...)) call in start()
-        // No direct implementation needed here.
+        // This method is conceptually handled by the clientHandlerExecutor.submit(handler) in start()
     }
 
-    /**
-     * Called by HartuClientHandler to enqueue a raw message for processing.
-     * @param rawMessage The raw string message received from a client.
-     * @param clientAddress The address of the client that sent the message.
-     */
     public void enqueueRawMessage(String rawMessage, String clientAddress) {
         try {
             rawMessageQueue.put(rawMessage);
@@ -137,52 +130,67 @@ public class HartuServer extends AbstractServer {
         }
     }
 
-    /**
-     * Inner class to handle individual client connections for HartuServer.
-     * It reads raw messages and passes them to the outer HartuServer for enqueuing.
-     */
+    protected void removeHandler(HartuClientHandler handler) {
+        connectedHandlers.remove(handler);
+        protocolLoggerClient.sendMessage(formatLogMessage("Handler removed for client: " + handler.getClientAddress()));
+    }
+
     private static class HartuClientHandler implements Runnable {
         private Socket clientSocket;
-        private HartuServer server; // Reference to the outer HartuServer instance
+        private HartuServer server;
         private BufferedReader in;
-        private PrintWriter out; // For sending responses back to client, if needed
+        private PrintWriter out;
+        private volatile boolean clientConnected;
+        private String clientAddress; // Made into a field
 
         public HartuClientHandler(Socket socket, HartuServer server) {
             this.clientSocket = socket;
             this.server = server;
+            this.clientConnected = true;
+            this.clientAddress = clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort(); // Initialize here
         }
 
         @Override
         public void run() {
-            String clientAddress = clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort();
             try {
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new PrintWriter(clientSocket.getOutputStream(), true); // Auto-flush
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                // Send a greeting to the client connecting to HartuServer
                 out.println(server.formatLogMessage("HartuServer: Welcome! Send your robot commands."));
 
                 String commandLine;
-                while ((commandLine = in.readLine()) != null) {
-                    server.enqueueRawMessage(commandLine, clientAddress); // Enqueue the raw message
-                    // Optionally, send a response back to the client after enqueuing
-                    // out.println(server.formatLogMessage("HartuServer: Command received and enqueued."));
+                while (clientConnected && (commandLine = in.readLine()) != null) {
+                    server.enqueueRawMessage(commandLine, this.clientAddress); // Use this.clientAddress
                 }
             } catch (IOException e) {
-                // Log the exception using the server's protocol logger
-                server.protocolLoggerClient.sendMessage(server.formatLogMessage("Client handler error for " + clientAddress + ": " + e.getMessage()));
-            } finally {
-                try {
-                    if (out != null) out.close();
-                    if (in != null) in.close();
-                    if (clientSocket != null && !clientSocket.isClosed()) {
-                        clientSocket.close();
-                        server.protocolLoggerClient.sendMessage(server.formatLogMessage("Client " + clientAddress + " disconnected from HartuServer."));
-                    }
-                } catch (IOException e) {
-                    server.protocolLoggerClient.sendMessage(server.formatLogMessage("Error closing resources for client " + clientAddress + ": " + e.getMessage()));
+                if (clientConnected) {
+                    server.protocolLoggerClient.sendMessage(server.formatLogMessage("Client handler I/O error for " + this.clientAddress + ": " + e.getMessage())); // Use this.clientAddress
                 }
+            } finally {
+                disconnect();
+                server.removeHandler(this);
             }
+        }
+
+        public void disconnect() {
+            if (!clientConnected) {
+                return;
+            }
+            clientConnected = false;
+            try {
+                if (out != null) out.close();
+                if (in != null) in.close();
+                if (clientSocket != null && !clientSocket.isClosed()) {
+                    clientSocket.close();
+                    server.protocolLoggerClient.sendMessage(server.formatLogMessage("Client " + this.clientAddress + " disconnected from HartuServer.")); // Use this.clientAddress
+                }
+            } catch (IOException e) {
+                server.protocolLoggerClient.sendMessage(server.formatLogMessage("ERROR: Error closing resources for client " + this.clientAddress + ": " + e.getMessage())); // Use this.clientAddress
+            }
+        }
+
+        public String getClientAddress() {
+            return clientSocket != null ? clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort() : "Unknown";
         }
     }
 }
