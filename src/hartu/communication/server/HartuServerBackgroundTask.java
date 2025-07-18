@@ -13,12 +13,6 @@ import hartu.communication.client.LoggerClient;
 
 public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
-    @Inject
-    private Controller controller;
-
-    @Inject
-    private LogServerBackgroundTask logServerBackgroundTask; // Still needed to ensure it's running and for dependency order
-
     private HartuServer hartuServer;
     private Thread serverListenThread;
 
@@ -32,10 +26,10 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
     @Override
     public void initialize() {
-        initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
+       
 
         try {
-            Thread.sleep(2000);
+        	 Thread.sleep(2000);
 
             protocolLoggerClient = new LoggerClient(LOG_SERVER_ADDRESS, PROTOCOL_LOG_PORT);
 
@@ -53,6 +47,9 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             getLogger().error("HartuServerBackgroundTask: FATAL ERROR during HartuServerBackgroundTask initialization: " + e.getMessage(), e);
             throw new IllegalStateException("Failed to initialize HartuServerBackgroundTask due to an unexpected error.", e);
         }
+        
+        initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
+        
     }
 
     @Override
