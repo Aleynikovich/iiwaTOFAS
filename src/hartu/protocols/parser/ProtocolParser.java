@@ -25,7 +25,6 @@ public class ProtocolParser {
 
         int rawActionIntValue = Integer.parseInt(rawParts[MessagePartIndex.ACTION_TYPE.getIndex()].trim());
 
-        // Use the constant PROGRAM_CALL_OFFSET
         boolean isProgramCall = rawActionIntValue > ActionTypes.PROGRAM_CALL_OFFSET;
         ActionTypes actionType = ActionTypes.fromValue(isProgramCall ? rawActionIntValue - ActionTypes.PROGRAM_CALL_OFFSET : rawActionIntValue);
 

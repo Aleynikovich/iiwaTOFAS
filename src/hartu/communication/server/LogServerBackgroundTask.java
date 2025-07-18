@@ -30,7 +30,6 @@ public class LogServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
         if (serverListenThread == null || !serverListenThread.isAlive() || !logServer.isRunning()) {
             System.out.println("LogServerBackgroundTask: LogServer thread not running or server stopped. Attempting restart...");
 
-            // Ensure any previous thread is properly shut down before starting a new one
             if (serverListenThread != null && serverListenThread.isAlive()) {
                 serverListenThread.interrupt(); // Try to interrupt if it's stuck
                 try {
