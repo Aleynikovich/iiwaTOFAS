@@ -17,20 +17,20 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
     private Controller controller;
 
     @Inject
-    private LogServerBackgroundTask logServerBackgroundTask; // For accessing the protocol LogServer
+    private LogServerBackgroundTask logServerBackgroundTask;
 
     private HartuServer hartuServer;
     private Thread serverListenThread;
 
-    private LoggerClient protocolLoggerClient; // Client for HartuServer's own logs
-    private LoggerClient executionLoggerClient; // Client for command execution logs
-    private BlockingQueue<String> rawMessageQueue; // Queue for raw messages from HartuServer
+    private LoggerClient protocolLoggerClient;
+    private LoggerClient executionLoggerClient;
+    private BlockingQueue<String> rawMessageQueue;
 
     private final int HARTU_SERVER_PORT = 30001;
-    private final int PROTOCOL_LOG_PORT = 30003; // Matches LogServerBackgroundTask's port
-    private final int EXECUTION_LOG_PORT = 30004; // New port for execution logs
+    private final int PROTOCOL_LOG_PORT = 30003;
+    private final int EXECUTION_LOG_PORT = 30004;
 
-    private final String LOG_SERVER_ADDRESS = "127.0.0.1"; // Localhost for log servers
+    private final String LOG_SERVER_ADDRESS = "127.0.0.1";
 
     @Override
     public void initialize() {
@@ -38,7 +38,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
         LogServer protocolLogServer = logServerBackgroundTask.getLogServer();
         if (protocolLogServer == null) {
-            System.err.println("HartuServerBackgroundTask: LogServer instance is null. Cannot proceed.");
+            System.err.println("HartuServerBackgroundTask: LogServer instance is null. Cannot proceed."); // Fallback to System.err
             throw new IllegalStateException("LogServer not initialized by LogServerBackgroundTask.");
         }
 
@@ -48,17 +48,17 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             if (!protocolLoggerClient.isConnected()) {
                 throw new RuntimeException("Failed to connect Protocol Logger Client for HartuServer.");
             }
-            System.out.println("HartuServerBackgroundTask: Protocol Logger Client connected.");
+            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Protocol Logger Client connected.");
 
             executionLoggerClient = new LoggerClient(LOG_SERVER_ADDRESS, EXECUTION_LOG_PORT);
             executionLoggerClient.connect();
             if (!executionLoggerClient.isConnected()) {
                 throw new RuntimeException("Failed to connect Execution Logger Client for HartuServer.");
             }
-            System.out.println("HartuServerBackgroundTask: Execution Logger Client connected.");
+            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Execution Logger Client connected.");
 
         } catch (Exception e) {
-            System.err.println("HartuServerBackgroundTask: Error initializing LoggerClients: " + e.getMessage());
+            System.err.println("HartuServerBackgroundTask: Error initializing LoggerClients: " + e.getMessage()); // Fallback to System.err
             e.printStackTrace();
             throw new IllegalStateException("Failed to initialize LoggerClients for HartuServer.", e);
         }
@@ -66,13 +66,13 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
         rawMessageQueue = new LinkedBlockingQueue<>();
 
         hartuServer = new HartuServer(HARTU_SERVER_PORT, protocolLoggerClient, rawMessageQueue);
-        System.out.println("HartuServerBackgroundTask: HartuServer instance created, linked to loggers and raw message queue.");
+        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer instance created, linked to loggers and raw message queue.");
     }
 
     @Override
     public void runCyclic() {
         if (serverListenThread == null || !serverListenThread.isAlive()) {
-            System.out.println("HartuServerBackgroundTask: HartuServer thread not running. Attempting restart...");
+            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer thread not running. Attempting restart...");
 
             if (serverListenThread != null) {
                 serverListenThread.interrupt();
@@ -80,7 +80,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
                     serverListenThread.join(1000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    System.err.println("HartuServerBackgroundTask: Interrupted while waiting for old HartuServer thread to stop: " + e.getMessage());
+                    protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Interrupted while waiting for old HartuServer thread to stop: " + e.getMessage());
                 }
             }
 
@@ -90,20 +90,20 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
                     try {
                         hartuServer.start();
                     } catch (Exception e) {
-                        System.err.println("HartuServerBackgroundTask: Error during HartuServer.start(): " + e.getMessage());
+                        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: ERROR during HartuServer.start(): " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
             }, "HartuServerListenThread");
 
             serverListenThread.start();
-            System.out.println("HartuServerBackgroundTask: HartuServer listening thread (re)started on port " + HARTU_SERVER_PORT);
+            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer listening thread (re)started on port " + HARTU_SERVER_PORT);
         }
     }
 
     @Override
     public void dispose() {
-        System.out.println("HartuServerBackgroundTask: dispose() called. Stopping HartuServer...");
+        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: dispose() called. Stopping HartuServer...");
         if (hartuServer != null) {
             hartuServer.stop();
 
@@ -111,13 +111,13 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
                 if (serverListenThread != null) {
                     serverListenThread.join(5000);
                     if (serverListenThread.isAlive()) {
-                        System.err.println("HartuServerBackgroundTask: HartuServer thread did not terminate within timeout. Forcing interrupt.");
+                        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer thread did not terminate within timeout. Forcing interrupt.");
                         serverListenThread.interrupt();
                     }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.err.println("HartuServerBackgroundTask: Interrupted while waiting for HartuServer thread to stop.");
+                protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Interrupted while waiting for HartuServer thread to stop.");
             }
         }
         if (protocolLoggerClient != null) {
@@ -126,7 +126,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
         if (executionLoggerClient != null) {
             executionLoggerClient.disconnect();
         }
-        System.out.println("HartuServerBackgroundTask: HartuServer stopped.");
+        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer stopped.");
         super.dispose();
     }
 
