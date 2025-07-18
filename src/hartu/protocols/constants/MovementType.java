@@ -17,13 +17,13 @@ public enum MovementType {
     private final boolean continuous;
     private final boolean relative;
     private final boolean axisMotion;
-    private final boolean frameMotion;
+    private final boolean cartesianMotion;
 
-    MovementType(boolean continuous, boolean relative, boolean axisMotion, boolean frameMotion) {
+    MovementType(boolean continuous, boolean relative, boolean axisMotion, boolean cartesianMotion) {
         this.continuous = continuous;
         this.relative = relative;
         this.axisMotion = axisMotion;
-        this.frameMotion = frameMotion;
+        this.cartesianMotion = cartesianMotion;
     }
 
     public boolean isContinuous() {
@@ -38,8 +38,8 @@ public enum MovementType {
         return axisMotion;
     }
 
-    public boolean isFrameMotion() {
-        return frameMotion;
+    public boolean isCartesianMotion() {
+        return cartesianMotion;
     }
 
     public static MovementType fromActionType(ActionTypes actionType) {
