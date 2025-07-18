@@ -1,4 +1,4 @@
-package hartu.protocols.constants;
+package hartu.robot.utils;
 
 public enum AngularUnit {
     DEGREE(1.0),   // Degrees (base unit for conversions)
