@@ -38,12 +38,6 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
         // --- FIRST THING: Establish connection to the existing LogServer for protocol logging ---
         LogServer protocolLogServerInstance = logServerBackgroundTask.getLogServer();
-        if (protocolLogServerInstance == null) {
-            // This is a critical failure. If the LogServer isn't ready, we can't log.
-            // Fallback to KUKA's internal logger, but this indicates a setup issue.
-            getLogger().error("HartuServerBackgroundTask: CRITICAL ERROR: LogServer instance is null from LogServerBackgroundTask. Cannot establish protocol logger. Check LogServerBackgroundTask initialization.");
-            throw new IllegalStateException("LogServer not initialized by LogServerBackgroundTask.");
-        }
 
         try {
             // Give LogServerBackgroundTask a moment to fully start the LogServer
