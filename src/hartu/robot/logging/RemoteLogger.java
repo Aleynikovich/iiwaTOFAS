@@ -17,7 +17,7 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
         running = true;
     }
 
-    public static synchronized RemoteLogger getInstance() {
+    public static RemoteLogger getInstance() { // Removed synchronized
         if (instance == null) {
             instance = new RemoteLogger();
         }
@@ -30,10 +30,8 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
         try {
             socket = new DatagramSocket(); // Attempt to create the socket
         } catch (SocketException e) {
-            // No logging here, just set running to false to prevent further operations
             running = false;
         } catch (Exception e) {
-            // Catch any other unexpected exceptions during socket creation
             running = false;
         }
     }
@@ -41,7 +39,6 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
     @Override
     public void runCyclic() {
         // Do nothing in runCyclic for this minimal test
-        // We are just testing if initialize() causes a crash
     }
 
     @Override
@@ -53,7 +50,6 @@ public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
         instance = null;
     }
 
-    // Keep a dummy log method to avoid compilation errors in TestRobotApplication
     public void log(String message) {
         // This method does nothing in this minimal version
     }
