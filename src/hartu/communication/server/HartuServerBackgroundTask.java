@@ -48,17 +48,17 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             throw new IllegalStateException("Failed to initialize HartuServerBackgroundTask due to an unexpected error.", e);
         }
         
+        protocolLoggerClient.sendMessage("sora1");
         initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         
     }
 
     @Override
     public void runCyclic() {
+    	
+    	protocolLoggerClient.sendMessage("sora221");
         if (serverListenThread == null || !serverListenThread.isAlive()) {
-            if (protocolLoggerClient == null) {
-                getLogger().error("HartuServerBackgroundTask: protocolLoggerClient is null in runCyclic(). Initialization might have failed. Cannot log further.");
-                return;
-            }
+        	
             protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer thread not running or has died. Attempting restart...");
 
             if (serverListenThread != null) {
