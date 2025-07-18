@@ -10,22 +10,12 @@ import java.util.concurrent.TimeUnit;
 public class RemoteLogger extends RoboticsAPICyclicBackgroundTask {
 
     private static final String UBUNTU_IP = "10.66.171.69";
-    private static final int LOGGING_PORT = 30002;
+    private static final int LOGGING_PORT = 30003;
 
     private static RemoteLogger instance;
     private Socket socket;
     private volatile boolean connectionAttempted = false; // Flag to indicate an attempt has been made
 
-    private RemoteLogger() {
-        // Private constructor for singleton
-    }
-
-    public static synchronized RemoteLogger getInstance() {
-        if (instance == null) {
-            instance = new RemoteLogger();
-        }
-        return instance;
-    }
 
     @Override
     public void initialize() {
