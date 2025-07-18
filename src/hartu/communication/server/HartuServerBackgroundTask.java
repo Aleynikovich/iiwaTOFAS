@@ -28,9 +28,9 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
     private final int HARTU_SERVER_PORT = 30001;
     private final int PROTOCOL_LOG_PORT = 30003;
-    private final int EXECUTION_LOG_PORT = 30004;
+    // private final int EXECUTION_LOG_PORT = 30004; // REMOVED: This constant is not needed here.
 
-    private final String LOG_SERVER_ADDRESS = "127.0.0.1";
+    private final String LOG_SERVER_ADDRESS = "127.0.0.1"; // Assuming localhost on the controller
 
     @Override
     public void initialize() {
@@ -39,7 +39,11 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
 
         try {
             getLogger().info("HartuServerBackgroundTask: Attempting to get LogServer instance from LogServerBackgroundTask.");
-
+            LogServer protocolLogServerInstance = logServerBackgroundTask.getLogServer();
+            if (protocolLogServerInstance == null) {
+                getLogger().error("HartuServerBackgroundTask: CRITICAL ERROR: LogServer instance is null from LogServerBackgroundTask. Cannot establish protocol logger. Check LogServerBackgroundTask initialization.");
+                throw new IllegalStateException("LogServer not initialized by LogServerBackgroundTask.");
+            }
             getLogger().info("HartuServerBackgroundTask: LogServer instance obtained. Proceeding to connect protocol logger client.");
 
             getLogger().info("HartuServerBackgroundTask: Sleeping for 2 seconds to allow LogServer to fully start.");
@@ -49,8 +53,8 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             protocolLoggerClient = new LoggerClient(LOG_SERVER_ADDRESS, PROTOCOL_LOG_PORT);
             getLogger().info("HartuServerBackgroundTask: Attempting to connect Protocol Logger Client.");
             
-            protocolLoggerClient.connect();
-            if (!protocolLoggerClient.isConnected()) { // Now checking the boolean state
+            protocolLoggerClient.connect(); 
+            if (!protocolLoggerClient.isConnected()) {
                 getLogger().error("HartuServerBackgroundTask: Failed to connect Protocol Logger Client to LogServer on port " + PROTOCOL_LOG_PORT + ". Check LogServer status and network configuration.");
                 throw new RuntimeException("Failed to connect Protocol Logger Client for HartuServer.");
             }
@@ -58,18 +62,19 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             getLogger().info("HartuServerBackgroundTask: Protocol Logger Client reports connected.");
 
 
-            getLogger().info("HartuServerBackgroundTask: Creating Execution Logger Client for port " + EXECUTION_LOG_PORT + ".");
-            executionLoggerClient = new LoggerClient(LOG_SERVER_ADDRESS, EXECUTION_LOG_PORT);
+            // The EXECUTION_LOG_PORT is now defined directly where the client is instantiated.
+            // This is cleaner as HartuServerBackgroundTask's only role for this client is to create it.
+            getLogger().info("HartuServerBackgroundTask: Creating Execution Logger Client for port 30004."); // Explicitly using 30004 here
+            executionLoggerClient = new LoggerClient(LOG_SERVER_ADDRESS, 30004); // Using literal 30004
             getLogger().info("HartuServerBackgroundTask: Attempting to connect Execution Logger Client.");
-
-
+            
             executionLoggerClient.connect();
-            if (!executionLoggerClient.isConnected()) { // Now checking the boolean state
-                protocolLoggerClient.sendMessage("HartuServerBackgroundTask: ERROR: Failed to connect Execution Logger Client to LogServer on port " + EXECUTION_LOG_PORT + ".");
-                getLogger().error("HartuServerBackgroundTask: Failed to connect Execution Logger Client to LogServer on port " + EXECUTION_LOG_PORT + ". Check LogServer status and network configuration.");
+            if (!executionLoggerClient.isConnected()) {
+                protocolLoggerClient.sendMessage("HartuServerBackgroundTask: ERROR: Failed to connect Execution Logger Client to LogServer on port 30004.");
+                getLogger().error("HartuServerBackgroundTask: Failed to connect Execution Logger Client to LogServer on port 30004. Check LogServer status and network configuration.");
                 throw new RuntimeException("Failed to connect Execution Logger Client for HartuServer.");
             }
-            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Execution Logger Client connected successfully to LogServer on port " + EXECUTION_LOG_PORT + ".");
+            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Execution Logger Client connected successfully to LogServer on port 30004.");
             getLogger().info("HartuServerBackgroundTask: Execution Logger Client reports connected.");
 
             getLogger().info("HartuServerBackgroundTask: Initializing raw message queue.");
@@ -93,7 +98,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
                 getLogger().error("HartuServerBackgroundTask: protocolLoggerClient is null in runCyclic(). Initialization might have failed. Cannot log further.");
                 return;
             }
-            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer thread not running. Attempting restart...");
+            protocolLoggerClient.sendMessage("HartuServerBackgroundTask: HartuServer thread not running or has died. Attempting restart...");
 
             if (serverListenThread != null) {
                 serverListenThread.interrupt();
@@ -106,10 +111,11 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
             }
 
             try {
-                Thread.sleep(500);
+                protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Waiting 5 seconds before attempting server restart...");
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Interrupted during pre-restart delay.");
+                protocolLoggerClient.sendMessage("HartuServerBackgroundTask: Interrupted during pre-restart delay. Aborting restart attempt.");
                 return;
             }
 
@@ -119,7 +125,7 @@ public class HartuServerBackgroundTask extends RoboticsAPICyclicBackgroundTask {
                     try {
                         hartuServer.start();
                     } catch (Exception e) {
-                        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: ERROR during HartuServer.start(): " + e.getMessage());
+                        protocolLoggerClient.sendMessage("HartuServerBackgroundTask: ERROR: HartuServer.start() failed: " + e.getMessage());
                     }
                 }
             }, "HartuServerListenThread");
