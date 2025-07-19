@@ -57,6 +57,7 @@ public class ServerClass implements IClientHandlerCallback
             this.taskClientHandler = handler;
         } else if ("Log Listener".equals(listenerName)) {
             this.logClientHandler = handler;
+            Logger.getInstance().setLogClientHandler(this.logClientHandler);
         }
     }
 
