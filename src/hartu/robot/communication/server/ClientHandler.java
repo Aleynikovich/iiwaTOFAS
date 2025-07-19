@@ -3,7 +3,6 @@ package hartu.robot.communication.server;
 
 import hartu.robot.utils.CommandParser; // Import CommandParser
 import hartu.robot.commands.ParsedCommand; // Import ParsedCommand
-import hartu.robot.commands.MotionParameters; // Ensure MotionParameters is imported if needed for validation/access
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,8 +28,8 @@ public class ClientHandler implements Runnable
     public void sendMessage(String message)
     {
         if (out != null) {
-            // Using print to avoid automatic newline, as per previous discussion
             out.print(message);
+            out.flush();
         } else {
             Logger.getInstance().log("ClientHandler (" + clientType + "): Attempted to send message before PrintWriter was initialized.");
         }
@@ -68,12 +67,13 @@ public class ClientHandler implements Runnable
                         String receivedMessage = messageBuilder.toString();
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Received: " + receivedMessage);
 
+                        // *** NEW: Parse the received command ***
                         try {
                             ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR); // Re-add terminator for parser
-                            // Logging the ParsedCommand using its toString() method
+                            // *** MODIFIED: Log the entire ParsedCommand object using its toString() ***
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toString());
 
-                            // Send FREE|commandID# back to the client
+                            // *** NEW ADDITION: Send FREE|commandID# back to the client ***
                             String responseToClient = "FREE|" + parsedCommand.getId() + MESSAGE_TERMINATOR;
                             sendMessage(responseToClient);
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
@@ -85,6 +85,7 @@ public class ClientHandler implements Runnable
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Parsing Error: " + e.getMessage());
                             // You might want to send an error response back to the client here
                         }
+                        // *** END NEW ***
 
                         messageBuilder.setLength(0); // Clear the builder for the next message
                     } else {
@@ -123,5 +124,6 @@ public class ClientHandler implements Runnable
         Logger.getInstance().log("ClientHandler (" + clientType + "): Terminated for client " + clientAddress);
     }
 
+    // Define MESSAGE_TERMINATOR here as it's used in this class
     private static final String MESSAGE_TERMINATOR = "#";
 }
