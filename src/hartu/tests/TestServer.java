@@ -35,8 +35,6 @@ import hartu.robot.communication.server.*;
 public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	@Inject
 	Controller kUKA_Sunrise_Cabinet_1;
-	@Inject
-	private LBR lBR_iiwa_14_R820_1;
 
 	private ServerClass robotCommunicationServer;
 	private static final int TASK_PORT = 30001;
@@ -46,7 +44,6 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,
 				CycleBehavior.BestEffort);
-		lBR_iiwa_14_R820_1.move(ptp(lBR_iiwa_14_R820_1.getCurrentJointPosition()));
         Thread serverThread = new Thread(new Runnable() {
             @Override
             public void run() {
