@@ -26,4 +26,6 @@ public enum MessagePartIndex {
     public int getIndex() {
         return index;
     }
+
 }
+
