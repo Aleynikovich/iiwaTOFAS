@@ -35,7 +35,7 @@ public class ServerPortListener implements Runnable
         {
             while (true)
             {
-                Logger.getInstance().log(listenerName + ": Waiting for a client to connect...");
+                Logger.getInstance().log(listenerName + ": Waiting for a new client to connect...");
                 Socket clientSocket = ss.accept(); // Accept the connection first
 
                 // Check if this is the Task Listener and if the Log Client is connected
