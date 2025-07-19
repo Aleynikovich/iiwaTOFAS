@@ -1,6 +1,9 @@
 // --- ClientHandler.java ---
 package hartu.robot.communication.server;
 
+import hartu.robot.utils.CommandParser; // Import CommandParser
+import hartu.robot.commands.ParsedCommand; // Import ParsedCommand
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,15 +15,14 @@ public class ClientHandler implements Runnable
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
-    private String clientType; // New field to store client type (e.g., "Task Listener", "Log Listener")
+    private String clientType;
 
-    // Constructor now takes clientType
     public ClientHandler(Socket socket, String clientType) throws IOException
     {
         this.clientSocket = socket;
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        this.clientType = clientType; // Store the client type
+        this.clientType = clientType;
     }
 
     public void sendMessage(String message)
@@ -63,7 +65,21 @@ public class ClientHandler implements Runnable
                     if (c == '#') {
                         String receivedMessage = messageBuilder.toString();
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Received: " + receivedMessage);
-                        // TODO: Implement actual task command processing here later
+
+                        try {
+                            ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR); // Re-add terminator for parser
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command: " + parsedCommand.getActionType() + " with ID: " + parsedCommand.getId());
+
+                            String responseToClient = "FREE|" + parsedCommand.getId() + MESSAGE_TERMINATOR;
+                            sendMessage(responseToClient);
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
+                            // TODO: Act on parser command
+
+                        } catch (IllegalArgumentException e) {
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Parsing Error: " + e.getMessage());
+                            // You might want to send an error response back to the client here
+                        }
+
                         messageBuilder.setLength(0); // Clear the builder for the next message
                     } else {
                         messageBuilder.append(c);
@@ -100,4 +116,7 @@ public class ClientHandler implements Runnable
         }
         Logger.getInstance().log("ClientHandler (" + clientType + "): Terminated for client " + clientAddress);
     }
+
+    // Define MESSAGE_TERMINATOR here as it's used in this class
+    private static final String MESSAGE_TERMINATOR = "#";
 }
