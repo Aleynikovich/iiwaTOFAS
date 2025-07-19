@@ -6,7 +6,9 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
+import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
+import com.kuka.roboticsAPI.applicationModel.tasks.UseRoboticsAPIContext;
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import hartu.robot.communication.server.*;
 
@@ -30,34 +32,32 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	Controller kUKA_Sunrise_Cabinet_1;
 	
 	private ServerClass robotCommunicationServer;
-	private static final int SERVER_PORT = 30003;
-	
+	private static final int TASK_PORT = 30001;
+    private static final int LOG_PORT = 40001;
 	@Override
 	public void initialize() {
 		// initialize your task here
-		initializeCyclic(0, 500, TimeUnit.MILLISECONDS,
-				CycleBehavior.BestEffort);
+		initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
 		
         Thread serverThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    robotCommunicationServer = new ServerClass(SERVER_PORT);
-                    robotCommunicationServer.start();
-                } catch (IOException e) {
-                    // Handle the exception if the server fails to start.
-                    // In a real robot application, you'd want robust logging here.
-                    System.err.println("Failed to start robot communication server: " + e.getMessage());
-                    e.printStackTrace();
+                try
+                {
+                    robotCommunicationServer = new ServerClass(TASK_PORT, LOG_PORT);
+                } catch (IOException e)
+                {
+                    throw new RuntimeException(e);
                 }
+                robotCommunicationServer.start();
             }
         });
-        serverThread.setDaemon(true); // Set as daemon so it doesn't prevent JVM exit
-        serverThread.start(); // Start the server thread
+        serverThread.setDaemon(true);
+        serverThread.start();
     }
 
 	@Override
 	public void runCyclic() {
-		// your task execution starts here
+
 	}
 }
