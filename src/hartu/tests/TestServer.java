@@ -59,7 +59,14 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 
 	@Override
 	public void runCyclic() {
+        if (robotCommunicationServer != null) {
+            robotCommunicationServer.sendHeartbeatToTaskClient("CONNECTION ALIVE - Task");
+        }
 
+        // Send heartbeat to log client
+        if (robotCommunicationServer != null) {
+            robotCommunicationServer.sendHeartbeatToLogClient("CONNECTION ALIVE - Log");
+        }
 	}
 
     @Override
