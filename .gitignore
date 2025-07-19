@@ -1,4 +1,3 @@
 /bin/
 *.class
-*.md!bin/
-!bin/
+*.md
