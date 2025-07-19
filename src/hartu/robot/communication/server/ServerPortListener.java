@@ -9,14 +9,13 @@ public class ServerPortListener implements Runnable
 {
     private ServerSocket serverSocket;
     private String listenerName;
-    private IClientHandlerCallback clientHandlerCallback; // New field for callback
+    private IClientHandlerCallback clientHandlerCallback;
 
-    // Constructor now takes a callback interface
     public ServerPortListener(ServerSocket serverSocket, String listenerName, IClientHandlerCallback callback)
     {
         this.serverSocket = serverSocket;
         this.listenerName = listenerName;
-        this.clientHandlerCallback = callback; // Store the callback
+        this.clientHandlerCallback = callback;
     }
 
     public ServerSocket getServerSocket() {
@@ -41,7 +40,6 @@ public class ServerPortListener implements Runnable
                 handlerThread.setDaemon(true);
                 handlerThread.start();
 
-
                 if (clientHandlerCallback != null) {
                     clientHandlerCallback.onClientConnected(handler, listenerName);
                 }
@@ -49,9 +47,15 @@ public class ServerPortListener implements Runnable
         }
         catch (IOException e)
         {
-            Logger.getInstance().log(listenerName + ": Listener error on port " + serverSocket.getLocalPort() + ": " + e.getMessage());
-            throw new RuntimeException("Listener error on port " + serverSocket.getLocalPort() + ": " + e.getMessage(), e);
+            // Log the error through the Logger.
+            // This IOException is expected when serverSocket.close() is called
+            // (e.g., from ServerClass.stop()), causing accept() to throw.
+            // We log it and allow the thread to terminate gracefully.
+            Logger.getInstance().log(listenerName + ": Listener I/O error (server shutting down or port issue): " + e.getMessage());
+            // *** IMPORTANT CHANGE: Removed 'throw new RuntimeException(e);' ***
+            // Allow the thread to terminate gracefully after logging.
         }
+        // No finally block needed here for ServerSocket as try-with-resources handles closing
+        // and any RuntimeException would still allow the thread to terminate.
     }
-
 }

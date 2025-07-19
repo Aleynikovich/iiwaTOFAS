@@ -64,8 +64,10 @@ public class ClientHandler implements Runnable
         catch (IOException e)
         {
             // Log the error through the Logger
-            Logger.getInstance().log("ClientHandler (" + clientAddress + "): I/O error: " + e.getMessage());
-            throw new RuntimeException("ClientHandler I/O error: " + e.getMessage(), e);
+            // This is expected when the client disconnects gracefully or forcibly.
+            Logger.getInstance().log("ClientHandler (" + clientAddress + "): I/O error (client disconnected): " + e.getMessage());
+            // *** IMPORTANT CHANGE: Removed 'throw new RuntimeException(e);' ***
+            // Allow the thread to terminate gracefully after logging.
         }
         finally
         {
@@ -76,7 +78,8 @@ public class ClientHandler implements Runnable
             catch (IOException e)
             {
                 Logger.getInstance().log("ClientHandler (" + clientAddress + "): Error closing client socket: " + e.getMessage());
-                throw new RuntimeException("Error closing client socket in handler: " + e.getMessage(), e);
+                // *** IMPORTANT CHANGE: Removed 'throw new RuntimeException(e);' ***
+                // Allow the thread to terminate gracefully after logging.
             }
         }
         Logger.getInstance().log("ClientHandler: Terminated for client " + clientAddress);
