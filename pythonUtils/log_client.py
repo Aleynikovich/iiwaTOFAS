@@ -7,6 +7,15 @@ SERVER_PORT = 30002 # Log client port
 
 RECONNECT_DELAY_SECONDS = 5 # How long to wait before attempting to reconnect
 
+# ANSI escape codes for coloring
+# You can find more colors here: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+COLOR_RESET = "\033[0m"
+COLOR_GREEN = "\033[92m" # Light Green
+COLOR_YELLOW = "\033[93m" # Light Yellow
+COLOR_RED = "\033[91m"   # Light Red
+COLOR_CYAN = "\033[96m"  # Light Cyan
+COLOR_BLUE = "\033[94m"  # Blue
+
 def run_log_client():
     """
     Runs the log client, attempting to connect to the server and
@@ -28,9 +37,22 @@ def run_log_client():
                         print("Server closed the connection. Attempting to reconnect...\n")
                         break # Break inner loop to trigger reconnection
 
-                    # MODIFIED: Removed .strip() to preserve newlines from server if present,
-                    # but the f-string's \n will ensure readability if server uses print()
-                    print(f"{data.decode()}\n")
+                    received_message = data.decode()
+
+                    # Apply coloring based on message content (simple example)
+                    # You can expand this logic for more granular coloring
+                    if "Error:" in received_message:
+                        colored_message = f"{COLOR_RED}{received_message}{COLOR_RESET}"
+                    elif "Warning:" in received_message:
+                        colored_message = f"{COLOR_YELLOW}{received_message}{COLOR_RESET}"
+                    elif "Successfully parsed command:" in received_message:
+                        colored_message = f"{COLOR_GREEN}{received_message}{COLOR_RESET}"
+                    elif "Received:" in received_message or "Sent response:" in received_message:
+                        colored_message = f"{COLOR_CYAN}{received_message}{COLOR_RESET}"
+                    else:
+                        colored_message = received_message # Default color (no change)
+
+                    print(f"{colored_message}") # MODIFIED: Removed the trailing \n
 
                     # No sleep here, as logs might come in rapidly.
                     # The server's heartbeat already has a delay.
