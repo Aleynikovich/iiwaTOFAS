@@ -32,12 +32,12 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	Controller kUKA_Sunrise_Cabinet_1;
 	
 	private ServerClass robotCommunicationServer;
-	private static final int TASK_PORT = 30005;
-    private static final int LOG_PORT = 30007;
+	private static final int TASK_PORT = 30001;
+    private static final int LOG_PORT = 30002;
 	@Override
 	public void initialize() {
 		// initialize your task here
-		initializeCyclic(0, 500, TimeUnit.MILLISECONDS,
+		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,
 				CycleBehavior.BestEffort);
 		
         Thread serverThread = new Thread(new Runnable() {
