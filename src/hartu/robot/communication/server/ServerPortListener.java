@@ -36,4 +36,6 @@ public class ServerPortListener implements Runnable
             throw new RuntimeException("Listener error on port " + serverSocket.getLocalPort() + ": " + e.getMessage(), e);
         }
     }
+
+    public ServerSocket getServerSocket() { return serverSocket; }
 }
