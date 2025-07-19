@@ -18,19 +18,20 @@ def run_log_client():
         try:
             print(f"Attempting to connect to server at {SERVER_IP}:{SERVER_PORT}...")
             client_socket.connect((SERVER_IP, SERVER_PORT))
-            print(f"Connected to server at {SERVER_IP}:{SERVER_PORT}\n")
+            print(f"Connected to server at {SERVER_IP}:{SERVER_PORT}") # Removed \n
 
             # Inner loop for receiving data while connected
             while True:
                 try:
                     data = client_socket.recv(4096) # Increased buffer size for potentially larger log messages
                     if not data:
-                        print("Server closed the connection. Attempting to reconnect...\n")
+                        print("Server closed the connection.") # Removed \n
                         break # Break inner loop to trigger reconnection
 
-                    # MODIFIED: Removed .strip() to preserve newlines from server if present,
-                    # but the f-string's \n will ensure readability if server uses print()
-                    print(f"{data.decode()}\n")
+                    received_message = data.decode()
+
+                    # Print the received message without adding a newline
+                    print(f"{received_message}")
 
                     # No sleep here, as logs might come in rapidly.
                     # The server's heartbeat already has a delay.
@@ -38,21 +39,20 @@ def run_log_client():
                     # This should not typically happen with blocking sockets unless explicitly set
                     pass
                 except ConnectionResetError:
-                    print("Server forcibly closed the connection. Attempting to reconnect...\n")
+                    print("Server forcibly closed the connection.") # Removed \n
                     break # Break inner loop to trigger reconnection
                 except Exception as e:
-                    print(f"An error occurred during communication: {e}. Attempting to reconnect...\n")
+                    print(f"An error occurred during communication: {e}") # Removed \n
                     break # Break inner loop to trigger reconnection
 
         except ConnectionRefusedError:
-            print(f"Connection refused. Is the server running on {SERVER_IP}:{SERVER_PORT}? Retrying in {RECONNECT_DELAY_SECONDS} seconds...\n")
+            print(f"Connection refused. Is the server running on {SERVER_IP}:{SERVER_PORT}? Retrying in {RECONNECT_DELAY_SECONDS} seconds...") # Removed \n
         except Exception as e:
-            print(f"An unexpected error occurred: {e}. Retrying in {RECONNECT_DELAY_SECONDS} seconds...\n")
+            print(f"An unexpected error occurred: {e}. Retrying in {RECONNECT_DELAY_SECONDS} seconds...") # Removed \n
         finally:
             # Ensure the socket is closed before the next reconnection attempt
             if client_socket:
                 client_socket.close()
-                # print("Client socket closed.\n") # Removed for cleaner output during rapid retries
 
         # Wait before attempting to reconnect
         time.sleep(RECONNECT_DELAY_SECONDS)
