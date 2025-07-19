@@ -106,6 +106,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask {
             }
         }
         // If resultHolder is null, no command was available, just continue to next cycle.
+        Logger.getInstance().log("Waiting for command");
     }
 
     @Override
