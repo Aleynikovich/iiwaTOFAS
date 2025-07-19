@@ -33,11 +33,12 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	
 	private ServerClass robotCommunicationServer;
 	private static final int TASK_PORT = 30001;
-    private static final int LOG_PORT = 30002;
+    private static final int LOG_PORT = 40001;
 	@Override
 	public void initialize() {
 		// initialize your task here
-		initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
+		initializeCyclic(0, 500, TimeUnit.MILLISECONDS,
+				CycleBehavior.BestEffort);
 		
         Thread serverThread = new Thread(new Runnable() {
             @Override
@@ -60,4 +61,20 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	public void runCyclic() {
 
 	}
+
+    @Override
+    public void dispose() {
+        // This method is called when the background task is terminated.
+        // It's the perfect place to clean up resources.
+        if (robotCommunicationServer != null) {
+            try {
+                robotCommunicationServer.stop();
+            } catch (IOException e) {
+                // Re-throwing as RuntimeException to align with previous error handling style.
+                // In a production robot system, you would want robust error logging here.
+                throw new RuntimeException("Error stopping robot communication server: " + e.getMessage(), e);
+            }
+        }
+        super.dispose(); // Call the superclass's dispose method
+    }
 }
