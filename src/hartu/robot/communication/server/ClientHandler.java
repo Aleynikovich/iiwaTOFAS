@@ -66,19 +66,25 @@ public class ClientHandler implements Runnable
                         String receivedMessage = messageBuilder.toString();
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Received: " + receivedMessage);
 
+                        // *** NEW: Parse the received command ***
                         try {
                             ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR); // Re-add terminator for parser
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command: " + parsedCommand.getActionType() + " with ID: " + parsedCommand.getId());
+                            // *** MODIFIED: Log the entire ParsedCommand object using its toString() ***
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toString());
 
+                            // *** NEW ADDITION: Send FREE|commandID# back to the client ***
                             String responseToClient = "FREE|" + parsedCommand.getId() + MESSAGE_TERMINATOR;
                             sendMessage(responseToClient);
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
-                            // TODO: Act on parser command
+                            // TODO: Now that the command is parsed, you can act on it.
+                            // Example: if (parsedCommand.isMovementCommand()) { ... initiate robot move ... }
+                            // Example: if (parsedCommand.isIoCommand()) { ... activate IO ... }
 
                         } catch (IllegalArgumentException e) {
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Parsing Error: " + e.getMessage());
                             // You might want to send an error response back to the client here
                         }
+                        // *** END NEW ***
 
                         messageBuilder.setLength(0); // Clear the builder for the next message
                     } else {
