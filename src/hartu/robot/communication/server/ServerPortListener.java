@@ -35,7 +35,7 @@ public class ServerPortListener implements Runnable
                 Socket clientSocket = ss.accept();
                 Logger.getInstance().log(listenerName + ": Client connected from: " + clientSocket.getInetAddress().getHostAddress());
 
-                ClientHandler handler = new ClientHandler(clientSocket);
+                ClientHandler handler = new ClientHandler(clientSocket, listenerName);
                 Thread handlerThread = new Thread(handler);
                 handlerThread.setDaemon(true);
                 handlerThread.start();
