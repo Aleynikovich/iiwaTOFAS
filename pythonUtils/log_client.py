@@ -1,7 +1,8 @@
 # --- log_client.py ---
 import socket
 import time
-import re # Import the regular expression module
+import json # Import the json module
+import re   # Still needed for general log message parsing
 
 SERVER_IP = '10.66.171.147'
 SERVER_PORT = 30002 # Log client port
@@ -14,12 +15,10 @@ COLOR_GREEN = "\033[92m"   # Light Green (for success messages)
 COLOR_YELLOW = "\033[93m"  # Light Yellow (for warnings)
 COLOR_RED = "\033[91m"     # Light Red (for errors)
 COLOR_CYAN = "\033[96m"    # Light Cyan (for general received/sent messages)
-COLOR_BLUE = "\033[94m"    # Blue (for command type/ID labels)
-COLOR_WHITE = "\033[97m"   # White (for general labels/headers)
-
-# Special delimiters from Java ParsedCommand.java
-VALUE_START_DELIMITER = "\u001A" # Substitute (SUB) character
-VALUE_END_DELIMITER = "\u001B"   # Escape (ESC) character
+COLOR_BLUE = "\033[94m"    # Blue (for JSON keys/labels)
+COLOR_MAGENTA = "\033[95m" # Magenta (for JSON string values)
+COLOR_WHITE = "\033[97m"   # White (for JSON numeric/boolean values)
+COLOR_LIGHT_BLUE = "\033[38;5;111m" # A softer blue for some values
 
 # Specific colors for individual joint/Cartesian coordinates (used cyclically)
 JOINT_COLORS = [
@@ -34,84 +33,74 @@ JOINT_COLORS = [
 
 # Specific colors for individual motion parameter values (used cyclically)
 PARAM_COLORS = [
-    "\033[38;5;46m",  # Bright Green
-    "\033[38;5;226m", # Bright Yellow
-    "\033[38;5;201m", # Deep Pink
-    "\033[38;5;39m",  # Deep Sky Blue
-    "\033[38;5;160m", # Red Orange
-    "\033[38;5;105m", # Light Purple
-    "\033[38;5;123m"  # Light Cyan
+    "\033[38;5;46m",  # Bright Green (Speed Override)
+    "\033[38;5;226m", # Bright Yellow (Tool)
+    "\033[38;5;201m", # Deep Pink (Base)
+    "\033[38;5;39m",  # Deep Sky Blue (Continuous)
+    "\033[38;5;160m", # Red Orange (Num Points)
+    "\033[38;5;105m", # Light Purple (IO Point)
+    "\033[38;5;123m"  # Light Cyan (IO Pin)
 ]
 
+# Global index for cyclic coloring (reset per ParsedCommand)
+_joint_coord_color_idx = 0
+_param_color_idx = 0
 
-def colorize_parsed_command(message_content):
+def format_json_with_colors(data, indent=0):
     """
-    Applies detailed coloring to the ParsedCommand output using embedded delimiters.
+    Recursively formats and colors JSON data for terminal output.
     """
-    lines = message_content.split('\n')
-    colored_lines = []
+    global _joint_coord_color_idx, _param_color_idx # Use global indices
 
-    # Keep track of the index for cyclic coloring of joints/coords and params
-    joint_coord_color_idx = 0
-    param_color_idx = 0
+    indent_str = "  " * indent
+    output = []
 
-    for line in lines:
-        temp_line = line
+    if isinstance(data, dict):
+        output.append(f"{indent_str}{{")
+        for i, (key, value) in enumerate(data.items()):
+            # Reset indices for new command block (top level)
+            if indent == 0 and key == "actionType":
+                _joint_coord_color_idx = 0
+                _param_color_idx = 0
 
-        # Split the line by the delimiters
-        # The regex (VALUE_START_DELIMITER + '(.*?)' + VALUE_END_DELIMITER)
-        # captures the content between the delimiters.
-        # re.split will return a list where odd indices are the captured groups
-        # (the values we want to color), and even indices are the text outside.
-        parts = re.split(f'{re.escape(VALUE_START_DELIMITER)}(.*?){re.escape(VALUE_END_DELIMITER)}', temp_line)
+            # Color keys (labels)
+            colored_key = f"{COLOR_BLUE}\"{key}\"{COLOR_RESET}"
 
-        colored_parts = []
-        for i, part in enumerate(parts):
-            if i % 2 == 1: # This is a value that was inside the delimiters
-                value_to_color = part
+            # Handle specific values with their own colors
+            if key in ["actionType", "id", "actionValue", "commandType", "programId"]:
+                colored_value = f"{COLOR_GREEN}{json.dumps(value)}{COLOR_RESET}"
+            elif key in ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "X", "Y", "Z", "A", "B", "C"]:
+                color = JOINT_COLORS[_joint_coord_color_idx % len(JOINT_COLORS)]
+                colored_value = f"{color}{json.dumps(value)}{COLOR_RESET}"
+                _joint_coord_color_idx += 1
+            elif key in ["speedOverride", "tool", "base", "continuous", "numPoints", "ioPoint", "ioPin", "ioState"]:
+                color = PARAM_COLORS[_param_color_idx % len(PARAM_COLORS)]
+                colored_value = f"{color}{json.dumps(value)}{COLOR_RESET}"
+                _param_color_idx += 1
+            elif isinstance(value, (int, float, bool)):
+                colored_value = f"{COLOR_WHITE}{json.dumps(value)}{COLOR_RESET}"
+            elif isinstance(value, str):
+                colored_value = f"{COLOR_MAGENTA}{json.dumps(value)}{COLOR_RESET}"
+            else:
+                colored_value = format_json_with_colors(value, indent + 1) # Recurse for nested dicts/lists
 
-                # Determine which color to apply based on the content/context
-                color_to_apply = COLOR_WHITE # Default for values
+            output.append(f"{indent_str}  {colored_key}: {colored_value}{',' if i < len(data) - 1 else ''}")
+        output.append(f"{indent_str}}}")
+    elif isinstance(data, list):
+        output.append(f"{indent_str}[")
+        for i, item in enumerate(data):
+            output.append(f"{indent_str}  {format_json_with_colors(item, indent + 1)}{',' if i < len(data) - 1 else ''}")
+        output.append(f"{indent_str}]")
+    else:
+        # For primitive types not handled above (e.g., if a top-level value is not dict/list)
+        if isinstance(data, (int, float, bool)):
+            return f"{COLOR_WHITE}{json.dumps(data)}{COLOR_RESET}"
+        elif isinstance(data, str):
+            return f"{COLOR_MAGENTA}{json.dumps(data)}{COLOR_RESET}"
+        else:
+            return json.dumps(data) # Fallback
 
-                # Check for specific patterns to apply distinct colors
-                if any(f"J{j}=" in value_to_color for j in range(1, 8)) or \
-                        any(f"{coord}=" in value_to_color for coord in ['X', 'Y', 'Z', 'A', 'B', 'C']):
-                    color_to_apply = JOINT_COLORS[joint_coord_color_idx % len(JOINT_COLORS)]
-                    joint_coord_color_idx += 1
-                elif any(label in line for label in ["Speed Override:", "Tool:", "Base:", "Continuous:", "Num Points:", "IO Point:", "IO Pin:", "IO State:", "Program ID:"]):
-                    color_to_apply = PARAM_COLORS[param_color_idx % len(PARAM_COLORS)]
-                    param_color_idx += 1
-
-                colored_parts.append(f"{color_to_apply}{value_to_color}{COLOR_RESET}")
-            else: # This is text outside the delimiters (labels, static text)
-                # Apply colors to specific labels/headers
-                part = part.replace("ActionType:", f"{COLOR_BLUE}ActionType:{COLOR_RESET}")
-                part = part.replace("ID:", f"{COLOR_BLUE}ID:{COLOR_RESET}")
-                part = part.replace("--- Movement Command ---", f"{COLOR_WHITE}--- Movement Command ---{COLOR_RESET}")
-                part = part.replace("--- IO Command ---", f"{COLOR_WHITE}--- IO Command ---{COLOR_RESET}")
-                part = part.replace("--- Program Call ---", f"{COLOR_WHITE}--- Program Call ---{COLOR_RESET}")
-                part = part.replace("Axis Target Points", f"{COLOR_WHITE}Axis Target Points{COLOR_RESET}")
-                part = part.replace("Cartesian Target Points", f"{COLOR_WHITE}Cartesian Target Points{COLOR_RESET}")
-                part = part.replace("Motion Parameters:", f"{COLOR_WHITE}Motion Parameters:{COLOR_RESET}")
-                part = part.replace("IO Data:", f"{COLOR_WHITE}IO Data:{COLOR_RESET}")
-                part = part.replace("Program ID:", f"{COLOR_WHITE}Program ID:{COLOR_RESET}")
-                part = re.sub(r'(Point \d+:)', f"{COLOR_WHITE}\\1{COLOR_RESET}", part) # Color "Point X:"
-
-                # Color labels for motion parameters and IO data
-                part = part.replace("Speed Override: ", f"{COLOR_WHITE}Speed Override: {COLOR_RESET}")
-                part = part.replace("Tool: ", f"{COLOR_WHITE}Tool: {COLOR_RESET}")
-                part = part.replace("Base: ", f"{COLOR_WHITE}Base: {COLOR_RESET}")
-                part = part.replace("Continuous: ", f"{COLOR_WHITE}Continuous: {COLOR_RESET}")
-                part = part.replace("Num Points: ", f"{COLOR_WHITE}Num Points: {COLOR_RESET}")
-                part = part.replace("IO Point: ", f"{COLOR_WHITE}IO Point: {COLOR_RESET}")
-                part = part.replace("IO Pin: ", f"{COLOR_WHITE}IO Pin: {COLOR_RESET}")
-                part = part.replace("IO State: ", f"{COLOR_WHITE}IO State: {COLOR_RESET}")
-
-                colored_parts.append(part)
-
-        colored_lines.append("".join(colored_parts))
-
-    return "\n".join(colored_lines) + COLOR_RESET
+    return "\n".join(output)
 
 def run_log_client():
     """
@@ -138,13 +127,31 @@ def run_log_client():
 
                     colored_message = received_message # Default to no color
 
-                    # Apply general coloring first
-                    if "Error:" in received_message:
+                    # Check if the message is a "Successfully parsed command:" log containing JSON
+                    if "Successfully parsed command:" in received_message:
+                        # Extract the JSON part
+                        json_start_index = received_message.find("{")
+                        if json_start_index != -1:
+                            log_prefix = received_message[:json_start_index]
+                            json_string = received_message[json_start_index:]
+
+                            try:
+                                parsed_json = json.loads(json_string)
+                                # Colorize the log prefix
+                                colored_prefix = f"{COLOR_GREEN}{log_prefix}{COLOR_RESET}"
+                                # Format and colorize the JSON data
+                                colored_json = format_json_with_colors(parsed_json)
+                                colored_message = f"{colored_prefix}\n{colored_json}"
+                            except json.JSONDecodeError:
+                                # Not valid JSON, fall back to simple coloring
+                                colored_message = f"{COLOR_GREEN}{received_message}{COLOR_RESET}"
+                        else:
+                            # "Successfully parsed command:" but no JSON found, simple color
+                            colored_message = f"{COLOR_GREEN}{received_message}{COLOR_RESET}"
+                    elif "Error:" in received_message:
                         colored_message = f"{COLOR_RED}{received_message}{COLOR_RESET}"
                     elif "Warning:" in received_message:
                         colored_message = f"{COLOR_YELLOW}{received_message}{COLOR_RESET}"
-                    elif "Successfully parsed command:" in received_message:
-                        colored_message = colorize_parsed_command(received_message) # Call helper function for detailed coloring
                     elif "Received:" in received_message or "Sent response:" in received_message:
                         colored_message = f"{COLOR_CYAN}{received_message}{COLOR_RESET}"
 
