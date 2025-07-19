@@ -18,7 +18,7 @@
 
 The Apache Log4j 2 team is pleased to announce the Log4j 2.12.4 release!
 
-Apache Log4j is a well known framework for logging application behavior. Log4j 2 is an upgrade
+Apache Log4j is a well known framework for logging hartu.application behavior. Log4j 2 is an upgrade
 to Log4j that provides significant improvements over its predecessor, Log4j 1.x, and provides
 many other modern features such as support for Markers, lambda expressions for lazy logging,
 property substitution using Lookups, multiple patterns on a PatternLayout and asynchronous

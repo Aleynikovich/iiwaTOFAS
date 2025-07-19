@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <RoboticsAPIData version="3">
    <world>
@@ -10,7 +11,7 @@
     This file contains examples for generating process data elements. 
     Please copy the processDataContainer and its content into the RoboticsAPI.data.xml and modify the processData as needed.
     
-    To use this process data elements in your application use getApplicationData().getProcessData(<id>).
+    To use this process data elements in your hartu.application use getApplicationData().getProcessData(<id>).
     e.g.
     getApplicationData().getProcessData("counter").setValue(3);
     
