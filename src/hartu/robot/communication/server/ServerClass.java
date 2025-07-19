@@ -5,38 +5,28 @@ import java.net.*;
 
 public class ServerClass
 {
-    private ServerSocket serverSocket;
+    private ServerPortListener taskPortListener;
+    private ServerPortListener logPortListener;
 
-    public ServerClass(int port) throws IOException
+    public ServerClass(int taskPort, int logPort) throws IOException
     {
-        this.serverSocket = new ServerSocket(port);
+        ServerSocket taskServerSocket = new ServerSocket(taskPort);
+        this.taskPortListener = new ServerPortListener(taskServerSocket, "Task Listener");
+
+        ServerSocket logServerSocket = new ServerSocket(logPort);
+        this.logPortListener = new ServerPortListener(logServerSocket, "Log Listener");
     }
 
-    public void start() throws IOException
+    public void start()
     {
-        while (true)
-        {
-            Socket clientSocket = serverSocket.accept();
-            handleClient(clientSocket);
-        }
+        Thread taskListenerThread = new Thread(taskPortListener);
+        Thread logListenerThread = new Thread(logPortListener);
+
+        taskListenerThread.setDaemon(true);
+        logListenerThread.setDaemon(true);
+
+        taskListenerThread.start();
+        logListenerThread.start();
     }
 
-    private void handleClient(Socket clientSocket) throws IOException
-    {
-        try (
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
-        ) {
-            String inputLine;
-            while ((inputLine = in.readLine()) != null)
-            {
-                out.println("Echo: " + inputLine);
-                if ("bye".equalsIgnoreCase(inputLine.trim()))
-                {
-                    break;
-                }
-            }
-        }
-        clientSocket.close();
-    }
 }
