@@ -108,7 +108,7 @@ public class ClientHandler implements Runnable
                         if (executionSuccess) {
                             responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
                         } else {
-                            responseToClient = "ERROR|" + commandId + MESSAGE_TERMINATOR;
+                            responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
                         }
                         sendMessage(responseToClient);
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
