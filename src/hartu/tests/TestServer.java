@@ -32,8 +32,8 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	Controller kUKA_Sunrise_Cabinet_1;
 	
 	private ServerClass robotCommunicationServer;
-	private static final int TASK_PORT = 30001;
-    private static final int LOG_PORT = 30002;
+	private static final int TASK_PORT = 30004;
+    private static final int LOG_PORT = 30006;
 	@Override
 	public void initialize() {
 		// initialize your task here
