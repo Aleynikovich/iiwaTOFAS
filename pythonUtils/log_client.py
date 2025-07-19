@@ -1,21 +1,40 @@
 # --- log_client.py ---
 import socket
+import time
 
 SERVER_IP = '10.66.171.147'
-SERVER_PORT = 40001 # Log client port - Corrected to 40001
+SERVER_PORT = 30002 # Log client port - Corrected to 30002
 
 def run_log_client():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         client_socket.connect((SERVER_IP, SERVER_PORT))
-        client_socket.sendall(b"Hello from log client!\n")
-        response = client_socket.recv(1024) # Try to receive, but server will close quickly
-        print(f"Received from server: {response.decode().strip()}")
+        print(f"Connected to server at {SERVER_IP}:{SERVER_PORT}")
+
+        while True:
+            try:
+                # Attempt to receive data (logs/heartbeats from server)
+                data = client_socket.recv(1024)
+                if not data:
+                    print("Server closed the connection.")
+                    break
+                print(f"Received from server: {data.decode().strip()}")
+                time.sleep(1) # Small delay to avoid busy-waiting too aggressively
+            except BlockingIOError:
+                # No data available, continue loop
+                pass
+            except ConnectionResetError:
+                print("Server forcibly closed the connection.")
+                break
+            except Exception as e:
+                print(f"An error occurred during communication: {e}")
+                break
     except ConnectionRefusedError:
         print(f"Connection refused. Is the server running on {SERVER_IP}:{SERVER_PORT}?")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred during connection: {e}")
     finally:
+        print("Closing client socket.")
         client_socket.close()
 
 if __name__ == '__main__':

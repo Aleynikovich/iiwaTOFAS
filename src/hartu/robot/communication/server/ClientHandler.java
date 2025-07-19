@@ -20,47 +20,51 @@ public class ClientHandler implements Runnable
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    // Method to send a message to this specific client
     public void sendMessage(String message)
     {
-        out.println(message);
+        if (out != null) { // Defensive check
+            out.println(message);
+        } else {
+            Logger.getInstance().log("ClientHandler: Attempted to send message before PrintWriter was initialized.");
+        }
     }
 
-    // Method to read a message from this specific client (blocking)
     public String readMessage() throws IOException
     {
         return in.readLine();
     }
 
-    // Method to close the client socket
     public void close() throws IOException
     {
-        clientSocket.close();
+        if (clientSocket != null && !clientSocket.isClosed()) {
+            clientSocket.close();
+            Logger.getInstance().log("ClientHandler: Client socket closed for " + clientSocket.getInetAddress().getHostAddress());
+        }
     }
 
     @Override
     public void run()
     {
-        // The run method will contain the primary communication loop for this client.
-        // For now, it will simply read messages until the client disconnects or sends "bye".
-        // In later steps, we'll add logic to process task requests or manage log streaming.
+        String clientAddress = clientSocket.getInetAddress().getHostAddress();
+        Logger.getInstance().log("ClientHandler: Started for client " + clientAddress);
+
         String inputLine;
         try
         {
             while ((inputLine = in.readLine()) != null)
             {
-                // For now, we'll just read and discard, or you can add simple echo logic if needed for testing.
-                // The main purpose of this ClientHandler's run method is to keep the connection alive
-                // and be ready to receive. Sending will be done via sendMessage().
+                Logger.getInstance().log("ClientHandler (" + clientAddress + "): Received: " + inputLine);
                 if ("bye".equalsIgnoreCase(inputLine.trim()))
                 {
+                    Logger.getInstance().log("ClientHandler (" + clientAddress + "): Client sent 'bye'.");
                     break;
                 }
             }
         }
         catch (IOException e)
         {
-            // Re-throw as RuntimeException as per preference
+            // Log the error through the Logger
+            Logger.getInstance().log("ClientHandler (" + clientAddress + "): I/O error: " + e.getMessage());
             throw new RuntimeException("ClientHandler I/O error: " + e.getMessage(), e);
         }
         finally
@@ -71,8 +75,10 @@ public class ClientHandler implements Runnable
             }
             catch (IOException e)
             {
+                Logger.getInstance().log("ClientHandler (" + clientAddress + "): Error closing client socket: " + e.getMessage());
                 throw new RuntimeException("Error closing client socket in handler: " + e.getMessage(), e);
             }
         }
+        Logger.getInstance().log("ClientHandler: Terminated for client " + clientAddress);
     }
 }
