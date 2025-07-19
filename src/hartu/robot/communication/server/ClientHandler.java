@@ -1,10 +1,12 @@
 // --- ClientHandler.java ---
 package hartu.robot.communication.server;
 
-import hartu.robot.utils.CommandParser; // Import CommandParser
-import hartu.robot.commands.ParsedCommand; // Import ParsedCommand
+import hartu.robot.utils.CommandParser;
+import hartu.robot.commands.ParsedCommand;
 
 import java.io.BufferedReader;
+import java.io.File; // Import File class
+import java.io.FileWriter; // Import FileWriter
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -16,6 +18,10 @@ public class ClientHandler implements Runnable
     private PrintWriter out;
     private BufferedReader in;
     private String clientType;
+
+    // Define the path for the JSON log file
+    private static final String PARSED_DATA_DIR = "parsedData";
+    private static final String PARSED_COMMAND_FILE = PARSED_DATA_DIR + File.separator + "parsedCommand.json";
 
     public ClientHandler(Socket socket, String clientType) throws IOException
     {
@@ -29,7 +35,6 @@ public class ClientHandler implements Runnable
     {
         if (out != null) {
             out.print(message);
-            out.flush();
         } else {
             Logger.getInstance().log("ClientHandler (" + clientType + "): Attempted to send message before PrintWriter was initialized.");
         }
@@ -37,8 +42,7 @@ public class ClientHandler implements Runnable
 
     public String readMessage() throws IOException
     {
-        // This method might need to be adapted later if external calls need to read specific delimiters
-        return in.readLine(); // Still uses readLine for now, but run() will handle delimiter
+        return in.readLine();
     }
 
     public void close() throws IOException
@@ -58,42 +62,39 @@ public class ClientHandler implements Runnable
         try
         {
             if ("Task Listener".equals(clientType)) {
-                // Logic for reading messages delimited by '#'
                 StringBuilder messageBuilder = new StringBuilder();
                 int charCode;
-                while ((charCode = in.read()) != -1) { // Read character by character
+                while ((charCode = in.read()) != -1) {
                     char c = (char) charCode;
                     if (c == '#') {
                         String receivedMessage = messageBuilder.toString();
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Received: " + receivedMessage);
 
-                        // *** NEW: Parse the received command ***
                         try {
-                            ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR); // Re-add terminator for parser
-                            // *** MODIFIED: Log the entire ParsedCommand object using its toString() ***
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toString());
+                            ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR);
+                            String parsedCommandJson = parsedCommand.toJson(); // Get the JSON string
 
-                            // *** NEW ADDITION: Send FREE|commandID# back to the client ***
-                            String responseToClient = "FREE|" + parsedCommand.getId() + MESSAGE_TERMINATOR;
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommandJson);
+
+                            // --- NEW: Save JSON to file ---
+                            saveJsonToFile(parsedCommandJson, PARSED_COMMAND_FILE);
+                            // --- END NEW ---
+
+                            String commandId = parsedCommand.getId();
+                            String responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
                             sendMessage(responseToClient);
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
-                            // TODO: Now that the command is parsed, you can act on it.
-                            // Example: if (parsedCommand.isMovementCommand()) { ... initiate robot move ... }
-                            // Example: if (parsedCommand.isIoCommand()) { ... activate IO ... }
 
                         } catch (IllegalArgumentException e) {
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Parsing Error: " + e.getMessage());
-                            // You might want to send an error response back to the client here
                         }
-                        // *** END NEW ***
 
-                        messageBuilder.setLength(0); // Clear the builder for the next message
+                        messageBuilder.setLength(0);
                     } else {
                         messageBuilder.append(c);
                     }
                 }
             } else {
-                // Original logic for reading messages delimited by newline (for Log Listener)
                 String inputLine;
                 while ((inputLine = in.readLine()) != null)
                 {
@@ -124,6 +125,31 @@ public class ClientHandler implements Runnable
         Logger.getInstance().log("ClientHandler (" + clientType + "): Terminated for client " + clientAddress);
     }
 
-    // Define MESSAGE_TERMINATOR here as it's used in this class
+    /**
+     * Saves the given JSON string to a specified file, overwriting it if it exists.
+     * Creates the parent directory if it does not exist.
+     * @param jsonString The JSON content to save.
+     * @param filePath The path to the file where the JSON should be saved.
+     */
+    private void saveJsonToFile(String jsonString, String filePath) {
+        File outputFile = new File(filePath);
+        File parentDir = outputFile.getParentFile();
+
+        // Create parent directories if they don't exist
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                Logger.getInstance().log("ClientHandler: Failed to create directory: " + parentDir.getAbsolutePath());
+                return; // Exit if directory creation fails
+            }
+        }
+
+        try (FileWriter writer = new FileWriter(outputFile, false)) { // false for overwrite
+            writer.write(jsonString);
+            Logger.getInstance().log("ClientHandler: Parsed command JSON saved to: " + filePath);
+        } catch (IOException e) {
+            Logger.getInstance().log("ClientHandler Error: Could not save parsed command JSON to file " + filePath + ": " + e.getMessage());
+        }
+    }
+
     private static final String MESSAGE_TERMINATOR = "#";
 }
