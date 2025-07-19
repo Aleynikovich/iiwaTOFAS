@@ -3,18 +3,21 @@ package hartu.robot.communication.server;
 import java.io.*;
 import java.net.*;
 
-public class ServerClass
+public class ServerClass implements IClientHandlerCallback
 {
     private ServerPortListener taskPortListener;
     private ServerPortListener logPortListener;
 
+    private ClientHandler taskClientHandler;
+    private ClientHandler logClientHandler;
+
     public ServerClass(int taskPort, int logPort) throws IOException
     {
         ServerSocket taskServerSocket = new ServerSocket(taskPort);
-        this.taskPortListener = new ServerPortListener(taskServerSocket, "Task Listener");
+        this.taskPortListener = new ServerPortListener(taskServerSocket, "Task Listener", this);
 
         ServerSocket logServerSocket = new ServerSocket(logPort);
-        this.logPortListener = new ServerPortListener(logServerSocket, "Log Listener");
+        this.logPortListener = new ServerPortListener(logServerSocket, "Log Listener", this);
     }
 
     public void start()
@@ -29,12 +32,8 @@ public class ServerClass
         logListenerThread.start();
     }
 
-    // New stop method for graceful shutdown
     public void stop() throws IOException
     {
-        // Close the ServerSockets via their listeners
-        // This will cause the accept() calls in ServerPortListener.run() to throw an IOException
-        // and the listener threads should then terminate.
         if (taskPortListener != null && taskPortListener.getServerSocket() != null && !taskPortListener.getServerSocket().isClosed())
         {
             taskPortListener.getServerSocket().close();
@@ -42,6 +41,34 @@ public class ServerClass
         if (logPortListener != null && logPortListener.getServerSocket() != null && !logPortListener.getServerSocket().isClosed())
         {
             logPortListener.getServerSocket().close();
+        }
+        if (taskClientHandler != null) {
+            taskClientHandler.close();
+        }
+        if (logClientHandler != null) {
+            logClientHandler.close();
+        }
+    }
+
+    @Override
+    public void onClientConnected(ClientHandler handler, String listenerName)
+    {
+        if ("Task Listener".equals(listenerName)) {
+            this.taskClientHandler = handler;
+        } else if ("Log Listener".equals(listenerName)) {
+            this.logClientHandler = handler;
+        }
+    }
+
+    public void sendHeartbeatToTaskClient(String message) {
+        if (taskClientHandler != null) {
+            taskClientHandler.sendMessage(message);
+        }
+    }
+
+    public void sendHeartbeatToLogClient(String message) {
+        if (logClientHandler != null) {
+            logClientHandler.sendMessage(message);
         }
     }
 
