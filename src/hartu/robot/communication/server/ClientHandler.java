@@ -28,7 +28,7 @@ public class ClientHandler implements Runnable
     public void sendMessage(String message)
     {
         if (out != null) {
-            out.println(message);
+            out.print(message);
         } else {
             Logger.getInstance().log("ClientHandler (" + clientType + "): Attempted to send message before PrintWriter was initialized.");
         }
