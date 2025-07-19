@@ -149,8 +149,7 @@ public class CommandParser
             case ACTIVATE_IO:
                 // Parse IO Command Data
                 try {
-                	//TODO: Handle ioPoint instead of hardcoding for testing
-                	int ioPoint = 0;
+                    int ioPoint = Integer.parseInt(parts[MessagePartIndex.IO_POINT.getIndex()]);
                     int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
                     boolean ioState = Boolean.parseBoolean(parts[MessagePartIndex.IO_STATE.getIndex()]);
                     ioCommandData = new IoCommandData(ioPoint, ioPin, ioState);

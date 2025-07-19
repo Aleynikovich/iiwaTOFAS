@@ -5,11 +5,12 @@ import hartu.robot.utils.CommandParser;
 import hartu.robot.commands.ParsedCommand;
 
 import java.io.BufferedReader;
+import java.io.File; // Import File class
+import java.io.FileWriter; // Import FileWriter
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit; // For await timeout
 
 public class ClientHandler implements Runnable
 {
@@ -17,6 +18,10 @@ public class ClientHandler implements Runnable
     private PrintWriter out;
     private BufferedReader in;
     private String clientType;
+
+    // Define the path for the JSON log file
+    private static final String PARSED_DATA_DIR = "parsedData";
+    private static final String PARSED_COMMAND_FILE = PARSED_DATA_DIR + File.separator + "parsedCommand.json";
 
     public ClientHandler(Socket socket, String clientType) throws IOException
     {
@@ -66,59 +71,31 @@ public class ClientHandler implements Runnable
                         String receivedMessage = messageBuilder.toString();
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Received: " + receivedMessage);
 
-                        String commandId = "N/A"; // Default ID for error responses
-                        boolean executionSuccess = false;
-
                         try {
                             ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR);
-                            commandId = parsedCommand.getId(); // Get ID for response
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toString());
+                            String parsedCommandJson = parsedCommand.toJson(); // Get the JSON string
 
-                            // Create a CommandResultHolder to pass the command and wait for its execution
-                            CommandResultHolder resultHolder = new CommandResultHolder(parsedCommand);
-                            CommandQueue.putCommand(resultHolder); // Put the command into the shared queue
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommandJson);
 
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Waiting for command ID " + commandId + " to execute...");
-                            // Wait for the executor to signal completion (with a timeout)
-                            boolean awaited = resultHolder.getLatch().await(60, TimeUnit.SECONDS); // Wait up to 60 seconds
+                            // --- NEW: Save JSON to file ---
+                            saveJsonToFile(parsedCommandJson, PARSED_COMMAND_FILE);
+                            // --- END NEW ---
 
-                            if (awaited) {
-                                executionSuccess = resultHolder.isSuccess();
-                                Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Command ID " + commandId + " execution finished. Success: " + executionSuccess);
-                            } else {
-                                Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Command ID " + commandId + " execution TIMED OUT.");
-                                executionSuccess = false; // Treat timeout as failure
-                            }
+                            String commandId = parsedCommand.getId();
+                            String responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
+                            sendMessage(responseToClient);
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
 
                         } catch (IllegalArgumentException e) {
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Parsing Error: " + e.getMessage());
-                            executionSuccess = false;
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt(); // Restore interrupted status
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Interrupted while waiting for command execution: " + e.getMessage());
-                            executionSuccess = false;
-                        } catch (Exception e) { // Catch any other unexpected errors during processing
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Unexpected error during command processing: " + e.getMessage());
-                            e.printStackTrace();
-                            executionSuccess = false;
                         }
 
-                        // Send response back to task client based on execution result
-                        String responseToClient;
-                        if (executionSuccess) {
-                            responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
-                        } else {
-                            responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
-                        }
-                        sendMessage(responseToClient);
-                        Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
-
-                        messageBuilder.setLength(0); // Clear buffer for next command
+                        messageBuilder.setLength(0);
                     } else {
                         messageBuilder.append(c);
                     }
                 }
-            } else { // Log Listener
+            } else {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null)
                 {
@@ -147,6 +124,32 @@ public class ClientHandler implements Runnable
             }
         }
         Logger.getInstance().log("ClientHandler (" + clientType + "): Terminated for client " + clientAddress);
+    }
+
+    /**
+     * Saves the given JSON string to a specified file, overwriting it if it exists.
+     * Creates the parent directory if it does not exist.
+     * @param jsonString The JSON content to save.
+     * @param filePath The path to the file where the JSON should be saved.
+     */
+    private void saveJsonToFile(String jsonString, String filePath) {
+        File outputFile = new File(filePath);
+        File parentDir = outputFile.getParentFile();
+
+        // Create parent directories if they don't exist
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                Logger.getInstance().log("ClientHandler: Failed to create directory: " + parentDir.getAbsolutePath());
+                return; // Exit if directory creation fails
+            }
+        }
+
+        try (FileWriter writer = new FileWriter(outputFile, false)) { // false for overwrite
+            writer.write(jsonString);
+            Logger.getInstance().log("ClientHandler: Parsed command JSON saved to: " + filePath);
+        } catch (IOException e) {
+            Logger.getInstance().log("ClientHandler Error: Could not save parsed command JSON to file " + filePath + ": " + e.getMessage());
+        }
     }
 
     private static final String MESSAGE_TERMINATOR = "#";
