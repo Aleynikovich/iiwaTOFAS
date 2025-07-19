@@ -33,7 +33,7 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	
 	private ServerClass robotCommunicationServer;
 	private static final int TASK_PORT = 30001;
-    private static final int LOG_PORT = 40001;
+    private static final int LOG_PORT = 30002;
 	@Override
 	public void initialize() {
 		// initialize your task here
