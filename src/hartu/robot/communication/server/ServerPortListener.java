@@ -43,6 +43,11 @@ public class ServerPortListener implements Runnable
                 if (clientHandlerCallback != null) {
                     clientHandlerCallback.onClientConnected(handler, listenerName);
                 }
+
+                if ("Task Listener".equals(listenerName)) {
+                    handler.sendMessage("#FREE");
+                    Logger.getInstance().log("ServerPortListener (" + listenerName + "): Sent '#FREE' to new task client " + clientSocket.getInetAddress().getHostAddress());
+                }
             }
         }
         catch (IOException e)
