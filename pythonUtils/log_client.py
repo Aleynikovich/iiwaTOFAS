@@ -18,7 +18,7 @@ def run_log_client():
                 if not data:
                     print("Server closed the connection.")
                     break
-                print(f"Received from server: {data.decode().strip()}")
+                print(f"{data.decode().strip()}\n")
                 time.sleep(1) # Small delay to avoid busy-waiting too aggressively
             except BlockingIOError:
                 # No data available, continue loop
