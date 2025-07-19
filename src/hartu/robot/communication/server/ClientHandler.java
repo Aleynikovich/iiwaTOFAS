@@ -3,6 +3,7 @@ package hartu.robot.communication.server;
 
 import hartu.robot.utils.CommandParser; // Import CommandParser
 import hartu.robot.commands.ParsedCommand; // Import ParsedCommand
+import hartu.robot.commands.MotionParameters; // Ensure MotionParameters is imported if needed for validation/access
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class ClientHandler implements Runnable
     public void sendMessage(String message)
     {
         if (out != null) {
-            // Changed println to print to avoid automatic newline
+            // Using print to avoid automatic newline, as per previous discussion
             out.print(message);
         } else {
             Logger.getInstance().log("ClientHandler (" + clientType + "): Attempted to send message before PrintWriter was initialized.");
@@ -69,9 +70,10 @@ public class ClientHandler implements Runnable
 
                         try {
                             ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR); // Re-add terminator for parser
-                            // MODIFIED: Log the JSON string of the ParsedCommand
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toJson());
+                            // Logging the ParsedCommand using its toString() method
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toString());
 
+                            // Send FREE|commandID# back to the client
                             String responseToClient = "FREE|" + parsedCommand.getId() + MESSAGE_TERMINATOR;
                             sendMessage(responseToClient);
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);

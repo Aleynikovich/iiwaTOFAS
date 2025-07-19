@@ -107,92 +107,64 @@ public class ParsedCommand
         return programId.intValue();
     }
 
-    /**
-     * Converts the ParsedCommand object into a JSON string.
-     * This method manually constructs the JSON string to avoid external library dependencies.
-     *
-     * @return A JSON string representation of the ParsedCommand.
-     */
-    public String toJson() {
-        StringBuilder json = new StringBuilder();
-        json.append("{");
-        json.append("\"actionType\": \"").append(actionType.name()).append("\",");
-        json.append("\"actionValue\": ").append(actionType.getValue()).append(",");
-        json.append("\"id\": \"").append(id).append("\"");
-
-        if (isMovementCommand()) {
-            json.append(",\"commandType\": \"Movement\"");
-            if (axisTargetPoints != null && !axisTargetPoints.isEmpty()) {
-                json.append(",\"axisTargetPoints\": [");
-                for (int i = 0; i < axisTargetPoints.size(); i++) {
-                    AxisPosition pos = axisTargetPoints.get(i);
-                    json.append("{");
-                    json.append("\"J1\": ").append(pos.getJ1()).append(",");
-                    json.append("\"J2\": ").append(pos.getJ2()).append(",");
-                    json.append("\"J3\": ").append(pos.getJ3()).append(",");
-                    json.append("\"J4\": ").append(pos.getJ4()).append(",");
-                    json.append("\"J5\": ").append(pos.getJ5()).append(",");
-                    json.append("\"J6\": ").append(pos.getJ6()).append(",");
-                    json.append("\"J7\": ").append(pos.getJ7());
-                    json.append("}");
-                    if (i < axisTargetPoints.size() - 1) {
-                        json.append(",");
-                    }
-                }
-                json.append("]");
-            }
-            if (cartesianTargetPoints != null && !cartesianTargetPoints.isEmpty()) {
-                json.append(",\"cartesianTargetPoints\": [");
-                for (int i = 0; i < cartesianTargetPoints.size(); i++) {
-                    CartesianPosition pos = cartesianTargetPoints.get(i);
-                    json.append("{");
-                    json.append("\"X\": ").append(pos.getX()).append(",");
-                    json.append("\"Y\": ").append(pos.getY()).append(",");
-                    json.append("\"Z\": ").append(pos.getZ()).append(",");
-                    json.append("\"A\": ").append(pos.getA()).append(",");
-                    json.append("\"B\": ").append(pos.getB()).append(",");
-                    json.append("\"C\": ").append(pos.getC());
-                    json.append("}");
-                    if (i < cartesianTargetPoints.size() - 1) {
-                        json.append(",");
-                    }
-                }
-                json.append("]");
-            }
-            if (motionParameters != null) {
-                json.append(",\"motionParameters\": {");
-                json.append("\"speedOverride\": ").append(motionParameters.getSpeedOverride()).append(",");
-                json.append("\"tool\": \"").append(motionParameters.getTool()).append("\",");
-                json.append("\"base\": \"").append(motionParameters.getBase()).append("\",");
-                json.append("\"continuous\": ").append(motionParameters.isContinuous()).append(",");
-                json.append("\"numPoints\": ").append(motionParameters.getNumPoints());
-                json.append("}");
-            }
-        } else if (isIoCommand()) {
-            json.append(",\"commandType\": \"IO\"");
-            if (ioCommandData != null) {
-                json.append(",\"ioCommandData\": {");
-                json.append("\"ioPoint\": ").append(ioCommandData.getIoPoint()).append(",");
-                json.append("\"ioPin\": ").append(ioCommandData.getIoPin()).append(",");
-                json.append("\"ioState\": ").append(ioCommandData.getIoState());
-                json.append("}");
-            }
-        } else if (isProgramCall()) {
-            json.append(",\"commandType\": \"ProgramCall\"");
-            json.append(",\"programId\": ").append(programId);
-        } else {
-            json.append(",\"commandType\": \"Unknown\"");
-        }
-
-        json.append("}");
-        return json.toString();
-    }
-
     @Override
     public String toString() {
-        // For now, toString() will just return the JSON representation.
-        // If you need a different non-JSON string representation for other purposes,
-        // you can implement it here.
-        return toJson();
+        StringBuilder sb = new StringBuilder();
+        sb.append("ParsedCommand {\n");
+        sb.append("  ActionType: ").append(actionType).append(" (").append(actionType.getValue()).append(")\n");
+        sb.append("  ID: ").append(id).append("\n");
+
+        if (isMovementCommand()) {
+            sb.append("  --- Movement Command ---\n");
+            if (axisTargetPoints != null && !axisTargetPoints.isEmpty()) {
+                sb.append("  Axis Target Points (").append(axisTargetPoints.size()).append("):\n");
+                for (int i = 0; i < axisTargetPoints.size(); i++) {
+                    AxisPosition pos = axisTargetPoints.get(i);
+                    sb.append("    Point ").append(i + 1).append(": J1=").append(pos.getJ1())
+                            .append(", J2=").append(pos.getJ2())
+                            .append(", J3=").append(pos.getJ3())
+                            .append(", J4=").append(pos.getJ4())
+                            .append(", J5=").append(pos.getJ5())
+                            .append(", J6=").append(pos.getJ6())
+                            .append(", J7=").append(pos.getJ7()).append("\n");
+                }
+            }
+            if (cartesianTargetPoints != null && !cartesianTargetPoints.isEmpty()) {
+                sb.append("  Cartesian Target Points (").append(cartesianTargetPoints.size()).append("):\n");
+                for (int i = 0; i < cartesianTargetPoints.size(); i++) {
+                    CartesianPosition pos = cartesianTargetPoints.get(i);
+                    sb.append("    Point ").append(i + 1).append(": X=").append(pos.getX())
+                            .append(", Y=").append(pos.getY())
+                            .append(", Z=").append(pos.getZ())
+                            .append(", A=").append(pos.getA())
+                            .append(", B=").append(pos.getB())
+                            .append(", C=").append(pos.getC()).append("\n");
+                }
+            }
+            if (motionParameters != null) {
+                sb.append("  Motion Parameters:\n");
+                sb.append("    Speed Override: ").append(motionParameters.getSpeedOverride()).append("\n");
+                sb.append("    Tool: ").append(motionParameters.getTool().isEmpty() ? "[Default]" : motionParameters.getTool()).append("\n");
+                sb.append("    Base: ").append(motionParameters.getBase().isEmpty() ? "[Default]" : motionParameters.getBase()).append("\n");
+                sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
+                sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
+            }
+        } else if (isIoCommand()) {
+            sb.append("  --- IO Command ---\n");
+            if (ioCommandData != null) {
+                sb.append("  IO Data:\n");
+                sb.append("    IO Point: ").append(ioCommandData.getIoPoint()).append("\n");
+                sb.append("    IO Pin: ").append(ioCommandData.getIoPin()).append("\n");
+                sb.append("    IO State: ").append(ioCommandData.getIoState()).append("\n");
+            }
+        } else if (isProgramCall()) {
+            sb.append("  --- Program Call ---\n");
+            sb.append("  Program ID: ").append(programId).append("\n");
+        } else {
+            sb.append("  --- Unrecognized Command Type ---\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
 }
