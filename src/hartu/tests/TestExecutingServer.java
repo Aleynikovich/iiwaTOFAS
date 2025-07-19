@@ -1,5 +1,5 @@
 // --- TestExecutingServer.java ---
-package hartu.tests; // Assuming this is in your 'tests' package
+package hartu.tests;
 
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
@@ -7,80 +7,109 @@ import java.util.concurrent.TimeUnit;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.controllerModel.Controller;
-import com.kuka.roboticsAPI.deviceModel.LBR; // Inject LBR if needed for future motion tests
+import com.kuka.roboticsAPI.deviceModel.LBR;
 
-// Imports for CommandExecutor and ParsedCommand
-import hartu.robot.executor.CommandExecutor;
+// KUKA Generated IO Access Imports
+import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
+import com.kuka.generated.ioAccess.IOFlangeIOGroup;
+// import com.kuka.generated.ioAccess.MediaFlangeIOGroup; // Uncomment if needed
+
+// Imports for ParsedCommand, IoCommandData, and CommandQueue
 import hartu.robot.commands.ParsedCommand;
-import hartu.robot.commands.MotionParameters; // Needed for ParsedCommand constructor
-import hartu.robot.commands.io.IoCommandData; // Needed for ParsedCommand constructor
-import hartu.protocols.constants.ActionTypes; // Needed for ParsedCommand constructor
-
-import hartu.robot.communication.server.Logger; // For logging
+import hartu.robot.commands.io.IoCommandData;
+import hartu.robot.communication.server.CommandQueue;
+import hartu.robot.communication.server.CommandResultHolder;
+import hartu.robot.communication.server.Logger;
 
 /**
- * A temporary background KUKA application to test the CommandExecutor.
- * It will execute a simple IO command on initialization to verify functionality.
+ * A temporary background KUKA application that acts as the command executor.
+ * It continuously polls the shared CommandQueue for ParsedCommand objects,
+ * executes them (currently only IO commands), and signals the result back
+ * via the CommandResultHolder.
  */
 public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask {
 
     @Inject
-    private Controller robotController; // Injected KUKA Controller
+    private Controller robotController;
 
     @Inject
-    private LBR robot; // Injected LBR, even if not used for motion in initial test
+    private LBR robot;
 
+    // Inject the specific IO Groups directly into this class
     @Inject
-    private CommandExecutor commandExecutor; // Inject the CommandExecutor
+    private IOFlangeIOGroup ioFlangeIOGroup;
+    @Inject
+    private Ethercat_x44IOGroup ethercatX44IOGroup;
+    // @Inject // Uncomment if MediaFlangeIOGroup is also directly used for IO
+    // private MediaFlangeIOGroup mediaFlangeIOGroup;
 
     @Override
     public void initialize() {
-        // Initialize the cyclic background task behavior
-        // We'll set a long period or just let it run once if the test is in initialize
-        initializeCyclic(0, 5000, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort); // 5-second cycle for background
+        // This task will run cyclically, checking the queue in runCyclic
+        // Set a short cycle period for responsiveness
+        initializeCyclic(0, 100, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort); // Check queue every 100ms
 
-        Logger.getInstance().log("TestExecutingServer: Initializing...");
-
-        try {
-            // --- Create a simple ParsedCommand for an IO action ---
-            // This mimics a command that would come from your Task Client
-            String testId = "test_io_command_123";
-            int testIoPoint = 0; // ioPoint is not used in CommandExecutor's IO switch, but part of ParsedCommand
-            int testIoPin = 1;   // Corresponds to DO_Flange7 in IOFlangeIOGroup
-            boolean testIoState = true; // Set to true to activate
-
-            IoCommandData testIoData = new IoCommandData(testIoPoint, testIoPin, testIoState);
-
-            // MotionParameters can be null or default for IO commands if not relevant
-            MotionParameters defaultMotionParams = new MotionParameters(0.0, "", "", false, 0);
-
-            ParsedCommand testCommand = ParsedCommand.forIo(ActionTypes.ACTIVATE_IO, testId, testIoData);
-
-            Logger.getInstance().log("TestExecutingServer: Attempting to execute test IO command...");
-            boolean success = commandExecutor.executeCommand(testCommand);
-
-            if (success) {
-                Logger.getInstance().log("TestExecutingServer: Test IO command executed SUCCESSFULLY.");
-            } else {
-                Logger.getInstance().log("TestExecutingServer: Test IO command execution FAILED.");
-            }
-
-        } catch (Exception e) {
-            Logger.getInstance().log("TestExecutingServer Error: Exception during initialization and test command execution: " + e.getMessage());
-            e.printStackTrace(); // Print stack trace to KUKA console for detailed error
-        }
+        Logger.getInstance().log("TestExecutingServer: Initializing. Ready to take commands from queue.");
     }
 
     @Override
     public void runCyclic() {
-        // This method will be called cyclically.
-        // For this simple test, it can just log a heartbeat or remain empty.
-        Logger.getInstance().log("TestExecutingServer: Cyclic heartbeat. Still running...");
+        // Continuously try to take a command from the queue without blocking indefinitely
+        CommandResultHolder resultHolder = CommandQueue.pollCommand(0, TimeUnit.MILLISECONDS); // Non-blocking poll
+
+        if (resultHolder != null) {
+            ParsedCommand command = resultHolder.getCommand();
+            Logger.getInstance().log("TestExecutingServer: Received command ID " + command.getId() + " from queue for execution.");
+            boolean executionSuccess = false;
+
+            try {
+                if (command.isIoCommand()) {
+                    IoCommandData ioData = command.getIoCommandData();
+                    int ioPin = ioData.getIoPin();
+                    boolean ioState = ioData.getIoState();
+
+                    Logger.getInstance().log("TestExecutingServer: Executing IO command. Pin: " + ioPin + ", State: " + ioState);
+
+                    switch (ioPin) {
+                        case 1:
+                            ioFlangeIOGroup.setDO_Flange7(ioState);
+                            Logger.getInstance().log("TestExecutingServer: Set DO_Flange7 to " + ioState);
+                            executionSuccess = true;
+                            break;
+                        case 2:
+                            ethercatX44IOGroup.setOutput2(ioState);
+                            Logger.getInstance().log("TestExecutingServer: Set Ethercat_x44 Output2 to " + ioState);
+                            executionSuccess = true;
+                            break;
+                        case 3:
+                            ethercatX44IOGroup.setOutput1(ioState);
+                            Logger.getInstance().log("TestExecutingServer: Set Ethercat_x44 Output1 to " + ioState);
+                            executionSuccess = true;
+                            break;
+                        default:
+                            Logger.getInstance().log("TestExecutingServer Error: Invalid IO pin in parsed command for direct mapping: " + ioPin);
+                            executionSuccess = false;
+                    }
+                } else {
+                    Logger.getInstance().log("TestExecutingServer Warning: Received non-IO command. Only IO commands are supported in this test: " + command.getActionType().name());
+                    executionSuccess = false; // Mark as failure for unsupported command types
+                }
+            } catch (Exception e) {
+                Logger.getInstance().log("TestExecutingServer Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
+                e.printStackTrace();
+                executionSuccess = false;
+            } finally {
+                // Signal completion back to the ClientHandler
+                resultHolder.setSuccess(executionSuccess);
+                resultHolder.getLatch().countDown(); // Decrement the latch, releasing the waiting ClientHandler
+                Logger.getInstance().log("TestExecutingServer: Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
+            }
+        }
+        // If resultHolder is null, no command was available, just continue to next cycle.
     }
 
     @Override
     public void dispose() {
-        // Cleanup resources if necessary
         Logger.getInstance().log("TestExecutingServer: Disposing...");
         super.dispose();
     }
