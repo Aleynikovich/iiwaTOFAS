@@ -2,12 +2,18 @@ package hartu.tests;
 
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
+
+import application.RobotApplicationtest;
+
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.controllerModel.Controller;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.sun.org.apache.bcel.internal.classfile.JavaClass;
 //Import Log4j Logger
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 /**
  * Implementation of a cyclic background task.
  * <p>
@@ -24,7 +30,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class MinimalTestTask extends RoboticsAPICyclicBackgroundTask {
-	private static final Logger logger = Logger.getLogger(JavaClass.class.getName());
+	private static final  Logger logger = LogManager.getLogger(MinimalTestTask.class);
     @Inject
     Controller kUKA_Sunrise_Cabinet_1;
 
