@@ -1,6 +1,9 @@
 package hartu.tests;
 
 
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
+
 import javax.inject.Inject;
 
 import java.io.IOException;
@@ -10,6 +13,8 @@ import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.applicationModel.tasks.UseRoboticsAPIContext;
 import com.kuka.roboticsAPI.controllerModel.Controller;
+import com.kuka.roboticsAPI.deviceModel.LBR;
+
 import hartu.robot.communication.server.*;
 
 /**
@@ -30,7 +35,9 @@ import hartu.robot.communication.server.*;
 public class TestServer extends RoboticsAPICyclicBackgroundTask {
 	@Inject
 	Controller kUKA_Sunrise_Cabinet_1;
-	
+	@Inject
+	private LBR lBR_iiwa_14_R820_1;
+
 	private ServerClass robotCommunicationServer;
 	private static final int TASK_PORT = 30001;
     private static final int LOG_PORT = 30002;
@@ -39,7 +46,7 @@ public class TestServer extends RoboticsAPICyclicBackgroundTask {
 		// initialize your task here
 		initializeCyclic(0, 1000, TimeUnit.MILLISECONDS,
 				CycleBehavior.BestEffort);
-		
+		lBR_iiwa_14_R820_1.move(ptp(lBR_iiwa_14_R820_1.getCurrentJointPosition()));
         Thread serverThread = new Thread(new Runnable() {
             @Override
             public void run() {
