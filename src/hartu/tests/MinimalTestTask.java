@@ -30,7 +30,7 @@ public class MinimalTestTask extends RoboticsAPICyclicBackgroundTask {
     // ** Declare the Logger instance here **
     // 'static final' ensures there's one logger instance per class, initialized once.
     // LogManager.getLogger(MinimalTestTask.class) gets a logger specifically named after this class.
-    //private static final Logger LOGGER = LogManager.getLogger(MinimalTestTask.class);
+    private static final Logger LOGGER = LogManager.getLogger(MinimalTestTask.class);
 
     @Inject
     Controller kUKA_Sunrise_Cabinet_1;
