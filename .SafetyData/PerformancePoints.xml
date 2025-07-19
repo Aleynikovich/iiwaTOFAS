@@ -29,7 +29,7 @@ KUKA Roboter GmbH, Germany. All Rights Reserved
 <Units  xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
    xs:noNamespaceSchemaLocation="PerformancePoints.xsd">
    <!-- By definition the maximal number of performance points per controller: 1000
-        Granted computing time of the safety application module:
+        Granted computing time of the safety hartu.application module:
          - Controller ControllerLBR5: 2000 micros GNU/ 4.1 ms DIAB
          - Controller ControllerKRC4Compact: 750 micros GNU
          - Controller ControllerLBR4: 750 micros GNU

@@ -93,7 +93,7 @@ sssaa
 
                         // Create a new MessageHandler instance for each client.
                         // Pass the RoboticsAPIApplication instance from the current task context.
-                        // This allows MessageHandler to access application data like frames.
+                        // This allows MessageHandler to access hartu.application data like frames.
                         MessageHandler messageHandler = new MessageHandler(robot, gimatic, iOs, (RoboticsAPIApplication) getApplicationContext());
 
                         // Create and start a new ClientHandler thread for the connected client.
@@ -149,7 +149,7 @@ sssaa
     }
 
     /**
-     * Disposes of resources when the task is stopped or the application terminates.
+     * Disposes of resources when the task is stopped or the hartu.application terminates.
      * This method ensures that the server socket and all active client sockets are closed gracefully.
      */
     @Override

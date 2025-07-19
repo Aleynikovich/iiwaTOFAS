@@ -7,10 +7,10 @@ import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRClient;
 import com.kuka.connectivity.fastRobotInterface.clientSDK.connection.UdpConnection;
 
 /**
- * Implementation of a FRI client application.
+ * Implementation of a FRI client hartu.application.
  * <p>
- * The application provides a {@link ClientApplication#connect}, a {@link ClientApplication#step()} and a
- * {@link ClientApplication#disconnect} method, which will be called successively in the application life-cycle.
+ * The hartu.application provides a {@link ClientApplication#connect}, a {@link ClientApplication#step()} and a
+ * {@link ClientApplication#disconnect} method, which will be called successively in the hartu.application life-cycle.
  * 
  * 
  * @see ClientApplication#connect
@@ -34,7 +34,7 @@ public class TransformationProviderApp
         {
             if (argv[0].equals("help"))
             {
-                Logger.getAnonymousLogger().info("\nKUKA TransformationProvider test application\n\n\tCommand line arguments:");
+                Logger.getAnonymousLogger().info("\nKUKA TransformationProvider test hartu.application\n\n\tCommand line arguments:");
                 Logger.getAnonymousLogger().info("\t1) remote hostname (optional)");
                 Logger.getAnonymousLogger().info("\t2) port ID (optional)");
                 return;
@@ -57,7 +57,7 @@ public class TransformationProviderApp
 
         /***************************************************************************/
         /*                                                                         */
-        /* Standard application structure */
+        /* Standard hartu.application structure */
         /* Configuration */
         /*                                                                         */
         /***************************************************************************/
@@ -68,15 +68,15 @@ public class TransformationProviderApp
         // create new robot client
         LBRClient client = new LBRClient();
 
-        // pass connection and client to a new FRI client application
+        // pass connection and client to a new FRI client hartu.application
         ClientApplication app = new ClientApplication(connection, client, trafoClient);
 
-        // connect client application to KUKA Sunrise controller
+        // connect client hartu.application to KUKA Sunrise controller
         app.connect(port, hostname);
 
         /***************************************************************************/
         /*                                                                         */
-        /* Standard application structure */
+        /* Standard hartu.application structure */
         /* Execution mainloop */
         /*                                                                         */
         /***************************************************************************/
@@ -90,7 +90,7 @@ public class TransformationProviderApp
 
         /***************************************************************************/
         /*                                                                         */
-        /* Standard application structure */
+        /* Standard hartu.application structure */
         /* Dispose */
         /*                                                                         */
         /***************************************************************************/
