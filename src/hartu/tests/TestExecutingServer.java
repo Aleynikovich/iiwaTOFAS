@@ -47,7 +47,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask {
     public void initialize() {
         // This task will run cyclically, checking the queue in runCyclic
         // Set a short cycle period for responsiveness
-        initializeCyclic(0, 2000, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort); // Check queue every 100ms
+        initializeCyclic(0, 50, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort); // Check queue every 100ms
 
         Logger.getInstance().log("TestExecutingServer: Initializing. Ready to take commands from queue.");
     }
@@ -105,8 +105,6 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask {
                 Logger.getInstance().log("TestExecutingServer: Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
             }
         }
-        // If resultHolder is null, no command was available, just continue to next cycle.
-        Logger.getInstance().log("Waiting for command");
     }
 
     @Override
