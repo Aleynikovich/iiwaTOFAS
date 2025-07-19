@@ -29,4 +29,20 @@ public class ServerClass
         logListenerThread.start();
     }
 
+    // New stop method for graceful shutdown
+    public void stop() throws IOException
+    {
+        // Close the ServerSockets via their listeners
+        // This will cause the accept() calls in ServerPortListener.run() to throw an IOException
+        // and the listener threads should then terminate.
+        if (taskPortListener != null && taskPortListener.getServerSocket() != null && !taskPortListener.getServerSocket().isClosed())
+        {
+            taskPortListener.getServerSocket().close();
+        }
+        if (logPortListener != null && logPortListener.getServerSocket() != null && !logPortListener.getServerSocket().isClosed())
+        {
+            logPortListener.getServerSocket().close();
+        }
+    }
+
 }
