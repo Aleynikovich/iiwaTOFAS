@@ -73,7 +73,7 @@ public class ServerPortListener implements Runnable
                 // Send FREE|0# if this is the Task Listener
                 if ("Task Listener".equals(listenerName)) {
                     handler.sendMessage("FREE|0#");
-                    Logger.getInstance().log("ServerPortListener (" + listenerName + "): Sent 'FREE|0#' to new task client " + clientSocket.getInetAddress().getHostAddress());
+                    Logger.getInstance().log("Sent 'FREE|0#' to new task client " + clientSocket.getInetAddress().getHostAddress()+"\n");
                 }
             }
         }
