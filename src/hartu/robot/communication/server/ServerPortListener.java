@@ -35,7 +35,7 @@ public class ServerPortListener implements Runnable
         {
             while (true)
             {
-                Logger.getInstance().log(listenerName + ": Waiting for a client to connect...");
+                Logger.getInstance().log(listenerName + ": Waiting for a new client to connect...");
                 Socket clientSocket = ss.accept(); // Accept the connection first
 
                 // Check if this is the Task Listener and if the Log Client is connected
@@ -73,7 +73,7 @@ public class ServerPortListener implements Runnable
                 // Send FREE|0# if this is the Task Listener
                 if ("Task Listener".equals(listenerName)) {
                     handler.sendMessage("FREE|0#");
-                    Logger.getInstance().log("ServerPortListener (" + listenerName + "): Sent 'FREE|0#' to new task client " + clientSocket.getInetAddress().getHostAddress());
+                    Logger.getInstance().log("Sent 'FREE|0#' to new task client " + clientSocket.getInetAddress().getHostAddress());
                 }
             }
         }
