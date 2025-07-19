@@ -1,14 +1,15 @@
 // --- ClientHandler.java ---
 package hartu.robot.communication.server;
 
-import hartu.robot.utils.CommandParser; // Import CommandParser
-import hartu.robot.commands.ParsedCommand; // Import ParsedCommand
+import hartu.robot.utils.CommandParser;
+import hartu.robot.commands.ParsedCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit; // For await timeout
 
 public class ClientHandler implements Runnable
 {
@@ -29,7 +30,6 @@ public class ClientHandler implements Runnable
     {
         if (out != null) {
             out.print(message);
-            out.flush();
         } else {
             Logger.getInstance().log("ClientHandler (" + clientType + "): Attempted to send message before PrintWriter was initialized.");
         }
@@ -37,8 +37,7 @@ public class ClientHandler implements Runnable
 
     public String readMessage() throws IOException
     {
-        // This method might need to be adapted later if external calls need to read specific delimiters
-        return in.readLine(); // Still uses readLine for now, but run() will handle delimiter
+        return in.readLine();
     }
 
     public void close() throws IOException
@@ -58,42 +57,67 @@ public class ClientHandler implements Runnable
         try
         {
             if ("Task Listener".equals(clientType)) {
-                // Logic for reading messages delimited by '#'
                 StringBuilder messageBuilder = new StringBuilder();
                 int charCode;
-                while ((charCode = in.read()) != -1) { // Read character by character
+                while ((charCode = in.read()) != -1) {
                     char c = (char) charCode;
                     if (c == '#') {
                         String receivedMessage = messageBuilder.toString();
                         Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Received: " + receivedMessage);
 
-                        // *** NEW: Parse the received command ***
+                        String commandId = "N/A"; // Default ID for error responses
+                        boolean executionSuccess = false;
+
                         try {
-                            ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR); // Re-add terminator for parser
-                            // *** MODIFIED: Log the entire ParsedCommand object using its toString() ***
+                            ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + MESSAGE_TERMINATOR);
+                            commandId = parsedCommand.getId(); // Get ID for response
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Successfully parsed command:\n" + parsedCommand.toString());
 
-                            // *** NEW ADDITION: Send FREE|commandID# back to the client ***
-                            String responseToClient = "FREE|" + parsedCommand.getId() + MESSAGE_TERMINATOR;
-                            sendMessage(responseToClient);
-                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
-                            // TODO: Now that the command is parsed, you can act on it.
-                            // Example: if (parsedCommand.isMovementCommand()) { ... initiate robot move ... }
-                            // Example: if (parsedCommand.isIoCommand()) { ... activate IO ... }
+                            // Create a CommandResultHolder to pass the command and wait for its execution
+                            CommandResultHolder resultHolder = new CommandResultHolder(parsedCommand);
+                            CommandQueue.putCommand(resultHolder); // Put the command into the shared queue
+
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Waiting for command ID " + commandId + " to execute...");
+                            // Wait for the executor to signal completion (with a timeout)
+                            boolean awaited = resultHolder.getLatch().await(60, TimeUnit.SECONDS); // Wait up to 60 seconds
+
+                            if (awaited) {
+                                executionSuccess = resultHolder.isSuccess();
+                                Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Command ID " + commandId + " execution finished. Success: " + executionSuccess);
+                            } else {
+                                Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Command ID " + commandId + " execution TIMED OUT.");
+                                executionSuccess = false; // Treat timeout as failure
+                            }
 
                         } catch (IllegalArgumentException e) {
                             Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Parsing Error: " + e.getMessage());
-                            // You might want to send an error response back to the client here
+                            executionSuccess = false;
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt(); // Restore interrupted status
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Interrupted while waiting for command execution: " + e.getMessage());
+                            executionSuccess = false;
+                        } catch (Exception e) { // Catch any other unexpected errors during processing
+                            Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Unexpected error during command processing: " + e.getMessage());
+                            e.printStackTrace();
+                            executionSuccess = false;
                         }
-                        // *** END NEW ***
 
-                        messageBuilder.setLength(0); // Clear the builder for the next message
+                        // Send response back to task client based on execution result
+                        String responseToClient;
+                        if (executionSuccess) {
+                            responseToClient = "FREE|" + commandId + MESSAGE_TERMINATOR;
+                        } else {
+                            responseToClient = "ERROR|" + commandId + MESSAGE_TERMINATOR;
+                        }
+                        sendMessage(responseToClient);
+                        Logger.getInstance().log("ClientHandler (" + clientType + " - " + clientAddress + "): Sent response: " + responseToClient);
+
+                        messageBuilder.setLength(0); // Clear buffer for next command
                     } else {
                         messageBuilder.append(c);
                     }
                 }
-            } else {
-                // Original logic for reading messages delimited by newline (for Log Listener)
+            } else { // Log Listener
                 String inputLine;
                 while ((inputLine = in.readLine()) != null)
                 {
@@ -124,6 +148,5 @@ public class ClientHandler implements Runnable
         Logger.getInstance().log("ClientHandler (" + clientType + "): Terminated for client " + clientAddress);
     }
 
-    // Define MESSAGE_TERMINATOR here as it's used in this class
     private static final String MESSAGE_TERMINATOR = "#";
 }
