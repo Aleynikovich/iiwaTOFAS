@@ -26,17 +26,22 @@ public class ServerPortListener implements Runnable
     @Override
     public void run()
     {
+        Logger.getInstance().log(listenerName + " started listening on port " + serverSocket.getLocalPort());
+
         try (ServerSocket ss = this.serverSocket)
         {
             while (true)
             {
+                Logger.getInstance().log(listenerName + ": Waiting for a client to connect...");
                 Socket clientSocket = ss.accept();
-                ClientHandler handler = new ClientHandler(clientSocket); // Create ClientHandler
-                Thread handlerThread = new Thread(handler); // Create a new thread for the handler
-                handlerThread.setDaemon(true); // Mark as daemon
-                handlerThread.start(); // Start the handler thread
+                Logger.getInstance().log(listenerName + ": Client connected from: " + clientSocket.getInetAddress().getHostAddress());
 
-                // Use the callback to notify ServerClass about the new handler
+                ClientHandler handler = new ClientHandler(clientSocket);
+                Thread handlerThread = new Thread(handler);
+                handlerThread.setDaemon(true);
+                handlerThread.start();
+
+
                 if (clientHandlerCallback != null) {
                     clientHandlerCallback.onClientConnected(handler, listenerName);
                 }
@@ -44,6 +49,7 @@ public class ServerPortListener implements Runnable
         }
         catch (IOException e)
         {
+            Logger.getInstance().log(listenerName + ": Listener error on port " + serverSocket.getLocalPort() + ": " + e.getMessage());
             throw new RuntimeException("Listener error on port " + serverSocket.getLocalPort() + ": " + e.getMessage(), e);
         }
     }
