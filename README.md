@@ -1,9 +1,5 @@
 # iiwaTOFAS
----
-config:
-theme: neo
-layout: elk
----
+
 flowchart TD
 subgraph subGraph0["Client Side"]
 B["Sends Command String"]
