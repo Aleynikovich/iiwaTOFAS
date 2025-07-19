@@ -39,7 +39,7 @@ public class Logger
     {
         // Prepend current date and time to the message
         String timestamp = dateFormat.format(new Date());
-        String formattedMessage = "[" + timestamp + "] " + message;
+        String formattedMessage = "[" + timestamp + "] " + message + "\n";
 
         if (logClientHandler != null)
         {
