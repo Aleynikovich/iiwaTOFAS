@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.controllerModel.Controller;
+import com.sun.org.apache.bcel.internal.classfile.JavaClass;
 //Import Log4j Logger
 import org.apache.log4j.Logger;
 /**
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class MinimalTestTask extends RoboticsAPICyclicBackgroundTask {
-	private static final Logger logger = Logger.getLogger(MinimalTestTask.class);
+	private static final Logger logger = Logger.getLogger(JavaClass.class.getName());
     @Inject
     Controller kUKA_Sunrise_Cabinet_1;
 
