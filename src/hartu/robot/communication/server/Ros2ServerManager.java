@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
 {
+    private static final int TASK_PORT = 30001;
+    private static final int LOG_PORT = 30002;
     private ServerClass rosCommunicationServer;
 
     @Override
@@ -21,9 +23,8 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
             {
                 try
                 {
-                    rosCommunicationServer = new ServerClass();
-                }
-                catch (IOException e)
+                    rosCommunicationServer = new ServerClass(TASK_PORT, LOG_PORT);
+                } catch (IOException e)
                 {
                     Logger.getInstance().log("APP", "Error initializing ROS Communication Server: " + e.getMessage());
                     throw new RuntimeException(e);
@@ -51,8 +52,7 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
             {
                 rosCommunicationServer.stop();
                 Logger.getInstance().log("APP", "ROS Communication Server stopped.");
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 Logger.getInstance().log("APP", "Error stopping ROS Communication Server: " + e.getMessage());
                 throw new RuntimeException("Error stopping robot communication server: " + e.getMessage(), e);
