@@ -73,7 +73,7 @@ public class Ros2ClientManager extends RoboticsAPICyclicBackgroundTask
                 throw new RuntimeException(e);
             }
 
-            //Logger.getInstance().log("CLIENT_MGR", "Sent: " + message);
+            Logger.getInstance().log("CLIENT_MGR", "Sent: " + message);
         }
         else
         {
