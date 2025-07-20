@@ -17,7 +17,6 @@ public class ServerClass implements IClientHandlerCallback
     private ClientHandler logClientHandler;
     private volatile boolean isLogClientConnected = false;
 
-    // Added to hold references to the listener threads
     private Thread taskListenerThread;
     private Thread logListenerThread;
 
@@ -36,8 +35,8 @@ public class ServerClass implements IClientHandlerCallback
 
     public void start()
     {
-        taskListenerThread = new Thread(taskPortListener); // Assign to class member
-        logListenerThread = new Thread(logPortListener);   // Assign to class member
+        taskListenerThread = new Thread(taskPortListener);
+        logListenerThread = new Thread(logPortListener);
 
         taskListenerThread.setDaemon(true);
         logListenerThread.setDaemon(true);
@@ -73,10 +72,14 @@ public class ServerClass implements IClientHandlerCallback
                 }
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore the interrupted status
+            Thread.currentThread().interrupt();
             Logger.getInstance().log("SERVER", "Interrupted while waiting for listener threads to stop: " + e.getMessage());
         }
 
+        // IMPORTANT: Clear the logClientHandler in Logger BEFORE closing it
+        if (logClientHandler != null) {
+            Logger.getInstance().setLogClientHandler(null); // Clear the reference
+        }
 
         if (taskClientHandler != null)
         {
@@ -87,7 +90,7 @@ public class ServerClass implements IClientHandlerCallback
             logClientHandler.close();
         }
         this.isLogClientConnected = false;
-        Logger.getInstance().log("SERVER", "Server stopped.");
+        Logger.getInstance().log("SERVER", "Server stopped."); // This log will now not try to use a closed handler
     }
 
     @Override
