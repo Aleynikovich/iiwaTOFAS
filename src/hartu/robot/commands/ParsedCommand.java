@@ -1,6 +1,7 @@
 package hartu.robot.commands;
 
 import hartu.protocols.constants.ActionTypes;
+import hartu.protocols.constants.CommandCategory; // Import CommandCategory
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.commands.positions.AxisPosition;
 import hartu.robot.commands.positions.CartesianPosition;
@@ -11,6 +12,7 @@ public class ParsedCommand
 {
     private final ActionTypes actionType;
     private final String id;
+    private final CommandCategory commandCategory; // New field for command category
 
     private final List<AxisPosition> axisTargetPoints;
     private final List<CartesianPosition> cartesianTargetPoints;
@@ -18,10 +20,11 @@ public class ParsedCommand
     private final IoCommandData ioCommandData;
     private final Integer programId;
 
-    private ParsedCommand(ActionTypes actionType, String id, List<AxisPosition> axisTargetPoints, List<CartesianPosition> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId)
+    private ParsedCommand(ActionTypes actionType, String id, CommandCategory commandCategory, List<AxisPosition> axisTargetPoints, List<CartesianPosition> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId)
     {
         this.actionType = actionType;
         this.id = id;
+        this.commandCategory = commandCategory; // Initialize new field
         this.axisTargetPoints = axisTargetPoints;
         this.cartesianTargetPoints = cartesianTargetPoints;
         this.motionParameters = motionParameters;
@@ -31,22 +34,22 @@ public class ParsedCommand
 
     public static ParsedCommand forAxisMovement(ActionTypes actionType, String id, List<AxisPosition> axisTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(actionType, id, axisTargetPoints, null, motionParameters, null, null);
+        return new ParsedCommand(actionType, id, CommandCategory.MOVEMENT, axisTargetPoints, null, motionParameters, null, null);
     }
 
     public static ParsedCommand forCartesianMovement(ActionTypes actionType, String id, List<CartesianPosition> cartesianTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(actionType, id, null, cartesianTargetPoints, motionParameters, null, null);
+        return new ParsedCommand(actionType, id, CommandCategory.MOVEMENT, null, cartesianTargetPoints, motionParameters, null, null);
     }
 
     public static ParsedCommand forIo(ActionTypes actionType, String id, IoCommandData ioCommandData)
     {
-        return new ParsedCommand(actionType, id, null, null, null, ioCommandData, null);
+        return new ParsedCommand(actionType, id, CommandCategory.IO, null, null, null, ioCommandData, null);
     }
 
     public static ParsedCommand forProgramCall(ActionTypes actionType, String id, Integer programId)
     {
-        return new ParsedCommand(actionType, id, null, null, null, null, programId);
+        return new ParsedCommand(actionType, id, CommandCategory.PROGRAM_CALL, null, null, null, null, programId);
     }
 
     public ActionTypes getActionType()
@@ -57,6 +60,10 @@ public class ParsedCommand
     public String getId()
     {
         return id;
+    }
+
+    public CommandCategory getCommandCategory() { // New getter for command category
+        return commandCategory;
     }
 
     public List<AxisPosition> getAxisTargetPoints()
@@ -84,19 +91,22 @@ public class ParsedCommand
         return programId;
     }
 
+    // Updated to use commandCategory
     public boolean isMovementCommand()
     {
-        return (axisTargetPoints != null || cartesianTargetPoints != null) && programId == null;
+        return this.commandCategory == CommandCategory.MOVEMENT;
     }
 
+    // Updated to use commandCategory
     public boolean isIoCommand()
     {
-        return ioCommandData != null;
+        return this.commandCategory == CommandCategory.IO;
     }
 
+    // Updated to use commandCategory
     public boolean isProgramCall()
     {
-        return programId != null;
+        return this.commandCategory == CommandCategory.PROGRAM_CALL;
     }
 
     public int getProgramCallId()
@@ -114,6 +124,7 @@ public class ParsedCommand
         StringBuilder sb = new StringBuilder();
         sb.append("ParsedCommand {\n");
         sb.append("  ActionType: ").append(actionType).append(" (").append(actionType.getValue()).append(")\n");
+        sb.append("  Category: ").append(commandCategory).append("\n"); // Log category
         sb.append("  ID: ").append(id).append("\n");
 
         if (isMovementCommand())
@@ -137,8 +148,8 @@ public class ParsedCommand
                 {
                     CartesianPosition pos = cartesianTargetPoints.get(i);
                     sb.append("    Point ").append(i + 1).append(": X=").append(pos.getX()).append(", Y=").append(pos.getY()).append(
-                            ", Z=").append(pos.getZ()).append(", A=").append(pos.getA()).append(", B=").append(pos.getB()).append(
-                            ", C=").append(pos.getC()).append("\n");
+                            ", Z=").append(pos.getZ()).append(", A=").append(pos.getADeg()).append(", B=").append(pos.getBDeg()).append(
+                            ", C=").append(pos.getCDeg()).append("\n");
                 }
             }
             if (motionParameters != null)
