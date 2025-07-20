@@ -115,7 +115,8 @@ package hartu.tests;
 
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
-import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
+import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.motionModel.IMotion;
@@ -136,7 +137,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
+
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
 public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
@@ -154,6 +155,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
     @Override
     public void initialize()
     {
+        initializeCyclic(0, 50, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         Logger.getInstance().log("ROBOT_EXEC", "Initializing. Ready to take commands from queue.");
     }
 
@@ -214,7 +216,6 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
             }
         }
     }
-
 
     /**
      * Consolidates the execution logic for all movement commands (PTP, LIN, CIRC).
