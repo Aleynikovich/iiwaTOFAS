@@ -1,12 +1,12 @@
-// --- ServerClass.java ---
 package hartu.robot.communication.server;
-import java.io.*;
-import java.net.*;
+
+import java.io.IOException;
+import java.net.ServerSocket;
 
 public class ServerClass implements IClientHandlerCallback
 {
-    private ServerPortListener taskPortListener;
-    private ServerPortListener logPortListener;
+    private final ServerPortListener taskPortListener;
+    private final ServerPortListener logPortListener;
 
     private ClientHandler taskClientHandler;
     private ClientHandler logClientHandler;
@@ -16,11 +16,9 @@ public class ServerClass implements IClientHandlerCallback
     public ServerClass(int taskPort, int logPort) throws IOException
     {
         ServerSocket taskServerSocket = new ServerSocket(taskPort);
-        // Pass 'this' as the ServerClass instance to the taskPortListener constructor
         this.taskPortListener = new ServerPortListener(taskServerSocket, "Task Listener", this, this);
 
         ServerSocket logServerSocket = new ServerSocket(logPort);
-        // Pass 'this' as the ServerClass instance to the logPortListener constructor
         this.logPortListener = new ServerPortListener(logServerSocket, "Log Listener", this, this);
     }
 
@@ -47,40 +45,34 @@ public class ServerClass implements IClientHandlerCallback
             logPortListener.getServerSocket().close();
         }
 
-        if (taskClientHandler != null) {
+        if (taskClientHandler != null)
+        {
             taskClientHandler.close();
         }
-        if (logClientHandler != null) {
+        if (logClientHandler != null)
+        {
             logClientHandler.close();
         }
-        this.isLogClientConnected = false; // Reset flag on stop
+        this.isLogClientConnected = false;
     }
 
     @Override
     public void onClientConnected(ClientHandler handler, String listenerName)
     {
-        if ("Task Listener".equals(listenerName)) {
+        if ("Task Listener".equals(listenerName))
+        {
             this.taskClientHandler = handler;
-        } else if ("Log Listener".equals(listenerName)) {
+        } else if ("Log Listener".equals(listenerName))
+        {
             this.logClientHandler = handler;
             Logger.getInstance().setLogClientHandler(this.logClientHandler);
-            this.isLogClientConnected = true; // Set flag when log client connects
+            this.isLogClientConnected = true;
         }
     }
 
-    public boolean isLogClientConnected() {
+    public boolean isLogClientConnected()
+    {
         return isLogClientConnected;
     }
 
-    public void sendHeartbeatToTaskClient(String message) {
-        if (taskClientHandler != null) {
-            taskClientHandler.sendMessage(message);
-        }
-    }
-
-    public void sendHeartbeatToLogClient(String message) {
-        if (logClientHandler != null) {
-            logClientHandler.sendMessage(message);
-        }
-    }
 }
