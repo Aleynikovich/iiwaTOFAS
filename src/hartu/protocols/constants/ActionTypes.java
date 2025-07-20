@@ -46,4 +46,35 @@ public enum ActionTypes
     {
         return value;
     }
+
+    /**
+     * Returns the high-level category for this ActionType.
+     * This centralizes the mapping from specific actions to broader command types.
+     * @return The CommandCategory for this action.
+     */
+    public CommandCategory getCategory() {
+        // Use a switch statement for clear mapping
+        switch (this) {
+            case PTP_AXIS:
+            case PTP_FRAME:
+            case LIN_AXIS:
+            case LIN_FRAME:
+            case CIRC_AXIS:
+            case CIRC_FRAME:
+            case PTP_AXIS_C:
+            case PTP_FRAME_C:
+            case LIN_FRAME_C:
+            case LIN_REL_TOOL:
+            case LIN_REL_BASE:
+                return CommandCategory.MOVEMENT;
+            case ACTIVATE_IO:
+                return CommandCategory.IO;
+            default:
+                // For UNKNOWN or actions within the PROGRAM_CALL_OFFSET range
+                if (this.value > PROGRAM_CALL_OFFSET && this != UNKNOWN) {
+                    return CommandCategory.PROGRAM_CALL;
+                }
+                return CommandCategory.UNKNOWN;
+        }
+    }
 }
