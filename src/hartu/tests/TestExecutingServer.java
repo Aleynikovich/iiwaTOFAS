@@ -15,12 +15,6 @@ import hartu.robot.communication.server.Logger;
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
-/**
- * A temporary background KUKA application that acts as the command executor.
- * It continuously polls the shared CommandQueue for ParsedCommand objects,
- * executes them (currently only IO commands), and signals the result back
- * via the CommandResultHolder.
- */
 public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
 {
 
@@ -41,7 +35,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
 
         initializeCyclic(0, 50, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
 
-        Logger.getInstance().log("TestExecutingServer: Initializing. Ready to take commands from queue.");
+        Logger.getInstance().log("ROBOT_EXEC", "Initializing. Ready to take commands from queue.");
     }
 
     @Override
@@ -53,7 +47,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
         if (resultHolder != null)
         {
             ParsedCommand command = resultHolder.getCommand();
-            Logger.getInstance().log("TestExecutingServer: Received command ID " + command.getId() + " from queue for execution.");
+            Logger.getInstance().log("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
             boolean executionSuccess = false;
 
             try
@@ -64,47 +58,47 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
                     int ioPin = ioData.getIoPin();
                     boolean ioState = ioData.getIoState();
 
-                    Logger.getInstance().log("TestExecutingServer: Executing IO command. Pin: " + ioPin + ", State: " + ioState);
+                    Logger.getInstance().log("ROBOT_EXEC", "Executing IO command. Pin: " + ioPin + ", State: " + ioState);
 
                     switch (ioPin)
                     {
                         case 1:
                             gimaticIO.setDO_Flange7(ioState);
-                            Logger.getInstance().log("TestExecutingServer: Set DO_Flange7 to " + ioState);
+                            Logger.getInstance().log("ROBOT_EXEC", "Set DO_Flange7 to " + ioState);
                             executionSuccess = true;
                             break;
                         case 2:
                             toolControlIO.setOutput2(ioState);
-                            Logger.getInstance().log("TestExecutingServer: Set Ethercat_x44 Output2 to " + ioState);
+                            Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output2 to " + ioState);
                             executionSuccess = true;
                             break;
                         case 3:
                             toolControlIO.setOutput1(ioState);
-                            Logger.getInstance().log("TestExecutingServer: Set Ethercat_x44 Output1 to " + ioState);
+                            Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
                             executionSuccess = true;
                             break;
                         default:
                             Logger.getInstance().log(
-                                    "TestExecutingServer Error: Invalid IO pin in parsed command for direct mapping: " + ioPin);
+                                    "ROBOT_EXEC", "Error: Invalid IO pin in parsed command for direct mapping: " + ioPin);
                     }
                 }
                 else
                 {
                     Logger.getInstance().log(
-                            "TestExecutingServer Warning: Received non-IO command. Only IO commands are supported in this test: " + command.getActionType().name());
+                            "ROBOT_EXEC", "Warning: Received non-IO command. Only IO commands are supported in this test: " + command.getActionType().name());
 
                 }
             }
             catch (Exception e)
             {
-                Logger.getInstance().log("TestExecutingServer Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
+                Logger.getInstance().log("ROBOT_EXEC", "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
             }
             finally
             {
 
                 resultHolder.setSuccess(executionSuccess);
                 resultHolder.getLatch().countDown();
-                Logger.getInstance().log("TestExecutingServer: Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
+                Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
             }
         }
     }
@@ -112,7 +106,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
     @Override
     public void dispose()
     {
-        Logger.getInstance().log("TestExecutingServer: Disposing...");
+        Logger.getInstance().log("ROBOT_EXEC", "Disposing...");
         super.dispose();
     }
 }
