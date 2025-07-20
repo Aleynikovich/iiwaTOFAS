@@ -1,4 +1,3 @@
-// --- Logger.java ---
 package hartu.robot.communication.server;
 
 import java.text.SimpleDateFormat;
@@ -8,13 +7,11 @@ public class Logger
 {
     private static Logger instance;
     private ClientHandler logClientHandler;
-    private SimpleDateFormat dateFormat; // New field for date formatting
+    private final SimpleDateFormat timeFormat; // For HH:mm:ss.SSS
 
     private Logger()
     {
-        // Private constructor to enforce singleton pattern
-        // Initialize the date format
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        this.timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
     }
 
     public static synchronized Logger getInstance()
@@ -26,27 +23,29 @@ public class Logger
         return instance;
     }
 
-    // Method to set the active log client handler
     public void setLogClientHandler(ClientHandler handler)
     {
         this.logClientHandler = handler;
-        // Log when the log client handler is set
-        log("Logger: Log client handler set.");
+        // Log when the log client handler is set, using a tag
+        log("LOGGER", "Log client handler set.");
     }
 
-    // Method to send a log message
-    public void log(String message)
+    // New method to send a log message with a tag
+    public void log(String tag, String message)
     {
-        // Prepend current date and time to the message
-        String timestamp = dateFormat.format(new Date());
-        String formattedMessage = "[" + timestamp + "] " + message + "\n";
+        String timestamp = timeFormat.format(new Date());
+        // Format: [HH:mm:ss.SSS] [TAG] message\n
+        String formattedMessage = "[" + timestamp + "] [" + tag + "] " + message + "\n";
 
         if (logClientHandler != null)
         {
             logClientHandler.sendMessage(formattedMessage);
         }
-        // Optionally, you could also print to System.out/err as a fallback
-        // if the log client is not connected, but you've expressed a preference
-        // against local prints.
+    }
+
+    // Existing log method, now delegates to the tagged version with a default tag
+    public void log(String message)
+    {
+        log("DEFAULT", message); // Use a default tag for existing calls
     }
 }
