@@ -46,13 +46,12 @@ public class ServerClass implements IClientHandlerCallback
     public void stop() throws IOException
     {
         Logger.getInstance().log("SERVER", "Stopping server listeners and client handlers...");
-        if (taskPortListener != null && taskPortListener.getServerSocket() != null && !taskPortListener.getServerSocket().isClosed())
-        {
-            taskPortListener.getServerSocket().close();
+        // Call stopListening() on the listener instances for graceful shutdown
+        if (taskPortListener != null) {
+            taskPortListener.stopListening();
         }
-        if (logPortListener != null && logPortListener.getServerSocket() != null && !logPortListener.getServerSocket().isClosed())
-        {
-            logPortListener.getServerSocket().close();
+        if (logPortListener != null) {
+            logPortListener.stopListening();
         }
 
         if (taskClientHandler != null)
@@ -71,7 +70,7 @@ public class ServerClass implements IClientHandlerCallback
     public void onClientConnected(ClientHandler handler, ListenerType listenerType)
     {
         String clientIp = handler.getClientSession().getRemoteAddress();
-        String clientName = handler.getClientSession().getClientName(); // Get the name already assigned by ServerPortListener
+        String clientName = handler.getClientSession().getClientName();
 
         if (listenerType == ListenerType.TASK_LISTENER)
         {
