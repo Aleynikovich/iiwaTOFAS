@@ -1,7 +1,6 @@
 package hartu.robot.communication.server;
 
 import hartu.protocols.constants.ProtocolConstants.ListenerType;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Map;
@@ -51,53 +50,34 @@ public class ServerClass implements IClientHandlerCallback
     {
         Logger.getInstance().log("SERVER", "Stopping server listeners and client handlers...");
         // Signal listeners to stop and close their sockets
-        if (taskPortListener != null)
-        {
+        if (taskPortListener != null) {
             taskPortListener.stopListening();
         }
-        if (logPortListener != null)
-        {
+        if (logPortListener != null) {
             logPortListener.stopListening();
         }
 
         // Wait for listener threads to actually terminate
-        try
-        {
-            if (taskListenerThread != null && taskListenerThread.isAlive())
-            {
+        try {
+            if (taskListenerThread != null && taskListenerThread.isAlive()) {
                 taskListenerThread.join(2000); // Wait up to 2 seconds for task listener
-                if (taskListenerThread.isAlive())
-                {
-                    Logger.getInstance().log(
-                            "SERVER",
-                            "Warning: Task Listener thread did not terminate within timeout."
-                                            );
+                if (taskListenerThread.isAlive()) {
+                    Logger.getInstance().log("SERVER", "Warning: Task Listener thread did not terminate within timeout.");
                 }
             }
-            if (logListenerThread != null && logListenerThread.isAlive())
-            {
+            if (logListenerThread != null && logListenerThread.isAlive()) {
                 logListenerThread.join(2000); // Wait up to 2 seconds for log listener
-                if (logListenerThread.isAlive())
-                {
-                    Logger.getInstance().log(
-                            "SERVER",
-                            "Warning: Log Listener thread did not terminate within timeout."
-                                            );
+                if (logListenerThread.isAlive()) {
+                    Logger.getInstance().log("SERVER", "Warning: Log Listener thread did not terminate within timeout.");
                 }
             }
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            Logger.getInstance().log(
-                    "SERVER",
-                    "Interrupted while waiting for listener threads to stop: " + e.getMessage()
-                                    );
+            Logger.getInstance().log("SERVER", "Interrupted while waiting for listener threads to stop: " + e.getMessage());
         }
 
         // IMPORTANT: Clear the logClientHandler in Logger BEFORE closing it
-        if (logClientHandler != null)
-        {
+        if (logClientHandler != null) {
             Logger.getInstance().setLogClientHandler(null); // Clear the reference
         }
 
@@ -129,10 +109,7 @@ public class ServerClass implements IClientHandlerCallback
             Logger.getInstance().setLogClientHandler(this.logClientHandler);
             this.isLogClientConnected = true;
         }
-        Logger.getInstance().log(
-                "SERVER",
-                "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName()
-                                );
+        Logger.getInstance().log("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
     }
 
     public boolean isLogClientConnected()
