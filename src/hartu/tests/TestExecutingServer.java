@@ -137,8 +137,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+<<<<<<< HEAD
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
+=======
+>>>>>>> 306d3b7241344a82c243fc9830ca5814d11c5fb6
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
 public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
@@ -218,7 +221,10 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
         }
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 306d3b7241344a82c243fc9830ca5814d11c5fb6
     /**
      * Consolidates the execution logic for all movement commands (PTP, LIN, CIRC).
      * This method now handles both single-point and continuous motions, applying blending for the latter.
