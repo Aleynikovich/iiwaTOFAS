@@ -136,6 +136,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
@@ -154,6 +156,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
     @Override
     public void initialize()
     {
+        initializeCyclic(0, 50, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         Logger.getInstance().log("ROBOT_EXEC", "Initializing. Ready to take commands from queue.");
     }
 
