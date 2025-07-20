@@ -15,18 +15,18 @@ public class MotionParameters
 
         if (speedOverride <= 0)
         {
-            Logger.getInstance().log("SpeedOverride is negative or zero");
+            Logger.getInstance().log("CMD_PARAM", "SpeedOverride is negative or zero. Clamping to 0.0.");
         }
         if (speedOverride > 1.0)
         {
-            Logger.getInstance().log("MotionParameters Warning: Initial speedOverride (" + speedOverride + ") is outside 0.0-1.0 range. Attempting to scale/clamp.");
-            speedOverride = speedOverride / 100.0;
+            Logger.getInstance().log("CMD_PARAM", "Warning: Initial speedOverride (" + speedOverride + ") is outside 0.0-1.0 range. Clamping to 1.0.");
         }
 
         this.speedOverride = Math.max(0.0, Math.min(1.0, speedOverride));
 
         if (numPoints < 0)
         {
+            Logger.getInstance().log("CMD_PARAM", "Error: Number of points cannot be negative.");
             throw new IllegalArgumentException("Number of points cannot be negative.");
         }
         this.tool = tool;
