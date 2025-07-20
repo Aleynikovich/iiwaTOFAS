@@ -122,7 +122,7 @@ public class ParsedCommand
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("ParsedCommand {\n");
+        sb.append("\nParsedCommand {\n");
         sb.append("  ActionType: ").append(actionType).append(" (").append(actionType.getValue()).append(")\n");
         sb.append("  Category: ").append(commandCategory).append("\n"); // Log category
         sb.append("  ID: ").append(id).append("\n");
