@@ -64,14 +64,7 @@ public class Ros2ClientManager extends RoboticsAPICyclicBackgroundTask
 
         if (connectionEstablished && jointLogClient.isConnected())
         {
-            try
-            {
-                jointLogClient.sendMessage(message);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
+            jointLogClient.sendMessage(message);
 
             Logger.getInstance().log("CLIENT_MGR", "Sent: " + message);
         }

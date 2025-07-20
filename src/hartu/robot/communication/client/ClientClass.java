@@ -2,16 +2,19 @@ package hartu.robot.communication.client;
 
 import hartu.protocols.constants.ProtocolConstants;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientClass
 {
+    private Socket clientSocket;
+    private PrintWriter out;
+    private BufferedReader in;
     private final String serverIp;
     private final int serverPort;
-    private Socket clientSocket;
-    private OutputStream out;
 
     public ClientClass(String serverIp, int serverPort)
     {
@@ -22,20 +25,41 @@ public class ClientClass
     public void connect() throws IOException
     {
         clientSocket = new Socket(serverIp, serverPort);
-        out = clientSocket.getOutputStream();
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public void sendMessage(String message) throws IOException
+    public void sendMessage(String message)
     {
         if (out != null)
         {
-            out.write(message.getBytes());
+            out.print(message);
             out.flush();
         }
     }
 
+    public String readMessage() throws IOException
+    {
+        StringBuilder messageBuilder = new StringBuilder();
+        int charCode;
+        while ((charCode = in.read()) != -1)
+        {
+            char c = (char) charCode;
+            if (c == ProtocolConstants.MESSAGE_TERMINATOR.charAt(0))
+            {
+                break;
+            }
+            messageBuilder.append(c);
+        }
+        return messageBuilder.toString();
+    }
+
     public void close() throws IOException
     {
+        if (in != null)
+        {
+            in.close();
+        }
         if (out != null)
         {
             out.close();
