@@ -54,7 +54,7 @@ public class ServerClass implements IClientHandlerCallback
 
         // Read robot's own IP
         robotIp = properties.getProperty("robot.ip", "0.0.0.0"); // Default to 0.0.0.0 if not specified
-
+        //wtflolXD
         // Dynamically create listeners based on properties
         for (ListenerType type : ListenerType.values()) {
             String portKey = type.getName() + ".port";

@@ -46,5 +46,4 @@ bin/
 deploy/
 # Any other specific KUKA generated files or folders that should not be in Git
 # For example, if there are generated IO access classes you don't want to track
-# hartu/generated/!bin/
-!bin/
+# hartu/generated/
