@@ -15,8 +15,7 @@ public class ProtocolConstants
 
     public enum ListenerType
     { // Renamed from ClientType
-        TASK_LISTENER("Task Listener", 0),
-        LOG_LISTENER("Log Listener", 1);
+        TASK_LISTENER("Task Listener", 0), LOG_LISTENER("Log Listener", 1);
 
         private final String name;
         private final int value;
