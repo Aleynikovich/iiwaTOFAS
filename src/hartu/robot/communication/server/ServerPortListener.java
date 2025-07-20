@@ -100,8 +100,13 @@ public class ServerPortListener implements Runnable
                 }
 
                 String clientIp = clientSocket.getInetAddress().getHostAddress();
-                // Changed to use the public getClientNameForIp method
-                String clientName = serverInstance.getClientNameForIp(clientIp);
+                String clientName = serverInstance.clientIpToNameMap.get(clientIp);
+
+                if (clientName == null)
+                {
+                    clientName = "Client-" + serverInstance.clientNameCounter.incrementAndGet();
+                    serverInstance.clientIpToNameMap.put(clientIp, clientName);
+                }
 
                 Logger.getInstance().log("COMM", listenerType.getName() + ": Client " + clientName + " (" + clientIp + ") connected.");
 
