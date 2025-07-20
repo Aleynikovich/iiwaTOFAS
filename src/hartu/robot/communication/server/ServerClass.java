@@ -9,13 +9,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerClass implements IClientHandlerCallback
 {
-    public final Map<String, String> clientIpToNameMap;
-    public final AtomicInteger clientNameCounter;
+    final Map<String, String> clientIpToNameMap;
+    final AtomicInteger clientNameCounter;
     private final ServerPortListener taskPortListener;
     private final ServerPortListener logPortListener;
     private ClientHandler taskClientHandler;
     private ClientHandler logClientHandler;
     private volatile boolean isLogClientConnected = false;
+
+    // Added to hold references to the listener threads
+    private Thread taskListenerThread;
+    private Thread logListenerThread;
 
     public ServerClass(int taskPort, int logPort) throws IOException
     {
@@ -32,8 +36,8 @@ public class ServerClass implements IClientHandlerCallback
 
     public void start()
     {
-        Thread taskListenerThread = new Thread(taskPortListener);
-        Thread logListenerThread = new Thread(logPortListener);
+        taskListenerThread = new Thread(taskPortListener); // Assign to class member
+        logListenerThread = new Thread(logPortListener);   // Assign to class member
 
         taskListenerThread.setDaemon(true);
         logListenerThread.setDaemon(true);
@@ -46,13 +50,33 @@ public class ServerClass implements IClientHandlerCallback
     public void stop() throws IOException
     {
         Logger.getInstance().log("SERVER", "Stopping server listeners and client handlers...");
-        // Call stopListening() on the listener instances for graceful shutdown
+        // Signal listeners to stop and close their sockets
         if (taskPortListener != null) {
             taskPortListener.stopListening();
         }
         if (logPortListener != null) {
             logPortListener.stopListening();
         }
+
+        // Wait for listener threads to actually terminate
+        try {
+            if (taskListenerThread != null && taskListenerThread.isAlive()) {
+                taskListenerThread.join(2000); // Wait up to 2 seconds for task listener
+                if (taskListenerThread.isAlive()) {
+                    Logger.getInstance().log("SERVER", "Warning: Task Listener thread did not terminate within timeout.");
+                }
+            }
+            if (logListenerThread != null && logListenerThread.isAlive()) {
+                logListenerThread.join(2000); // Wait up to 2 seconds for log listener
+                if (logListenerThread.isAlive()) {
+                    Logger.getInstance().log("SERVER", "Warning: Log Listener thread did not terminate within timeout.");
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore the interrupted status
+            Logger.getInstance().log("SERVER", "Interrupted while waiting for listener threads to stop: " + e.getMessage());
+        }
+
 
         if (taskClientHandler != null)
         {
