@@ -1,7 +1,6 @@
 package hartu.robot.communication.server;
 
 import hartu.protocols.constants.ProtocolConstants.ListenerType;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Map;
@@ -28,6 +27,7 @@ public class ServerClass implements IClientHandlerCallback
 
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
+        Logger.getInstance().log("SERVER", "Server initialized on Task Port: " + taskPort + ", Log Port: " + logPort);
     }
 
     public void start()
@@ -40,17 +40,18 @@ public class ServerClass implements IClientHandlerCallback
 
         taskListenerThread.start();
         logListenerThread.start();
+        Logger.getInstance().log("SERVER", "Server listeners started.");
     }
 
     public void stop() throws IOException
     {
-        if (taskPortListener != null && taskPortListener.getServerSocket() != null && !taskPortListener.getServerSocket().isClosed())
-        {
-            taskPortListener.getServerSocket().close();
+        Logger.getInstance().log("SERVER", "Stopping server listeners and client handlers...");
+        // Call stopListening() on the listener instances for graceful shutdown
+        if (taskPortListener != null) {
+            taskPortListener.stopListening();
         }
-        if (logPortListener != null && logPortListener.getServerSocket() != null && !logPortListener.getServerSocket().isClosed())
-        {
-            logPortListener.getServerSocket().close();
+        if (logPortListener != null) {
+            logPortListener.stopListening();
         }
 
         if (taskClientHandler != null)
@@ -62,15 +63,14 @@ public class ServerClass implements IClientHandlerCallback
             logClientHandler.close();
         }
         this.isLogClientConnected = false;
+        Logger.getInstance().log("SERVER", "Server stopped.");
     }
 
     @Override
     public void onClientConnected(ClientHandler handler, ListenerType listenerType)
     {
         String clientIp = handler.getClientSession().getRemoteAddress();
-        String clientName;
-
-        clientName = clientIpToNameMap.get(clientIp);
+        String clientName = handler.getClientSession().getClientName();
 
         if (listenerType == ListenerType.TASK_LISTENER)
         {
@@ -82,7 +82,7 @@ public class ServerClass implements IClientHandlerCallback
             Logger.getInstance().setLogClientHandler(this.logClientHandler);
             this.isLogClientConnected = true;
         }
-        Logger.getInstance().log("ServerClass: Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
+        Logger.getInstance().log("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
     }
 
     public boolean isLogClientConnected()
