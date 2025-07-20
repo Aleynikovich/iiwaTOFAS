@@ -1,149 +1,96 @@
 package hartu.robot.communication.server;
 
 import hartu.protocols.constants.ProtocolConstants.ListenerType;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.EnumMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerClass implements IClientHandlerCallback
 {
-    private static final String CONFIG_FILE_PATH = "server_config.properties";
-
-    // Made private for better encapsulation, as getClientNameForIp method is now public
-    private final Map<String, String> clientIpToNameMap;
-    private final AtomicInteger clientNameCounter;
-
-    private final EnumMap<ListenerType, ServerPortListener> activeListeners;
-    private final EnumMap<ListenerType, Thread> listenerThreads;
-    private final EnumMap<ListenerType, ClientHandler> activeClientHandlers;
-
+    final Map<String, String> clientIpToNameMap;
+    final AtomicInteger clientNameCounter;
+    private final ServerPortListener taskPortListener;
+    private final ServerPortListener logPortListener;
+    private ClientHandler taskClientHandler;
+    private ClientHandler logClientHandler;
     private volatile boolean isLogClientConnected = false;
-    private String robotIp; // Added to store robot's own IP
 
-    public ServerClass() throws IOException
+    private Thread taskListenerThread;
+    private Thread logListenerThread;
+
+    public ServerClass(int taskPort, int logPort) throws IOException
     {
+        ServerSocket taskServerSocket = new ServerSocket(taskPort);
+        this.taskPortListener = new ServerPortListener(taskServerSocket, ListenerType.TASK_LISTENER, this, this);
+
+        ServerSocket logServerSocket = new ServerSocket(logPort);
+        this.logPortListener = new ServerPortListener(logServerSocket, ListenerType.LOG_LISTENER, this, this);
+
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
-        this.activeListeners = new EnumMap<>(ListenerType.class);
-        this.listenerThreads = new EnumMap<>(ListenerType.class);
-        this.activeClientHandlers = new EnumMap<>(ListenerType.class);
-
-        loadConfigurationAndInitializeListeners();
-        Logger.getInstance().log("SERVER", "Server initialized with dynamic configuration. Robot IP: " + robotIp);
-    }
-
-    private void loadConfigurationAndInitializeListeners() throws IOException {
-        Properties properties = new Properties();
-        try {
-            properties.load(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_PATH));
-            Logger.getInstance().log("SERVER", "Loaded server configuration from classpath resource: " + CONFIG_FILE_PATH);
-        } catch (IOException e) {
-            try (FileInputStream fis = new FileInputStream(CONFIG_FILE_PATH)) {
-                properties.load(fis);
-                Logger.getInstance().log("SERVER", "Loaded server configuration from file system: " + CONFIG_FILE_PATH);
-            } catch (IOException ex) {
-                Logger.getInstance().log("SERVER", "Error: Could not load server configuration from " + CONFIG_FILE_PATH + ". Server will not start. " + ex.getMessage());
-                throw new IOException("Failed to load server configuration: " + ex.getMessage(), ex);
-            }
-        }
-
-        // Read robot's own IP
-        robotIp = properties.getProperty("robot.ip", "0.0.0.0"); // Default to 0.0.0.0 if not specified
-        //wtflolXD
-        // Dynamically create listeners based on properties
-        for (ListenerType type : ListenerType.values()) {
-            String portKey = type.getName() + ".port";
-            String portString = properties.getProperty(portKey);
-            if (portString != null) {
-                try {
-                    int port = Integer.parseInt(portString);
-                    ServerSocket serverSocket = new ServerSocket(port);
-                    ServerPortListener listener = new ServerPortListener(serverSocket, type, this, this);
-                    activeListeners.put(type, listener);
-                    Logger.getInstance().log("SERVER", "Configured " + type.getName() + " on port " + port);
-                } catch (NumberFormatException e) {
-                    Logger.getInstance().log("SERVER", "Error: Invalid port number for " + type.getName() + ": " + portString + ". " + e.getMessage());
-                } catch (IOException e) {
-                    Logger.getInstance().log("SERVER", "Error: Could not open socket for " + type.getName() + " on port " + portString + ": " + e.getMessage());
-                    throw e;
-                }
-            } else {
-                Logger.getInstance().log("SERVER", "Warning: Port for " + type.getName() + " not found in configuration. This listener will not be started.");
-            }
-        }
-
-        if (activeListeners.isEmpty()) {
-            Logger.getInstance().log("SERVER", "Error: No listeners configured. Server will not start.");
-            throw new IOException("No listeners configured in " + CONFIG_FILE_PATH);
-        }
+        Logger.getInstance().log("SERVER", "Server initialized on Task Port: " + taskPort + ", Log Port: " + logPort);
     }
 
     public void start()
     {
-        for (Map.Entry<ListenerType, ServerPortListener> entry : activeListeners.entrySet()) {
-            ListenerType type = entry.getKey();
-            ServerPortListener listener = entry.getValue();
-            Thread listenerThread = new Thread(listener);
-            listenerThread.setDaemon(true);
-            listenerThread.start();
-            listenerThreads.put(type, listenerThread);
-        }
-        Logger.getInstance().log("SERVER", "All configured server listeners started.");
+        taskListenerThread = new Thread(taskPortListener);
+        logListenerThread = new Thread(logPortListener);
+
+        taskListenerThread.setDaemon(true);
+        logListenerThread.setDaemon(true);
+
+        taskListenerThread.start();
+        logListenerThread.start();
+        Logger.getInstance().log("SERVER", "Server listeners started.");
     }
 
     public void stop() throws IOException
     {
-        Logger.getInstance().log("SERVER", "Stopping all server listeners and client handlers...");
-
-        for (ServerPortListener listener : activeListeners.values()) {
-            if (listener != null) {
-                listener.stopListening();
-            }
+        Logger.getInstance().log("SERVER", "Stopping server listeners and client handlers...");
+        // Signal listeners to stop and close their sockets
+        if (taskPortListener != null) {
+            taskPortListener.stopListening();
+        }
+        if (logPortListener != null) {
+            logPortListener.stopListening();
         }
 
-        for (Map.Entry<ListenerType, Thread> entry : listenerThreads.entrySet()) {
-            ListenerType type = entry.getKey();
-            Thread thread = entry.getValue();
-            if (thread != null && thread.isAlive()) {
-                try {
-                    thread.join(2000);
-                    if (thread.isAlive()) {
-                        Logger.getInstance().log("SERVER", "Warning: " + type.getName() + " thread did not terminate within timeout.");
-                    }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    Logger.getInstance().log("SERVER", "Interrupted while waiting for " + type.getName() + " thread to stop: " + e.getMessage());
+        // Wait for listener threads to actually terminate
+        try {
+            if (taskListenerThread != null && taskListenerThread.isAlive()) {
+                taskListenerThread.join(2000); // Wait up to 2 seconds for task listener
+                if (taskListenerThread.isAlive()) {
+                    Logger.getInstance().log("SERVER", "Warning: Task Listener thread did not terminate within timeout.");
                 }
             }
-        }
-
-        if (activeClientHandlers.containsKey(ListenerType.LOG_LISTENER)) {
-            Logger.getInstance().setLogClientHandler(null);
-        }
-
-        for (ClientHandler handler : activeClientHandlers.values()) {
-            if (handler != null) {
-                handler.close();
+            if (logListenerThread != null && logListenerThread.isAlive()) {
+                logListenerThread.join(2000); // Wait up to 2 seconds for log listener
+                if (logListenerThread.isAlive()) {
+                    Logger.getInstance().log("SERVER", "Warning: Log Listener thread did not terminate within timeout.");
+                }
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            Logger.getInstance().log("SERVER", "Interrupted while waiting for listener threads to stop: " + e.getMessage());
         }
-        activeClientHandlers.clear();
 
+        // IMPORTANT: Clear the logClientHandler in Logger BEFORE closing it
+        if (logClientHandler != null) {
+            Logger.getInstance().setLogClientHandler(null); // Clear the reference
+        }
+
+        if (taskClientHandler != null)
+        {
+            taskClientHandler.close();
+        }
+        if (logClientHandler != null)
+        {
+            logClientHandler.close();
+        }
         this.isLogClientConnected = false;
-        Logger.getInstance().log("SERVER", "Server stopped.");
-    }
-
-    public String getClientNameForIp(String clientIp) {
-        String clientName = clientIpToNameMap.get(clientIp);
-        if (clientName == null) {
-            clientName = "Client-" + clientNameCounter.incrementAndGet();
-            clientIpToNameMap.put(clientIp, clientName);
-        }
-        return clientName;
+        Logger.getInstance().log("SERVER", "Server stopped."); // This log will now not try to use a closed handler
     }
 
     @Override
@@ -152,11 +99,14 @@ public class ServerClass implements IClientHandlerCallback
         String clientIp = handler.getClientSession().getRemoteAddress();
         String clientName = handler.getClientSession().getClientName();
 
-        activeClientHandlers.put(listenerType, handler);
-
-        if (listenerType == ListenerType.LOG_LISTENER)
+        if (listenerType == ListenerType.TASK_LISTENER)
         {
-            Logger.getInstance().setLogClientHandler(handler);
+            this.taskClientHandler = handler;
+        }
+        else if (listenerType == ListenerType.LOG_LISTENER)
+        {
+            this.logClientHandler = handler;
+            Logger.getInstance().setLogClientHandler(this.logClientHandler);
             this.isLogClientConnected = true;
         }
         Logger.getInstance().log("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
@@ -165,5 +115,10 @@ public class ServerClass implements IClientHandlerCallback
     public boolean isLogClientConnected()
     {
         return isLogClientConnected;
+    }
+
+    public String getClientName(String ipAddress)
+    {
+        return clientIpToNameMap.get(ipAddress);
     }
 }
