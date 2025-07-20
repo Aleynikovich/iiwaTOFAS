@@ -1,25 +1,33 @@
 package hartu.robot.communication.server;
 
+import hartu.protocols.constants.ProtocolConstants.ListenerType;
+
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerClass implements IClientHandlerCallback
 {
+    public final Map<String, String> clientIpToNameMap;
+    public final AtomicInteger clientNameCounter;
     private final ServerPortListener taskPortListener;
     private final ServerPortListener logPortListener;
-
     private ClientHandler taskClientHandler;
     private ClientHandler logClientHandler;
-
     private volatile boolean isLogClientConnected = false;
 
     public ServerClass(int taskPort, int logPort) throws IOException
     {
         ServerSocket taskServerSocket = new ServerSocket(taskPort);
-        this.taskPortListener = new ServerPortListener(taskServerSocket, "Task Listener", this, this);
+        this.taskPortListener = new ServerPortListener(taskServerSocket, ListenerType.TASK_LISTENER, this, this);
 
         ServerSocket logServerSocket = new ServerSocket(logPort);
-        this.logPortListener = new ServerPortListener(logServerSocket, "Log Listener", this, this);
+        this.logPortListener = new ServerPortListener(logServerSocket, ListenerType.LOG_LISTENER, this, this);
+
+        this.clientIpToNameMap = new ConcurrentHashMap<>();
+        this.clientNameCounter = new AtomicInteger(0);
     }
 
     public void start()
@@ -57,17 +65,24 @@ public class ServerClass implements IClientHandlerCallback
     }
 
     @Override
-    public void onClientConnected(ClientHandler handler, String listenerName)
+    public void onClientConnected(ClientHandler handler, ListenerType listenerType)
     {
-        if ("Task Listener".equals(listenerName))
+        String clientIp = handler.getClientSession().getRemoteAddress();
+        String clientName;
+
+        clientName = clientIpToNameMap.get(clientIp);
+
+        if (listenerType == ListenerType.TASK_LISTENER)
         {
             this.taskClientHandler = handler;
-        } else if ("Log Listener".equals(listenerName))
+        }
+        else if (listenerType == ListenerType.LOG_LISTENER)
         {
             this.logClientHandler = handler;
             Logger.getInstance().setLogClientHandler(this.logClientHandler);
             this.isLogClientConnected = true;
         }
+        Logger.getInstance().log("ServerClass: Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
     }
 
     public boolean isLogClientConnected()
@@ -75,4 +90,8 @@ public class ServerClass implements IClientHandlerCallback
         return isLogClientConnected;
     }
 
+    public String getClientName(String ipAddress)
+    {
+        return clientIpToNameMap.get(ipAddress);
+    }
 }
