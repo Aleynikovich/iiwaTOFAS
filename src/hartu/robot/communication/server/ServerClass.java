@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerClass implements IClientHandlerCallback
 {
-    private final Map<String, String> clientIpToNameMap;
-    private final AtomicInteger clientNameCounter;
+    final Map<String, String> clientIpToNameMap;
+    final AtomicInteger clientNameCounter;
     private final ServerPortListener taskPortListener;
     private final ServerPortListener logPortListener;
     private ClientHandler taskClientHandler;
