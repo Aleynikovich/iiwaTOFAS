@@ -1,25 +1,30 @@
 package hartu.robot.commands.io;
 
-public class IoCommandData {
+public class IoCommandData
+{
     private final int ioPoint;
     private final int ioPin;
     private final boolean ioState;
 
-    public IoCommandData(int ioPoint, int ioPin, boolean ioState) {
+    public IoCommandData(int ioPoint, int ioPin, boolean ioState)
+    {
         this.ioPoint = ioPoint;
         this.ioPin = ioPin;
         this.ioState = ioState;
     }
 
-    public int getIoPoint() {
+    public int getIoPoint()
+    {
         return ioPoint;
     }
 
-    public int getIoPin() {
+    public int getIoPin()
+    {
         return ioPin;
     }
 
-    public boolean getIoState() {
+    public boolean getIoState()
+    {
         return ioState;
     }
 }
