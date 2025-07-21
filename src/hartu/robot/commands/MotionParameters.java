@@ -20,6 +20,7 @@ public class MotionParameters
         if (speedOverride > 1.0)
         {
             Logger.getInstance().log("CMD_PARAM", "Warning: Initial speedOverride (" + speedOverride + ") is outside 0.0-1.0 range. Clamping to 1.0.");
+            speedOverride = speedOverride/100;
         }
 
         this.speedOverride = Math.max(0.0, Math.min(1.0, speedOverride));
