@@ -1,5 +1,7 @@
 package hartu.robot.utils;
 
+import com.kuka.roboticsAPI.deviceModel.JointPosition;
+import com.kuka.roboticsAPI.geometricModel.Frame;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.CommandCategory;
 import hartu.protocols.constants.MessagePartIndex;
@@ -7,8 +9,6 @@ import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.commands.io.IoCommandData;
-import hartu.robot.commands.positions.AxisPosition;
-import hartu.robot.commands.positions.CartesianPosition;
 import hartu.robot.communication.server.Logger;
 
 import java.util.ArrayList;
@@ -94,8 +94,8 @@ public class CommandParser
         }
         MotionParameters motionParameters = new MotionParameters(speedOverride, tool, base, isContinuous, numPoints);
 
-        List<AxisPosition> axisTargetPoints;
-        List<CartesianPosition> cartesianTargetPoints;
+        List<JointPosition> jointTargetPoints;
+        List<Frame> cartesianTargetPoints;
         IoCommandData ioCommandData;
         Integer programId;
 
@@ -110,14 +110,14 @@ public class CommandParser
             {
                 try
                 {
-                    axisTargetPoints = parseAxisPositions(parts[MessagePartIndex.TARGET_POINTS.getIndex()]);
-                    if (axisTargetPoints.size() != numPoints)
+                    jointTargetPoints = parseAxisPositions(parts[MessagePartIndex.TARGET_POINTS.getIndex()]);
+                    if (jointTargetPoints.size() != numPoints)
                     {
-                        String errorMsg = "Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed axis points (" + axisTargetPoints.size() + ").";
+                        String errorMsg = "Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed axis points (" + jointTargetPoints.size() + ").";
                         Logger.getInstance().log("PARSER", "Error: " + errorMsg);
                         throw new IllegalArgumentException(errorMsg);
                     }
-                    return ParsedCommand.forAxisMovement(actionType, id, axisTargetPoints, motionParameters);
+                    return ParsedCommand.forAxisMovement(actionType, id, jointTargetPoints, motionParameters);
                 }
                 catch (ArrayIndexOutOfBoundsException e)
                 {
@@ -189,9 +189,9 @@ public class CommandParser
         }
     }
 
-    private static List<AxisPosition> parseAxisPositions(String axisPositionsString)
+    private static List<JointPosition> parseAxisPositions(String axisPositionsString)
     {
-        List<AxisPosition> positions = new ArrayList<>();
+        List<JointPosition> positions = new ArrayList<>();
         String[] individualPointStrings = axisPositionsString.split(MULTI_POINT_DELIMITER);
 
         for (String pointString : individualPointStrings)
@@ -206,14 +206,14 @@ public class CommandParser
 
             try
             {
-                double j1 = Double.parseDouble(jointValues[0]);
-                double j2 = Double.parseDouble(jointValues[1]);
-                double j3 = Double.parseDouble(jointValues[2]);
-                double j4 = Double.parseDouble(jointValues[3]);
-                double j5 = Double.parseDouble(jointValues[4]);
-                double j6 = Double.parseDouble(jointValues[5]);
-                double j7 = Double.parseDouble(jointValues[6]);
-                positions.add(new AxisPosition(j1, j2, j3, j4, j5, j6, j7));
+                double j1 = Math.toRadians(Double.parseDouble(jointValues[0]));
+                double j2 = Math.toRadians(Double.parseDouble(jointValues[1]));
+                double j3 = Math.toRadians(Double.parseDouble(jointValues[2]));
+                double j4 = Math.toRadians(Double.parseDouble(jointValues[3]));
+                double j5 = Math.toRadians(Double.parseDouble(jointValues[4]));
+                double j6 = Math.toRadians(Double.parseDouble(jointValues[5]));
+                double j7 = Math.toRadians(Double.parseDouble(jointValues[6]));
+                positions.add(new JointPosition(j1, j2, j3, j4, j5, j6, j7));
             }
             catch (NumberFormatException e)
             {
@@ -225,9 +225,9 @@ public class CommandParser
         return positions;
     }
 
-    private static List<CartesianPosition> parseCartesianPositions(String cartesianPositionsString)
+    private static List<Frame> parseCartesianPositions(String cartesianPositionsString)
     {
-        List<CartesianPosition> positions = new ArrayList<>();
+        List<Frame> positions = new ArrayList<>();
         String[] individualPointStrings = cartesianPositionsString.split(MULTI_POINT_DELIMITER);
 
         for (String pointString : individualPointStrings)
@@ -245,10 +245,10 @@ public class CommandParser
                 double x = Double.parseDouble(values[0]);
                 double y = Double.parseDouble(values[1]);
                 double z = Double.parseDouble(values[2]);
-                double a = Double.parseDouble(values[3]);
-                double b = Double.parseDouble(values[4]);
-                double c = Double.parseDouble(values[5]);
-                positions.add(new CartesianPosition(x, y, z, a, b, c));
+                double a = Math.toRadians(Double.parseDouble(values[3]));
+                double b = Math.toRadians(Double.parseDouble(values[4]));
+                double c = Math.toRadians(Double.parseDouble(values[5]));
+                positions.add(new Frame(x, y, z, a, b, c));
             }
             catch (NumberFormatException e)
             {
