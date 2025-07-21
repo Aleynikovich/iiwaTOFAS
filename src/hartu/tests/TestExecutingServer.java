@@ -253,7 +253,9 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
                 "Executing " + actionType.name() + " command ID " + commandId + " with parameters: " );
 
         List<?> motionsToExecute = command.getMotionList();
-
+        Logger.getInstance().log(
+                "ROBOT_EXEC",
+                "Got motion list " );
         // Execute all collected motions
         boolean overallSuccess = true;
         for (Object motion : motionsToExecute)
