@@ -5,6 +5,7 @@ import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.motionModel.RobotMotion;
@@ -22,6 +23,7 @@ import hartu.robot.communication.server.Logger;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
@@ -119,163 +121,33 @@ public class CommandExecutor extends RoboticsAPIApplication
         String commandId = command.getId();
         ActionTypes actionType = command.getActionType();
         MovementType movementType = MovementType.fromActionType(actionType);
+        Tool flexTool = createFromTemplate(Objects.requireNonNull(mapTool(command.getMotionParameters().getTool())));
+        flexTool.attachTo(iiwa.getFlange());
 
-        Logger.getInstance().log(
-                "ROBOT_EXEC",
-                "Executing " + actionType.name() + " command ID " + commandId + " with speed override: " + speed
-                                );
-
-        // Handle CIRC motions separately as they require two points at a time
-        if (actionType == ActionTypes.CIRC_AXIS || actionType == ActionTypes.CIRC_FRAME)
+        if (command.getCartesianTargetPoints() == null && command.getAxisTargetPoints() == null)
         {
-            return executeCIRC(command); // Keep executeCIRC as a dedicated method
-        }
-
-        List<IMotion> motionsToExecute = new ArrayList<>();
-        boolean isJointMotion = movementType.isAxisMotion();
-        String motionDescription = isJointMotion ? "Axis" : "Cartesian";
-
-        if (isJointMotion)
-        { // PTP_AXIS, PTP_AXIS_C, LIN_AXIS, LIN_AXIS_C
-            List<AxisPosition> axisPoints = command.getAxisTargetPoints();
-            if (axisPoints == null || axisPoints.isEmpty())
-            {
-                Logger.getInstance().error(
-                        "ROBOT_EXEC",
-                        actionType.name() + " command ID " + commandId + " has no target points for " + motionDescription + "."
-                                          );
-                return false;
-            }
-
-            if (motionParams.isContinuous() && axisPoints.size() > 1)
-            {
-                Logger.getInstance().warn(
-                        "ROBOT_EXEC",
-                        actionType.name() + " with multiple points: Attempting continuous motion via chained individual moves with blending."
-                                         );
-                for (AxisPosition axPos : axisPoints)
-                {
-                    IMotion currentMotion = null;
-                    if (actionType == ActionTypes.PTP_AXIS || actionType == ActionTypes.PTP_AXIS_C)
-                    {
-                        currentMotion = ptp(axPos.toJointPosition());
-                    }
-                    else if (actionType == ActionTypes.LIN_AXIS)
-                    {
-                        currentMotion = lin(iiwa.getForwardKinematic(axPos.toJointPosition()));
-                    }
-                    if (currentMotion != null)
-                    {
-                        motionsToExecute.add(((RobotMotion<?>) currentMotion).setBlendingRel(0.5)); // Apply blending
-                    }
-                }
-            }
-            else
-            {
-                // Single point motion
-                AxisPosition axPos = axisPoints.get(0);
-                IMotion singleMotion = null;
-                if (actionType == ActionTypes.PTP_AXIS)
-                {
-                    singleMotion = ptp(axPos.toJointPosition());
-                }
-                else if (actionType == ActionTypes.LIN_AXIS)
-                {
-                    singleMotion = lin(iiwa.getForwardKinematic(axPos.toJointPosition()));
-                }
-                if (singleMotion != null)
-                {
-                    motionsToExecute.add(singleMotion);
-                }
-            }
-        }
-        else
-        { // PTP_FRAME, PTP_FRAME_C, LIN_FRAME, LIN_FRAME_C, LIN_REL_TOOL, LIN_REL_BASE
-            List<CartesianPosition> cartesianPoints = command.getCartesianTargetPoints();
-            if (cartesianPoints == null || cartesianPoints.isEmpty())
-            {
-                Logger.getInstance().error(
-                        "ROBOT_EXEC",
-                        actionType.name() + " command ID " + commandId + " has no target points for " + motionDescription + "."
-                                          );
-                return false;
-            }
-
-            if (motionParams.isContinuous() && cartesianPoints.size() > 1)
-            {
-                Logger.getInstance().warn(
-                        "ROBOT_EXEC",
-                        actionType.name() + " with multiple points: Attempting continuous motion via chained individual moves with blending."
-                                         );
-                for (CartesianPosition cartPos : cartesianPoints)
-                {
-                    IMotion currentMotion = null;
-                    if (actionType == ActionTypes.PTP_FRAME || actionType == ActionTypes.PTP_FRAME_C)
-                    {
-                        currentMotion = ptp(cartPos.toFrame(iiwa.getFlange()));
-                    }
-                    else if (actionType == ActionTypes.LIN_FRAME || actionType == ActionTypes.LIN_FRAME_C)
-                    {
-                        currentMotion = lin(cartPos.toFrame(iiwa.getFlange()));
-                    }
-                    else if (actionType == ActionTypes.LIN_REL_TOOL)
-                    {
-                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getFlange());
-                    }
-                    else if (actionType == ActionTypes.LIN_REL_BASE)
-                    {
-                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
-                    }
-                    if (currentMotion != null)
-                    {
-                        motionsToExecute.add(((RobotMotion<?>) currentMotion).setBlendingRel(0.5)); // Apply blending
-                    }
-                }
-            }
-            else
-            {
-                // Single point motion
-                CartesianPosition cartPos = cartesianPoints.get(0);
-                IMotion singleMotion = null;
-                if (actionType == ActionTypes.PTP_FRAME)
-                {
-                    singleMotion = ptp(cartPos.toFrame(iiwa.getFlange()));
-                }
-                else if (actionType == ActionTypes.LIN_FRAME)
-                {
-                    singleMotion = lin(cartPos.toFrame(iiwa.getFlange()));
-                }
-                else if (actionType == ActionTypes.LIN_REL_TOOL)
-                {
-                    singleMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getFlange());
-                }
-                else if (actionType == ActionTypes.LIN_REL_BASE)
-                {
-                    singleMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
-                }
-                if (singleMotion != null)
-                {
-                    motionsToExecute.add(singleMotion);
-                }
-            }
-        }
-
-        if (motionsToExecute.isEmpty())
-        {
-            Logger.getInstance().error(
-                    "ROBOT_EXEC",
-                    "Failed to create any motion for command ID " + commandId + " with ActionType " + actionType.name()
-                                      );
+            Logger.getInstance().error
+                    (
+                            "ROBOT_EXEC",
+                            actionType.name() + " command ID " + commandId + " has no target points"
+                    );
             return false;
         }
 
+        Logger.getInstance().log(
+                "ROBOT_EXEC",
+                "Executing " + actionType.name() + " command ID " + commandId + " with parameters: " + motionParams
+                                );
+
+        List<?> motionsToExecute = command.getMotionList();
+
         // Execute all collected motions
         boolean overallSuccess = true;
-        for (IMotion motion : motionsToExecute)
+        for (Object motion : motionsToExecute)
         {
             // isJointMotion is determined at the beginning of the method based on MovementType.
             // For LIN and PTP, this flag correctly indicates whether to use setJointVelocityRel or setCartesianVelocityRel.
-            if (!executeMotionInternal(motion, speed, isJointMotion, commandId, actionType))
+            if (!executeMotionInternal((IMotion) motion, speed, movementType.isAxisMotion(), commandId, actionType))
             {
                 overallSuccess = false;
                 break; // Stop on first failure
@@ -283,6 +155,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         }
         return overallSuccess;
     }
+
 
     /**
      * Helper method to execute a motion and handle its completion/failure.
@@ -433,12 +306,57 @@ public class CommandExecutor extends RoboticsAPIApplication
      */
     private boolean executeProgramCallCommand(ParsedCommand command)
     {
+        int programId = command.getProgramCallId();
         Logger.getInstance().warn(
                 "ROBOT_EXEC",
-                "External Program Call command ID " + command.getId() + " received. This functionality is not yet implemented."
+                "External Program Call command ID " + programId + " received. This functionality is not yet implemented."
                                  );
-        // TODO: Implement logic for executing external programs based on command.getProgramId() or other data.
-        return false; // Currently always returns false as it's not implemented
+        switch (programId)
+        {
+            case 1:
+                Logger.getInstance().warn(
+                        "ROBOT_EXEC",
+                        "Executing program 1"
+                                         );
+                break;
+            case 2:
+                break;
+            default:
+        }
+
+        return true; // Currently always returns false as it's not implemented
+    }
+
+    private String mapTool(String toolId)
+    {
+        switch (toolId)
+        {
+            case "0":
+                return "Tool";            // Generic "Tool" in your image
+            case "1":
+                return "RollScan";        // "RollScan" from your image
+            case "2":
+                return "BinPick_Tool";    // "BinPick_Tool" from your image
+            case "3":
+                return "GimaticCamera";   // "GimaticCamera" from your image
+            case "4":
+                return "GimaticGripperV"; // "GimaticGripperV" from your image
+            case "5":
+                return "GimaticIxtur";    // "Gimaticlxtur" from your image
+            case "6":
+                return "IxturPlatoGrande"; // "lxturPlatoGrande" from your image
+            case "7":
+                return "RealSense";       // "RealSense" from your image
+            case "8":
+                return "Roldana";         // "Roldana" from your image
+            case "9":
+                return "ToolTemplate";    // "ToolTemplate" from your image
+            case "10":
+                return "TrackerTool";    // "TrackerTool" from your image
+            default:
+                System.err.println("Tool ID '" + toolId + "' not recognized in mapToolIdToWorkVisualName.");
+                return null; // Return null if the ID does not map to a known tool name
+        }
     }
 
     @Override
