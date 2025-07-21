@@ -6,7 +6,7 @@ import hartu.robot.communication.server.Logger; // Assuming Logger is accessible
 /**
  * Represents a robot's joint position with 7 axis values.
  */
-public class AxisPosition {
+public class AxisPosition extends PositionClass{
     private final double j1, j2, j3, j4, j5, j6, j7;
 
     public AxisPosition(double j1, double j2, double j3, double j4, double j5, double j6, double j7) {
@@ -36,8 +36,14 @@ public class AxisPosition {
         return new JointPosition(j1, j2, j3, j4, j5, j6, j7);
     }
 
+
     @Override
     public String toString() {
         return String.format("J1:%.3f, J2:%.3f, J3:%.3f, J4:%.3f, J5:%.3f, J6:%.3f, J7:%.3f", j1, j2, j3, j4, j5, j6, j7);
+    }
+
+    @Override
+    public Class<?> getTypeClass() {
+        return getClass();
     }
 }
