@@ -5,6 +5,7 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.CommandCategory;
 import hartu.robot.commands.io.IoCommandData;
+import hartu.robot.communication.server.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -120,62 +121,69 @@ public class ParsedCommand
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nParsedCommand {\n");
-        sb.append("  ActionType: ").append(actionType).append(" (").append(actionType.getValue()).append(")\n");
-        sb.append("  Category: ").append(commandCategory).append("\n");
-        sb.append("  ID: ").append(id).append("\n");
+        try {
 
-        if (isMovementCommand())
-        {
-            sb.append("  --- Movement Command ---\n");
+            StringBuilder sb = new StringBuilder();
+            sb.append("\nParsedCommand {\n");
+            sb.append("  ActionType: ").append(actionType).append(" (").append(actionType.getValue()).append(")\n");
+            sb.append("  Category: ").append(commandCategory).append("\n");
+            sb.append("  ID: ").append(id).append("\n");
 
-            if (cartesianTargetPoints.isEmpty())
+            if (isMovementCommand())
             {
-                sb.append("  Joint Target Points (").append(axisTargetPoints.size()).append("):\n");
-                for (int i = 0; i < axisTargetPoints.size(); i++)
+                sb.append("  --- Movement Command ---\n");
+
+                if (cartesianTargetPoints.isEmpty())
                 {
-                    JointPosition pos = axisTargetPoints.get(i);
-                    sb.append("    Point ").append(i + 1).append(": J1=").append(pos.get(0)).append(", J2=").append(pos.get(1)).append(
-                            ", J3=").append(pos.get(2)).append(", J4=").append(pos.get(3)).append(", J5=").append(pos.get(4)).append(
-                            ", J6=").append(pos.get(5)).append(", J7=").append(pos.get(6)).append("\n");
+                    sb.append("  Joint Target Points (").append(axisTargetPoints.size()).append("):\n");
+                    for (int i = 0; i < axisTargetPoints.size(); i++)
+                    {
+                        JointPosition pos = axisTargetPoints.get(i);
+                        sb.append("    Point ").append(i + 1).append(": J1=").append(pos.get(0)).append(", J2=").append(pos.get(1)).append(
+                                ", J3=").append(pos.get(2)).append(", J4=").append(pos.get(3)).append(", J5=").append(pos.get(4)).append(
+                                ", J6=").append(pos.get(5)).append(", J7=").append(pos.get(6)).append("\n");
+                    }
+                }
+
+                if (motionParameters != null)
+                {
+                    sb.append("  Motion Parameters:\n");
+                    sb.append("    Speed Override: ").append(motionParameters.getSpeedOverride()).append("\n");
+                    sb.append("    Tool: ").append(motionParameters.getTool().isEmpty() ? "[Default]" : motionParameters.getTool()).append(
+                            "\n");
+                    sb.append("    Base: ").append(motionParameters.getBase().isEmpty() ? "[Default]" : motionParameters.getBase()).append(
+                            "\n");
+                    sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
+                    sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
                 }
             }
-
-            if (motionParameters != null)
+            else if (isIoCommand())
             {
-                sb.append("  Motion Parameters:\n");
-                sb.append("    Speed Override: ").append(motionParameters.getSpeedOverride()).append("\n");
-                sb.append("    Tool: ").append(motionParameters.getTool().isEmpty() ? "[Default]" : motionParameters.getTool()).append(
-                        "\n");
-                sb.append("    Base: ").append(motionParameters.getBase().isEmpty() ? "[Default]" : motionParameters.getBase()).append(
-                        "\n");
-                sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
-                sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
+                sb.append("  --- IO Command ---\n");
+                if (ioCommandData != null)
+                {
+                    sb.append("  IO Data:\n");
+                    sb.append("    IO Point: ").append(ioCommandData.getIoPoint()).append("\n");
+                    sb.append("    IO Pin: ").append(ioCommandData.getIoPin()).append("\n");
+                    sb.append("    IO State: ").append(ioCommandData.getIoState()).append("\n");
+                }
             }
-        }
-        else if (isIoCommand())
-        {
-            sb.append("  --- IO Command ---\n");
-            if (ioCommandData != null)
+            else if (isProgramCall())
             {
-                sb.append("  IO Data:\n");
-                sb.append("    IO Point: ").append(ioCommandData.getIoPoint()).append("\n");
-                sb.append("    IO Pin: ").append(ioCommandData.getIoPin()).append("\n");
-                sb.append("    IO State: ").append(ioCommandData.getIoState()).append("\n");
+                sb.append("  --- Program Call ---\n");
+                sb.append("  Program ID: ").append(programId).append("\n");
             }
-        }
-        else if (isProgramCall())
-        {
-            sb.append("  --- Program Call ---\n");
-            sb.append("  Program ID: ").append(programId).append("\n");
-        }
-        else
-        {
-            sb.append("  --- Unrecognized Command Type ---\n");
-        }
+            else
+            {
+                sb.append("  --- Unrecognized Command Type ---\n");
+            }
 
-        sb.append("}");
-        return sb.toString();
+            sb.append("}");
+            return sb.toString();
+        }
+        catch (Exception e) {
+            Logger.getInstance().error("PARSER", "Error parsing command: " + e.getMessage());
+        }
+        return "Lel";
     }
 }
