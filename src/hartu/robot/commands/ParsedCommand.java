@@ -1,33 +1,25 @@
 package hartu.robot.commands;
 
-import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.motionModel.IMotion;
-import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.CommandCategory;
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.commands.positions.AxisPosition;
 import hartu.robot.commands.positions.CartesianPosition;
+import hartu.robot.commands.positions.PositionClass; // Import PositionClass
 
-import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.linRel;
 
 public class ParsedCommand
 {
     private final ActionTypes actionType;
     private final String id;
     private final CommandCategory commandCategory;
+
     private final List<AxisPosition> axisTargetPoints;
     private final List<CartesianPosition> cartesianTargetPoints;
     private final MotionParameters motionParameters;
     private final IoCommandData ioCommandData;
     private final Integer programId;
-    @Inject
-    private LBR iiwa;
 
     private ParsedCommand(ActionTypes actionType, String id, CommandCategory commandCategory, List<AxisPosition> axisTargetPoints, List<CartesianPosition> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId)
     {
@@ -43,30 +35,12 @@ public class ParsedCommand
 
     public static ParsedCommand forAxisMovement(ActionTypes actionType, String id, List<AxisPosition> axisTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(
-                actionType,
-                id,
-                actionType.getCategory(),
-                axisTargetPoints,
-                null,
-                motionParameters,
-                null,
-                null
-        );
+        return new ParsedCommand(actionType, id, actionType.getCategory(), axisTargetPoints, null, motionParameters, null, null);
     }
 
     public static ParsedCommand forCartesianMovement(ActionTypes actionType, String id, List<CartesianPosition> cartesianTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(
-                actionType,
-                id,
-                actionType.getCategory(),
-                null,
-                cartesianTargetPoints,
-                motionParameters,
-                null,
-                null
-        );
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, cartesianTargetPoints, motionParameters, null, null);
     }
 
     public static ParsedCommand forIo(ActionTypes actionType, String id, IoCommandData ioCommandData)
@@ -89,21 +63,42 @@ public class ParsedCommand
         return id;
     }
 
-    public CommandCategory getCommandCategory()
-    {
+    public CommandCategory getCommandCategory() {
         return commandCategory;
     }
 
     /**
-     * Returns the list of target points for movement commands.
-     * The specific type of the list (AxisPosition or CartesianPosition)
-     * depends on whether it's an axis or cartesian motion.
-     * Callers should check isAxisMovement() or isCartesianMovement()
-     * and cast accordingly.
+     * Returns a MovementTargets object containing the Class type of the target points
+     * and the list of those points for movement commands.
      *
-     * @return A List<?> containing AxisPosition or CartesianPosition objects,
-     * or null if it's not a movement command.
+     * @return A MovementTargets object if it's a movement command with points, otherwise null.
      */
+    public MovementTargets<? extends PositionClass> getMovementTargetPoints() { // Updated return type
+        if (isMovementCommand()) {
+            if (axisTargetPoints != null) {
+                return new MovementTargets<>(AxisPosition.class, axisTargetPoints);
+            } else if (cartesianTargetPoints != null) {
+                return new MovementTargets<>(CartesianPosition.class, cartesianTargetPoints);
+            }
+        }
+        return null; // Not a movement command or no points
+    }
+
+    /**
+     * Returns the first target position as a generic PositionClass object.
+     * This is useful when you need to access common properties or methods
+     * of any position type without knowing its specific concrete class upfront.
+     *
+     * @return The first PositionClass object in the target list, or null if
+     * it's not a movement command or has no target points.
+     */
+    public PositionClass getFirstMovementPosition() {
+        MovementTargets<? extends PositionClass> movementTargets = getMovementTargetPoints();
+        if (movementTargets != null && movementTargets.getTargets() != null && !movementTargets.getTargets().isEmpty()) {
+            return movementTargets.getTargets().get(0);
+        }
+        return null;
+    }
 
     // Existing getters (can be deprecated or removed if no longer directly used outside ParsedCommand)
     public List<AxisPosition> getAxisTargetPoints()
@@ -155,79 +150,6 @@ public class ParsedCommand
         return programId;
     }
 
-    public List<IMotion> getMotionList()
-    {
-        List<IMotion> motionsToExecute = new ArrayList<>();
-        if (isMovementCommand())
-        {
-            if (axisTargetPoints != null)
-            {
-                for (AxisPosition axisTargetPoint : axisTargetPoints)
-                {
-                    RobotMotion<?> currentMotion = null;
-                    if (actionType == ActionTypes.PTP_AXIS || actionType == ActionTypes.PTP_AXIS_C)
-                    {
-                        currentMotion = ptp(axisTargetPoint.toJointPosition());
-                    }
-                    else if (actionType == ActionTypes.LIN_AXIS)
-                    {
-                        currentMotion = lin(iiwa.getForwardKinematic(axisTargetPoint.toJointPosition()));
-                    }
-                    if (currentMotion != null)
-                    {
-                        motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
-                    }
-                }
-            }
-            else if (cartesianTargetPoints != null)
-            {
-                for (CartesianPosition cartPos : cartesianTargetPoints)
-                {
-                    RobotMotion<?> currentMotion = null;
-                    if (actionType == ActionTypes.PTP_FRAME || actionType == ActionTypes.PTP_FRAME_C)
-                    {
-                        currentMotion = ptp(cartPos.toFrame(iiwa.getFlange()));
-                    }
-                    else if (actionType == ActionTypes.LIN_FRAME || actionType == ActionTypes.LIN_FRAME_C)
-                    {
-                        currentMotion = lin(cartPos.toFrame(iiwa.getFlange()));
-                    }
-                    else if (actionType == ActionTypes.LIN_REL_TOOL)
-                    {
-                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getFlange());
-                    }
-                    else if (actionType == ActionTypes.LIN_REL_BASE)
-                    {
-                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
-                    }
-                    if (currentMotion != null)
-                    {
-                        motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
-                    }
-                }
-            }
-
-            return motionsToExecute;
-        }
-        return null;
-    }
-
-    public List<?> getMovementTargetPoints()
-    {
-        if (isMovementCommand())
-        {
-            if (axisTargetPoints != null)
-            {
-                return axisTargetPoints;
-            }
-            else if (cartesianTargetPoints != null)
-            {
-                return cartesianTargetPoints;
-            }
-        }
-        return null;
-    }
-
     @Override
     public String toString()
     {
@@ -240,33 +162,26 @@ public class ParsedCommand
         if (isMovementCommand())
         {
             sb.append("  --- Movement Command ---\n");
-            // Use the new getMovementTargetPoints for toString as well
-            List<?> targetPoints = getMovementTargetPoints();
-            if (targetPoints != null && !targetPoints.isEmpty())
-            {
-                if (axisTargetPoints != null)
-                { // Check original field to know the type
-                    sb.append("  Axis Target Points (").append(axisTargetPoints.size()).append("):\n");
-                    for (int i = 0; i < axisTargetPoints.size(); i++)
+            MovementTargets<? extends PositionClass> movementTargets = getMovementTargetPoints();
+            if (movementTargets != null && movementTargets.getTargets() != null && !movementTargets.getTargets().isEmpty()) {
+                if (movementTargets.getTargetClass() == AxisPosition.class) {
+                    List<AxisPosition> axisPoints = (List<AxisPosition>) movementTargets.getTargets();
+                    sb.append("  Axis Target Points (").append(axisPoints.size()).append("):\n");
+                    for (int i = 0; i < axisPoints.size(); i++)
                     {
-                        AxisPosition pos = axisTargetPoints.get(i);
-                        sb.append("    Point ").append(i + 1).append(": J1=").append(pos.getJ1()).append(", J2=").append(
-                                pos.getJ2()).append(
-                                ", J3=").append(pos.getJ3()).append(", J4=").append(pos.getJ4()).append(", J5=").append(
-                                pos.getJ5()).append(
+                        AxisPosition pos = axisPoints.get(i);
+                        sb.append("    Point ").append(i + 1).append(": J1=").append(pos.getJ1()).append(", J2=").append(pos.getJ2()).append(
+                                ", J3=").append(pos.getJ3()).append(", J4=").append(pos.getJ4()).append(", J5=").append(pos.getJ5()).append(
                                 ", J6=").append(pos.getJ6()).append(", J7=").append(pos.getJ7()).append("\n");
                     }
-                }
-                else if (cartesianTargetPoints != null)
-                { // Check original field to know the type
-                    sb.append("  Cartesian Target Points (").append(cartesianTargetPoints.size()).append("):\n");
-                    for (int i = 0; i < cartesianTargetPoints.size(); i++)
+                } else if (movementTargets.getTargetClass() == CartesianPosition.class) {
+                    List<CartesianPosition> cartesianPoints = (List<CartesianPosition>) movementTargets.getTargets();
+                    sb.append("  Cartesian Target Points (").append(cartesianPoints.size()).append("):\n");
+                    for (int i = 0; i < cartesianPoints.size(); i++)
                     {
-                        CartesianPosition pos = cartesianTargetPoints.get(i);
-                        sb.append("    Point ").append(i + 1).append(": X=").append(pos.getX()).append(", Y=").append(
-                                pos.getY()).append(
-                                ", Z=").append(pos.getZ()).append(", A=").append(pos.getADeg()).append(", B=").append(
-                                pos.getBDeg()).append(
+                        CartesianPosition pos = cartesianPoints.get(i);
+                        sb.append("    Point ").append(i + 1).append(": X=").append(pos.getX()).append(", Y=").append(pos.getY()).append(
+                                ", Z=").append(pos.getZ()).append(", A=").append(pos.getADeg()).append(", B=").append(pos.getBDeg()).append(
                                 ", C=").append(pos.getCDeg()).append("\n");
                     }
                 }
