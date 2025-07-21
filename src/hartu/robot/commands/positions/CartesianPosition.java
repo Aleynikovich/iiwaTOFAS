@@ -8,7 +8,7 @@ import hartu.robot.communication.server.Logger; // Assuming Logger is accessible
  * Represents a robot's Cartesian position with X, Y, Z, A, B, C (Euler angles).
  * Stores A, B, C in both degrees (as input) and radians (for KUKA API).
  */
-public class CartesianPosition {
+public class CartesianPosition extends PositionClass {
     private final double x, y, z;
     private final double aDeg, bDeg, cDeg; // Store input in degrees
     private final double aRad, bRad, cRad; // Store converted radians for KUKA API
@@ -63,5 +63,10 @@ public class CartesianPosition {
     @Override
     public String toString() {
         return String.format("X:%.3f, Y:%.3f, Z:%.3f, A:%.3f(deg), B:%.3f(deg), C:%.3f(deg)", x, y, z, aDeg, bDeg, cDeg);
+    }
+
+    @Override
+    public Class<?> getTypeClass() {
+        return getClass();
     }
 }
