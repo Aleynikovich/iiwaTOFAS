@@ -89,7 +89,9 @@ public class CommandParser {
         if (MovementType.fromActionType(actionType) != MovementType.UNKNOWN) {
             if (MovementType.fromActionType(actionType).isAxisMotion()) {
                 try {
+                    Logger.getInstance().log("PARSER", "Trying to parse AxisPositions");
                     jointTargetPoints = parseAxisPositions(parts[MessagePartIndex.TARGET_POINTS.getIndex()]);
+                    Logger.getInstance().log("PARSER", "Parsed: " + jointTargetPoints);
                     if (jointTargetPoints.size() != numPoints) {
                         String errorMsg = "Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed axis points (" + jointTargetPoints.size() + ").";
                         Logger.getInstance().log("PARSER", "Error: " + errorMsg);
