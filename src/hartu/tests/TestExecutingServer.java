@@ -250,8 +250,7 @@ public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
 
         Logger.getInstance().log(
                 "ROBOT_EXEC",
-                "Executing " + actionType.name() + " command ID " + commandId + " with parameters: " + motionParams
-                                );
+                "Executing " + actionType.name() + " command ID " + commandId + " with parameters: " );
 
         List<?> motionsToExecute = command.getMotionList();
 
