@@ -192,38 +192,44 @@ public class CommandParser
     private static List<JointPosition> parseAxisPositions(String axisPositionsString)
     {
         Logger.getInstance().log("PARSER", "Attempting to parse AxisPositions from string: " + axisPositionsString);
-        List<JointPosition> positions = new ArrayList<>();
-        String[] individualPointStrings = axisPositionsString.split(MULTI_POINT_DELIMITER);
+        try {
+            List<JointPosition> positions = new ArrayList<>();
+            String[] individualPointStrings = axisPositionsString.split(MULTI_POINT_DELIMITER);
 
-        for (String pointString : individualPointStrings)
-        {
-            String[] jointValues = pointString.split(SECONDARY_DELIMITER);
-            if (jointValues.length != 7)
+            for (String pointString : individualPointStrings)
             {
-                String errorMsg = "Invalid axis position format: Expected 7 joint values (J1-J7), got " + jointValues.length + " in point string: " + pointString;
-                Logger.getInstance().log("PARSER", "Error: " + errorMsg);
-                throw new IllegalArgumentException(errorMsg);
-            }
+                String[] jointValues = pointString.split(SECONDARY_DELIMITER);
+                if (jointValues.length != 7)
+                {
+                    String errorMsg = "Invalid axis position format: Expected 7 joint values (J1-J7), got " + jointValues.length + " in point string: " + pointString;
+                    Logger.getInstance().log("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg);
+                }
 
-            try
-            {
-                double j1 = Math.toRadians(Double.parseDouble(jointValues[0]));
-                double j2 = Math.toRadians(Double.parseDouble(jointValues[1]));
-                double j3 = Math.toRadians(Double.parseDouble(jointValues[2]));
-                double j4 = Math.toRadians(Double.parseDouble(jointValues[3]));
-                double j5 = Math.toRadians(Double.parseDouble(jointValues[4]));
-                double j6 = Math.toRadians(Double.parseDouble(jointValues[5]));
-                double j7 = Math.toRadians(Double.parseDouble(jointValues[6]));
-                positions.add(new JointPosition(j1, j2, j3, j4, j5, j6, j7));
+                try
+                {
+                    double j1 = Math.toRadians(Double.parseDouble(jointValues[0]));
+                    double j2 = Math.toRadians(Double.parseDouble(jointValues[1]));
+                    double j3 = Math.toRadians(Double.parseDouble(jointValues[2]));
+                    double j4 = Math.toRadians(Double.parseDouble(jointValues[3]));
+                    double j5 = Math.toRadians(Double.parseDouble(jointValues[4]));
+                    double j6 = Math.toRadians(Double.parseDouble(jointValues[5]));
+                    double j7 = Math.toRadians(Double.parseDouble(jointValues[6]));
+                    positions.add(new JointPosition(j1, j2, j3, j4, j5, j6, j7));
+                }
+                catch (NumberFormatException e)
+                {
+                    String errorMsg = "Invalid number format in axis positions: " + e.getMessage() + " for point string: " + pointString;
+                    Logger.getInstance().log("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg, e);
+                }
             }
-            catch (NumberFormatException e)
-            {
-                String errorMsg = "Invalid number format in axis positions: " + e.getMessage() + " for point string: " + pointString;
-                Logger.getInstance().log("PARSER", "Error: " + errorMsg);
-                throw new IllegalArgumentException(errorMsg, e);
-            }
+            return positions;
+        } catch (Exception e) {
+            Logger.getInstance().error("PARSER", "Error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
-        return positions;
+
     }
 
     private static List<Frame> parseCartesianPositions(String cartesianPositionsString)
