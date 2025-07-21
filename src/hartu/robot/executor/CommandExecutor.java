@@ -113,88 +113,71 @@ public class CommandExecutor extends RoboticsAPIApplication {
             return false;//executeCIRC(command); // Keep executeCIRC as a dedicated method
         }
 
-        List<IMotion> motionsToExecute = new ArrayList<>();
+        List<IMotionContainer> motionContainers = new ArrayList<>(); // Store motion containers
         boolean isJointMotion = movementType.isAxisMotion();
         String motionDescription = isJointMotion ? "Axis" : "Cartesian";
 
         Logger.getInstance().warn("ROBOT_EXEC", actionType.name() + " with multiple points: Attempting continuous motion via chained individual moves with blending.");
 
-        if (isJointMotion) {
-            // Cast the list to the specific type for iteration
-            for (JointPosition axPos : command.getAxisTargetPoints()) { // Iterate directly with AxisPosition
-                RobotMotion<?> currentMotion = null;
-                if (actionType == ActionTypes.PTP_AXIS || actionType == ActionTypes.PTP_AXIS_C) {
-                    currentMotion = ptp(axPos);
-                } else if (actionType == ActionTypes.LIN_AXIS) {
-                    currentMotion = lin(iiwa.getForwardKinematic(axPos));
-                }
-                assert currentMotion != null;
-                motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
-            }
-        } else { // Cartesian motion
-            // Cast the list to the specific type for iteration
-            List<Frame> cartesianPoints = command.getCartesianTargetPoints();
-            for (Frame cartPos : cartesianPoints) { // Iterate directly with CartesianPosition
-                RobotMotion<?> currentMotion = null;
-                if (actionType == ActionTypes.PTP_FRAME || actionType == ActionTypes.PTP_FRAME_C) {
-                    currentMotion = ptp(cartPos);
-                } else if (actionType == ActionTypes.LIN_FRAME || actionType == ActionTypes.LIN_FRAME_C) {
-                    currentMotion = lin(cartPos);
-                } else if (actionType == ActionTypes.LIN_REL_TOOL) {
-                    currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getFlange());
-                } else if (actionType == ActionTypes.LIN_REL_BASE) {
-                    currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
-                }
-                if (currentMotion != null) {
-                    motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
-                }
-            }
-        }
-
-        if (motionsToExecute.isEmpty()) {
-            Logger.getInstance().error("ROBOT_EXEC", "Failed to create any motion for command ID " + commandId + " with ActionType " + actionType.name());
-            return false;
-        }
-
-        boolean overallSuccess = true;
-//        for (IMotion motion : motionsToExecute) {
-//            if (!executeMotionInternal(motion, speed, isJointMotion, commandId, actionType)) {
-//                overallSuccess = false;
-//                break;
-//            }
-//        }
-        for (IMotion motion : motionsToExecute) {
-            RobotMotion<?> robotMotion = (RobotMotion<?>) motion;
-            iiwa.moveAsync(robotMotion.setJointVelocityRel(speed));
-        }
-        return overallSuccess;
-    }
-
-    /**
-     * Helper method to execute a motion and handle its completion/failure.
-     * Sets velocity based on whether it's a joint-space motion.
-     *
-     * @param motion        The IMotion to execute.
-     * @param speed         The relative speed override (0.0 - 1.0).
-     * @param isJointMotion True if this is a joint-space motion (PTP_AXIS, PTP_AXIS_C), false for Cartesian.
-     * @param commandId     The ID of the command for logging purposes.
-     * @param actionType    The ActionType for logging purposes.
-     * @return True if the motion executed successfully, false otherwise.
-     */
-    private boolean executeMotionInternal(IMotion motion, double speed, boolean isJointMotion, String commandId, ActionTypes actionType) {
-        IMotionContainer motionContainer = null;
         try {
-            RobotMotion<?> robotMotion = (RobotMotion<?>) motion;
+            if (isJointMotion) {
+                for (JointPosition axPos : command.getAxisTargetPoints()) {
+                    RobotMotion<?> currentMotion = null;
+                    if (actionType == ActionTypes.PTP_AXIS || actionType == ActionTypes.PTP_AXIS_C) {
+                        currentMotion = ptp(axPos);
+                    } else if (actionType == ActionTypes.LIN_AXIS) {
+                        currentMotion = lin(iiwa.getForwardKinematic(axPos));
+                    }
+                    if (currentMotion != null) {
+                        motionContainers.add(iiwa.moveAsync(currentMotion.setBlendingRel(0.5)));
+                    } else {
+                        Logger.getInstance().error("ROBOT_EXEC", "Failed to create joint motion for " + actionType.name() + " command ID " + commandId);
+                        return false;
+                    }
+                }
+            } else { // Cartesian motion
+                List<Frame> cartesianPoints = command.getCartesianTargetPoints();
+                for (Frame cartPos : cartesianPoints) {
+                    RobotMotion<?> currentMotion = null;
+                    if (actionType == ActionTypes.PTP_FRAME || actionType == ActionTypes.PTP_FRAME_C) {
+                        currentMotion = ptp(cartPos);
+                    } else if (actionType == ActionTypes.LIN_FRAME || actionType == ActionTypes.LIN_FRAME_C) {
+                        currentMotion = lin(cartPos);
+                    } else if (actionType == ActionTypes.LIN_REL_TOOL) {
+                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getFlange());
+                    } else if (actionType == ActionTypes.LIN_REL_BASE) {
+                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
+                    }
+                    if (currentMotion != null) {
+                        motionContainers.add(iiwa.moveAsync(currentMotion.setBlendingRel(0.5)));
+                    } else {
+                        Logger.getInstance().error("ROBOT_EXEC", "Failed to create cartesian motion for " + actionType.name() + " command ID " + commandId);
+                        return false;
+                    }
+                }
+            }
 
-            motionContainer = iiwa.moveAsync(robotMotion.setJointVelocityRel(speed));
-            motionContainer.await();
-            Logger.getInstance().log("ROBOT_EXEC", actionType.name() + " command ID " + commandId + " executed successfully.");
+            if (motionContainers.isEmpty()) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to create any motion for command ID " + commandId + " with ActionType " + actionType.name());
+                return false;
+            }
+
+            // Wait for all motions to complete
+            for (IMotionContainer container : motionContainers) {
+                container.await();
+            }
+            Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + commandId + " completed.");
             return true;
+
         } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", actionType.name() + " command ID " + commandId + " failed: " + e.getMessage());
+            Logger.getInstance().error(
+                    "ROBOT_EXEC",
+                    "Error during movement execution for command ID " + commandId + ": " + e.getMessage()
+            );
             return false;
         }
     }
+
 
 //    private boolean executeCIRC(ParsedCommand command) {
 //        MotionParameters motionParams = command.getMotionParameters();
