@@ -216,6 +216,7 @@ public class CommandParser
                     double j6 = Math.toRadians(Double.parseDouble(jointValues[5]));
                     double j7 = Math.toRadians(Double.parseDouble(jointValues[6]));
                     positions.add(new JointPosition(j1, j2, j3, j4, j5, j6, j7));
+                    Logger.getInstance().log("PARSER", "Parsed axis positions from string: " + positions);
                 }
                 catch (NumberFormatException e)
                 {
