@@ -3,23 +3,16 @@ package hartu.robot.executor;
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
-import com.kuka.roboticsAPI.conditionModel.ForceCondition;
 import com.kuka.roboticsAPI.controllerModel.Controller;
-import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.geometricModel.AbstractFrame;
-import com.kuka.roboticsAPI.geometricModel.Frame;
-import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
-import com.kuka.roboticsAPI.motionModel.PTP;
 import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import hartu.protocols.constants.ActionTypes;
-import hartu.protocols.constants.CommandCategory;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
+import hartu.robot.commands.MovementTargets;
 import hartu.robot.commands.ParsedCommand;
-import hartu.robot.commands.MovementTargets; // Correct import for MovementTargets
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.commands.positions.AxisPosition;
 import hartu.robot.commands.positions.CartesianPosition;
@@ -31,14 +24,9 @@ import hartu.robot.communication.server.Logger;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
-
 import java.util.concurrent.TimeUnit;
 
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.circ;
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.linRel;
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
 public class CommandExecutor extends RoboticsAPIApplication
 {
@@ -155,21 +143,21 @@ public class CommandExecutor extends RoboticsAPIApplication
                 // Cast the list to the specific type for iteration
                 List<AxisPosition> axisPoints = (List<AxisPosition>) rawPoints;
                 for (AxisPosition axPos : axisPoints) { // Iterate directly with AxisPosition
-                    IMotion currentMotion = null;
+                    RobotMotion<?> currentMotion = null;
                     if (actionType == ActionTypes.PTP_AXIS || actionType == ActionTypes.PTP_AXIS_C) {
                         currentMotion = ptp(axPos.toJointPosition());
                     } else if (actionType == ActionTypes.LIN_AXIS) {
                         currentMotion = lin(iiwa.getForwardKinematic(axPos.toJointPosition()));
                     }
                     if (currentMotion != null) {
-                        motionsToExecute.add(((RobotMotion<?>) currentMotion).setBlendingRel(0.5)); // Apply blending
+                        motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
                     }
                 }
             } else { // Cartesian motion
                 // Cast the list to the specific type for iteration
                 List<CartesianPosition> cartesianPoints = (List<CartesianPosition>) rawPoints;
                 for (CartesianPosition cartPos : cartesianPoints) { // Iterate directly with CartesianPosition
-                    IMotion currentMotion = null;
+                    RobotMotion<?> currentMotion = null;
                     if (actionType == ActionTypes.PTP_FRAME || actionType == ActionTypes.PTP_FRAME_C) {
                         currentMotion = ptp(cartPos.toFrame(iiwa.getFlange()));
                     } else if (actionType == ActionTypes.LIN_FRAME || actionType == ActionTypes.LIN_FRAME_C) {
@@ -180,7 +168,7 @@ public class CommandExecutor extends RoboticsAPIApplication
                         currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
                     }
                     if (currentMotion != null) {
-                        motionsToExecute.add(((RobotMotion<?>) currentMotion).setBlendingRel(0.5)); // Apply blending
+                        motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
                     }
                 }
             }
@@ -244,11 +232,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         try {
             RobotMotion<?> robotMotion = (RobotMotion<?>) motion;
 
-            if (isJointMotion) {
-                motionContainer = iiwa.move(robotMotion.setJointVelocityRel(speed));
-            } else {
-                motionContainer = iiwa.move(robotMotion.setJointVelocityRel(speed));
-            }
+            motionContainer = iiwa.move(robotMotion.setJointVelocityRel(speed));
             motionContainer.await();
             Logger.getInstance().log("ROBOT_EXEC", actionType.name() + " command ID " + commandId + " executed successfully.");
             return true;
