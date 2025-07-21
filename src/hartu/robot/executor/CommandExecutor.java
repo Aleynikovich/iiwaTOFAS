@@ -21,6 +21,7 @@ import hartu.robot.communication.server.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -127,9 +128,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 } else if (actionType == ActionTypes.LIN_AXIS) {
                     currentMotion = lin(iiwa.getForwardKinematic(axPos));
                 }
-                if (currentMotion != null) {
-                    motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
-                }
+                assert currentMotion != null;
+                motionsToExecute.add(currentMotion.setBlendingRel(0.5)); // Apply blending
             }
         } else { // Cartesian motion
             // Cast the list to the specific type for iteration
@@ -157,11 +157,15 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
 
         boolean overallSuccess = true;
+//        for (IMotion motion : motionsToExecute) {
+//            if (!executeMotionInternal(motion, speed, isJointMotion, commandId, actionType)) {
+//                overallSuccess = false;
+//                break;
+//            }
+//        }
         for (IMotion motion : motionsToExecute) {
-            if (!executeMotionInternal(motion, speed, isJointMotion, commandId, actionType)) {
-                overallSuccess = false;
-                break;
-            }
+            RobotMotion<?> robotMotion = (RobotMotion<?>) motion;
+            iiwa.moveAsync(robotMotion.setJointVelocityRel(speed));
         }
         return overallSuccess;
     }

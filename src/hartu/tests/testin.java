@@ -110,12 +110,10 @@ public class testin extends RoboticsAPIApplication {
             Logger.getInstance().log("ROBOT_EXEC", "Added   " + motionsToExecute);
         }
 
-        List<IMotionContainer> motionContainer;
-
         for (IMotion motion : motionsToExecute)
         {
             RobotMotion<?> robotMotion = (RobotMotion<?>) motion;
-            motionContainer = Collections.singletonList(iiwa.moveAsync(robotMotion.setJointVelocityRel(speed)));
+            iiwa.moveAsync(robotMotion.setJointVelocityRel(speed));
         }
 
         return true;
