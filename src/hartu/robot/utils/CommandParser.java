@@ -191,6 +191,7 @@ public class CommandParser
 
     private static List<JointPosition> parseAxisPositions(String axisPositionsString)
     {
+        Logger.getInstance().log("PARSER", "Attempting to parse AxisPositions from string: " + axisPositionsString);
         List<JointPosition> positions = new ArrayList<>();
         String[] individualPointStrings = axisPositionsString.split(MULTI_POINT_DELIMITER);
 
