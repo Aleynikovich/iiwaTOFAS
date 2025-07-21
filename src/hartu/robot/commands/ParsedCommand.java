@@ -133,7 +133,7 @@ public class ParsedCommand
             {
                 sb.append("  --- Movement Command ---\n");
 
-                if (cartesianTargetPoints.isEmpty())
+                if (axisTargetPoints != null)
                 {
                     sb.append("  Joint Target Points (").append(axisTargetPoints.size()).append("):\n");
                     for (int i = 0; i < axisTargetPoints.size(); i++)
@@ -142,6 +142,18 @@ public class ParsedCommand
                         sb.append("    Point ").append(i + 1).append(": J1=").append(pos.get(0)).append(", J2=").append(pos.get(1)).append(
                                 ", J3=").append(pos.get(2)).append(", J4=").append(pos.get(3)).append(", J5=").append(pos.get(4)).append(
                                 ", J6=").append(pos.get(5)).append(", J7=").append(pos.get(6)).append("\n");
+                    }
+                }
+
+                else if (cartesianTargetPoints != null)
+                {
+                    sb.append("  Frame Target Points (").append(cartesianTargetPoints.size()).append("):\n");
+                    for (int i = 0; i < cartesianTargetPoints.size(); i++)
+                    {
+                        Frame pos = cartesianTargetPoints.get(i);
+                        sb.append("    Point ").append(i + 1).append(": X=").append(pos.getX()).append(", Y=").append(pos.getY()).append(
+                                ", Z=").append(pos.getZ()).append(", A=").append(Math.toDegrees(pos.getAlphaRad())).append(", B=").append(Math.toDegrees(pos.getBetaRad())).append(
+                                ", C=").append(Math.toDegrees(pos.getGammaRad())).append("\n");
                     }
                 }
 
