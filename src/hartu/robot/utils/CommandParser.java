@@ -92,11 +92,11 @@ public class CommandParser {
                     Logger.getInstance().log("PARSER", "Trying to parse AxisPositions");
                     jointTargetPoints = parseAxisPositions(parts[MessagePartIndex.TARGET_POINTS.getIndex()]);
                     Logger.getInstance().log("PARSER", "Parsed: " + jointTargetPoints);
-                    if (jointTargetPoints.size() != numPoints) {
-                        String errorMsg = "Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed axis points (" + jointTargetPoints.size() + ").";
-                        Logger.getInstance().log("PARSER", "Error: " + errorMsg);
-                        throw new IllegalArgumentException(errorMsg);
-                    }
+//                    if (jointTargetPoints.size() != numPoints) {
+//                        String errorMsg = "Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed axis points (" + jointTargetPoints.size() + ").";
+//                        Logger.getInstance().log("PARSER", "Error: " + errorMsg);
+//                        throw new IllegalArgumentException(errorMsg);
+//                    }
                     Logger.getInstance().log("PARSER", "Returning forAxisMovmnt" + ParsedCommand.forAxisMovement(actionType, id, jointTargetPoints, motionParameters));
                     return ParsedCommand.forAxisMovement(actionType, id, jointTargetPoints, motionParameters);
                 } catch (ArrayIndexOutOfBoundsException e) {
