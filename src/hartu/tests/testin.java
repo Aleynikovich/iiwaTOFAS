@@ -7,9 +7,8 @@ import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
-
 import com.kuka.roboticsAPI.controllerModel.Controller;
+import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
@@ -17,10 +16,7 @@ import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
-import hartu.robot.commands.MovementTargets;
 import hartu.robot.commands.ParsedCommand;
-import hartu.robot.commands.positions.AxisPosition;
-import hartu.robot.commands.positions.PositionClass;
 import hartu.robot.communication.server.CommandQueue;
 import hartu.robot.communication.server.CommandResultHolder;
 import hartu.robot.communication.server.Logger;
@@ -29,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
 
 public class testin extends RoboticsAPIApplication {
 
@@ -106,9 +104,9 @@ public class testin extends RoboticsAPIApplication {
 
         List<IMotion> motionsToExecute = new ArrayList<>();
 
-        for (AxisPosition targetPoint : command.getAxisTargetPoints())
+        for (JointPosition targetPoint : command.getAxisTargetPoints())
         {
-            motionsToExecute.add(ptp(targetPoint.toJointPosition()).setBlendingRel(0.5));
+            motionsToExecute.add(ptp(targetPoint).setBlendingRel(0.5));
         }
 
         List<IMotionContainer> motionContainer;
