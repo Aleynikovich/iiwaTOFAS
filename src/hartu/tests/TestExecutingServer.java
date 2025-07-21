@@ -111,7 +111,9 @@
 //    }
 //}
 package hartu.tests;
-
+import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
+import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
+import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
@@ -140,7 +142,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
-public class TestExecutingServer extends RoboticsAPIApplication
+public class TestExecutingServer extends RoboticsAPICyclicBackgroundTask
 {
 
     @Inject
@@ -155,11 +157,11 @@ public class TestExecutingServer extends RoboticsAPIApplication
     @Override
     public void initialize()
     {
+    	initializeCyclic(0, 50, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         Logger.getInstance().log("ROBOT_EXEC", "Initializing. Ready to take commands from queue.");
     }
 
-    @Override
-    public void run()
+    public void  runCyclic()
     {
         while (true)
         {
@@ -233,8 +235,8 @@ public class TestExecutingServer extends RoboticsAPIApplication
         String commandId = command.getId();
         ActionTypes actionType = command.getActionType();
         MovementType movementType = MovementType.fromActionType(actionType);
-        Tool flexTool = createFromTemplate(Objects.requireNonNull(mapTool(command.getMotionParameters().getTool())));
-        flexTool.attachTo(iiwa.getFlange());
+       // Tool flexTool = createFromTemplate(Objects.requireNonNull(mapTool(command.getMotionParameters().getTool())));
+       // flexTool.attachTo(iiwa.getFlange());
 
         if (command.getCartesianTargetPoints() == null && command.getAxisTargetPoints() == null)
         {
@@ -477,4 +479,5 @@ public class TestExecutingServer extends RoboticsAPIApplication
         Logger.getInstance().log("ROBOT_EXEC", "Disposing CommandExecutor.");
         super.dispose();
     }
+
 }
