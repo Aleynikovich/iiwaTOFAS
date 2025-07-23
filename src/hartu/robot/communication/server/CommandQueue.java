@@ -45,6 +45,11 @@ public class CommandQueue {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             Logger.getInstance().log("QUEUE", "Error: Interrupted while trying to poll command: " + e.getMessage());
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         return resultHolder;
     }
