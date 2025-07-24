@@ -2,58 +2,110 @@ package hartu.protocols.constants;
 
 /**
  * Defines the types of actions a robot can perform.
- * Includes a constant for distinguishing program calls from direct commands.
+ * Each enum constant is a rich object holding multiple properties like its
+ * integer value, motion type, and command category.
  */
-public enum ActionTypes
-{
+public enum ActionTypes {
 
-    PTP_AXIS(0),
-    PTP_FRAME(1),
-    LIN_AXIS(2),
-    LIN_FRAME(3),
-    CIRC_AXIS(4),
-    CIRC_FRAME(5),
-    PTP_AXIS_C(6),
-    PTP_FRAME_C(7),
-    LIN_FRAME_C(8),
-    ACTIVATE_IO(9),
-    LIN_REL_TOOL(10),
-    LIN_REL_BASE(11),
-    UNKNOWN(999);
+    // --- Point-to-Point (PTP) Movements ---
+    PTP_AXIS(1, true, false, false, MovementType.PTP),
+    PTP_FRAME(2, false, true, false, MovementType.PTP),
+    PTP_AXIS_C(7, true, false, true, MovementType.PTP),
+    PTP_FRAME_C(8, false, true, true, MovementType.PTP),
 
+    // --- Linear (LIN) Movements ---
+    LIN_AXIS(3, true, false, false, MovementType.LIN),
+    LIN_FRAME(4, false, true, false, MovementType.LIN),
+    LIN_FRAME_C(9, false, true, true, MovementType.LIN),
+    LIN_REL_TOOL(11, false, false, false, MovementType.LIN),
+    LIN_REL_BASE(12, false, false, false, MovementType.LIN),
+
+    // --- Circular (CIRC) Movements ---
+    CIRC_AXIS(5, true, false, false, MovementType.CIRC),
+    CIRC_FRAME(6, false, true, false, MovementType.CIRC),
+
+    // --- Other Commands ---
+    ACTIVATE_IO(10, false, false, false, MovementType.UNKNOWN),
+
+    // --- Default and Program Call ---
+    UNKNOWN(999, false, false, false, MovementType.UNKNOWN);
+
+    /**
+     * A constant for distinguishing program calls from direct commands.
+     * Program calls are expected to have a value greater than this offset.
+     */
     public static final int PROGRAM_CALL_OFFSET = 100;
 
     private final int value;
+    private final boolean isJointMotion;
+    private final boolean isCartesianMotion;
+    private final boolean isContinuousMovement;
+    private final MovementType movementType;
 
-    ActionTypes(int value)
-    {
+    /**
+     * Constructs an ActionTypes enum constant with all its properties.
+     *
+     * @param value The unique integer value for the action.
+     * @param isJointMotion True if the command involves joint-space movement.
+     * @param isCartesianMotion True if the command involves cartesian-space movement.
+     * @param isContinuousMovement True if the command is for continuous motion.
+     * @param movementType The sub-category of the movement (PTP, LIN, CIRC).
+     */
+    ActionTypes(int value, boolean isJointMotion, boolean isCartesianMotion, boolean isContinuousMovement, MovementType movementType) {
         this.value = value;
+        this.isJointMotion = isJointMotion;
+        this.isCartesianMotion = isCartesianMotion;
+        this.isContinuousMovement = isContinuousMovement;
+        this.movementType = movementType;
     }
 
-    public static ActionTypes fromValue(int value)
-    {
-        for (ActionTypes type : ActionTypes.values())
-        {
-            if (type.value == value)
-            {
+    /**
+     * Retrieves the ActionType constant for a given integer value.
+     * This is useful for deserializing commands from a protocol.
+     *
+     * @param value The integer representation of the action type.
+     * @return The corresponding ActionType, or {@link #UNKNOWN} if no match is found.
+     */
+    public static ActionTypes fromValue(int value) {
+        for (ActionTypes type : ActionTypes.values()) {
+            if (type.value == value) {
                 return type;
             }
         }
         return UNKNOWN;
     }
 
-    public int getValue()
-    {
+    // --- Public Getter Methods ---
+
+    public int getValue() {
         return value;
+    }
+
+    public boolean isJointMotion() {
+        return isJointMotion;
+    }
+
+    public boolean isCartesianMotion() {
+        return isCartesianMotion;
+    }
+
+    public boolean isContinuousMovement() {
+        return isContinuousMovement;
+    }
+
+    public MovementType getMovementType() {
+        return movementType;
     }
 
     /**
      * Returns the high-level category for this ActionType.
-     * This centralizes the mapping from specific actions to broader command types.
+     * This centralizes the mapping from specific actions to broader command types,
+     * such as Movement, IO, or Program Calls.
+     *
      * @return The CommandCategory for this action.
      */
     public CommandCategory getCategory() {
-        // Use a switch statement for clear mapping
+        // The switch statement is a clean and type-safe way to map actions to categories.
         switch (this) {
             case PTP_AXIS:
             case PTP_FRAME:
@@ -70,8 +122,7 @@ public enum ActionTypes
             case ACTIVATE_IO:
                 return CommandCategory.IO;
             default:
-                // For UNKNOWN or actions within the PROGRAM_CALL_OFFSET range
-                if (this.value > PROGRAM_CALL_OFFSET && this != UNKNOWN) {
+                if (this.value >= PROGRAM_CALL_OFFSET) {
                     return CommandCategory.PROGRAM_CALL;
                 }
                 return CommandCategory.UNKNOWN;

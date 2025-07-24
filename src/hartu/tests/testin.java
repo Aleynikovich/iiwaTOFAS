@@ -98,7 +98,7 @@ public class testin extends RoboticsAPIApplication {
         double speed = motionParams.getSpeedOverride();
         String commandId = command.getId();
         ActionTypes actionType = command.getActionType();
-        MovementType movementType = MovementType.fromActionType(actionType);
+        //MovementType movementType = MovementType.fromActionType(actionType);
 
         Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + commandId + " with speed override: " + speed);
 
