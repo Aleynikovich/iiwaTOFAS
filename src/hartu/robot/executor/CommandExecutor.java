@@ -9,6 +9,7 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.motionModel.MotionBatch; // Correct import
 import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
@@ -50,10 +51,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
             if (resultHolder != null) {
                 ParsedCommand command = resultHolder.getCommand();
-                Logger.getInstance().log(
-                        "ROBOT_EXEC",
-                        "Received command ID " + command.getId() + " from queue for execution."
-                );
+                Logger.getInstance().log("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
                 boolean executionSuccess = false;
 
                 try {
@@ -74,138 +72,129 @@ public class CommandExecutor extends RoboticsAPIApplication {
                             break;
                     }
                 } catch (Exception e) {
-                    Logger.getInstance().error(
-                            "ROBOT_EXEC",
-                            "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage()
-                    );
+                    Logger.getInstance().error("ROBOT_EXEC", "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
                     executionSuccess = false;
                 } finally {
                     resultHolder.setSuccess(executionSuccess);
                     resultHolder.getLatch().countDown();
-                    Logger.getInstance().log(
-                            "ROBOT_EXEC",
-                            "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess
-                    );
+                    Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
                 }
             }
         }
     }
 
     /**
-     * Consolidates the execution logic for all movement commands (PTP, LIN, CIRC).
-     * This method now handles both single-point and continuous motions, applying blending for the latter.
-     *
-     * @param command The ParsedCommand representing a movement.
-     * @return True if the movement executed successfully, false otherwise.
+     * Executes a movement command by delegating to specific motion type handlers.
+     * @param command The ParsedCommand to execute.
+     * @return True if the motion was successful, false otherwise.
      */
     private boolean executeMovementCommand(ParsedCommand command) {
-        MotionParameters motionParams = command.getMotionParameters();
-        double speed = motionParams.getSpeedOverride();
-        String commandId = command.getId();
         ActionTypes actionType = command.getActionType();
-        MovementType movementType = MovementType.fromActionType(actionType);
+        Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId());
 
-        Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + commandId + " with speed override: " + speed);
+        List<IMotion> motions = new ArrayList<>();
 
-        // Handle CIRC motions separately as they require two points at a time
-        if (actionType == ActionTypes.CIRC_AXIS || actionType == ActionTypes.CIRC_FRAME) {
-            //TODO: Implement circ
-            return false;//executeCIRC(command); // Keep executeCIRC as a dedicated method
+        MovementType movementType = actionType.getMovementType();
+        if (movementType == MovementType.PTP) {
+            if (actionType.isJointMotion()) {
+                motions = createPtpJointMotions(command);
+            } else {
+                motions = createPtpCartesianMotions(command);
+            }
+        } else if (movementType == MovementType.LIN) {
+            motions = createLinMotions(command);
+        } else if (movementType == MovementType.CIRC) {
+            motions = createCircMotions(command);
+        } else {
+            Logger.getInstance().error("ROBOT_EXEC", "Unsupported ActionType for movement command: " + actionType.name());
+            return false;
         }
 
-        List<IMotionContainer> motionContainers = new ArrayList<>(); // Store motion containers
-        boolean isJointMotion = movementType.isAxisMotion();
-        String motionDescription = isJointMotion ? "Axis" : "Cartesian";
-
-        Logger.getInstance().warn("ROBOT_EXEC", actionType.name() + " with multiple points: Attempting continuous motion via chained individual moves with blending.");
+        if (motions.isEmpty()) {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to create any motion for command ID " + command.getId());
+            return false;
+        }
 
         try {
-            if (isJointMotion) {
-                for (JointPosition axPos : command.getAxisTargetPoints()) {
-                    RobotMotion<?> currentMotion = null;
-                    if (actionType == ActionTypes.PTP_AXIS || actionType == ActionTypes.PTP_AXIS_C) {
-                        currentMotion = ptp(axPos);
-                    } else if (actionType == ActionTypes.LIN_AXIS) {
-                        currentMotion = lin(iiwa.getForwardKinematic(axPos));
-                    }
-                    if (currentMotion != null) {
-                        motionContainers.add(iiwa.moveAsync(currentMotion.setBlendingRel(0.5)));
-                    } else {
-                        Logger.getInstance().error("ROBOT_EXEC", "Failed to create joint motion for " + actionType.name() + " command ID " + commandId);
-                        return false;
-                    }
-                }
-            } else { // Cartesian motion
-                List<Frame> cartesianPoints = command.getCartesianTargetPoints();
-                for (Frame cartPos : cartesianPoints) {
-                    RobotMotion<?> currentMotion = null;
-                    if (actionType == ActionTypes.PTP_FRAME || actionType == ActionTypes.PTP_FRAME_C) {
-                        currentMotion = ptp(cartPos);
-                    } else if (actionType == ActionTypes.LIN_FRAME || actionType == ActionTypes.LIN_FRAME_C) {
-                        currentMotion = lin(cartPos);
-                    } else if (actionType == ActionTypes.LIN_REL_TOOL) {
-                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getFlange());
-                    } else if (actionType == ActionTypes.LIN_REL_BASE) {
-                        currentMotion = linRel(cartPos.getX(), cartPos.getY(), cartPos.getZ(), iiwa.getRootFrame());
-                    }
-                    if (currentMotion != null) {
-                        motionContainers.add(iiwa.moveAsync(currentMotion.setBlendingRel(0.5)));
-                    } else {
-                        Logger.getInstance().error("ROBOT_EXEC", "Failed to create cartesian motion for " + actionType.name() + " command ID " + commandId);
-                        return false;
-                    }
-                }
+            IMotion motionToExecute;
+            if (motions.size() > 1) {
+                // Use MotionBatch to execute multiple motions as a single sequence
+                motionToExecute = new MotionBatch(motions.toArray(new RobotMotion[0]));
+            } else {
+                // For a single motion, execute it directly
+                motionToExecute = motions.get(0);
             }
 
-            if (motionContainers.isEmpty()) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to create any motion for command ID " + commandId + " with ActionType " + actionType.name());
-                return false;
-            }
+            IMotionContainer container = iiwa.moveAsync(motionToExecute);
+            container.await();
 
-            // Wait for all motions to complete
-            for (IMotionContainer container : motionContainers) {
-                container.await();
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + commandId + " completed.");
+            Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed.");
             return true;
-
         } catch (Exception e) {
-            Logger.getInstance().error(
-                    "ROBOT_EXEC",
-                    "Error during movement execution for command ID " + commandId + ": " + e.getMessage()
-            );
+            Logger.getInstance().error("ROBOT_EXEC", "Error during movement execution for command ID " + command.getId() + ": " + e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Creates a list of PTP motions for a sequence of JointPositions.
+     */
+    private List<IMotion> createPtpJointMotions(ParsedCommand command) {
+        List<IMotion> motions = new ArrayList<>();
+        MotionParameters params = command.getMotionParameters();
 
-//    private boolean executeCIRC(ParsedCommand command) {
-//        MotionParameters motionParams = command.getMotionParameters();
-//        double speed = motionParams.getSpeedOverride();
-//        Logger.getInstance().log("ROBOT_EXEC", "Executing CIRC command ID " + command.getId() + " with speed override: " + speed);
-//
-//        IMotion circMotion = null;
-//        boolean isJointMotion = false; // CIRC motions are always Cartesian in terms of velocity setting
-//
-//        // Use the targetClass from MovementTargets to cast the list correctly
-//        if (movementTargets.getTargetClass() == AxisPosition.class) {
-//            List<AxisPosition> axisPoints = (List<AxisPosition>) rawPoints;
-//            AxisPosition intermediate = axisPoints.get(0);
-//            AxisPosition end = axisPoints.get(1);
-//            circMotion = circ(iiwa.getForwardKinematic(intermediate.toJointPosition()), iiwa.getForwardKinematic(end.toJointPosition()));
-//            isJointMotion = false;
-//        } else if (movementTargets.getTargetClass() == CartesianPosition.class) {
-//            List<CartesianPosition> cartesianPoints = (List<CartesianPosition>) rawPoints;
-//            CartesianPosition intermediate = cartesianPoints.get(0);
-//            CartesianPosition end = cartesianPoints.get(1);
-//            circMotion = circ(intermediate.toFrame(iiwa.getFlange()), end.toFrame(iiwa.getFlange()));
-//            isJointMotion = false;
-//        } else {
-//            Logger.getInstance().error("ROBOT_EXEC", "CIRC command ID " + command.getId() + " has an unsupported target class for CIRC motion: " + movementTargets.getTargetClass().getSimpleName());
-//            return false;
-//        }
-//        return executeMotionInternal(circMotion, speed, isJointMotion, command.getId(), command.getActionType());
-//    }
+        for (JointPosition axPos : command.getAxisTargetPoints()) {
+            motions.add(params.createPTPJointMotion(axPos));
+        }
+        return motions;
+    }
+
+    /**
+     * Creates a list of PTP motions for a sequence of Cartesian Frames.
+     */
+    private List<IMotion> createPtpCartesianMotions(ParsedCommand command) {
+        List<IMotion> motions = new ArrayList<>();
+        MotionParameters params = command.getMotionParameters();
+
+        for (Frame cartPos : command.getCartesianTargetPoints()) {
+            motions.add(params.createPTPMotion(cartPos));
+        }
+        return motions;
+    }
+
+    /**
+     * Creates a list of LIN motions for a sequence of Cartesian Frames.
+     */
+    private List<IMotion> createLinMotions(ParsedCommand command) {
+        List<IMotion> motions = new ArrayList<>();
+        MotionParameters params = command.getMotionParameters();
+
+        for (Frame cartPos : command.getCartesianTargetPoints()) {
+            motions.add(params.createLINMotion(cartPos));
+        }
+        return motions;
+    }
+
+    /**
+     * Creates a list of circular motions for a sequence of Cartesian Frames.
+     */
+    private List<IMotion> createCircMotions(ParsedCommand command) {
+        List<IMotion> motions = new ArrayList<>();
+        MotionParameters params = command.getMotionParameters();
+        List<Frame> cartesianPoints = command.getCartesianTargetPoints();
+
+        if (cartesianPoints == null || cartesianPoints.size() < 2) {
+            Logger.getInstance().error("ROBOT_EXEC", "Circular motion requires at least two Cartesian points. Command ID: " + command.getId());
+            return Collections.emptyList();
+        }
+
+        for (int i = 0; i < cartesianPoints.size() - 1; i++) {
+            Frame auxiliaryFrame = cartesianPoints.get(i);
+            Frame destinationFrame = cartesianPoints.get(i + 1);
+            motions.add(params.createCircularMotion(auxiliaryFrame, destinationFrame));
+        }
+        return motions;
+    }
 
     private boolean executeIO(ParsedCommand command) {
         IoCommandData ioData = command.getIoCommandData();
