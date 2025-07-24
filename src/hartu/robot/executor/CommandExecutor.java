@@ -92,7 +92,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         ActionTypes actionType = command.getActionType();
         Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId());
 
-        List<IMotion> motions = new ArrayList<>();
+        List<IMotion> motions;
 
         MovementType movementType = actionType.getMovementType();
         if (movementType == MovementType.PTP) {
