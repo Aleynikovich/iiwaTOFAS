@@ -3,13 +3,12 @@ package hartu.robot.executor;
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
-import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
-import com.kuka.roboticsAPI.motionModel.MotionBatch; // Correct import
+import com.kuka.roboticsAPI.motionModel.MotionBatch;
 import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
@@ -26,12 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
-
 public class CommandExecutor extends RoboticsAPIApplication {
 
-    @Inject
-    private Controller robotController;
     @Inject
     private LBR iiwa;
     @Inject
@@ -68,12 +63,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
                         case UNKNOWN:
                         default:
                             Logger.getInstance().warn("ROBOT_EXEC", "Unknown or unsupported primary command category for ID " + command.getId() + ": " + command.getCommandCategory().name());
-                            executionSuccess = false;
                             break;
                     }
                 } catch (Exception e) {
                     Logger.getInstance().error("ROBOT_EXEC", "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
-                    executionSuccess = false;
                 } finally {
                     resultHolder.setSuccess(executionSuccess);
                     resultHolder.getLatch().countDown();
@@ -85,6 +78,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Executes a movement command by delegating to specific motion type handlers.
+     *
      * @param command The ParsedCommand to execute.
      * @return True if the motion was successful, false otherwise.
      */
