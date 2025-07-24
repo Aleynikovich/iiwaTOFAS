@@ -114,10 +114,12 @@ public class CommandParser {
         } else if (commandCategory == CommandCategory.IO) {
             if (actionType == ActionTypes.ACTIVATE_IO) {
                 try {
-                    int ioPoint = Integer.parseInt(parts[MessagePartIndex.IO_POINT.getIndex()]);
+                    //TODO: Fix ioPoint?
+                    //int ioPoint = Integer.parseInt(parts[MessagePartIndex.IO_POINT.getIndex()];
                     int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
                     boolean ioState = Boolean.parseBoolean(parts[MessagePartIndex.IO_STATE.getIndex()]);
-                    ioCommandData = new IoCommandData(ioPoint, ioPin, ioState);
+                    //TODO: Remove ioPoint hardocde
+                    ioCommandData = new IoCommandData(0, ioPin, ioState);
                     return ParsedCommand.forIo(actionType, id, ioCommandData);
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     String errorMsg = "Invalid IO command data format for ACTIVATE_IO: " + e.getMessage();
