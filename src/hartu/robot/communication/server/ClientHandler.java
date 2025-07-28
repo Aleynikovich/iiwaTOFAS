@@ -114,7 +114,7 @@ public class ClientHandler implements Runnable
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Waiting for command ID " + commandId + " to execute..."
                                                     );
 
-                            boolean awaited = resultHolder.getLatch().await(10, TimeUnit.SECONDS);
+                            boolean awaited = resultHolder.getLatch().await(30, TimeUnit.SECONDS);
 
                             if (awaited)
                             {

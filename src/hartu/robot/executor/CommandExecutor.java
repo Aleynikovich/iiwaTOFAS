@@ -122,8 +122,15 @@ public class CommandExecutor extends RoboticsAPIApplication {
             IMotionContainer container = iiwa.moveAsync(motionToExecute);
             container.await();
 
-            Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed.");
-            return true;
+            if (container.hasError()) {
+                String errorMessage = container.getErrorMessage();
+                Logger.getInstance().error("ROBOT_EXEC", "Motion for command ID " + command.getId() + " failed during execution: " + errorMessage);
+                return false; // Indicate that the motion did not complete successfully
+            } else {
+                Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
+                return true; // Indicate success
+            }
+            
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Error during movement execution for command ID " + command.getId() + ": " + e.getMessage());
             return false;

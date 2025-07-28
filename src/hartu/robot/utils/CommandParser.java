@@ -72,7 +72,8 @@ public class CommandParser {
             Logger.getInstance().warn("PARSER", "Warning: Basic MotionParameters fields (Tool, Base, SpeedOverride) missing or invalid. Using defaults. " + e.getMessage());
         }
 
-        MotionParameters motionParameters = new MotionParameters(
+        MotionParameters motionParameters;
+        motionParameters = new MotionParameters(
                 speedOverride, tool, base, isContinuous, numPoints,
                 null, // jointVelocityRel
                 null, // jointAccelerationRel
