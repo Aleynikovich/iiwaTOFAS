@@ -118,7 +118,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 // For a single motion, execute it directly
                 motionToExecute = motions.get(0);
             }
-
+            
+            // Log the specific motion or batch details
+            Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId() + " with motion: " + motionToExecute.toString());
             IMotionContainer container = iiwa.moveAsync(motionToExecute);
             container.await();
 
@@ -130,7 +132,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
                 return true; // Indicate success
             }
-            
+
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Error during movement execution for command ID " + command.getId() + ": " + e.getMessage());
             return false;
