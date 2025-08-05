@@ -1,5 +1,6 @@
 package hartu.robot.communication.server;
 
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -56,6 +57,16 @@ public class Logger
         String timestamp = timeFormat.format(new Date());
         String formattedMessage = "[" + timestamp + "] [" + tag + "] " + message + "\n";
 
+        if (logClientHandler != null)
+        {
+            logClientHandler.sendMessage(formattedMessage);
+        }
+    }
+
+    public void error(String tag, String message, Throwable t)
+    {
+        String timestamp = timeFormat.format(new Date());
+        String formattedMessage = "[" + timestamp + "] [" + tag + "] " + message + " with stack error:\n" + t + "\n";
         if (logClientHandler != null)
         {
             logClientHandler.sendMessage(formattedMessage);
