@@ -40,39 +40,55 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     @Override
-    public void run() {
-        while (true) {
-            CommandResultHolder resultHolder = CommandQueue.pollCommand(100, TimeUnit.MILLISECONDS);
+    public void run()
+    {
+        try
+        {
+        while (true)
+            {
+                CommandResultHolder resultHolder = CommandQueue.pollCommand(100, TimeUnit.MILLISECONDS);
 
-            if (resultHolder != null) {
-                ParsedCommand command = resultHolder.getCommand();
-                Logger.getInstance().log("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
-                boolean executionSuccess = false;
+                if (resultHolder != null) {
+                    ParsedCommand command = resultHolder.getCommand();
+                    Logger.getInstance().log("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
+                    boolean executionSuccess = false;
 
-                try {
-                    switch (command.getCommandCategory()) {
-                        case MOVEMENT:
-                            executionSuccess = executeMovementCommand(command);
-                            break;
-                        case IO:
-                            executionSuccess = executeIO(command);
-                            break;
-                        case PROGRAM_CALL:
-                            executionSuccess = executeProgramCallCommand(command);
-                            break;
-                        case UNKNOWN:
-                        default:
-                            Logger.getInstance().warn("ROBOT_EXEC", "Unknown or unsupported primary command category for ID " + command.getId() + ": " + command.getCommandCategory().name());
-                            break;
+                    try {
+                        switch (command.getCommandCategory()) {
+                            case MOVEMENT:
+                                executionSuccess = executeMovementCommand(command);
+                                break;
+                            case IO:
+                                executionSuccess = executeIO(command);
+                                break;
+                            case PROGRAM_CALL:
+                                executionSuccess = executeProgramCallCommand(command);
+                                break;
+                            case UNKNOWN:
+                            default:
+                                Logger.getInstance().warn("ROBOT_EXEC", "Unknown or unsupported primary command category for ID " + command.getId() + ": " + command.getCommandCategory().name());
+                                break;
+                        }
+                    } catch (Exception e) {
+                        Logger.getInstance().error("ROBOT_EXEC", "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
+                        Logger.getInstance().error("ROBOT_EXEC", "Stack trace:" + e);
+                        executionSuccess = false;
+                    } finally {
+                        resultHolder.setSuccess(executionSuccess);
+                        resultHolder.getLatch().countDown();
+                        Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
                     }
-                } catch (Exception e) {
-                    Logger.getInstance().error("ROBOT_EXEC", "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
-                } finally {
-                    resultHolder.setSuccess(executionSuccess);
-                    resultHolder.getLatch().countDown();
-                    Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
                 }
             }
+        } catch (Exception e) {
+            // Catch any other unexpected exceptions that cause the entire run loop to exit
+            Logger.getInstance().error("ROBOT_EXEC", "Critical, unhandled error in CommandExecutor run loop: " + e.getMessage());
+            // Log full stack trace for debugging critical unhandled exceptions
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+        } finally {
+            // This block will be executed if the run() method exits for any reason.
+            // The dispose() method is called by the RoboticsAPIApplication framework as part of its lifecycle.
+            Logger.getInstance().log("ROBOT_EXEC", "CommandExecutor run method is exiting.");
         }
     }
 
