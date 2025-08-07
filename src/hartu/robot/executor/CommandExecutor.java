@@ -139,16 +139,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
             // Log the specific motion or batch details
             Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId() + " with motion: " + motionToExecute.toString());
             //TODO: Catch Software axis limit violations in order to not stop task execution continuity
-             try {
+            try {
                 IMotionContainer container = iiwa.moveAsync(motionToExecute);
-                container.await();
+                container.await(); // puede lanzar otras excepciones además de CommandInvalid
                 Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
             } catch (CommandInvalidException e) {
-                Logger.getInstance().error("ROBOT_EXEC", "CommandInvalidException: " + e.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Invalid motion: " + e.getMessage());
             } catch (CancelledException e) {
-                Logger.getInstance().error("ROBOT_EXEC", "CancelledException: " + e.getMessage());
+                Logger.getInstance().warn("ROBOT_EXEC", "Motion was cancelled: " + e.getMessage());
             } catch (ExternalStopException e) {
-                Logger.getInstance().error("ROBOT_EXEC", "ExternalStopException: " + e.getMessage());
+                Logger.getInstance().warn("ROBOT_EXEC", "Motion stopped externally: " + e.getMessage());
+            } catch (Exception e) {
+                Logger.getInstance().error("ROBOT_EXEC", "Unhandled exception: " + e.getMessage(), e);
             }
 
         } catch (Exception e) {
