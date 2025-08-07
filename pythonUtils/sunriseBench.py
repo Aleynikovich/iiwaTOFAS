@@ -5,14 +5,17 @@ ROBOT_IP = "10.66.171.147"
 TASK_PORT = 30001
 TERMINATOR = "#"
 
+
 def generate_command_id():
     return str(uuid.uuid4())
+
 
 def send_command(sock, command):
     if not command.endswith(TERMINATOR):
         command += TERMINATOR
     sock.sendall(command.encode())
     print(f"> Sent: {command}")
+
 
 def receive_response(sock):
     data = b""
@@ -23,16 +26,25 @@ def receive_response(sock):
         data += chunk
     return data.decode()
 
-def input_floats(prompt, count):
-    while True:
-        try:
-            values = input(prompt).strip().split()
-            if len(values) != count:
-                print(f"Please enter exactly {count} values.")
-                continue
-            return [float(v) for v in values]
-        except ValueError:
-            print("Invalid number. Try again.")
+
+def determine_action_code(motion_type, continuous, joint_mode):
+    if motion_type == "1":  # PTP
+        if joint_mode:
+            return "6" if continuous else "0"  # PTP_AXIS_C or PTP_AXIS
+        else:
+            return "7" if continuous else "1"  # PTP_FRAME_C or PTP_FRAME
+    elif motion_type == "2":  # LIN
+        if joint_mode:
+            return "2"  # LIN_AXIS
+        else:
+            return "8" if continuous else "3"  # LIN_FRAME_C or LIN_FRAME
+    elif motion_type == "3":  # CIRC
+        if joint_mode:
+            return "4"  # CIRC_AXIS
+        else:
+            return "5"  # CIRC_FRAME
+    return "0"  # fallback
+
 
 def movement_menu(sock):
     print("\n-- Movement Type --")
@@ -40,22 +52,23 @@ def movement_menu(sock):
     print("2. LIN")
     print("3. CIRC")
     motion_type = input("Select motion type: ").strip()
-
     continuous = input("Should motion be continuous? (y/n): ").strip().lower() == 'y'
 
     points = []
+    joint_mode = None
+
     while True:
-        mode = input("Enter point as: [1] Joints (7 values) or [2] Cartesian (X Y Z A B C)? ").strip()
-        if mode == "1":
-            joints = input_floats("Enter J1-J7 (degrees): ", 7)
-            joints_rad = [str(j * 3.141592 / 180.0) for j in joints]
-            points.append(";".join(joints_rad))
-        elif mode == "2":
-            cart = input_floats("Enter X Y Z A B C: ", 6)
-            cart_rad = cart[:3] + [str(a * 3.141592 / 180.0) for a in cart[3:]]
-            points.append(";".join(str(c) for c in cart_rad))
+        raw = input("Enter motion point (6 or 7 values): ").strip()
+        values = raw.split()
+
+        if len(values) == 6:
+            joint_mode = False
+            points.append(";".join(values))
+        elif len(values) == 7:
+            joint_mode = True
+            points.append(";".join(values))
         else:
-            print("Invalid input.")
+            print("❌ Invalid number of values. Expected 6 or 7. Try again.")
             continue
 
         cont = input("Add another point? (y/n): ").strip().lower()
@@ -63,29 +76,34 @@ def movement_menu(sock):
             break
 
     id = generate_command_id()
-    tool = "testTool"
-    base = "testBase"
-    speed = 0.5
+    tool = ""
+    base = ""
+    speed = 0.25
     num_points = len(points)
-    action_code = "1" if motion_type == "1" else "8" if motion_type == "2" else "11"
-    joined = "|".join([action_code, tool, base, str(speed), str(num_points), "#MULTI#".join(points), id])
-    send_command(sock, joined)
+
+    action_code = determine_action_code(motion_type, continuous, joint_mode)
+    joined_points = ",".join(points)
+    command = f"{action_code}|{num_points}|{joined_points}|{tool}|{base}|{speed}|0|0|25|{id}"
+    send_command(sock, command)
     print("< Response:", receive_response(sock))
+
 
 def io_menu(sock):
     pin = input("Enter IO pin number (e.g., 1, 2, 3): ").strip()
     state = input("Enter state (true/false): ").strip().lower()
     id = generate_command_id()
-    command = f"20|tool|base|0.5|1|true|{pin}|{state}|{id}"
+    command = f"9|0|||{pin}|{state}|0|0|0|{id}"
     send_command(sock, command)
     print("< Response:", receive_response(sock))
+
 
 def subroutine_menu(sock):
     program_id = input("Enter program ID to call: ").strip()
     id = generate_command_id()
-    command = f"40|tool|base|0.5|0|||{program_id}|{id}"
+    command = f"41|||0.5|0|||{program_id}|{id}"
     send_command(sock, command)
     print("< Response:", receive_response(sock))
+
 
 def main():
     print(f"Connecting to robot at {ROBOT_IP}:{TASK_PORT}...")
@@ -112,6 +130,7 @@ def main():
                     print("Invalid choice.")
     except Exception as e:
         print(f"[ERROR] {e}")
+
 
 if __name__ == "__main__":
     main()
