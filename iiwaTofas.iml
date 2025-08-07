@@ -92,7 +92,7 @@
   </component>
   <component name="FacetManager">
     <facet type="Python" name="Python">
-      <configuration sdkName="Python 3.13" />
+      <configuration sdkName="Python 3.10 (eeeeemmmmRemover)" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -896,6 +896,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Python 3.13 interpreter library" level="application" />
+    <orderEntry type="library" name="Python 3.10 (eeeeemmmmRemover) interpreter library" level="application" />
   </component>
 </module>

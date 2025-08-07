@@ -43,7 +43,10 @@ public class MotionParameters {
         this.numPoints = numPoints;
         this.jointVelocityRel = jointVelocityRel;
         this.jointAccelerationRel = jointAccelerationRel;
-        this.blendingRel = blendingRel == null ? 0.05 : blendingRel;
+
+        //Make blending rel 0 for non cont movements to avoid single motions not to finish inside the batch
+        //blendingRel = blendingRel == null ? 0.05 : blendingRel;
+        this.blendingRel = continuous ? blendingRel == null ? 0.05: blendingRel : 0.0;
     }
 
     public double getSpeedOverride() { return speedOverride; }
