@@ -5,6 +5,10 @@ import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.executionModel.CancelledException;
+import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
+import com.kuka.roboticsAPI.executionModel.ExecutionException;
+import com.kuka.roboticsAPI.executionModel.ExternalStopException;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.motionModel.IMotion;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
@@ -40,12 +44,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     @Override
-    public void run()
-    {
-        try
-        {
-        while (true)
-            {
+    public void run() {
+        try {
+            while (true) {
                 CommandResultHolder resultHolder = CommandQueue.pollCommand(100, TimeUnit.MILLISECONDS);
 
                 if (resultHolder != null) {
@@ -137,22 +138,25 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
             // Log the specific motion or batch details
             Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId() + " with motion: " + motionToExecute.toString());
-            IMotionContainer container = iiwa.moveAsync(motionToExecute);
-            container.await();
-
-            if (container.hasError()) {
-                String errorMessage = container.getErrorMessage();
-                Logger.getInstance().error("ROBOT_EXEC", "Motion for command ID " + command.getId() + " failed during execution: " + errorMessage);
-                return false; // Indicate that the motion did not complete successfully
-            } else {
+            //TODO: Catch Software axis limit violations in order to not stop task execution continuity
+             try {
+                IMotionContainer container = iiwa.moveAsync(motionToExecute);
+                container.await();
                 Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
-                return true; // Indicate success
+            } catch (CommandInvalidException e) {
+                Logger.getInstance().error("ROBOT_EXEC", "CommandInvalidException: " + e.getMessage());
+            } catch (CancelledException e) {
+                Logger.getInstance().error("ROBOT_EXEC", "CancelledException: " + e.getMessage());
+            } catch (ExternalStopException e) {
+                Logger.getInstance().error("ROBOT_EXEC", "ExternalStopException: " + e.getMessage());
             }
 
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Error during movement execution for command ID " + command.getId() + ": " + e.getMessage());
             return false;
         }
+
+        return true;
     }
 
     /**
