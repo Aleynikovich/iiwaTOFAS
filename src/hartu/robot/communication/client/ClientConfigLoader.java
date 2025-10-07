@@ -54,7 +54,7 @@ public class ClientConfigLoader {
             }
         }
 
-        String serverIp = networkProps.getProperty("rosPC.ip", "10.66.171.69"); // Default IP
+        String serverIp = networkProps.getProperty("rosLaptop.ip"); // Default IP
         String serverPortStr = clientProps.getProperty(clientPurposeKey, defaultPort); // Default port
 
         Logger.getInstance().log("CONFIG_LOADER", "Resolved connection config: IP=" + serverIp + ", Port=" + serverPortStr + " for key " + clientPurposeKey);
