@@ -1,50 +1,76 @@
-/bin/
-*.class!bin/
-!bin/
-# Compiled class files
-*.class
+===============================================
+Standard .gitignore for Java / KUKA Projects
+(IntelliJ, VS Code, Eclipse, Build Outputs)
+===============================================
+-----------------------------------------------
+1. BUILD/OUTPUT DIRECTORIES AND FILES
+-----------------------------------------------
+Target directories for various build tools
 
-# Package Files
+bin/
+target/
+build/
+deploy/
+out/
+dist/
+temp/
+tmp/
+Compiled Java class files
+
+*.class
+Package Files
+
 *.jar
 *.war
 *.ear
 *.zip
 *.tar.gz
 *.rar
+*.7z
+Log files
 
-# Log files
 *.log
 logs/
+nohup.out
+-----------------------------------------------
+2. IDE SPECIFIC FILES (IntelliJ, VS Code, Eclipse)
+-----------------------------------------------
+IntelliJ IDEA (The primary ignore for this IDE)
 
-# IDE specific files and directories
-# Eclipse
+.idea/
+*.iml
+*.iws
+*.ipr
+/gen/ # Generated sources directory common in some setups
+VS Code
+
+.vscode/
+Eclipse
+
 .classpath
 .project
 .settings/
+-----------------------------------------------
+3. OPERATING SYSTEM / SHELL IGNORES
+-----------------------------------------------
+OS-generated files
 
-# IntelliJ IDEA
-.idea/
-*.iml
-*.ipr
-*.iws
+.DS_Store
+Thumbs.db
+Shell/history files
 
-# VS Code
-.vscode/
+*~
+Vim/Nano temp files
 
-# Build directories
-# Maven
-target/
+.swp
+.fuse_hidden
+-----------------------------------------------
+4. KUKA ROBOT SPECIFIC FILES (Adjust if needed)
+-----------------------------------------------
+These paths are based on typical KUKA WorkVisual projects or external build setups.
+If your project outputs other specific generated files, add them here.
+Assuming you only commit source code and build files are regenerated.
 
-# Gradle
-build/
-.gradle/
-
-# KUKA Robot specific (adjust paths as needed for your KUKA project structure)
-# If KUKA generates files directly in src or specific output folders
-# For example, if your compiled KUKA project goes into a 'bin' or 'deploy' folder
-bin/
-deploy/
-# Any other specific KUKA generated files or folders that should not be in Git
-# For example, if there are generated IO access classes you don't want to track
-# hartu/generated/!bin/
+WorkVisual/
+RobotProject/!bin/
 !bin/

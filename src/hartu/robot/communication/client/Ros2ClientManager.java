@@ -21,12 +21,12 @@ public class Ros2ClientManager extends RoboticsAPICyclicBackgroundTask
     @Override
     public void initialize()
     {
+        //TODO: Check
+        //String[] config = ClientConfigLoader.loadConnectionConfig("jointLog.port", "30002");
+        //String serverIp = config[0];
+        //int serverPort = Integer.parseInt(config[1]);
 
-        String[] config = ClientConfigLoader.loadConnectionConfig("jointLog.port", "30002");
-        String serverIp = config[0];
-        int serverPort = Integer.parseInt(config[1]);
-
-        jointLogClient = new ClientClass(serverIp, serverPort);
+        jointLogClient = new ClientClass("10.66.171.147", 30002);
 
         initializeCyclic(0, 10, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         lbr = getContext().getDeviceFromType(LBR.class);
