@@ -54,11 +54,6 @@ public class ParsedCommand
         return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId);
     }
 
-    public static ParsedCommand forQuery(ActionTypes actionType, String id)
-    {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, null);
-    }
-
     public ActionTypes getActionType()
     {
         return actionType;
@@ -112,11 +107,6 @@ public class ParsedCommand
     public boolean isProgramCall()
     {
         return this.commandCategory == CommandCategory.PROGRAM_CALL;
-    }
-
-    public boolean isQueryCommand()
-    {
-        return this.commandCategory == CommandCategory.QUERY;
     }
 
     public int getProgramCallId()

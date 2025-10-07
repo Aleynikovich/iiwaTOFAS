@@ -7,7 +7,6 @@ package hartu.protocols.constants;
 public enum CommandCategory {
     MOVEMENT,
     IO,
-    QUERY,
     PROGRAM_CALL,
     UNKNOWN
 }

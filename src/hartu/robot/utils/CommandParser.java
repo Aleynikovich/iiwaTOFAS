@@ -132,14 +132,6 @@ public class CommandParser {
                 Logger.getInstance().log("PARSER", "Error: " + errorMsg);
                 throw new IllegalArgumentException(errorMsg);
             }
-        } else if (commandCategory == CommandCategory.QUERY) {
-            if (actionType == ActionTypes.GET_JOINT_STATE) {
-                return ParsedCommand.forQuery(actionType, id);
-            } else {
-                String errorMsg = "QUERY CommandCategory but unknown ActionType: " + actionType.getValue();
-                Logger.getInstance().log("PARSER", "Error: " + errorMsg);
-                throw new IllegalArgumentException(errorMsg);
-            }
         } else if (commandCategory == CommandCategory.PROGRAM_CALL) {
             try {
                 programId = actionType.getValue() - ActionTypes.PROGRAM_CALL_OFFSET.getValue();

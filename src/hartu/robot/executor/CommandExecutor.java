@@ -61,9 +61,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
                             case IO:
                                 executionSuccess = executeIO(command);
                                 break;
-                            case QUERY:
-                                executionSuccess = executeQuery(command, resultHolder);
-                                break;
                             case PROGRAM_CALL:
                                 executionSuccess = executeProgramCallCommand(command);
                                 break;
@@ -269,47 +266,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
         Logger.getInstance().warn("ROBOT_EXEC", "External Program Call command ID " + command.getId() + " received. This functionality is not yet implemented.");
         // TODO: Implement logic for executing external programs based on command.getProgramId() or other data.
         return false; // Currently always returns false as it's not implemented
-    }
-
-    /**
-     * Executes a query command to retrieve robot state information.
-     *
-     * @param command The ParsedCommand representing a query.
-     * @param resultHolder The CommandResultHolder to store the result data.
-     * @return True if the query executed successfully, false otherwise.
-     */
-    private boolean executeQuery(ParsedCommand command, CommandResultHolder resultHolder) {
-        ActionTypes actionType = command.getActionType();
-        Logger.getInstance().log("ROBOT_EXEC", "Executing query " + actionType.name() + " command ID " + command.getId());
-
-        if (actionType == ActionTypes.GET_JOINT_STATE) {
-            try {
-                JointPosition currentPosition = iiwa.getCurrentJointPosition();
-                
-                // Format joint position as semicolon-separated degrees
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < currentPosition.getAxisCount(); i++) {
-                    double radians = currentPosition.get(i);
-                    double degrees = Math.toDegrees(radians);
-                    sb.append(degrees);
-                    if (i < currentPosition.getAxisCount() - 1) {
-                        sb.append(";");
-                    }
-                }
-                
-                String jointStateData = sb.toString();
-                resultHolder.setResultData(jointStateData);
-                
-                Logger.getInstance().log("ROBOT_EXEC", "Retrieved joint state for command ID " + command.getId() + ": " + jointStateData);
-                return true;
-            } catch (Exception e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to get joint state for command ID " + command.getId() + ": " + e.getMessage());
-                return false;
-            }
-        } else {
-            Logger.getInstance().error("ROBOT_EXEC", "Unsupported query type: " + actionType.name());
-            return false;
-        }
     }
 
     @Override

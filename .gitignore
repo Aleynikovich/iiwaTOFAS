@@ -16,13 +16,6 @@
 *.log
 logs/
 
-# Python cache files
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-
 # IDE specific files and directories
 # Eclipse
 .classpath
