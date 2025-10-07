@@ -13,6 +13,7 @@ public class CommandResultHolder {
     private final ParsedCommand command;
     private final CountDownLatch latch;
     private volatile boolean success; // volatile to ensure visibility across threads
+    private volatile String resultData; // Data returned from query commands
 
     /**
      * Creates a new CommandResultHolder.
@@ -22,6 +23,7 @@ public class CommandResultHolder {
         this.command = command;
         this.latch = new CountDownLatch(1); // Latch will count down once when command is executed
         this.success = false; // Default to false
+        this.resultData = null;
     }
 
     public ParsedCommand getCommand() {
@@ -38,5 +40,13 @@ public class CommandResultHolder {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public String getResultData() {
+        return resultData;
+    }
+
+    public void setResultData(String resultData) {
+        this.resultData = resultData;
     }
 }

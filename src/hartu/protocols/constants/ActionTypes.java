@@ -19,6 +19,9 @@ public enum ActionTypes {
     LIN_FRAME_REL_BASE(11, false, true, false, MovementType.LIN),
     DIGITAL_INPUT(12, false, false, false, MovementType.UNKNOWN),
     ANALOG_INPUT(13, false, false, false, MovementType.UNKNOWN),
+    
+    // --- Query Commands ---
+    GET_JOINT_STATE(14, false, false, false, MovementType.UNKNOWN),
 
     // --- Default and Program Call ---
     // Program call numbers are added to this offset. E.g., PROGRAM_CALL_1 is 100
@@ -65,6 +68,9 @@ public enum ActionTypes {
         }
         if (value >= 9 && value <= 13) {
             return CommandCategory.IO;
+        }
+        if (value == 14) {
+            return CommandCategory.QUERY;
         }
         if (value >= PROGRAM_CALL_OFFSET.value) {
             return CommandCategory.PROGRAM_CALL;

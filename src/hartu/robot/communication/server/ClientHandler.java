@@ -95,6 +95,7 @@ public class ClientHandler implements Runnable
 
                         String commandId = "N/A";
                         boolean executionSuccess = false;
+                        CommandResultHolder resultHolder = null;
 
                         try
                         {
@@ -106,7 +107,7 @@ public class ClientHandler implements Runnable
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Successfully parsed command: " + parsedCommand
                                                     );
 
-                            CommandResultHolder resultHolder = new CommandResultHolder(parsedCommand);
+                            resultHolder = new CommandResultHolder(parsedCommand);
                             CommandQueue.putCommand(resultHolder);
 
                             Logger.getInstance().log(
@@ -168,7 +169,16 @@ public class ClientHandler implements Runnable
                         String responseToClient;
                         if (executionSuccess)
                         {
-                            responseToClient = "FREE|" + commandId + ProtocolConstants.MESSAGE_TERMINATOR;
+                            // Check if there's result data (from query commands)
+                            String resultData = (resultHolder != null) ? resultHolder.getResultData() : null;
+                            if (resultData != null && !resultData.isEmpty())
+                            {
+                                responseToClient = "DATA|" + commandId + "|" + resultData + ProtocolConstants.MESSAGE_TERMINATOR;
+                            }
+                            else
+                            {
+                                responseToClient = "FREE|" + commandId + ProtocolConstants.MESSAGE_TERMINATOR;
+                            }
                         }
                         else
                         {
