@@ -1,10 +1,8 @@
 import socket
 import uuid
-import math
 
 ROBOT_IP = "10.66.171.147"
 TASK_PORT = 30001
-JOINT_STATE_PORT = 30002
 TERMINATOR = "#"
 
 
@@ -109,65 +107,72 @@ def subroutine_menu(sock):
 
 def get_current_joint_state():
     """
-    Connects to the joint state publishing port, reads the current joint state,
-    displays it, and optionally saves it in XML format.
+    Sends a GET_JOINT_STATE command to the robot and displays the joint state.
     """
     print("\n-- Get Current Joint State --")
-    print(f"Connecting to joint state publisher at {ROBOT_IP}:{JOINT_STATE_PORT}...")
+    print(f"Requesting joint state from robot at {ROBOT_IP}:{TASK_PORT}...")
     
     try:
-        with socket.create_connection((ROBOT_IP, JOINT_STATE_PORT), timeout=5) as sock:
-            print("✅ Connected to joint state publisher.")
+        with socket.create_connection((ROBOT_IP, TASK_PORT), timeout=5) as sock:
+            # Send GET_JOINT_STATE command (action type 14)
+            # Format: 14|0|||||||id#
+            id = generate_command_id()
+            command = f"14|0|||||||{id}"
+            send_command(sock, command)
             
-            # Read joint state data (format: j1;j2;j3;j4;j5;j6;j7#)
-            data = b""
-            while not data.endswith(TERMINATOR.encode()):
-                chunk = sock.recv(1024)
-                if not chunk:
-                    raise ConnectionError("Connection closed by robot.")
-                data += chunk
+            # Receive response
+            response = receive_response(sock)
+            print(f"< Response: {response}")
             
-            message = data.decode().rstrip(TERMINATOR)
-            joint_values_rad = [float(val) for val in message.split(";")]
-            
-            if len(joint_values_rad) != 7:
-                print(f"❌ Invalid joint state data. Expected 7 values, got {len(joint_values_rad)}")
-                return
-            
-            # Convert from radians to degrees
-            joints_deg = [math.degrees(val) for val in joint_values_rad]
-            
-            # Display the joint state
-            print("\n📊 Current Joint State (in degrees):")
-            for i, deg in enumerate(joints_deg, 1):
-                print(f"  J{i}: {deg:.6f}°")
-            
-            # Ask if user wants to save
-            save = input("\nDo you want to save this joint state? (y/n): ").strip().lower()
-            if save == 'y':
-                name = input("Enter a name for this joint state: ").strip()
-                if not name:
-                    print("❌ Name cannot be empty. Joint state not saved.")
-                    return
-                
-                # Format in the specified XML format with the specified order
-                xml_output = (
-                    f'<Joints name="{name}" '
-                    f'j6="{joints_deg[5]}" j7="{joints_deg[6]}" '
-                    f'j1="{joints_deg[0]}" j3="{joints_deg[2]}" '
-                    f'j5="{joints_deg[4]}" j2="{joints_deg[1]}" '
-                    f'j4="{joints_deg[3]}"/>'
-                )
-                
-                print("\n✅ Joint state saved in XML format:")
-                print(xml_output)
+            # Parse response
+            # Expected format: DATA|id|j1;j2;j3;j4;j5;j6;j7#
+            if response.startswith("DATA|"):
+                parts = response.rstrip(TERMINATOR).split("|")
+                if len(parts) >= 3:
+                    joint_data = parts[2]
+                    joint_values_deg = [float(val) for val in joint_data.split(";")]
+                    
+                    if len(joint_values_deg) != 7:
+                        print(f"❌ Invalid joint state data. Expected 7 values, got {len(joint_values_deg)}")
+                        return
+                    
+                    # Display the joint state (already in degrees from server)
+                    print("\n📊 Current Joint State (in degrees):")
+                    for i, deg in enumerate(joint_values_deg, 1):
+                        print(f"  J{i}: {deg:.6f}°")
+                    
+                    # Ask if user wants to save
+                    save = input("\nDo you want to save this joint state? (y/n): ").strip().lower()
+                    if save == 'y':
+                        name = input("Enter a name for this joint state: ").strip()
+                        if not name:
+                            print("❌ Name cannot be empty. Joint state not saved.")
+                            return
+                        
+                        # Format in the specified XML format with the specified order
+                        xml_output = (
+                            f'<Joints name="{name}" '
+                            f'j6="{joint_values_deg[5]}" j7="{joint_values_deg[6]}" '
+                            f'j1="{joint_values_deg[0]}" j3="{joint_values_deg[2]}" '
+                            f'j5="{joint_values_deg[4]}" j2="{joint_values_deg[1]}" '
+                            f'j4="{joint_values_deg[3]}"/>'
+                        )
+                        
+                        print("\n✅ Joint state saved in XML format:")
+                        print(xml_output)
+                    else:
+                        print("Joint state not saved.")
+                else:
+                    print(f"❌ Unexpected response format: {response}")
+            elif response.startswith("FREE|"):
+                print("❌ Command executed but no data returned. Check robot server logs.")
             else:
-                print("Joint state not saved.")
+                print(f"❌ Unexpected response: {response}")
                 
     except socket.timeout:
-        print(f"❌ Connection timeout. Could not connect to {ROBOT_IP}:{JOINT_STATE_PORT}")
+        print(f"❌ Connection timeout. Could not connect to {ROBOT_IP}:{TASK_PORT}")
     except ConnectionRefusedError:
-        print(f"❌ Connection refused. Is the robot server running on {ROBOT_IP}:{JOINT_STATE_PORT}?")
+        print(f"❌ Connection refused. Is the robot server running on {ROBOT_IP}:{TASK_PORT}?")
     except Exception as e:
         print(f"❌ Error: {e}")
 
