@@ -3,6 +3,8 @@ package hartu.robot.executor;
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+
+import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.executionModel.CancelledException;
@@ -10,10 +12,7 @@ import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
 import com.kuka.roboticsAPI.executionModel.ExecutionException;
 import com.kuka.roboticsAPI.executionModel.ExternalStopException;
 import com.kuka.roboticsAPI.geometricModel.Frame;
-import com.kuka.roboticsAPI.motionModel.IMotion;
-import com.kuka.roboticsAPI.motionModel.IMotionContainer;
-import com.kuka.roboticsAPI.motionModel.MotionBatch;
-import com.kuka.roboticsAPI.motionModel.RobotMotion;
+import com.kuka.roboticsAPI.motionModel.*;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
@@ -138,10 +137,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
             // Log the specific motion or batch details
             Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId() + " with motion: " + motionToExecute.toString());
-            //TODO: Catch Software axis limit violations in order to not stop task execution continuity
+            //TODO: Catch Internal APIs Software axis limit violations in order to not stop task execution continuity
             try {
                 IMotionContainer container = iiwa.moveAsync(motionToExecute);
-                container.await(); // puede lanzar otras excepciones además de CommandInvalid
+                container.await();
                 Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
             } catch (CommandInvalidException e) {
                 Logger.getInstance().error("ROBOT_EXEC", "Invalid motion: " + e.getMessage());

@@ -107,7 +107,7 @@ public class testin extends RoboticsAPIApplication {
         for (JointPosition targetPoint : command.getAxisTargetPoints())
         {
             motionsToExecute.add(ptp(targetPoint).setBlendingRel(0.5));
-            Logger.getInstance().log("ROBOT_EXEC", "Added   " + motionsToExecute);
+            Logger.getInstance().log("ROBOT_EXEC", "Added motion for target point: " + targetPoint);
         }
 
         for (IMotion motion : motionsToExecute)
