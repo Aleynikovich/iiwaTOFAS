@@ -45,8 +45,10 @@ public class RobotTCPServerTask extends RoboticsAPICyclicBackgroundTask {
 
     // Logger for logging messages and errors
     private static final Logger LOGGER = Logger.getLogger(RobotTCPServerTask.class.getName());
+a
     // Flag to control the server listening thread
     private volatile boolean isRunning = true;
+sssaa
     // List to keep track of active client handler threads
     // Using Collections.synchronizedList for thread-safe access
     private List<ClientHandler> activeClientHandlers = Collections.synchronizedList(new ArrayList<>());
