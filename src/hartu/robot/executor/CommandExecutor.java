@@ -3,8 +3,6 @@ package hartu.robot.executor;
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
-
-import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.executionModel.CancelledException;
@@ -12,7 +10,10 @@ import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
 import com.kuka.roboticsAPI.executionModel.ExecutionException;
 import com.kuka.roboticsAPI.executionModel.ExternalStopException;
 import com.kuka.roboticsAPI.geometricModel.Frame;
-import com.kuka.roboticsAPI.motionModel.*;
+import com.kuka.roboticsAPI.motionModel.IMotion;
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.motionModel.MotionBatch;
+import com.kuka.roboticsAPI.motionModel.RobotMotion;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
@@ -137,10 +138,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
             // Log the specific motion or batch details
             Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId() + " with motion: " + motionToExecute.toString());
-            //TODO: Catch Internal APIs Software axis limit violations in order to not stop task execution continuity
+            //TODO: Catch Software axis limit violations in order to not stop task execution continuity
             try {
                 IMotionContainer container = iiwa.moveAsync(motionToExecute);
-                container.await();
+                container.await(); // puede lanzar otras excepciones además de CommandInvalid
                 Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
             } catch (CommandInvalidException e) {
                 Logger.getInstance().error("ROBOT_EXEC", "Invalid motion: " + e.getMessage());
@@ -234,17 +235,40 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
         try {
             switch (ioPin) {
+                //Pick
                 case 1:
-                    gimaticIO.setDO_Flange7(ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set DO_Flange7 to " + ioState);
+                    toolControlIO.setOutput3(true);
+                    toolControlIO.setOutput2(false);
+                    toolControlIO.setOutput1(true);
+                    gimaticIO.setDO_Flange2(false);
+                    gimaticIO.setDO_Flange1(true);
+                    Thread.sleep(300);
+                    toolControlIO.setOutput1(false);
+                    gimaticIO.setDO_Flange1(false);
+                    Logger.getInstance().log("ROBOT_EXEC", "Pick command executed");
                     return true;
+                //Place
                 case 2:
-                    toolControlIO.setOutput2(ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output2 to " + ioState);
+                    toolControlIO.setOutput3(true);
+                    toolControlIO.setOutput1(false);
+                    toolControlIO.setOutput2(true);
+                    gimaticIO.setDO_Flange1(false);
+                    gimaticIO.setDO_Flange2(true);
+                    Logger.getInstance().log("ROBOT_EXEC", "Place command executed");
+                    Thread.sleep(300);
+                    gimaticIO.setDO_Flange2(false);
+                    toolControlIO.setOutput2(false);
+                    toolControlIO.setOutput3(false);
                     return true;
+                //Pick tool
                 case 3:
-                    toolControlIO.setOutput1(ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
+                    gimaticIO.setDO_Flange7(false);
+                    Logger.getInstance().log("ROBOT_EXEC", "Grip tool executed");
+                    return true;
+                //Place tool
+                case 4:
+                    gimaticIO.setDO_Flange7(true);
+                    Logger.getInstance().log("ROBOT_EXEC", "Release tool executed");
                     return true;
                 default:
                     Logger.getInstance().error("ROBOT_EXEC", "Invalid IO pin in parsed command for direct mapping: " + ioPin + " for command ID " + command.getId());
