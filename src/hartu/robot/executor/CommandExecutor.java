@@ -246,6 +246,14 @@ public class CommandExecutor extends RoboticsAPIApplication {
                     toolControlIO.setOutput1(ioState);
                     Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
                     return true;
+                case 10:
+                    return pickTool();
+                case 11:
+                    return placeTool();
+                case 12:
+                    return openTool();
+                case 13:
+                    return closeTool();
                 default:
                     Logger.getInstance().error("ROBOT_EXEC", "Invalid IO pin in parsed command for direct mapping: " + ioPin + " for command ID " + command.getId());
                     return false;
@@ -257,15 +265,134 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     /**
-     * Placeholder for executing external program call commands.
+     * Executes external program call commands by calling appropriate subprograms.
      *
      * @param command The ParsedCommand representing an external program call.
      * @return True if the program call executed successfully, false otherwise.
      */
     private boolean executeProgramCallCommand(ParsedCommand command) {
-        Logger.getInstance().warn("ROBOT_EXEC", "External Program Call command ID " + command.getId() + " received. This functionality is not yet implemented.");
-        // TODO: Implement logic for executing external programs based on command.getProgramId() or other data.
-        return false; // Currently always returns false as it's not implemented
+        Integer programId = command.getProgramId();
+        if (programId == null) {
+            Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " has no program ID.");
+            return false;
+        }
+
+        Logger.getInstance().log("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
+
+        try {
+            switch (programId) {
+                case 1:
+                    return pickTool();
+                case 2:
+                    return placeTool();
+                case 3:
+                    return openTool();
+                case 4:
+                    return closeTool();
+                default:
+                    Logger.getInstance().error("ROBOT_EXEC", "Unknown program ID: " + programId + " for command ID " + command.getId());
+                    return false;
+            }
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Opens the tool by setting appropriate IO outputs.
+     *
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean openTool() {
+        try {
+            toolControlIO.setOutput3(true);
+            toolControlIO.setOutput2(true);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange2(true);
+            gimaticIO.setDO_Flange1(false);
+            Thread.sleep(300);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Open tool operation completed");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Open tool operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Closes the tool by setting appropriate IO outputs.
+     *
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean closeTool() {
+        try {
+            toolControlIO.setOutput3(true);
+            toolControlIO.setOutput2(false);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange2(false);
+            gimaticIO.setDO_Flange1(false);
+            Thread.sleep(300);
+            toolControlIO.setOutput3(false);
+            gimaticIO.setDO_Flange2(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Close tool operation completed");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Close tool operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Picks with the tool by setting appropriate IO outputs.
+     *
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean pickTool() {
+        try {
+            toolControlIO.setOutput3(true);
+            toolControlIO.setOutput2(false);
+            toolControlIO.setOutput1(true);
+            gimaticIO.setDO_Flange2(false);
+            gimaticIO.setDO_Flange1(true);
+            Thread.sleep(300);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Pick tool operation completed");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Pick tool operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Places with the tool by setting appropriate IO outputs.
+     *
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean placeTool() {
+        try {
+            toolControlIO.setOutput3(false);
+            toolControlIO.setOutput2(true);
+            toolControlIO.setOutput1(true);
+            gimaticIO.setDO_Flange2(true);
+            gimaticIO.setDO_Flange1(true);
+            Thread.sleep(300);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Place tool operation completed");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Place tool operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
     }
 
     @Override
