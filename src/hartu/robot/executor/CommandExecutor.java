@@ -246,6 +246,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
                     toolControlIO.setOutput1(ioState);
                     Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
                     return true;
+                case 10:
+                    // Lock Gimatic tool changer
+                    return lockGimatic();
+                case 11:
+                    // Unlock Gimatic tool changer
+                    return unlockGimatic();
+                case 12:
+                    // Open tool (activate vacuum) - default to tool 1
+                    return openTool(1);
+                case 13:
+                    // Close tool (blow air) - default to tool 1
+                    return closeTool(1);
                 default:
                     Logger.getInstance().error("ROBOT_EXEC", "Invalid IO pin in parsed command for direct mapping: " + ioPin + " for command ID " + command.getId());
                     return false;
@@ -257,15 +269,335 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     /**
-     * Placeholder for executing external program call commands.
+     * Executes external program call commands by calling appropriate subprograms.
+     * 
+     * Program ID ranges:
+     * - 1-99: Custom/general programs (extendable for various operations)
+     * - 100-9999: Tool operations with format: Operation * 100 + ToolID
+     *   - Operations: 1=Pick, 2=Place, 3=Open, 4=Close
+     *   - Tool IDs: 1-99
+     * 
+     * Examples:
+     * - 1: Custom program 1
+     * - 2: Custom program 2
+     * - 101: Pick with Tool 1
+     * - 202: Place with Tool 2
+     * - 303: Open Tool 3
      *
      * @param command The ParsedCommand representing an external program call.
      * @return True if the program call executed successfully, false otherwise.
      */
     private boolean executeProgramCallCommand(ParsedCommand command) {
-        Logger.getInstance().warn("ROBOT_EXEC", "External Program Call command ID " + command.getId() + " received. This functionality is not yet implemented.");
-        // TODO: Implement logic for executing external programs based on command.getProgramId() or other data.
-        return false; // Currently always returns false as it's not implemented
+        Integer programId = command.getProgramId();
+        if (programId == null) {
+            Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " has no program ID.");
+            return false;
+        }
+
+        Logger.getInstance().log("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
+
+        try {
+            // Route based on program ID range
+            if (programId >= 1 && programId <= 99) {
+                // Custom/general programs (1-99)
+                return executeCustomProgram(programId);
+            } else if (programId >= 100 && programId <= 9999) {
+                // Tool operations (100-9999) using encoding: Operation * 100 + ToolID
+                return executeToolOperation(programId);
+            } else {
+                Logger.getInstance().error("ROBOT_EXEC", "Invalid program ID: " + programId + " (must be 1-9999) for command ID " + command.getId());
+                return false;
+            }
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Executes custom/general programs.
+     * 
+     * @param programId The program ID (1-99)
+     * @return True if the program executed successfully, false otherwise.
+     */
+    private boolean executeCustomProgram(int programId) {
+        Logger.getInstance().log("ROBOT_EXEC", "Executing custom program " + programId);
+        
+        switch (programId) {
+            case 1:
+                // Example: Custom program 1
+                Logger.getInstance().log("ROBOT_EXEC", "Custom program 1 executed");
+                return true;
+            case 2:
+                // Example: Custom program 2
+                Logger.getInstance().log("ROBOT_EXEC", "Custom program 2 executed");
+                return true;
+            // Add more custom programs as needed
+            default:
+                Logger.getInstance().error("ROBOT_EXEC", "Custom program " + programId + " not implemented");
+                return false;
+        }
+    }
+
+    /**
+     * Executes tool operations using encoded program ID.
+     * Program ID format: Operation * 100 + ToolID
+     * 
+     * @param programId The encoded program ID (100-9999)
+     * @return True if the tool operation executed successfully, false otherwise.
+     */
+    private boolean executeToolOperation(int programId) {
+        // Parse operation and tool ID from program ID
+        int operation = programId / 100;
+        int toolId = programId % 100;
+
+        // Validate tool ID
+        if (toolId < 1 || toolId > 99) {
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID: " + toolId + " (must be 1-99) in program ID: " + programId);
+            return false;
+        }
+
+        // Route to appropriate tool operation
+        switch (operation) {
+            case 1:
+                return pickTool(toolId);
+            case 2:
+                return placeTool(toolId);
+            case 3:
+                return openTool(toolId);
+            case 4:
+                return closeTool(toolId);
+            default:
+                Logger.getInstance().error("ROBOT_EXEC", "Unknown tool operation: " + operation + " in program ID: " + programId);
+                return false;
+        }
+    }
+
+    /**
+     * Opens the tool by activating vacuum/suction (same for all tools).
+     * Controls the IO outputs to activate suction.
+     * 
+     * @param toolId The ID of the tool to open (1-99)
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean openTool(int toolId) {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolId + " (activating vacuum/suction)");
+            
+            // Same IO sequence for all tools - activates vacuum/suction
+            toolControlIO.setOutput3(true);
+            toolControlIO.setOutput2(true);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange2(true);
+            gimaticIO.setDO_Flange1(false);
+            Thread.sleep(300);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " opened (vacuum activated)");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Open tool " + toolId + " operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Closes the tool by blowing air (same for all tools).
+     * Controls the IO outputs to blow air and release vacuum.
+     * 
+     * @param toolId The ID of the tool to close (1-99)
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean closeTool(int toolId) {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolId + " (blowing air)");
+            
+            // Same IO sequence for all tools - blows air to release
+            toolControlIO.setOutput3(true);
+            toolControlIO.setOutput2(false);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange2(false);
+            gimaticIO.setDO_Flange1(false);
+            Thread.sleep(300);
+            toolControlIO.setOutput3(false);
+            gimaticIO.setDO_Flange2(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " closed (air blown)");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Close tool " + toolId + " operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Locks the Gimatic tool changer.
+     * IO operations to command the locking of the tool changer.
+     * 
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean lockGimatic() {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Locking Gimatic tool changer");
+            
+            toolControlIO.setOutput3(true);
+            toolControlIO.setOutput2(false);
+            toolControlIO.setOutput1(true);
+            gimaticIO.setDO_Flange2(false);
+            gimaticIO.setDO_Flange1(true);
+            Thread.sleep(300);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer locked");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Lock Gimatic operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Unlocks the Gimatic tool changer.
+     * IO operations to command the unlocking of the tool changer.
+     * 
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean unlockGimatic() {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer");
+            
+            toolControlIO.setOutput3(false);
+            toolControlIO.setOutput2(true);
+            toolControlIO.setOutput1(true);
+            gimaticIO.setDO_Flange2(true);
+            gimaticIO.setDO_Flange1(true);
+            Thread.sleep(300);
+            toolControlIO.setOutput1(false);
+            gimaticIO.setDO_Flange1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer unlocked");
+            return true;
+        } catch (InterruptedException e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Unlock Gimatic operation interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     * Picks up tool from its storage position.
+     * Moves to tool position and locks the Gimatic tool changer.
+     * Uses tool-specific base coordinate system but same motion pattern.
+     * 
+     * @param toolId The ID of the tool to pick (1-99)
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean pickTool(int toolId) {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Picking tool " + toolId);
+            
+            // Get tool-specific position (different base frame per tool)
+            Frame toolPosition = getToolPosition(toolId);
+            if (toolPosition == null) {
+                Logger.getInstance().error("ROBOT_EXEC", "Tool " + toolId + " position not configured");
+                return false;
+            }
+            
+            // Move to tool position
+            Logger.getInstance().log("ROBOT_EXEC", "Moving to tool " + toolId + " position");
+            CartesianPTP ptpMotion = new CartesianPTP(toolPosition);
+            ptpMotion.setJointVelocityRel(0.2); // Conservative speed for tool pickup
+            
+            try {
+                IMotionContainer container = iiwa.moveAsync(ptpMotion);
+                container.await();
+                Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + toolId + " position");
+            } catch (Exception e) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " position: " + e.getMessage());
+                return false;
+            }
+            
+            // Lock the Gimatic tool changer
+            if (!lockGimatic()) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to lock Gimatic for tool " + toolId);
+                return false;
+            }
+            
+            Logger.getInstance().log("ROBOT_EXEC", "Successfully picked tool " + toolId);
+            return true;
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Places tool back to its storage position.
+     * Moves to tool position and unlocks the Gimatic tool changer.
+     * Uses tool-specific base coordinate system but same motion pattern.
+     * 
+     * @param toolId The ID of the tool to place (1-99)
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean placeTool(int toolId) {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Placing tool " + toolId);
+            
+            // Get tool-specific position (different base frame per tool)
+            Frame toolPosition = getToolPosition(toolId);
+            if (toolPosition == null) {
+                Logger.getInstance().error("ROBOT_EXEC", "Tool " + toolId + " position not configured");
+                return false;
+            }
+            
+            // Move to tool position
+            Logger.getInstance().log("ROBOT_EXEC", "Moving to tool " + toolId + " storage position");
+            CartesianPTP ptpMotion = new CartesianPTP(toolPosition);
+            ptpMotion.setJointVelocityRel(0.2); // Conservative speed for tool placement
+            
+            try {
+                IMotionContainer container = iiwa.moveAsync(ptpMotion);
+                container.await();
+                Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + toolId + " storage position");
+            } catch (Exception e) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " storage position: " + e.getMessage());
+                return false;
+            }
+            
+            // Unlock the Gimatic tool changer
+            if (!unlockGimatic()) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic for tool " + toolId);
+                return false;
+            }
+            
+            Logger.getInstance().log("ROBOT_EXEC", "Successfully placed tool " + toolId);
+            return true;
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Place tool " + toolId + " operation failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Gets the position/frame for a specific tool.
+     * Each tool has its own base coordinate system.
+     * 
+     * @param toolId The ID of the tool (1-99)
+     * @return The Frame representing the tool position, or null if not configured
+     */
+    private Frame getToolPosition(int toolId) {
+        // TODO: Implement tool position configuration
+        // This should return tool-specific positions with different base frames
+        // For now, returning null to indicate positions need to be configured
+        
+        // Example implementation could be:
+        // - Load from configuration file
+        // - Use predefined positions based on toolId
+        // - Query from a tool management system
+        
+        Logger.getInstance().warn("ROBOT_EXEC", "Tool " + toolId + " position not yet configured. Please implement getToolPosition().");
+        return null;
     }
 
     @Override
