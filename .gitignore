@@ -1,6 +1,3 @@
-/bin/
-*.class!bin/
-!bin/
 # Compiled class files
 *.class
 
@@ -40,11 +37,7 @@ build/
 .gradle/
 
 # KUKA Robot specific (adjust paths as needed for your KUKA project structure)
-# If KUKA generates files directly in src or specific output folders
-# For example, if your compiled KUKA project goes into a 'bin' or 'deploy' folder
+# This line ensures the bin directory is ignored
 bin/
 deploy/
 # Any other specific KUKA generated files or folders that should not be in Git
-# For example, if there are generated IO access classes you don't want to track
-# hartu/generated/!bin/
-!bin/
