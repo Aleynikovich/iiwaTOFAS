@@ -247,13 +247,14 @@ public class CommandExecutor extends RoboticsAPIApplication {
                     Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
                     return true;
                 case 10:
-                    return pickTool();
+                    // Default to tool 1 for backward compatibility with simple IO commands
+                    return pickTool(1);
                 case 11:
-                    return placeTool();
+                    return placeTool(1);
                 case 12:
-                    return openTool();
+                    return openTool(1);
                 case 13:
-                    return closeTool();
+                    return closeTool(1);
                 default:
                     Logger.getInstance().error("ROBOT_EXEC", "Invalid IO pin in parsed command for direct mapping: " + ioPin + " for command ID " + command.getId());
                     return false;
@@ -266,6 +267,14 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Executes external program call commands by calling appropriate subprograms.
+     * Program ID format: Operation * 100 + ToolID
+     * Operations: 1=Pick, 2=Place, 3=Open, 4=Close
+     * Tool IDs: 1-99 (scalable for multiple tools)
+     * 
+     * Examples:
+     * - 101: Pick with Tool 1
+     * - 202: Place with Tool 2
+     * - 303: Open Tool 3
      *
      * @param command The ParsedCommand representing an external program call.
      * @return True if the program call executed successfully, false otherwise.
@@ -280,17 +289,28 @@ public class CommandExecutor extends RoboticsAPIApplication {
         Logger.getInstance().log("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
 
         try {
-            switch (programId) {
+            // Parse operation and tool ID from program ID
+            int operation = programId / 100;
+            int toolId = programId % 100;
+
+            // Validate tool ID
+            if (toolId < 1 || toolId > 99) {
+                Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID: " + toolId + " (must be 1-99) for command ID " + command.getId());
+                return false;
+            }
+
+            // Route to appropriate operation
+            switch (operation) {
                 case 1:
-                    return pickTool();
+                    return pickTool(toolId);
                 case 2:
-                    return placeTool();
+                    return placeTool(toolId);
                 case 3:
-                    return openTool();
+                    return openTool(toolId);
                 case 4:
-                    return closeTool();
+                    return closeTool(toolId);
                 default:
-                    Logger.getInstance().error("ROBOT_EXEC", "Unknown program ID: " + programId + " for command ID " + command.getId());
+                    Logger.getInstance().error("ROBOT_EXEC", "Unknown operation: " + operation + " in program ID: " + programId + " for command ID " + command.getId());
                     return false;
             }
         } catch (Exception e) {
@@ -301,11 +321,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Opens the tool by setting appropriate IO outputs.
-     *
+     * 
+     * @param toolId The ID of the tool to open (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
-    private boolean openTool() {
+    private boolean openTool(int toolId) {
         try {
+            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolId);
+            
+            // Tool-specific IO configuration can be added here
+            // For now, using the same IO sequence for all tools
+            // Future enhancement: load tool-specific configurations from a map/config file
+            
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(true);
             toolControlIO.setOutput1(false);
@@ -314,10 +341,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Open tool operation completed");
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " opened successfully");
             return true;
         } catch (InterruptedException e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Open tool operation interrupted: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Open tool " + toolId + " operation interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
@@ -325,11 +352,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Closes the tool by setting appropriate IO outputs.
-     *
+     * 
+     * @param toolId The ID of the tool to close (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
-    private boolean closeTool() {
+    private boolean closeTool(int toolId) {
         try {
+            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolId);
+            
+            // Tool-specific IO configuration can be added here
+            // For now, using the same IO sequence for all tools
+            // Future enhancement: load tool-specific configurations from a map/config file
+            
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput1(false);
@@ -338,10 +372,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput3(false);
             gimaticIO.setDO_Flange2(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Close tool operation completed");
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " closed successfully");
             return true;
         } catch (InterruptedException e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Close tool operation interrupted: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Close tool " + toolId + " operation interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
@@ -349,11 +383,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Picks with the tool by setting appropriate IO outputs.
-     *
+     * 
+     * @param toolId The ID of the tool to use for picking (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
-    private boolean pickTool() {
+    private boolean pickTool(int toolId) {
         try {
+            Logger.getInstance().log("ROBOT_EXEC", "Picking with tool " + toolId);
+            
+            // Tool-specific IO configuration can be added here
+            // For now, using the same IO sequence for all tools
+            // Future enhancement: load tool-specific configurations from a map/config file
+            
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput1(true);
@@ -362,10 +403,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Pick tool operation completed");
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " pick operation completed");
             return true;
         } catch (InterruptedException e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Pick tool operation interrupted: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
@@ -373,11 +414,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Places with the tool by setting appropriate IO outputs.
-     *
+     * 
+     * @param toolId The ID of the tool to use for placing (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
-    private boolean placeTool() {
+    private boolean placeTool(int toolId) {
         try {
+            Logger.getInstance().log("ROBOT_EXEC", "Placing with tool " + toolId);
+            
+            // Tool-specific IO configuration can be added here
+            // For now, using the same IO sequence for all tools
+            // Future enhancement: load tool-specific configurations from a map/config file
+            
             toolControlIO.setOutput3(false);
             toolControlIO.setOutput2(true);
             toolControlIO.setOutput1(true);
@@ -386,10 +434,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Place tool operation completed");
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " place operation completed");
             return true;
         } catch (InterruptedException e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Place tool operation interrupted: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Place tool " + toolId + " operation interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
