@@ -247,13 +247,16 @@ public class CommandExecutor extends RoboticsAPIApplication {
                     Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
                     return true;
                 case 10:
-                    // Default to tool 1 for backward compatibility with simple IO commands
-                    return pickTool(1);
+                    // Lock Gimatic tool changer
+                    return lockGimatic();
                 case 11:
-                    return placeTool(1);
+                    // Unlock Gimatic tool changer
+                    return unlockGimatic();
                 case 12:
+                    // Open tool (activate vacuum) - default to tool 1
                     return openTool(1);
                 case 13:
+                    // Close tool (blow air) - default to tool 1
                     return closeTool(1);
                 default:
                     Logger.getInstance().error("ROBOT_EXEC", "Invalid IO pin in parsed command for direct mapping: " + ioPin + " for command ID " + command.getId());
@@ -371,19 +374,17 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     /**
-     * Opens the tool by setting appropriate IO outputs.
+     * Opens the tool by activating vacuum/suction (same for all tools).
+     * Controls the IO outputs to activate suction.
      * 
      * @param toolId The ID of the tool to open (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
     private boolean openTool(int toolId) {
         try {
-            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolId);
+            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolId + " (activating vacuum/suction)");
             
-            // Tool-specific IO configuration can be added here
-            // For now, using the same IO sequence for all tools
-            // Future enhancement: load tool-specific configurations from a map/config file
-            
+            // Same IO sequence for all tools - activates vacuum/suction
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(true);
             toolControlIO.setOutput1(false);
@@ -392,7 +393,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " opened successfully");
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " opened (vacuum activated)");
             return true;
         } catch (InterruptedException e) {
             Logger.getInstance().error("ROBOT_EXEC", "Open tool " + toolId + " operation interrupted: " + e.getMessage());
@@ -402,19 +403,17 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     /**
-     * Closes the tool by setting appropriate IO outputs.
+     * Closes the tool by blowing air (same for all tools).
+     * Controls the IO outputs to blow air and release vacuum.
      * 
      * @param toolId The ID of the tool to close (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
     private boolean closeTool(int toolId) {
         try {
-            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolId);
+            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolId + " (blowing air)");
             
-            // Tool-specific IO configuration can be added here
-            // For now, using the same IO sequence for all tools
-            // Future enhancement: load tool-specific configurations from a map/config file
-            
+            // Same IO sequence for all tools - blows air to release
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput1(false);
@@ -423,7 +422,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput3(false);
             gimaticIO.setDO_Flange2(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " closed successfully");
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " closed (air blown)");
             return true;
         } catch (InterruptedException e) {
             Logger.getInstance().error("ROBOT_EXEC", "Close tool " + toolId + " operation interrupted: " + e.getMessage());
@@ -433,18 +432,14 @@ public class CommandExecutor extends RoboticsAPIApplication {
     }
 
     /**
-     * Picks with the tool by setting appropriate IO outputs.
+     * Locks the Gimatic tool changer.
+     * IO operations to command the locking of the tool changer.
      * 
-     * @param toolId The ID of the tool to use for picking (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
-    private boolean pickTool(int toolId) {
+    private boolean lockGimatic() {
         try {
-            Logger.getInstance().log("ROBOT_EXEC", "Picking with tool " + toolId);
-            
-            // Tool-specific IO configuration can be added here
-            // For now, using the same IO sequence for all tools
-            // Future enhancement: load tool-specific configurations from a map/config file
+            Logger.getInstance().log("ROBOT_EXEC", "Locking Gimatic tool changer");
             
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
@@ -454,28 +449,24 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " pick operation completed");
+            Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer locked");
             return true;
         } catch (InterruptedException e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation interrupted: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Lock Gimatic operation interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
     }
 
     /**
-     * Places with the tool by setting appropriate IO outputs.
+     * Unlocks the Gimatic tool changer.
+     * IO operations to command the unlocking of the tool changer.
      * 
-     * @param toolId The ID of the tool to use for placing (1-99)
      * @return True if the operation executed successfully, false otherwise.
      */
-    private boolean placeTool(int toolId) {
+    private boolean unlockGimatic() {
         try {
-            Logger.getInstance().log("ROBOT_EXEC", "Placing with tool " + toolId);
-            
-            // Tool-specific IO configuration can be added here
-            // For now, using the same IO sequence for all tools
-            // Future enhancement: load tool-specific configurations from a map/config file
+            Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer");
             
             toolControlIO.setOutput3(false);
             toolControlIO.setOutput2(true);
@@ -485,13 +476,128 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Thread.sleep(300);
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolId + " place operation completed");
+            Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer unlocked");
             return true;
         } catch (InterruptedException e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Place tool " + toolId + " operation interrupted: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Unlock Gimatic operation interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
+    }
+
+    /**
+     * Picks up tool from its storage position.
+     * Moves to tool position and locks the Gimatic tool changer.
+     * Uses tool-specific base coordinate system but same motion pattern.
+     * 
+     * @param toolId The ID of the tool to pick (1-99)
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean pickTool(int toolId) {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Picking tool " + toolId);
+            
+            // Get tool-specific position (different base frame per tool)
+            Frame toolPosition = getToolPosition(toolId);
+            if (toolPosition == null) {
+                Logger.getInstance().error("ROBOT_EXEC", "Tool " + toolId + " position not configured");
+                return false;
+            }
+            
+            // Move to tool position
+            Logger.getInstance().log("ROBOT_EXEC", "Moving to tool " + toolId + " position");
+            CartesianPTP ptpMotion = new CartesianPTP(toolPosition);
+            ptpMotion.setJointVelocityRel(0.2); // Conservative speed for tool pickup
+            
+            try {
+                IMotionContainer container = iiwa.moveAsync(ptpMotion);
+                container.await();
+                Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + toolId + " position");
+            } catch (Exception e) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " position: " + e.getMessage());
+                return false;
+            }
+            
+            // Lock the Gimatic tool changer
+            if (!lockGimatic()) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to lock Gimatic for tool " + toolId);
+                return false;
+            }
+            
+            Logger.getInstance().log("ROBOT_EXEC", "Successfully picked tool " + toolId);
+            return true;
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Places tool back to its storage position.
+     * Moves to tool position and unlocks the Gimatic tool changer.
+     * Uses tool-specific base coordinate system but same motion pattern.
+     * 
+     * @param toolId The ID of the tool to place (1-99)
+     * @return True if the operation executed successfully, false otherwise.
+     */
+    private boolean placeTool(int toolId) {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Placing tool " + toolId);
+            
+            // Get tool-specific position (different base frame per tool)
+            Frame toolPosition = getToolPosition(toolId);
+            if (toolPosition == null) {
+                Logger.getInstance().error("ROBOT_EXEC", "Tool " + toolId + " position not configured");
+                return false;
+            }
+            
+            // Move to tool position
+            Logger.getInstance().log("ROBOT_EXEC", "Moving to tool " + toolId + " storage position");
+            CartesianPTP ptpMotion = new CartesianPTP(toolPosition);
+            ptpMotion.setJointVelocityRel(0.2); // Conservative speed for tool placement
+            
+            try {
+                IMotionContainer container = iiwa.moveAsync(ptpMotion);
+                container.await();
+                Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + toolId + " storage position");
+            } catch (Exception e) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " storage position: " + e.getMessage());
+                return false;
+            }
+            
+            // Unlock the Gimatic tool changer
+            if (!unlockGimatic()) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic for tool " + toolId);
+                return false;
+            }
+            
+            Logger.getInstance().log("ROBOT_EXEC", "Successfully placed tool " + toolId);
+            return true;
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Place tool " + toolId + " operation failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Gets the position/frame for a specific tool.
+     * Each tool has its own base coordinate system.
+     * 
+     * @param toolId The ID of the tool (1-99)
+     * @return The Frame representing the tool position, or null if not configured
+     */
+    private Frame getToolPosition(int toolId) {
+        // TODO: Implement tool position configuration
+        // This should return tool-specific positions with different base frames
+        // For now, returning null to indicate positions need to be configured
+        
+        // Example implementation could be:
+        // - Load from configuration file
+        // - Use predefined positions based on toolId
+        // - Query from a tool management system
+        
+        Logger.getInstance().warn("ROBOT_EXEC", "Tool " + toolId + " position not yet configured. Please implement getToolPosition().");
+        return null;
     }
 
     @Override
