@@ -267,11 +267,16 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Executes external program call commands by calling appropriate subprograms.
-     * Program ID format: Operation * 100 + ToolID
-     * Operations: 1=Pick, 2=Place, 3=Open, 4=Close
-     * Tool IDs: 1-99 (scalable for multiple tools)
+     * 
+     * Program ID ranges:
+     * - 1-99: Custom/general programs (extendable for various operations)
+     * - 100-9999: Tool operations with format: Operation * 100 + ToolID
+     *   - Operations: 1=Pick, 2=Place, 3=Open, 4=Close
+     *   - Tool IDs: 1-99
      * 
      * Examples:
+     * - 1: Custom program 1
+     * - 2: Custom program 2
      * - 101: Pick with Tool 1
      * - 202: Place with Tool 2
      * - 303: Open Tool 3
@@ -289,33 +294,79 @@ public class CommandExecutor extends RoboticsAPIApplication {
         Logger.getInstance().log("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
 
         try {
-            // Parse operation and tool ID from program ID
-            int operation = programId / 100;
-            int toolId = programId % 100;
-
-            // Validate tool ID
-            if (toolId < 1 || toolId > 99) {
-                Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID: " + toolId + " (must be 1-99) for command ID " + command.getId());
+            // Route based on program ID range
+            if (programId >= 1 && programId <= 99) {
+                // Custom/general programs (1-99)
+                return executeCustomProgram(programId);
+            } else if (programId >= 100 && programId <= 9999) {
+                // Tool operations (100-9999) using encoding: Operation * 100 + ToolID
+                return executeToolOperation(programId);
+            } else {
+                Logger.getInstance().error("ROBOT_EXEC", "Invalid program ID: " + programId + " (must be 1-9999) for command ID " + command.getId());
                 return false;
-            }
-
-            // Route to appropriate operation
-            switch (operation) {
-                case 1:
-                    return pickTool(toolId);
-                case 2:
-                    return placeTool(toolId);
-                case 3:
-                    return openTool(toolId);
-                case 4:
-                    return closeTool(toolId);
-                default:
-                    Logger.getInstance().error("ROBOT_EXEC", "Unknown operation: " + operation + " in program ID: " + programId + " for command ID " + command.getId());
-                    return false;
             }
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed: " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Executes custom/general programs.
+     * 
+     * @param programId The program ID (1-99)
+     * @return True if the program executed successfully, false otherwise.
+     */
+    private boolean executeCustomProgram(int programId) {
+        Logger.getInstance().log("ROBOT_EXEC", "Executing custom program " + programId);
+        
+        switch (programId) {
+            case 1:
+                // Example: Custom program 1
+                Logger.getInstance().log("ROBOT_EXEC", "Custom program 1 executed");
+                return true;
+            case 2:
+                // Example: Custom program 2
+                Logger.getInstance().log("ROBOT_EXEC", "Custom program 2 executed");
+                return true;
+            // Add more custom programs as needed
+            default:
+                Logger.getInstance().error("ROBOT_EXEC", "Custom program " + programId + " not implemented");
+                return false;
+        }
+    }
+
+    /**
+     * Executes tool operations using encoded program ID.
+     * Program ID format: Operation * 100 + ToolID
+     * 
+     * @param programId The encoded program ID (100-9999)
+     * @return True if the tool operation executed successfully, false otherwise.
+     */
+    private boolean executeToolOperation(int programId) {
+        // Parse operation and tool ID from program ID
+        int operation = programId / 100;
+        int toolId = programId % 100;
+
+        // Validate tool ID
+        if (toolId < 1 || toolId > 99) {
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID: " + toolId + " (must be 1-99) in program ID: " + programId);
+            return false;
+        }
+
+        // Route to appropriate tool operation
+        switch (operation) {
+            case 1:
+                return pickTool(toolId);
+            case 2:
+                return placeTool(toolId);
+            case 3:
+                return openTool(toolId);
+            case 4:
+                return closeTool(toolId);
+            default:
+                Logger.getInstance().error("ROBOT_EXEC", "Unknown tool operation: " + operation + " in program ID: " + programId);
+                return false;
         }
     }
 
