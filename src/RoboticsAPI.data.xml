@@ -892,38 +892,8 @@
                 </redundancyData>
             </frame>
         </frame>
-        <frame id="_9fff81b3-89a7-4afb-a5a6-4b2213e89567" name="P1">
-            <transformation a="-2.3717375149226303" b="0.23221488568333928" c="-2.7038371988478214" x="427.7279340068196" y="-154.98369229718512" z="841.39190564502"/>
-            <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1357001364584"/>
-                <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="Flange" tool="Flange" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
-                    <tcpTransformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                </info>
-            </additionalInformation>
-            <redundancyData>
-                <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
-                    <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
-                    <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="73" valueType="java.lang.Integer"/>
-                    <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="1.6897732402417852E-5" valueType="java.lang.Double"/>
-                </redundancy>
-            </redundancyData>
-        </frame>
     </world>
     <objectTemplates>
-        <toolTemplate class="" defaultMotionFrameRef="" name="Tool">
-            <frames>
-                <frame id="_f9d50d68-07d5-460b-8ec3-921bb142a26f" name="flange_2_tool">
-                    <transformation a="0.0" b="0.0" c="0.0" x="-0.5685902465325279" y="-0.3008472544565028" z="307.9"/>
-                    <additionalInformation>
-                        <info key="Comment" type="java.lang.String" value="Transformation from flange to tool point"/>
-                    </additionalInformation>
-                </frame>
-            </frames>
-            <additionalInformation>
-                <info key="Comment" type="java.lang.String" value="tool"/>
-            </additionalInformation>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="349.78057536560544" cogY="-39.76726875614" cogZ="14.05058456695571" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.6293725145628982"/>
-        </toolTemplate>
         <toolTemplate class="" defaultMotionFrameRef="/roll_tcp" name="RollScan">
             <frames>
                 <frame id="_ae1a755a-b6e9-4a08-9715-89b782013835" name="roll_tcp">
@@ -961,7 +931,7 @@
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="17.64448912333996" cogY="11.31147424235794" cogZ="87.91762326859212" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="4.207947468891694"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-22.597943344430433" cogY="-58.296554295571" cogZ="78.75686071217353" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.122511008263128"/>
         </toolTemplate>
         <toolTemplate class="" defaultMotionFrameRef="/gripper2flange" name="GimaticGripperV">
             <frames>
@@ -971,7 +941,7 @@
                     <measurementRotation method="ABCWorld6D" timestamp="1356995442266"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-21.858750642857075" cogY="-54.62486456248389" cogZ="79.57532888244523" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.49435374530215"/>
         </toolTemplate>
         <toolTemplate class="" name="TrackerTool">
             <frames>
@@ -1008,12 +978,6 @@
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
-        <toolTemplate class="" name="ToolTemplate">
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
-        </toolTemplate>
-        <toolTemplate class="" name="IxturPlatoGrande">
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="7.1366834531178025" cogY="54.629448323165775" cogZ="183.46380369306698" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="9.921096286987034"/>
-        </toolTemplate>
         <toolTemplate class="" defaultMotionFrameRef="/GimaticTCP" name="GimaticCamera">
             <frames>
                 <frame id="_bc1a0aef-760a-4d80-9963-96888d89d033" name="GimaticTCP">
@@ -1021,34 +985,50 @@
                     <measurementRotation method="ABCWorld6D" timestamp="1357070202786"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="100.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="3.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-41.48587299606944" cogY="-105.7277711882329" cogZ="24.27896671617802" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="4.194537114942863"/>
         </toolTemplate>
-        <toolTemplate class="" name="Vac1">
-            <frames>
-                <frame id="_edff393a-166d-4eed-86c5-86c56688fb67" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                </frame>
-            </frames>
+        <workpieceTemplate class="" name="PlatoSombrero">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <workpieceTemplate class="" name="PlatoTambor">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <workpieceTemplate class="" name="EjeS">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <workpieceTemplate class="" name="EjeM">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <workpieceTemplate class="" name="Disco">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <toolTemplate class="" name="GimaticCircMagnet">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-16.682703136966186" cogY="-64.53579237902936" cogZ="55.50233796614493" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.428565115040336"/>
+        </toolTemplate>
+        <toolTemplate class="" name="GimaticGripperR">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-26.124652478763302" cogY="-58.85550589882337" cogZ="68.90749189107193" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.2657827107113295"/>
+        </toolTemplate>
+        <toolTemplate class="" name="GimaticVac1">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
-        <toolTemplate class="" name="Vac2">
-            <frames>
-                <frame id="_0e04cf7e-39a3-4b50-86e7-1f0f7e720c1e" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                </frame>
-            </frames>
+        <toolTemplate class="" name="GimaticVac2">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
-        <toolTemplate class="" name="Vac3">
-            <frames>
-                <frame id="_0c6e1b0e-4fe1-477e-975b-b6824f57759c" name="TCP">
-                    <transformation a="2.7177206158078135" b="0.0027652162211643156" c="0.016441404517443352" x="-11.819090665220825" y="8.236128112642243" z="451.182881852388"/>
-                    <measurementTranslation calculationError="6.796015401444549" method="XYZ4Point" timestamp="1357000736510"/>
-                    <measurementRotation method="ABC2Point" timestamp="1357001173447"/>
-                </frame>
-            </frames>
+        <toolTemplate class="" name="GimaticVac3">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
+        <toolTemplate class="" name="ToolTemplate">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-14.473441866704244" cogY="-44.73514646068471" cogZ="108.7895199799053" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="8.055824150836983"/>
+        </toolTemplate>
+        <workpieceTemplate class="" name="BoxM">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <workpieceTemplate class="" name="BoxS">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
+        <workpieceTemplate class="" name="BoxL">
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+        </workpieceTemplate>
     </objectTemplates>
     <processDataContainer>
         <processData dataType="java.lang.Integer" defaultValue="30000" displayName="Port" id="port" value="30000"/>
