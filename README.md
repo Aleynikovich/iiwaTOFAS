@@ -138,7 +138,7 @@ flowchart TD
 
 ### Running the Python Clients
 
-There are two Python utilities in the `pythonUtils/` directory:
+There are three Python utilities in the `pythonUtils/` directory:
 
 **Log Client** (start this first):
 ```bash
@@ -150,7 +150,12 @@ python pythonUtils/log_client.py
 python pythonUtils/task_client.py
 ```
 
-You'll need to update the `SERVER_IP` in both files to match your robot's IP address.
+**Joint State Client** (for receiving real-time joint positions):
+```bash
+python pythonUtils/joint_state_client.py
+```
+
+You'll need to update the `SERVER_IP` in all files to match your robot's IP address.
 
 ### Receiving Joint State Data
 
