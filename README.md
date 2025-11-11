@@ -54,7 +54,7 @@ flowchart TD
         M["CommandParser"]
         N["JSON String"]
         O["parsedData/parsedCommand.json"]
-        P@{ label: "Sends 'FREE/ID#' Response" }
+        P@{ label: "Sends 'FREE|ID|success#' or 'FREE|ID|failure#' Response" }
   end
  subgraph Java_Server_Robot_Controller["Java_Server_Robot_Controller"]
         Server_Startup
@@ -227,7 +227,7 @@ When you connect a client to the task port:
 4. Server parses the command via `CommandParser`
 5. Command gets validated and converted to robot instructions
 6. Execution status/logs are sent to the log client in JSON format
-7. Server responds with `FREE/ID#` when ready for next command
+7. Server responds with `FREE|ID|success#` on successful execution or `FREE|ID|failure#` on failure
 8. Command history is saved to `parsedData/parsedCommand.json`
 
 The logging system uses a singleton pattern to ensure all server components can log events, and everything gets broadcast to connected log clients in real-time.

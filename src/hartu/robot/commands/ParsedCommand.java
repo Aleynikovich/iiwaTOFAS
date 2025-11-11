@@ -196,6 +196,6 @@ public class ParsedCommand
         catch (Exception e) {
             Logger.getInstance().error("PARSER", "Error parsing command: " + e.getMessage());
         }
-        return "Parsing done";
+        return "Lel";
     }
 }

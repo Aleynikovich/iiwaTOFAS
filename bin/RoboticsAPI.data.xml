@@ -5,8 +5,7 @@
         <frame id="_f79a21ed-4d4e-4f3b-b710-959f3aebaad9" name="TofasBase">
             <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1762860780290"/>
-                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1747638553089"/>
             </additionalInformation>
             <frame id="_9f4f3079-fb25-4007-81c7-2c459622f5f2" name="Kitting">
                 <transformation a="0.35058723306925954" b="1.545517845423623" c="-1.2144052417251379" x="-25.018461125786583" y="738.668390996136" z="158.09670937404292"/>
@@ -891,34 +890,6 @@
                         <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="-0.5011540400579373" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
-            </frame>
-        </frame>
-        <frame id="_199c3581-5837-4794-8e69-08eeeb38ad43" name="ToolSetBase">
-            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-            <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1762860811195"/>
-                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
-            </additionalInformation>
-            <frame id="_80225f22-fb42-4c15-a003-23b7f2d2c20c" name="T1">
-                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1762860828242"/>
-                    <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
-                </additionalInformation>
-            </frame>
-            <frame id="_c79d51bb-65eb-468b-a6c1-ef92bbdaf643" name="T2">
-                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1762860857133"/>
-                    <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
-                </additionalInformation>
-            </frame>
-            <frame id="_8786d1e9-4843-4687-a29d-250767e145ce" name="T3">
-                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1762860854771"/>
-                    <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
-                </additionalInformation>
             </frame>
         </frame>
     </world>
