@@ -10,7 +10,10 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
 {
     private static final int TASK_PORT = 30001;
     private static final int LOG_PORT = 30002;
+    private static final int JOINT_PORT = 30003;
+    private static final int JOINT_LOG_PORT = 300004;
     private ServerClass rosCommunicationServer;
+    private ServerClass jointStateServer;
 
     @Override
     public void initialize()
@@ -24,6 +27,7 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
                 try
                 {
                     rosCommunicationServer = new ServerClass(TASK_PORT, LOG_PORT);
+                    jointStateServer = new ServerClass(JOINT_PORT,JOINT_LOG_PORT );
                 } catch (IOException e)
                 {
                     Logger.getInstance().log("APP", "Error initializing ROS Communication Server: " + e.getMessage());
