@@ -96,8 +96,11 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
         String message = JointDataFormatter.formatJointPosition(currentPosition);
         
         // Broadcast to all connected clients
-        connectedClients.forEach((clientIp, connection) ->
+        for (Map.Entry<String, ClientConnection> entry : connectedClients.entrySet())
         {
+            String clientIp = entry.getKey();
+            ClientConnection connection = entry.getValue();
+            
             if (connection.isConnected())
             {
                 try
@@ -115,7 +118,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
             {
                 closeClientConnection(clientIp, connection);
             }
-        });
+        }
     }
     
     private void closeClientConnection(String clientIp, ClientConnection connection)
@@ -140,8 +143,10 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
         isRunning = false;
         
         // Close all client connections
-        connectedClients.forEach((clientIp, connection) ->
+        for (Map.Entry<String, ClientConnection> entry : connectedClients.entrySet())
         {
+            String clientIp = entry.getKey();
+            ClientConnection connection = entry.getValue();
             try
             {
                 connection.close();
@@ -150,7 +155,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
             {
                 Logger.getInstance().warn("JOINT_STATE_SRV", "Error closing client " + clientIp + ": " + e.getMessage());
             }
-        });
+        }
         connectedClients.clear();
         
         // Close server socket
