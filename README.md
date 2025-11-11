@@ -4,11 +4,12 @@ A TCP/IP-based control system for KUKA iiwa robots, designed to work with the KU
 
 ## What This Does
 
-This is a server application that runs on the KUKA robot controller and handles two types of connections:
+This is a server application that runs on the KUKA robot controller and handles three types of connections:
 - **Task Port (30001)**: Receives motion commands and control instructions
 - **Log Port (30002)**: Broadcasts JSON-formatted logging data in real-time
+- **Joint State Port (30003)**: Broadcasts real-time joint position data to connected clients
 
-Think of it as a bridge between your robot control software and the KUKA hardware. Commands come in as simple string messages, get parsed into robot motions, and everything that happens gets logged back to you.
+Think of it as a bridge between your robot control software and the KUKA hardware. Commands come in as simple string messages, get parsed into robot motions, and everything that happens gets logged back to you. Joint state data is continuously broadcast to all connected clients for monitoring and control feedback.
 
 ## Features
 
@@ -18,13 +19,19 @@ Think of it as a bridge between your robot control software and the KUKA hardwar
 - Continuous motion support for smooth trajectories
 - Digital and analog I/O control
 - Real-time JSON logging over a dedicated connection
+- **Real-time joint state broadcasting to multiple clients (100Hz)**
 - Command validation and error handling
 - Session management with unique client IDs
 - Automatic command history saved to `parsedData/parsedCommand.json`
 
 ## Architecture
 
-The system uses a dual-port architecture. The log client must be connected first before task clients can send commands - this ensures you never miss any logging information.
+The system uses a multi-port architecture with three dedicated server ports:
+- Port 30001 for task commands
+- Port 30002 for log data
+- Port 30003 for joint state data
+
+The log client must be connected first before task clients can send commands - this ensures you never miss any logging information. The joint state server operates independently and accepts multiple simultaneous client connections.
 
 ```mermaid
 ---
@@ -127,6 +134,7 @@ flowchart TD
 4. The server will automatically start listening on:
    - Port 30001 (task commands)
    - Port 30002 (logging)
+   - Port 30003 (joint state broadcasting)
 
 ### Running the Python Clients
 
@@ -143,6 +151,39 @@ python pythonUtils/task_client.py
 ```
 
 You'll need to update the `SERVER_IP` in both files to match your robot's IP address.
+
+### Receiving Joint State Data
+
+To receive real-time joint state data from the robot, connect to port 30003. The robot broadcasts joint positions at 100Hz (10ms intervals) in the following format:
+
+```
+J1;J2;J3;J4;J5;J6;J7#
+```
+
+Where J1-J7 are the joint angles in degrees. Example Python client:
+
+```python
+import socket
+
+SERVER_IP = "10.66.171.147"  # Robot IP
+JOINT_STATE_PORT = 30003
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((SERVER_IP, JOINT_STATE_PORT))
+
+while True:
+    data = ""
+    while True:
+        char = sock.recv(1).decode()
+        if char == '#':
+            break
+        data += char
+    
+    joints = data.split(';')
+    print(f"Joint positions: {joints}")
+```
+
+Multiple clients can connect simultaneously to receive joint state updates.
 
 ## Command Protocol
 
@@ -206,8 +247,8 @@ iiwaTOFAS/
 │       └── robot/
 │           ├── commands/        # Command data structures
 │           ├── communication/   # TCP server and client handlers
-│           │   ├── server/      # ServerClass, ClientHandler, Logger
-│           │   └── client/      # Client connection utilities
+│           │   ├── server/      # ServerClass, JointStateServerManager, Logger
+│           │   └── client/      # Client connection utilities (deprecated)
 │           ├── executor/        # Robot motion execution
 │           └── utils/           # Command parser, formatters
 ├── pythonUtils/
@@ -232,10 +273,22 @@ When you connect a client to the task port:
 
 The logging system uses a singleton pattern to ensure all server components can log events, and everything gets broadcast to connected log clients in real-time.
 
+### Joint State Broadcasting
+
+The robot continuously broadcasts joint position data to all connected clients on port 30003:
+
+1. `JointStateServerManager` starts a server socket on port 30003
+2. Multiple clients can connect simultaneously
+3. Every 10ms (100Hz), the current joint positions are read from the robot
+4. Joint data is formatted as semicolon-separated values: `J1;J2;J3;J4;J5;J6;J7#`
+5. The message is broadcast to all connected clients
+6. Disconnected clients are automatically removed
+
 ## Key Classes
 
-- **ServerClass**: Main TCP server managing both ports
-- **ClientHandler**: Handles individual client connections
+- **ServerClass**: Main TCP server managing task and log ports
+- **JointStateServerManager**: Server that broadcasts joint positions to multiple clients
+- **ClientHandler**: Handles individual client connections for tasks and logging
 - **CommandParser**: Converts string commands to ParsedCommand objects
 - **Logger**: Singleton that broadcasts events to log clients
 - **ParsedCommand**: Validated, structured command ready for execution
