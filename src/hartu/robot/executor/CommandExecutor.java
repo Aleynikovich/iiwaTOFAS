@@ -515,15 +515,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private boolean unlockGimatic() {
         try {
             Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer");
-            
-            toolControlIO.setOutput3(false);
-            toolControlIO.setOutput2(true);
-            toolControlIO.setOutput1(true);
-            gimaticIO.setDO_Flange2(true);
-            gimaticIO.setDO_Flange1(true);
+
+            gimaticIO.setDO_Flange7(true);
             Thread.sleep(300);
-            toolControlIO.setOutput1(false);
-            gimaticIO.setDO_Flange1(false);
             Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer unlocked");
             return true;
         } catch (InterruptedException e) {
