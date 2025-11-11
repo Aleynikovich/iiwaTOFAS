@@ -488,15 +488,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private boolean lockGimatic() {
         try {
             Logger.getInstance().log("ROBOT_EXEC", "Locking Gimatic tool changer");
-            
-            toolControlIO.setOutput3(true);
-            toolControlIO.setOutput2(false);
-            toolControlIO.setOutput1(true);
-            gimaticIO.setDO_Flange2(false);
-            gimaticIO.setDO_Flange1(true);
+            gimaticIO.setDO_Flange7(false);
             Thread.sleep(300);
-            toolControlIO.setOutput1(false);
-            gimaticIO.setDO_Flange1(false);
             Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer locked");
             return true;
         } catch (InterruptedException e) {
@@ -515,7 +508,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private boolean unlockGimatic() {
         try {
             Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer");
-
             gimaticIO.setDO_Flange7(true);
             Thread.sleep(300);
             Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer unlocked");
