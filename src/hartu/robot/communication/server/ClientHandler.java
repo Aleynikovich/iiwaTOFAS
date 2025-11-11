@@ -168,11 +168,11 @@ public class ClientHandler implements Runnable
                         String responseToClient;
                         if (executionSuccess)
                         {
-                            responseToClient = "FREE|" + commandId + ProtocolConstants.MESSAGE_TERMINATOR;
+                            responseToClient = "FREE|" + commandId + "|success" + ProtocolConstants.MESSAGE_TERMINATOR;
                         }
                         else
                         {
-                            responseToClient = "FREE|" + commandId + ProtocolConstants.MESSAGE_TERMINATOR;
+                            responseToClient = "FREE|" + commandId + "|failure" + ProtocolConstants.MESSAGE_TERMINATOR;
                         }
                         sendMessage(responseToClient);
 
