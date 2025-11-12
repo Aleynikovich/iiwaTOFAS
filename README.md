@@ -18,20 +18,31 @@ Think of it as a bridge between your robot control software and the KUKA hardwar
 - Both joint-space and Cartesian-space motion commands
 - Continuous motion support for smooth trajectories
 - Digital and analog I/O control
-- Real-time JSON logging over a dedicated connection
+- **Dual-output logging system:**
+  - Real-time network broadcast to multiple Python log clients
+  - Console output visible on robot SmartPad (foreground tasks)
+  - Simultaneous logging to both destinations
 - **Real-time joint state broadcasting to multiple clients (100Hz)**
 - Command validation and error handling
 - Session management with unique client IDs
 - Automatic command history saved to `parsedData/parsedCommand.json`
+- Robust exception handling - errors don't crash the system
 
 ## Architecture
 
 The system uses a multi-port architecture with three dedicated server ports:
 - Port 30001 for task commands
-- Port 30002 for log data
+- Port 30002 for log data (supports multiple simultaneous clients)
 - Port 30003 for joint state data
 
-The log client must be connected first before task clients can send commands - this ensures you never miss any logging information. The joint state server operates independently and accepts multiple simultaneous client connections.
+### Logging System
+
+The logging system has been redesigned to support dual outputs:
+- **Network Logging**: Broadcasts to all connected Python log clients on port 30002
+- **Console Logging**: Writes to robot SmartPad console (foreground tasks only)
+- **Multi-Handler Architecture**: Logger acts as a broadcast hub, sending messages to all registered handlers simultaneously
+
+The log client connection is recommended before sending task commands to ensure you capture all logging information. The joint state server operates independently and accepts multiple simultaneous client connections.
 
 ```mermaid
 ---
