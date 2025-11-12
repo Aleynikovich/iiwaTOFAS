@@ -32,6 +32,9 @@ public class ServerClass implements IClientHandlerCallback
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
         
+        // Register console handler globally so ALL logs (from all tasks/threads) appear on robot console
+        Logger.getInstance().addHandler(new ConsoleLogHandler());
+        
         // Create network log handler and register it with the Logger
         this.networkLogHandler = new NetworkLogHandler();
         Logger.getInstance().addHandler(networkLogHandler);

@@ -42,10 +42,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     @Override
     public void initialize() {
-        // Enable console logging for the foreground task
-        // This allows logs to appear on the robot's SmartPad
-        Logger.getInstance().addHandler(new hartu.robot.communication.server.ConsoleLogHandler());
-        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor with console logging enabled.");
+        // Console logging is enabled globally in ServerClass, so all logs appear on robot console
+        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
