@@ -54,6 +54,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Logger.getInstance().log("ROBOT_EXEC", "Cleared " + flushedCount + " stale command(s) from queue on initialization.");
         }
         
+        // Move robot to home position after flushing queue
+        moveToHome();
+        
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
@@ -115,9 +118,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
                                 break;
                             case PROGRAM_CALL:
                                 executionSuccess = executeProgramCallCommand(command);
-                                break;
-                            case SYSTEM:
-                                executionSuccess = executeSystemCommand(command);
                                 break;
                             case UNKNOWN:
                             default:
@@ -393,39 +393,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
             }
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Executes system commands such as flushing the command queue.
-     * 
-     * @param command The ParsedCommand representing a system command.
-     * @return True if the system command executed successfully, false otherwise.
-     */
-    private boolean executeSystemCommand(ParsedCommand command) {
-        ActionTypes actionType = command.getActionType();
-        Logger.getInstance().log("ROBOT_EXEC", "Executing system command: " + actionType.name() + " for command ID " + command.getId());
-        
-        try {
-            if (actionType == ActionTypes.FLUSH_QUEUE) {
-                // Flush the command queue
-                int flushedCount = CommandQueue.flushQueue();
-                Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " command(s) from queue");
-                
-                // Move robot to home position after flushing
-                boolean movedHome = moveToHome();
-                if (!movedHome) {
-                    Logger.getInstance().warn("ROBOT_EXEC", "Queue flushed but failed to move to home position");
-                }
-                
-                return movedHome;
-            } else {
-                Logger.getInstance().error("ROBOT_EXEC", "Unknown system command: " + actionType.name());
-                return false;
-            }
-        } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "System command failed for ID " + command.getId() + ": " + e.getMessage());
             return false;
         }
     }

@@ -20,9 +20,6 @@ public enum ActionTypes {
     DIGITAL_INPUT(12, false, false, false, MovementType.UNKNOWN),
     ANALOG_INPUT(13, false, false, false, MovementType.UNKNOWN),
 
-    // --- System Commands ---
-    FLUSH_QUEUE(14, false, false, false, MovementType.UNKNOWN),
-
     // --- Default and Program Call ---
     // Program call numbers are added to this offset. E.g., PROGRAM_CALL_1 is 100
     PROGRAM_CALL_OFFSET(100, false, false, false, MovementType.UNKNOWN),
@@ -68,9 +65,6 @@ public enum ActionTypes {
         }
         if (value >= 9 && value <= 13) {
             return CommandCategory.IO;
-        }
-        if (value == 14) {
-            return CommandCategory.SYSTEM;
         }
         if (value >= PROGRAM_CALL_OFFSET.value) {
             return CommandCategory.PROGRAM_CALL;

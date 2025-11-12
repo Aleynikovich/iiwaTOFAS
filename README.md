@@ -230,20 +230,6 @@ ACTION_TYPE|NUM_POINTS|POINT_DATA|VELOCITY|ACCELERATION|JERK|ID#
 | PTP_FRAME_C | Continuous PTP in Cartesian space | 7 |
 | LIN_FRAME_C | Continuous linear in Cartesian space | 8 |
 
-### Supported I/O Commands
-
-| Action Type | Description | Value |
-|------------|-------------|-------|
-| ACTIVATE_IO | Digital output control | 9 |
-| DIGITAL_INPUT | Read digital input | 12 |
-| ANALOG_INPUT | Read analog input | 13 |
-
-### Supported System Commands
-
-| Action Type | Description | Value |
-|------------|-------------|-------|
-| FLUSH_QUEUE | Flush command queue and move to home | 14 |
-
 ### Example Commands
 
 Move to joint position (all angles in degrees):
@@ -273,24 +259,7 @@ Reading digital inputs:
 12|PIN_NUMBER|ID#
 ```
 
-### System Commands
-
-Flush command queue (clears all pending commands and moves robot to home position):
-```
-14|0||0.0|0.0|0.0|flush_cmd#
-```
-
-This command is useful when:
-- Restarting the CommandExecutor application
-- Recovering from an error state
-- Clearing stale commands after an emergency stop
-
-When executed:
-1. All pending commands in the queue are removed
-2. Any threads waiting for those commands are notified (marked as failed)
-3. The robot moves to home position (all joints at 0 degrees)
-
-**Note:** The flush queue operation is also automatically performed when the CommandExecutor initializes, ensuring a clean start.
+**Note:** The command queue is automatically flushed when the CommandExecutor initializes, clearing any stale commands and moving the robot to home position (all joints at 0 degrees).
 
 ## Project Structure
 
