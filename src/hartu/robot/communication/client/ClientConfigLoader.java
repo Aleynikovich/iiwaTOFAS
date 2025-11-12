@@ -7,7 +7,12 @@ import java.util.Properties;
 
 /**
  * Utility class to load client-side network configuration from properties files.
+ * 
+ * @deprecated This class is deprecated as it was used by the now-deprecated Ros2ClientManager.
+ * The robot now acts as a server for joint state data instead of a client.
+ * See {@link hartu.robot.communication.server.JointStateServerManager}.
  */
+@Deprecated
 public class ClientConfigLoader {
 
     private static final String CLIENT_CONFIG_FILE_PATH = "client_config.properties";

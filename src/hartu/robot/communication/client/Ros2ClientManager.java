@@ -11,6 +11,15 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @deprecated This class is deprecated as the robot now acts as a server for joint state data.
+ * Use {@link hartu.robot.communication.server.JointStateServerManager} instead.
+ * 
+ * Previously, the robot acted as a client connecting to an external server to publish joint states.
+ * The architecture has been changed so that the robot acts as a server, and external clients
+ * connect to it to receive joint state updates on port 30003.
+ */
+@Deprecated
 public class Ros2ClientManager extends RoboticsAPICyclicBackgroundTask
 {
     @Inject

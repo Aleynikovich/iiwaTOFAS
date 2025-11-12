@@ -8,6 +8,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * @deprecated This class is deprecated as it was used by the now-deprecated Ros2ClientManager.
+ * The robot now acts as a server for joint state data instead of a client.
+ * See {@link hartu.robot.communication.server.JointStateServerManager}.
+ */
+@Deprecated
 public class ClientClass
 {
     private Socket clientSocket;
