@@ -49,8 +49,12 @@ public class ServerPortListener implements Runnable
     {
         Logger.getInstance().log("COMM", listenerType.getName() + " started listening on port " + serverSocket.getLocalPort());
 
-        try (ServerSocket ss = this.serverSocket)
+        // NOTE: Removed try-with-resources to avoid "ServerSocket not AutoCloseable" error
+        // The finally block handles socket closing, making this equivalent.
+        try 
         {
+            ServerSocket ss = this.serverSocket;
+            
             while (isRunning)
             {
                 Logger.getInstance().log("COMM", listenerType.getName() + ": Waiting for a new client to connect...");
@@ -134,6 +138,7 @@ public class ServerPortListener implements Runnable
         }
         finally
         {
+            // This logic is now explicitly responsible for closing the socket
             if (!serverSocket.isClosed())
             {
                 try

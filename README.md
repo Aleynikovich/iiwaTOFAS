@@ -326,6 +326,12 @@ The continuous motion commands (PTP_AXIS_C, etc.) are useful when you need smoot
 
 Commands are validated before execution, so malformed inputs won't crash the server or damage the robot. Parse errors get logged and the connection stays open.
 
+## Documentation
+
+- **[KUKA Programming Guide](KUKA_PROGRAMMING_GUIDE.md)**: Comprehensive guide for programming KUKA robots using the Sunrise.OS API. Essential reading for AI agents and developers new to KUKA programming.
+- **[Log Format](LOG_FORMAT.md)**: Details of the JSON logging format
+- **[Refactoring Guidelines](REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
+
 ## Contributing
 
 Feel free to open issues or submit pull requests. When adding new command types, make sure to:
