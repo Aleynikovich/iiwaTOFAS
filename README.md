@@ -156,6 +156,13 @@ There are three Python utilities in the `pythonUtils/` directory:
 python pythonUtils/log_client.py
 ```
 
+The log client displays color-coded messages based on severity:
+- 🟢 **INFO** (Green): Normal operation messages
+- 🟡 **WARN** (Yellow): Warnings and recoverable issues
+- 🔴 **ERROR** (Red): Errors and failures
+
+Message format: `[timestamp] [LEVEL] [tag] message`
+
 **Task Client** (for testing commands):
 ```bash
 python pythonUtils/task_client.py
