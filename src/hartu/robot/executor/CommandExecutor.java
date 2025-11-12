@@ -69,7 +69,14 @@ public class CommandExecutor extends RoboticsAPIApplication {
     public void run() {
         // Main execution loop - runs indefinitely until application is stopped
         // All exceptions are caught and logged without terminating the loop
+        Logger.getInstance().log("ROBOT_EXEC", "Starting main execution loop.");
         while (true) {
+            // Check for intentional shutdown signal at the start of each iteration
+            if (Thread.currentThread().isInterrupted()) {
+                Logger.getInstance().log("ROBOT_EXEC", "Shutdown signal received, exiting execution loop gracefully.");
+                break;
+            }
+            
             try {
                 CommandResultHolder resultHolder = CommandQueue.pollCommand(100, TimeUnit.MILLISECONDS);
 
@@ -116,7 +123,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
                     TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
-                    Logger.getInstance().warn("ROBOT_EXEC", "Execution loop interrupted, exiting...");
+                    Logger.getInstance().log("ROBOT_EXEC", "Sleep interrupted during error recovery - shutdown signal detected, exiting...");
                     break;
                 }
             }
@@ -192,9 +199,27 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 Logger.getInstance().error("ROBOT_EXEC", "Motion execution failed for command ID " + command.getId() + ": " + e.getMessage());
                 Logger.getInstance().error("ROBOT_EXEC", "This may indicate IK failure or hardware issue.");
                 motionSuccess = false;
-            } catch (Exception e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Unexpected exception during motion for command ID " + command.getId() + ": " + e.getMessage(), e);
+            } catch (InterruptedException e) {
+                // Motion was interrupted - this is recoverable unless the main thread is being shut down
+                Logger.getInstance().warn("ROBOT_EXEC", "Motion interrupted for command ID " + command.getId() + ": " + e.getMessage());
+                Logger.getInstance().warn("ROBOT_EXEC", "Continuing execution - command marked as failed.");
                 motionSuccess = false;
+                // Clear the interrupted status to allow continued execution
+                // The main loop will handle intentional shutdown signals separately
+                Thread.interrupted();
+            } catch (Exception e) {
+                // Check if this is a wrapped InterruptedException (e.g., ThreadInterruptedException)
+                Throwable cause = e.getCause();
+                if (cause instanceof InterruptedException) {
+                    Logger.getInstance().warn("ROBOT_EXEC", "Motion interrupted (wrapped) for command ID " + command.getId() + ": " + e.getMessage());
+                    Logger.getInstance().warn("ROBOT_EXEC", "Continuing execution - command marked as failed.");
+                    motionSuccess = false;
+                    // Clear the interrupted status to allow continued execution
+                    Thread.interrupted();
+                } else {
+                    Logger.getInstance().error("ROBOT_EXEC", "Unexpected exception during motion for command ID " + command.getId() + ": " + e.getMessage(), e);
+                    motionSuccess = false;
+                }
             }
 
         } catch (Exception e) {
