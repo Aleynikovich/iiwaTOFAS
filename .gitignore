@@ -50,3 +50,4 @@ deploy/
 # Any other specific KUKA generated files or folders that should not be in Git
 src/hartu/execution/
 src/hartu/robot/motion/
+!bin/
