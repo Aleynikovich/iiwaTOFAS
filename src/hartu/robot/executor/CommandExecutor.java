@@ -42,7 +42,11 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     @Override
     public void initialize() {
-        Logger.getInstance().log("ROBOT_EXEC", "Initializing. Ready to take commands from queue.");
+        // Enable console logging for the foreground task
+        // This allows logs to appear on the robot's SmartPad
+        Logger.getInstance().addHandler(new hartu.robot.communication.server.ConsoleLogHandler());
+        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor with console logging enabled.");
+        Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
     @Override
@@ -592,6 +596,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
     @Override
     public void dispose() {
         Logger.getInstance().log("ROBOT_EXEC", "Disposing CommandExecutor.");
+        // Note: Don't clear all handlers here as other tasks may still be logging
         super.dispose();
     }
 }

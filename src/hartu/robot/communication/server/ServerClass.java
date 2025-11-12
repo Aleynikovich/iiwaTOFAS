@@ -16,6 +16,7 @@ public class ServerClass implements IClientHandlerCallback
     private ClientHandler taskClientHandler;
     private ClientHandler logClientHandler;
     private volatile boolean isLogClientConnected = false;
+    private final NetworkLogHandler networkLogHandler;
 
     private Thread taskListenerThread;
     private Thread logListenerThread;
@@ -30,6 +31,11 @@ public class ServerClass implements IClientHandlerCallback
 
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
+        
+        // Create network log handler and register it with the Logger
+        this.networkLogHandler = new NetworkLogHandler();
+        Logger.getInstance().addHandler(networkLogHandler);
+        
         Logger.getInstance().log("SERVER", "Server initialized on Task Port: " + taskPort + ", Log Port: " + logPort);
     }
 
@@ -76,9 +82,11 @@ public class ServerClass implements IClientHandlerCallback
             Logger.getInstance().log("SERVER", "Interrupted while waiting for listener threads to stop: " + e.getMessage());
         }
 
-        // IMPORTANT: Clear the logClientHandler in Logger BEFORE closing it
-        if (logClientHandler != null) {
-            Logger.getInstance().setLogClientHandler(null); // Clear the reference
+        // Close network log handler and remove it from Logger
+        if (networkLogHandler != null)
+        {
+            Logger.getInstance().removeHandler(networkLogHandler);
+            networkLogHandler.close();
         }
 
         if (taskClientHandler != null)
@@ -90,7 +98,7 @@ public class ServerClass implements IClientHandlerCallback
             logClientHandler.close();
         }
         this.isLogClientConnected = false;
-        Logger.getInstance().log("SERVER", "Server stopped."); // This log will now not try to use a closed handler
+        Logger.getInstance().log("SERVER", "Server stopped.");
     }
 
     @Override
@@ -106,8 +114,11 @@ public class ServerClass implements IClientHandlerCallback
         else if (listenerType == ListenerType.LOG_LISTENER)
         {
             this.logClientHandler = handler;
-            Logger.getInstance().setLogClientHandler(this.logClientHandler);
+            
+            // Add this client to the network log handler
+            networkLogHandler.addClient(clientName, handler);
             this.isLogClientConnected = true;
+            Logger.getInstance().log("SERVER", "Log client " + clientName + " added to network log handler (total clients: " + networkLogHandler.getClientCount() + ")");
         }
         Logger.getInstance().log("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
     }
