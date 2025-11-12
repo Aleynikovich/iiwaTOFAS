@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -25,21 +23,21 @@ import java.util.concurrent.TimeUnit;
 public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
 {
     private static final int JOINT_STATE_PORT = 30003;
-
+    
     @Inject
     private LBR lbr;
-
+    
     private ServerSocket serverSocket;
     private Thread listenerThread;
     private volatile boolean isRunning = false;
-    private final Map<String, ClientConnection> connectedClients = new ConcurrentHashMap<String, ClientConnection>();
+    private final Map<String, ClientConnection> connectedClients = new ConcurrentHashMap<>();
 
     @Override
     public void initialize()
     {
         initializeCyclic(0, 10, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         lbr = getContext().getDeviceFromType(LBR.class);
-
+        
         // Start server listener in a separate thread
         listenerThread = new Thread(new Runnable()
         {
@@ -51,7 +49,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
                     serverSocket = new ServerSocket(JOINT_STATE_PORT);
                     isRunning = true;
                     Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server started on port " + JOINT_STATE_PORT);
-
+                    
                     while (isRunning)
                     {
                         try
@@ -59,7 +57,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
                             Socket clientSocket = serverSocket.accept();
                             String clientIp = clientSocket.getInetAddress().getHostAddress();
                             Logger.getInstance().log("JOINT_STATE_SRV", "New client connected: " + clientIp);
-
+                            
                             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
                             ClientConnection connection = new ClientConnection(clientSocket, writer);
                             connectedClients.put(clientIp, connection);
@@ -81,7 +79,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
         });
         listenerThread.setDaemon(true);
         listenerThread.start();
-
+        
         Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server Manager initialized.");
     }
 
@@ -92,20 +90,18 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
         {
             return;
         }
-
+        
         // Get current joint position
         JointPosition currentPosition = lbr.getCurrentJointPosition();
         String message = JointDataFormatter.formatJointPosition(currentPosition);
-
+        
         // Broadcast to all connected clients
-        // Use a snapshot of the entry set to avoid issues if the map is modified during iteration
-        List<Map.Entry<String, ClientConnection>> entries =
-                new ArrayList<Map.Entry<String, ClientConnection>>(connectedClients.entrySet());
-        for (Map.Entry<String, ClientConnection> entry : entries)
+        for (Map.Entry<String, ClientConnection> entry : connectedClients.entrySet())
         {
             String clientIp = entry.getKey();
             ClientConnection connection = entry.getValue();
-            if (connection != null && connection.isConnected())
+            
+            if (connection.isConnected())
             {
                 try
                 {
@@ -124,15 +120,12 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
             }
         }
     }
-
+    
     private void closeClientConnection(String clientIp, ClientConnection connection)
     {
         try
         {
-            if (connection != null)
-            {
-                connection.close();
-            }
+            connection.close();
             connectedClients.remove(clientIp);
             Logger.getInstance().log("JOINT_STATE_SRV", "Client disconnected: " + clientIp);
         }
@@ -146,22 +139,17 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
     public void dispose()
     {
         super.dispose();
-
+        
         isRunning = false;
-
-        // Close all client connections (use snapshot to avoid concurrent modification issues)
-        List<Map.Entry<String, ClientConnection>> entries =
-                new ArrayList<Map.Entry<String, ClientConnection>>(connectedClients.entrySet());
-        for (Map.Entry<String, ClientConnection> entry : entries)
+        
+        // Close all client connections
+        for (Map.Entry<String, ClientConnection> entry : connectedClients.entrySet())
         {
             String clientIp = entry.getKey();
             ClientConnection connection = entry.getValue();
             try
             {
-                if (connection != null)
-                {
-                    connection.close();
-                }
+                connection.close();
             }
             catch (IOException e)
             {
@@ -169,7 +157,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
             }
         }
         connectedClients.clear();
-
+        
         // Close server socket
         if (serverSocket != null && !serverSocket.isClosed())
         {
@@ -183,7 +171,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
                 Logger.getInstance().error("JOINT_STATE_SRV", "Error closing server socket: " + e.getMessage());
             }
         }
-
+        
         // Wait for listener thread to finish
         if (listenerThread != null && listenerThread.isAlive())
         {
@@ -197,10 +185,10 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
                 Logger.getInstance().warn("JOINT_STATE_SRV", "Interrupted while waiting for listener thread.");
             }
         }
-
+        
         Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server Manager disposed.");
     }
-
+    
     /**
      * Inner class to represent a client connection
      */
@@ -208,23 +196,23 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
     {
         private final Socket socket;
         private final PrintWriter writer;
-
+        
         public ClientConnection(Socket socket, PrintWriter writer)
         {
             this.socket = socket;
             this.writer = writer;
         }
-
+        
         public PrintWriter getWriter()
         {
             return writer;
         }
-
+        
         public boolean isConnected()
         {
             return socket != null && socket.isConnected() && !socket.isClosed();
         }
-
+        
         public void close() throws IOException
         {
             if (writer != null)
