@@ -259,6 +259,8 @@ Reading digital inputs:
 12|PIN_NUMBER|ID#
 ```
 
+**Note:** The command queue is automatically flushed when the CommandExecutor initializes, clearing any stale commands and moving the robot to home position (all joints at 0 degrees).
+
 ## Project Structure
 
 ```
