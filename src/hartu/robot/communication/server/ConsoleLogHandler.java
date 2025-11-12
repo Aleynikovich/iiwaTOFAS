@@ -3,7 +3,7 @@ package hartu.robot.communication.server;
 /**
  * Log handler that writes messages to the robot's console using System.out.
  * This allows logs to be visible on the KUKA SmartPad/Teach Pendant.
- * Can only be used from foreground tasks (RoboticsAPIApplication), not background tasks.
+ * Works from any thread (foreground tasks and background tasks).
  */
 public class ConsoleLogHandler implements LogHandler
 {

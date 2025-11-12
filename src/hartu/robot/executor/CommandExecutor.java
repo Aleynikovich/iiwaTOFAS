@@ -14,6 +14,7 @@ import com.kuka.roboticsAPI.executionModel.ExecutionException;
 import com.kuka.roboticsAPI.executionModel.ExternalStopException;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.motionModel.*;
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
@@ -42,10 +43,25 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     @Override
     public void initialize() {
-        // Enable console logging for the foreground task
-        // This allows logs to appear on the robot's SmartPad
-        Logger.getInstance().addHandler(new hartu.robot.communication.server.ConsoleLogHandler());
-        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor with console logging enabled.");
+        // Console logging is enabled globally in ServerClass, so all logs appear on robot console
+        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
+        
+        // Flush any stale commands from previous runs
+        int flushedCount = CommandQueue.flushQueue();
+        if (flushedCount > 0) {
+            Logger.getInstance().log("ROBOT_EXEC", "Cleared " + flushedCount + " stale command(s) from queue on initialization.");
+        }
+        
+        // Move robot to home position after flushing queue
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
+            iiwa.move(ptpHome().setJointVelocityRel(0.2));
+            Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+        }
+        
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
