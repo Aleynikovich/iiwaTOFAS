@@ -42,13 +42,17 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     @Override
     public void initialize() {
-        Logger.getInstance().log("ROBOT_EXEC", "Initializing. Ready to take commands from queue.");
+        // Console logging is enabled globally in ServerClass, so all logs appear on robot console
+        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
+        Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
     @Override
     public void run() {
-        try {
-            while (true) {
+        // Main execution loop - runs indefinitely until application is stopped
+        // All exceptions are caught and logged without terminating the loop
+        while (true) {
+            try {
                 CommandResultHolder resultHolder = CommandQueue.pollCommand(100, TimeUnit.MILLISECONDS);
 
                 if (resultHolder != null) {
@@ -73,26 +77,33 @@ public class CommandExecutor extends RoboticsAPIApplication {
                                 break;
                         }
                     } catch (Exception e) {
-                        Logger.getInstance().error("ROBOT_EXEC", "Error: Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
-                        Logger.getInstance().error("ROBOT_EXEC", "Stack trace:" + e);
+                        Logger.getInstance().error("ROBOT_EXEC", "Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
+                        Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
                         executionSuccess = false;
+                        // Continue processing - don't let one command failure stop the system
                     } finally {
                         resultHolder.setSuccess(executionSuccess);
                         resultHolder.getLatch().countDown();
                         Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
                     }
                 }
+            } catch (Exception e) {
+                // Catch any unexpected exceptions in the main loop itself
+                // This prevents the entire run loop from exiting
+                Logger.getInstance().error("ROBOT_EXEC", "Unexpected error in main execution loop: " + e.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+                Logger.getInstance().log("ROBOT_EXEC", "Recovering from error and continuing execution...");
+                // Brief pause to prevent tight error loops
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    Logger.getInstance().warn("ROBOT_EXEC", "Execution loop interrupted, exiting...");
+                    break;
+                }
             }
-        } catch (Exception e) {
-            // Catch any other unexpected exceptions that cause the entire run loop to exit
-            Logger.getInstance().error("ROBOT_EXEC", "Critical, unhandled error in CommandExecutor run loop: " + e.getMessage());
-            // Log full stack trace for debugging critical unhandled exceptions
-            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
-        } finally {
-            // This block will be executed if the run() method exits for any reason.
-            // The dispose() method is called by the RoboticsAPIApplication framework as part of its lifecycle.
-            Logger.getInstance().log("ROBOT_EXEC", "CommandExecutor run method is exiting.");
         }
+        Logger.getInstance().log("ROBOT_EXEC", "CommandExecutor run method is exiting.");
     }
 
     /**
@@ -128,6 +139,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
             return false;
         }
 
+        boolean motionSuccess = true;
+        
         try {
             IMotion motionToExecute;
             if (motions.size() > 1) {
@@ -139,28 +152,40 @@ public class CommandExecutor extends RoboticsAPIApplication {
             }
 
             // Log the specific motion or batch details
-            Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId() + " with motion: " + motionToExecute.toString());
-            //TODO: Catch Internal APIs Software axis limit violations in order to not stop task execution continuity
+            Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId());
+            
+            // Execute motion with comprehensive exception handling
+            // This prevents KUKA API exceptions (IK failures, unreachable poses, axis limits) from crashing the program
             try {
                 IMotionContainer container = iiwa.moveAsync(motionToExecute);
                 container.await();
-                Logger.getInstance().log("ROBOT_EXEC", "All motions for command ID " + command.getId() + " completed successfully.");
+                Logger.getInstance().log("ROBOT_EXEC", "Motion for command ID " + command.getId() + " completed successfully.");
             } catch (CommandInvalidException e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Invalid motion: " + e.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Invalid motion parameters for command ID " + command.getId() + ": " + e.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "This usually means unreachable pose, singularity, or joint limits exceeded.");
+                motionSuccess = false;
             } catch (CancelledException e) {
-                Logger.getInstance().warn("ROBOT_EXEC", "Motion was cancelled: " + e.getMessage());
+                Logger.getInstance().warn("ROBOT_EXEC", "Motion cancelled for command ID " + command.getId() + ": " + e.getMessage());
+                motionSuccess = false;
             } catch (ExternalStopException e) {
-                Logger.getInstance().warn("ROBOT_EXEC", "Motion stopped externally: " + e.getMessage());
+                Logger.getInstance().warn("ROBOT_EXEC", "Motion stopped externally for command ID " + command.getId() + ": " + e.getMessage());
+                motionSuccess = false;
+            } catch (ExecutionException e) {
+                Logger.getInstance().error("ROBOT_EXEC", "Motion execution failed for command ID " + command.getId() + ": " + e.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "This may indicate IK failure or hardware issue.");
+                motionSuccess = false;
             } catch (Exception e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Unhandled exception: " + e.getMessage(), e);
+                Logger.getInstance().error("ROBOT_EXEC", "Unexpected exception during motion for command ID " + command.getId() + ": " + e.getMessage(), e);
+                motionSuccess = false;
             }
 
         } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Error during movement execution for command ID " + command.getId() + ": " + e.getMessage());
-            return false;
+            // Catch any errors in motion creation or setup
+            Logger.getInstance().error("ROBOT_EXEC", "Error preparing motion for command ID " + command.getId() + ": " + e.getMessage(), e);
+            motionSuccess = false;
         }
 
-        return true;
+        return motionSuccess;
     }
 
     /**
@@ -592,6 +617,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
     @Override
     public void dispose() {
         Logger.getInstance().log("ROBOT_EXEC", "Disposing CommandExecutor.");
+        // Note: Don't clear all handlers here as other tasks may still be logging
         super.dispose();
     }
 }
