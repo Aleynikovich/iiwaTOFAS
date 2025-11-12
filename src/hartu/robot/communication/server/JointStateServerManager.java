@@ -86,38 +86,47 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
     @Override
     public void runCyclic()
     {
-        if (!isRunning || connectedClients.isEmpty())
+        try
         {
-            return;
-        }
-        
-        // Get current joint position
-        JointPosition currentPosition = lbr.getCurrentJointPosition();
-        String message = JointDataFormatter.formatJointPosition(currentPosition);
-        
-        // Broadcast to all connected clients
-        for (Map.Entry<String, ClientConnection> entry : connectedClients.entrySet())
-        {
-            String clientIp = entry.getKey();
-            ClientConnection connection = entry.getValue();
-            
-            if (connection.isConnected())
+            if (!isRunning || connectedClients.isEmpty())
             {
-                try
+                return;
+            }
+            
+            // Get current joint position
+            JointPosition currentPosition = lbr.getCurrentJointPosition();
+            String message = JointDataFormatter.formatJointPosition(currentPosition);
+            
+            // Broadcast to all connected clients
+            for (Map.Entry<String, ClientConnection> entry : connectedClients.entrySet())
+            {
+                String clientIp = entry.getKey();
+                ClientConnection connection = entry.getValue();
+                
+                if (connection.isConnected())
                 {
-                    connection.getWriter().print(message);
-                    connection.getWriter().flush();
+                    try
+                    {
+                        connection.getWriter().print(message);
+                        connection.getWriter().flush();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.getInstance().warn("JOINT_STATE_SRV", "Error sending to client " + clientIp + ": " + e.getMessage());
+                        closeClientConnection(clientIp, connection);
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Logger.getInstance().warn("JOINT_STATE_SRV", "Error sending to client " + clientIp + ": " + e.getMessage());
                     closeClientConnection(clientIp, connection);
                 }
             }
-            else
-            {
-                closeClientConnection(clientIp, connection);
-            }
+        }
+        catch (Exception e)
+        {
+            // Catch any unexpected errors to prevent the cyclic task from stopping
+            Logger.getInstance().error("JOINT_STATE_SRV", "Unexpected error in joint state broadcast: " + e.getMessage());
+            // Don't rethrow - let the task continue running
         }
     }
     
