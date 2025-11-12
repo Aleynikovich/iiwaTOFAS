@@ -199,14 +199,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 Logger.getInstance().error("ROBOT_EXEC", "Motion execution failed for command ID " + command.getId() + ": " + e.getMessage());
                 Logger.getInstance().error("ROBOT_EXEC", "This may indicate IK failure or hardware issue.");
                 motionSuccess = false;
-            } catch (InterruptedException e) {
-                // Motion was interrupted - this is recoverable unless the main thread is being shut down
-                Logger.getInstance().warn("ROBOT_EXEC", "Motion interrupted for command ID " + command.getId() + ": " + e.getMessage());
-                Logger.getInstance().warn("ROBOT_EXEC", "Continuing execution - command marked as failed.");
-                motionSuccess = false;
-                // Clear the interrupted status to allow continued execution
-                // The main loop will handle intentional shutdown signals separately
-                Thread.interrupted();
             } catch (Exception e) {
                 // Check if this is a wrapped InterruptedException (e.g., ThreadInterruptedException)
                 Throwable cause = e.getCause();
