@@ -14,6 +14,7 @@ import com.kuka.roboticsAPI.executionModel.ExecutionException;
 import com.kuka.roboticsAPI.executionModel.ExternalStopException;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.motionModel.*;
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
@@ -30,9 +31,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class CommandExecutor extends RoboticsAPIApplication {
-
-    // Standard home position for KUKA iiwa robot (all joints at 0 degrees)
-    private static final double[] HOME_POSITION_DEGREES = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     @Inject
     private LBR iiwa;
@@ -55,44 +53,16 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
         
         // Move robot to home position after flushing queue
-        moveToHome();
-        
-        Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
-    }
-
-    /**
-     * Moves the robot to the home position (all joints at 0 degrees).
-     * This is called after flushing the queue to ensure the robot is in a known state.
-     * 
-     * @return True if the robot successfully moved to home position, false otherwise.
-     */
-    private boolean moveToHome() {
         try {
             Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
-            
-            JointPosition homePosition = new JointPosition(
-                Math.toRadians(HOME_POSITION_DEGREES[0]),
-                Math.toRadians(HOME_POSITION_DEGREES[1]),
-                Math.toRadians(HOME_POSITION_DEGREES[2]),
-                Math.toRadians(HOME_POSITION_DEGREES[3]),
-                Math.toRadians(HOME_POSITION_DEGREES[4]),
-                Math.toRadians(HOME_POSITION_DEGREES[5]),
-                Math.toRadians(HOME_POSITION_DEGREES[6])
-            );
-            
-            PTP homeMotion = new PTP(homePosition);
-            homeMotion.setJointVelocityRel(0.2); // Conservative speed for safety
-            
-            IMotionContainer container = iiwa.moveAsync(homeMotion);
-            container.await();
-            
+            iiwa.move(ptpHome().setJointVelocityRel(0.2));
             Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
-            return true;
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
-            return false;
         }
+        
+        Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
     @Override
