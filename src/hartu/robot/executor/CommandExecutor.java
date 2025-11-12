@@ -31,6 +31,9 @@ import java.util.concurrent.TimeUnit;
 
 public class CommandExecutor extends RoboticsAPIApplication {
 
+    // Standard home position for KUKA iiwa robot (all joints at 0 degrees)
+    private static final double[] HOME_POSITION_DEGREES = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
     @Inject
     private LBR iiwa;
     @Inject
@@ -44,7 +47,49 @@ public class CommandExecutor extends RoboticsAPIApplication {
     public void initialize() {
         // Console logging is enabled globally in ServerClass, so all logs appear on robot console
         Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
+        
+        // Flush any stale commands from previous runs
+        int flushedCount = CommandQueue.flushQueue();
+        if (flushedCount > 0) {
+            Logger.getInstance().log("ROBOT_EXEC", "Cleared " + flushedCount + " stale command(s) from queue on initialization.");
+        }
+        
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+
+    /**
+     * Moves the robot to the home position (all joints at 0 degrees).
+     * This is called after flushing the queue to ensure the robot is in a known state.
+     * 
+     * @return True if the robot successfully moved to home position, false otherwise.
+     */
+    private boolean moveToHome() {
+        try {
+            Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
+            
+            JointPosition homePosition = new JointPosition(
+                Math.toRadians(HOME_POSITION_DEGREES[0]),
+                Math.toRadians(HOME_POSITION_DEGREES[1]),
+                Math.toRadians(HOME_POSITION_DEGREES[2]),
+                Math.toRadians(HOME_POSITION_DEGREES[3]),
+                Math.toRadians(HOME_POSITION_DEGREES[4]),
+                Math.toRadians(HOME_POSITION_DEGREES[5]),
+                Math.toRadians(HOME_POSITION_DEGREES[6])
+            );
+            
+            PTP homeMotion = new PTP(homePosition);
+            homeMotion.setJointVelocityRel(0.2); // Conservative speed for safety
+            
+            IMotionContainer container = iiwa.moveAsync(homeMotion);
+            container.await();
+            
+            Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
+            return true;
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+            return false;
+        }
     }
 
     @Override
@@ -70,6 +115,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
                                 break;
                             case PROGRAM_CALL:
                                 executionSuccess = executeProgramCallCommand(command);
+                                break;
+                            case SYSTEM:
+                                executionSuccess = executeSystemCommand(command);
                                 break;
                             case UNKNOWN:
                             default:
@@ -345,6 +393,39 @@ public class CommandExecutor extends RoboticsAPIApplication {
             }
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Executes system commands such as flushing the command queue.
+     * 
+     * @param command The ParsedCommand representing a system command.
+     * @return True if the system command executed successfully, false otherwise.
+     */
+    private boolean executeSystemCommand(ParsedCommand command) {
+        ActionTypes actionType = command.getActionType();
+        Logger.getInstance().log("ROBOT_EXEC", "Executing system command: " + actionType.name() + " for command ID " + command.getId());
+        
+        try {
+            if (actionType == ActionTypes.FLUSH_QUEUE) {
+                // Flush the command queue
+                int flushedCount = CommandQueue.flushQueue();
+                Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " command(s) from queue");
+                
+                // Move robot to home position after flushing
+                boolean movedHome = moveToHome();
+                if (!movedHome) {
+                    Logger.getInstance().warn("ROBOT_EXEC", "Queue flushed but failed to move to home position");
+                }
+                
+                return movedHome;
+            } else {
+                Logger.getInstance().error("ROBOT_EXEC", "Unknown system command: " + actionType.name());
+                return false;
+            }
+        } catch (Exception e) {
+            Logger.getInstance().error("ROBOT_EXEC", "System command failed for ID " + command.getId() + ": " + e.getMessage());
             return false;
         }
     }

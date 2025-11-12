@@ -8,5 +8,6 @@ public enum CommandCategory {
     MOVEMENT,
     IO,
     PROGRAM_CALL,
+    SYSTEM,
     UNKNOWN
 }
