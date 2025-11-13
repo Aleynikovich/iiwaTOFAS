@@ -41,7 +41,6 @@ target/
 
 # Gradle
 build/
-.gradle/
 
 # KUKA Robot specific (adjust paths as needed for your KUKA project structure)
 # This line ensures the bin directory is ignored
@@ -50,4 +49,3 @@ deploy/
 # Any other specific KUKA generated files or folders that should not be in Git
 src/hartu/execution/
 src/hartu/robot/motion/
-!bin/
