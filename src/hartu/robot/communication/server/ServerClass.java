@@ -42,7 +42,7 @@ public class ServerClass implements IClientHandlerCallback
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
         
-        System.out.println("[ServerClass] Server initialized on port " + port + " for " + listenerType.getName());
+        Logger.getInstance().log("SERVER", "Server initialized on port " + port + " for " + listenerType.getName());
     }
 
     public void start()
@@ -50,12 +50,12 @@ public class ServerClass implements IClientHandlerCallback
         listenerThread = new Thread(portListener);
         listenerThread.setDaemon(true);
         listenerThread.start();
-        System.out.println("[ServerClass] Server listener started for " + listenerType.getName());
+        Logger.getInstance().log("SERVER", "Server listener started for " + listenerType.getName());
     }
 
     public void stop() throws IOException
     {
-        System.out.println("[ServerClass] Stopping server listener...");
+        Logger.getInstance().log("SERVER", "Stopping server listener...");
         
         if (portListener != null) {
             portListener.stopListening();
@@ -66,12 +66,12 @@ public class ServerClass implements IClientHandlerCallback
             if (listenerThread != null && listenerThread.isAlive()) {
                 listenerThread.join(2000);
                 if (listenerThread.isAlive()) {
-                    System.out.println("[ServerClass] Warning: Listener thread did not terminate within timeout.");
+                    Logger.getInstance().warn("SERVER", "Listener thread did not terminate within timeout");
                 }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.out.println("[ServerClass] Interrupted while waiting for listener thread to stop: " + e.getMessage());
+            Logger.getInstance().error("SERVER", "Interrupted while waiting for listener thread to stop: " + e.getMessage());
         }
 
         if (clientHandler != null)
@@ -79,7 +79,7 @@ public class ServerClass implements IClientHandlerCallback
             clientHandler.close();
         }
         
-        System.out.println("[ServerClass] Server stopped.");
+        Logger.getInstance().log("SERVER", "Server stopped");
     }
 
     @Override

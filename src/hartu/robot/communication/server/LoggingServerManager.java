@@ -57,7 +57,8 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                 {
                     serverSocket = new ServerSocket(LOG_PORT);
                     isRunning = true;
-                    System.out.println("[LoggingServerManager] Started on port " + LOG_PORT);
+                    // Log via Logger so it goes through the central logging system
+                    Logger.getInstance().log("LOG_SRV", "Started on port " + LOG_PORT);
                     
                     while (isRunning)
                     {
@@ -67,7 +68,8 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                             String clientIp = clientSocket.getInetAddress().getHostAddress();
                             String clientId = "LogClient-" + (++clientCounter);
                             
-                            System.out.println("[LoggingServerManager] New client connected: " + clientId + " (" + clientIp + ")");
+                            // Log via Logger so it goes through the central logging system
+                            Logger.getInstance().log("LOG_SRV", "New client connected: " + clientId + " (" + clientIp + ")");
                             
                             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
                             LogClientConnection connection = new LogClientConnection(clientSocket, writer, clientId);
@@ -77,21 +79,24 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                         {
                             if (isRunning)
                             {
-                                System.out.println("[LoggingServerManager] Error accepting client: " + e.getMessage());
+                                // Log via Logger so it goes through the central logging system
+                                Logger.getInstance().error("LOG_SRV", "Error accepting client: " + e.getMessage());
                             }
                         }
                     }
                 }
                 catch (IOException e)
                 {
-                    System.out.println("[LoggingServerManager] Error starting server: " + e.getMessage());
+                    // Log via Logger so it goes through the central logging system
+                    Logger.getInstance().error("LOG_SRV", "Error starting server: " + e.getMessage());
                 }
             }
         });
         listenerThread.setDaemon(true);
         listenerThread.start();
         
-        System.out.println("[LoggingServerManager] Initialized successfully.");
+        // Log via Logger so it goes through the central logging system
+        Logger.getInstance().log("LOG_SRV", "Initialized successfully");
     }
 
     @Override
@@ -113,7 +118,8 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         catch (Exception e)
         {
             // Catch any unexpected errors to prevent the cyclic task from stopping
-            System.out.println("[LoggingServerManager] Error in runCyclic: " + e.getMessage());
+            // Log via Logger so it goes through the central logging system
+            Logger.getInstance().error("LOG_SRV", "Error in runCyclic: " + e.getMessage());
         }
     }
     
@@ -159,11 +165,13 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         {
             connection.close();
             connectedClients.remove(clientId);
-            System.out.println("[LoggingServerManager] Client disconnected: " + clientId);
+            // Log via Logger so it goes through the central logging system
+            Logger.getInstance().log("LOG_SRV", "Client disconnected: " + clientId);
         }
         catch (IOException e)
         {
-            System.out.println("[LoggingServerManager] Error closing connection for " + clientId + ": " + e.getMessage());
+            // Log via Logger so it goes through the central logging system
+            Logger.getInstance().error("LOG_SRV", "Error closing connection for " + clientId + ": " + e.getMessage());
         }
     }
 
@@ -188,7 +196,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             }
             catch (IOException e)
             {
-                System.out.println("[LoggingServerManager] Error closing client " + clientId + ": " + e.getMessage());
+                // Can't log during dispose as we've removed ourselves from Logger
             }
         }
         connectedClients.clear();
@@ -199,11 +207,10 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             try
             {
                 serverSocket.close();
-                System.out.println("[LoggingServerManager] Server socket closed.");
             }
             catch (IOException e)
             {
-                System.out.println("[LoggingServerManager] Error closing server socket: " + e.getMessage());
+                // Can't log during dispose as we've removed ourselves from Logger
             }
         }
         
@@ -219,8 +226,6 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                 Thread.currentThread().interrupt();
             }
         }
-        
-        System.out.println("[LoggingServerManager] Disposed.");
     }
     
     // LogHandler implementation
