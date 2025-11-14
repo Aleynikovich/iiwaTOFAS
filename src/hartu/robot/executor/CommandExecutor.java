@@ -124,9 +124,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
                                 executionSuccess = false;
                                 break;
                         }
-                    } catch (Exception e) {
-                        Logger.getInstance().error("ROBOT_EXEC", "Exception during command execution for ID " + command.getId() + ": " + e.getMessage());
-                        Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+                    } catch (Throwable t) {
+                        Logger.getInstance().error("ROBOT_EXEC", "Exception during command execution for ID " + command.getId() + ": " + t.getClass().getName() + " - " + t.getMessage());
+                        Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
                         executionSuccess = false;
                         // Continue processing - don't let one command failure stop the system
                     } finally {
@@ -144,11 +144,11 @@ public class CommandExecutor extends RoboticsAPIApplication {
                         Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
                     }
                 }
-            } catch (Exception e) {
-                // Catch any unexpected exceptions in the main loop itself
-                // This prevents the entire run loop from exiting
-                Logger.getInstance().error("ROBOT_EXEC", "Unexpected error in main execution loop: " + e.getMessage());
-                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+            } catch (Throwable t) {
+                // Catch ANY exception or error in the main loop itself
+                // This is the ultimate safety net - prevents the entire run loop from exiting
+                Logger.getInstance().error("ROBOT_EXEC", "Unexpected error in main execution loop: " + t.getClass().getName() + " - " + t.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
                 Logger.getInstance().log("ROBOT_EXEC", "Recovering from error and continuing execution...");
                 // Brief pause to prevent tight error loops
                 try {
