@@ -18,31 +18,51 @@ Think of it as a bridge between your robot control software and the KUKA hardwar
 - Both joint-space and Cartesian-space motion commands
 - Continuous motion support for smooth trajectories
 - Digital and analog I/O control
-- **Dual-output logging system:**
-  - Real-time network broadcast to multiple Python log clients
-  - Console output visible on robot SmartPad (foreground tasks)
-  - Simultaneous logging to both destinations
-- **Real-time joint state broadcasting to multiple clients (100Hz)**
+- **Centralized logging system:**
+  - Single LoggingServerManager broadcasts to all clients
+  - Real-time network broadcast to multiple Python log clients (port 30002)
+  - Robot console output via RobotConsoleClient (all logs from all tasks appear on SmartPad)
+  - Background tasks can log to robot console through the centralized architecture
+- **Real-time joint state broadcasting to multiple clients (port 30003)**
 - Command validation and error handling
 - Session management with unique client IDs
 - Automatic command history saved to `parsedData/parsedCommand.json`
 - Robust exception handling - errors don't crash the system
+- Clean single-responsibility architecture: one server, one port, one function
 
 ## Architecture
 
-The system uses a multi-port architecture with three dedicated server ports:
-- Port 30001 for task commands
-- Port 30002 for log data (supports multiple simultaneous clients)
-- Port 30003 for joint state data
+The system uses a multi-port architecture with three dedicated server managers, each following the single responsibility principle:
+- **Port 30001**: Task commands (Ros2ServerManager)
+- **Port 30002**: Log data broadcasting (LoggingServerManager)
+- **Port 30003**: Joint state data (JointStateServerManager)
 
-### Logging System
+### Logging System Architecture
 
-The logging system has been redesigned to support dual outputs:
-- **Network Logging**: Broadcasts to all connected Python log clients on port 30002
-- **Console Logging**: Writes to robot SmartPad console (foreground tasks only)
-- **Multi-Handler Architecture**: Logger acts as a broadcast hub, sending messages to all registered handlers simultaneously
+The logging system uses a centralized hub-and-spoke architecture:
 
-The log client connection is recommended before sending task commands to ensure you capture all logging information. The joint state server operates independently and accepts multiple simultaneous client connections.
+1. **Logger (Singleton)**: Central hub that receives log messages from all tasks
+2. **LoggingServerManager**: Background task that:
+   - Receives messages from Logger via queue
+   - Broadcasts to all connected network clients (Python log clients)
+   - Listens on port 30002
+3. **RobotConsoleClient**: Runs in CommandExecutor (foreground task) and:
+   - Connects as a client to LoggingServerManager
+   - Receives log messages and displays them on robot console via println
+   - Only foreground tasks can write to robot console, hence this design
+
+**Key Benefits:**
+- All logs from all tasks (foreground and background) appear on robot console
+- Multiple Python clients can simultaneously receive logs
+- Single responsibility: one server, one port, one function
+- Background tasks can indirectly log to robot console via the forwarding mechanism
+
+**Log Flow:**
+```
+Background Task → Logger → LoggingServerManager → Network Clients (Python)
+                                ↓
+                        RobotConsoleClient (in CommandExecutor) → Robot Console (println)
+```
 
 ```mermaid
 ---

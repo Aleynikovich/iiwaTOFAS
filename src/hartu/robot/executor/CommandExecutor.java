@@ -25,6 +25,10 @@ import hartu.robot.communication.server.CommandResultHolder;
 import hartu.robot.communication.server.Logger;
 
 import javax.inject.Inject;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,10 +44,16 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private Ethercat_x44IOGroup toolControlIO;
     @Inject
     private MediaFlangeIOGroup mediaFlangeIO;
+    
+    private RobotConsoleClient consoleClient;
+    private Thread consoleClientThread;
 
     @Override
     public void initialize() {
-        // Console logging is enabled globally in ServerClass, so all logs appear on robot console
+        // Start robot console client to receive logs from LoggingServerManager
+        // and broadcast them via println (only foreground tasks can println to robot console)
+        startRobotConsoleClient();
+        
         Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
         
         // Flush any stale commands from previous runs
@@ -63,6 +73,18 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
         
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+    
+    /**
+     * Starts the robot console client that connects to LoggingServerManager
+     * and broadcasts all logs to robot console via println.
+     * Only foreground tasks (like CommandExecutor) can use println to write to robot console.
+     */
+    private void startRobotConsoleClient() {
+        consoleClient = new RobotConsoleClient();
+        consoleClientThread = new Thread(consoleClient);
+        consoleClientThread.setDaemon(true);
+        consoleClientThread.start();
     }
 
     @Override
@@ -652,7 +674,102 @@ public class CommandExecutor extends RoboticsAPIApplication {
     @Override
     public void dispose() {
         Logger.getInstance().log("ROBOT_EXEC", "Disposing CommandExecutor.");
-        // Note: Don't clear all handlers here as other tasks may still be logging
+        
+        // Stop robot console client
+        if (consoleClient != null) {
+            consoleClient.stop();
+        }
+        if (consoleClientThread != null && consoleClientThread.isAlive()) {
+            try {
+                consoleClientThread.join(2000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        
         super.dispose();
+    }
+    
+    /**
+     * Inner class that connects to LoggingServerManager as a client
+     * and broadcasts received log messages to robot console via println.
+     * 
+     * This is necessary because only foreground tasks (like CommandExecutor)
+     * can use println to write to the robot's SmartPad console.
+     * Background tasks cannot directly write to console.
+     */
+    private static class RobotConsoleClient implements Runnable {
+        private static final String LOG_SERVER_HOST = "localhost";
+        private static final int LOG_SERVER_PORT = 30002;
+        private static final int RECONNECT_DELAY_MS = 5000;
+        
+        private volatile boolean running = true;
+        private Socket socket;
+        private BufferedReader reader;
+        
+        @Override
+        public void run() {
+            System.out.println("[RobotConsoleClient] Starting console client to receive logs from LoggingServerManager...");
+            
+            while (running) {
+                try {
+                    // Connect to logging server
+                    socket = new Socket(LOG_SERVER_HOST, LOG_SERVER_PORT);
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    
+                    System.out.println("[RobotConsoleClient] Connected to LoggingServerManager on port " + LOG_SERVER_PORT);
+                    
+                    // Read and broadcast log messages
+                    String line;
+                    while (running && (line = reader.readLine()) != null) {
+                        // Broadcast to robot console using println
+                        // Only foreground tasks can do this
+                        System.out.println(line);
+                    }
+                    
+                } catch (IOException e) {
+                    if (running) {
+                        System.out.println("[RobotConsoleClient] Connection error: " + e.getMessage());
+                        System.out.println("[RobotConsoleClient] Will retry in " + RECONNECT_DELAY_MS + "ms...");
+                        
+                        // Wait before reconnecting
+                        try {
+                            Thread.sleep(RECONNECT_DELAY_MS);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            break;
+                        }
+                    }
+                } finally {
+                    // Clean up connection
+                    closeConnection();
+                }
+            }
+            
+            System.out.println("[RobotConsoleClient] Console client stopped.");
+        }
+        
+        public void stop() {
+            running = false;
+            closeConnection();
+        }
+        
+        private void closeConnection() {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                // Ignore
+            }
+            
+            try {
+                if (socket != null && !socket.isClosed()) {
+                    socket.close();
+                }
+            } catch (IOException e) {
+                // Ignore
+            }
+        }
     }
 }

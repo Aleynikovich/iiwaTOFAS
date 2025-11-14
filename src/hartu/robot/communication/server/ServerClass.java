@@ -7,101 +7,79 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Simplified server class that handles a single port with a single purpose.
+ * This follows the single responsibility principle - one server, one port, one function.
+ * 
+ * For the complete system:
+ * - Ros2ServerManager uses this for task commands on port 30001
+ * - LoggingServerManager handles log broadcasting on port 30002
+ * - JointStateServerManager handles joint state broadcasting on port 30003
+ */
 public class ServerClass implements IClientHandlerCallback
 {
     final Map<String, String> clientIpToNameMap;
     final AtomicInteger clientNameCounter;
-    private final ServerPortListener taskPortListener;
-    private final ServerPortListener logPortListener;
-    private ClientHandler taskClientHandler;
-    private ClientHandler logClientHandler;
-    private volatile boolean isLogClientConnected = false;
-    private final NetworkLogHandler networkLogHandler;
+    private final ServerPortListener portListener;
+    private ClientHandler clientHandler;
+    private final ListenerType listenerType;
 
-    private Thread taskListenerThread;
-    private Thread logListenerThread;
+    private Thread listenerThread;
 
-    public ServerClass(int taskPort, int logPort) throws IOException
+    /**
+     * Creates a server that listens on a single port.
+     * 
+     * @param port The port number to listen on
+     * @param listenerType The type of listener (TASK_LISTENER for command processing)
+     * @throws IOException if the server socket cannot be created
+     */
+    public ServerClass(int port, ListenerType listenerType) throws IOException
     {
-        ServerSocket taskServerSocket = new ServerSocket(taskPort);
-        this.taskPortListener = new ServerPortListener(taskServerSocket, ListenerType.TASK_LISTENER, this, this);
-
-        ServerSocket logServerSocket = new ServerSocket(logPort);
-        this.logPortListener = new ServerPortListener(logServerSocket, ListenerType.LOG_LISTENER, this, this);
+        ServerSocket serverSocket = new ServerSocket(port);
+        this.listenerType = listenerType;
+        this.portListener = new ServerPortListener(serverSocket, listenerType, this, this);
 
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
         
-        // Register console handler globally so ALL logs (from all tasks/threads) appear on robot console
-        Logger.getInstance().addHandler(new ConsoleLogHandler());
-        
-        // Create network log handler and register it with the Logger
-        this.networkLogHandler = new NetworkLogHandler();
-        Logger.getInstance().addHandler(networkLogHandler);
-        
-        Logger.getInstance().log("SERVER", "Server initialized on Task Port: " + taskPort + ", Log Port: " + logPort);
+        Logger.getInstance().log("SERVER", "Server initialized on port " + port + " for " + listenerType.getName());
     }
 
     public void start()
     {
-        taskListenerThread = new Thread(taskPortListener);
-        logListenerThread = new Thread(logPortListener);
-
-        taskListenerThread.setDaemon(true);
-        logListenerThread.setDaemon(true);
-
-        taskListenerThread.start();
-        logListenerThread.start();
-        Logger.getInstance().log("SERVER", "Server listeners started.");
+        listenerThread = new Thread(portListener);
+        listenerThread.setDaemon(true);
+        listenerThread.start();
+        Logger.getInstance().log("SERVER", "Server listener started for " + listenerType.getName());
     }
 
     public void stop() throws IOException
     {
-        Logger.getInstance().log("SERVER", "Stopping server listeners and client handlers...");
-        // Signal listeners to stop and close their sockets
-        if (taskPortListener != null) {
-            taskPortListener.stopListening();
-        }
-        if (logPortListener != null) {
-            logPortListener.stopListening();
+        Logger.getInstance().log("SERVER", "Stopping server listener...");
+        
+        if (portListener != null) {
+            portListener.stopListening();
         }
 
-        // Wait for listener threads to actually terminate
+        // Wait for listener thread to terminate
         try {
-            if (taskListenerThread != null && taskListenerThread.isAlive()) {
-                taskListenerThread.join(2000); // Wait up to 2 seconds for task listener
-                if (taskListenerThread.isAlive()) {
-                    Logger.getInstance().log("SERVER", "Warning: Task Listener thread did not terminate within timeout.");
-                }
-            }
-            if (logListenerThread != null && logListenerThread.isAlive()) {
-                logListenerThread.join(2000); // Wait up to 2 seconds for log listener
-                if (logListenerThread.isAlive()) {
-                    Logger.getInstance().log("SERVER", "Warning: Log Listener thread did not terminate within timeout.");
+            if (listenerThread != null && listenerThread.isAlive()) {
+                listenerThread.join(2000);
+                if (listenerThread.isAlive()) {
+                    Logger.getInstance().warn("SERVER", "Listener thread did not terminate within timeout");
                 }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            Logger.getInstance().log("SERVER", "Interrupted while waiting for listener threads to stop: " + e.getMessage());
+            Logger.getInstance().error("SERVER", "Interrupted while waiting for listener thread to stop: " + e.getMessage());
         }
 
-        // Close network log handler and remove it from Logger
-        if (networkLogHandler != null)
+        if (clientHandler != null)
         {
-            Logger.getInstance().removeHandler(networkLogHandler);
-            networkLogHandler.close();
+            clientHandler.close();
         }
-
-        if (taskClientHandler != null)
-        {
-            taskClientHandler.close();
-        }
-        if (logClientHandler != null)
-        {
-            logClientHandler.close();
-        }
-        this.isLogClientConnected = false;
-        Logger.getInstance().log("SERVER", "Server stopped.");
+        
+        Logger.getInstance().log("SERVER", "Server stopped");
     }
 
     @Override
@@ -110,25 +88,9 @@ public class ServerClass implements IClientHandlerCallback
         String clientIp = handler.getClientSession().getRemoteAddress();
         String clientName = handler.getClientSession().getClientName();
 
-        if (listenerType == ListenerType.TASK_LISTENER)
-        {
-            this.taskClientHandler = handler;
-        }
-        else if (listenerType == ListenerType.LOG_LISTENER)
-        {
-            this.logClientHandler = handler;
-            
-            // Add this client to the network log handler
-            networkLogHandler.addClient(clientName, handler);
-            this.isLogClientConnected = true;
-            Logger.getInstance().log("SERVER", "Log client " + clientName + " added to network log handler (total clients: " + networkLogHandler.getClientCount() + ")");
-        }
+        this.clientHandler = handler;
+        
         Logger.getInstance().log("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
-    }
-
-    public boolean isLogClientConnected()
-    {
-        return isLogClientConnected;
     }
 
     public String getClientName(String ipAddress)
