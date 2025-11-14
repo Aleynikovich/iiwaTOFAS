@@ -41,7 +41,6 @@ target/
 
 # Gradle
 build/
-.gradle/
 
 # KUKA Robot specific (adjust paths as needed for your KUKA project structure)
 # This line ensures the bin directory is ignored

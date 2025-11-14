@@ -77,32 +77,6 @@ public class ServerPortListener implements Runnable
                     }
                 }
 
-                if (listenerType == ListenerType.TASK_LISTENER)
-                {
-                    if (!serverInstance.isLogClientConnected())
-                    {
-                        Logger.getInstance().log("COMM", listenerType.getName() + ": Task client connection from " + clientSocket.getInetAddress().getHostAddress() + " rejected. Log client not connected.");
-                        try
-                        {
-                            clientSocket.close();
-                        }
-                        catch (IOException e)
-                        {
-                            Logger.getInstance().log("COMM", listenerType.getName() + ": Error closing rejected task client socket: " + e.getMessage());
-                        }
-                        try
-                        {
-                            TimeUnit.MILLISECONDS.sleep(1000);
-                        }
-                        catch (InterruptedException ie)
-                        {
-                            Thread.currentThread().interrupt();
-                            Logger.getInstance().log("COMM", listenerType.getName() + ": Listener interrupted during sleep.");
-                        }
-                        continue;
-                    }
-                }
-
                 String clientIp = clientSocket.getInetAddress().getHostAddress();
                 String clientName = serverInstance.clientIpToNameMap.get(clientIp);
 
