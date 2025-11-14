@@ -387,9 +387,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
         try {
             switch (ioPin) {
                 case 1:
-            		return openTool(0);
+            		return closeTool(0);
                 case 2:
-                	return closeTool(0);
+                	return openTool(0);
                 case 3:
  
                     return true;
