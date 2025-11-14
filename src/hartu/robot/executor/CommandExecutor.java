@@ -8,6 +8,7 @@ import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.controllerModel.Controller;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.executionModel.CancelledException;
 import com.kuka.roboticsAPI.executionModel.CommandInvalidException;
 import com.kuka.roboticsAPI.executionModel.ExecutionException;
@@ -15,6 +16,8 @@ import com.kuka.roboticsAPI.executionModel.ExternalStopException;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.motionModel.*;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
+import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
+import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
@@ -47,6 +50,12 @@ public class CommandExecutor extends RoboticsAPIApplication {
     
     private RobotConsoleClient consoleClient;
     private Thread consoleClientThread;
+    
+    // Track the current command being executed for error handling
+    private volatile ParsedCommand currentCommand = null;
+    private volatile boolean currentCommandFailed = false;
+    
+    private IErrorHandler moveAsyncErrorHandler;
 
     @Override
     public void initialize() {
@@ -55,6 +64,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
         startRobotConsoleClient();
         
         Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
+        
+        // Register error handler for asynchronous motion failures
+        // This prevents the application from terminating when moveAsync fails
+        registerMoveAsyncErrorHandler();
         
         // Flush any stale commands from previous runs
         int flushedCount = CommandQueue.flushQueue();
@@ -73,6 +86,58 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
         
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+    
+    /**
+     * Registers the error handler for asynchronous motion commands.
+     * According to KUKA Sunrise.OS manual section 15.29.3, this is the correct way
+     * to handle failed moveAsync commands without terminating the application.
+     * 
+     * The error handler:
+     * - Logs the failed motion command details
+     * - Logs any canceled motion commands
+     * - Flushes the command queue to prevent cascading failures
+     * - Returns ErrorHandlingAction.Ignore to continue the application
+     */
+    private void registerMoveAsyncErrorHandler() {
+        moveAsyncErrorHandler = new IErrorHandler() {
+            @Override
+            public ErrorHandlingAction handleError(Device device, 
+                                                   IMotionContainer failedContainer,
+                                                   List<IMotionContainer> canceledContainers) {
+                // Log the failed motion command
+                Logger.getInstance().error("ROBOT_EXEC", "Asynchronous motion failed: " + failedContainer.getCommand().toString());
+                
+                if (currentCommand != null) {
+                    Logger.getInstance().error("ROBOT_EXEC", "Failed command ID: " + currentCommand.getId());
+                    Logger.getInstance().error("ROBOT_EXEC", "This usually means unreachable pose, singularity, joint limits exceeded, or timeout.");
+                    currentCommandFailed = true;
+                }
+                
+                // Log canceled motion commands
+                if (canceledContainers != null && !canceledContainers.isEmpty()) {
+                    Logger.getInstance().warn("ROBOT_EXEC", "The following " + canceledContainers.size() + " motion(s) were canceled:");
+                    for (int i = 0; i < canceledContainers.size(); i++) {
+                        Logger.getInstance().warn("ROBOT_EXEC", "  [" + (i+1) + "] " + canceledContainers.get(i).getCommand().toString());
+                    }
+                }
+                
+                // Flush the command queue to prevent cascading failures
+                Logger.getInstance().warn("ROBOT_EXEC", "Flushing command queue due to motion failure...");
+                int flushedCount = CommandQueue.flushQueue();
+                if (flushedCount > 0) {
+                    Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after motion failure.");
+                }
+                
+                // Return Ignore to prevent application termination and allow continued operation
+                // This is the recommended approach per KUKA Sunrise.OS manual section 15.29.3
+                return ErrorHandlingAction.Ignore;
+            }
+        };
+        
+        // Register the error handler with the application controller
+        getApplicationControl().registerMoveAsyncErrorHandler(moveAsyncErrorHandler);
+        Logger.getInstance().log("ROBOT_EXEC", "Registered moveAsync error handler for graceful failure handling.");
     }
     
     /**
@@ -131,6 +196,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
                         // Continue processing - don't let one command failure stop the system
                     } finally {
                         // If command failed, flush the command queue to prevent cascading failures
+                        // Note: Motion command failures are already handled by the IErrorHandler which flushes the queue
+                        // This catches IO, program call, and other non-motion command failures
                         if (!executionSuccess) {
                             Logger.getInstance().warn("ROBOT_EXEC", "Command ID " + command.getId() + " failed. Flushing command queue to prevent cascading failures.");
                             int flushedCount = CommandQueue.flushQueue();
@@ -165,6 +232,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
 
     /**
      * Executes a movement command by delegating to specific motion type handlers.
+     * Uses the registered IErrorHandler for handling asynchronous motion failures.
+     * Per KUKA Sunrise.OS manual section 15.29.3, moveAsync failures are handled
+     * by the error handler which returns ErrorHandlingAction.Ignore to continue operation.
      *
      * @param command The ParsedCommand to execute.
      * @return True if the motion was successful, false otherwise.
@@ -208,47 +278,35 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 motionToExecute = motions.get(0);
             }
 
-            // Log the specific motion or batch details
-            Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId());
+            // Set the current command so the error handler can access it
+            currentCommand = command;
+            currentCommandFailed = false;
             
-            // Execute motion with comprehensive exception handling
-            // This prevents KUKA API exceptions (IK failures, unreachable poses, axis limits) from crashing the program
-            // NO exception should terminate the robot program - all are caught and logged
-            try {
-                IMotionContainer container = iiwa.moveAsync(motionToExecute);
-                container.await();
+            // Execute asynchronous motion
+            // Failures are handled by the registered IErrorHandler (see registerMoveAsyncErrorHandler)
+            // The error handler will flush the queue and return ErrorHandlingAction.Ignore
+            // This approach is per KUKA Sunrise.OS manual section 15.29.3
+            IMotionContainer container = iiwa.moveAsync(motionToExecute);
+            container.await();
+            
+            // Check if the error handler was triggered
+            if (currentCommandFailed) {
+                Logger.getInstance().error("ROBOT_EXEC", "Motion for command ID " + command.getId() + " failed (handled by error handler).");
+                motionSuccess = false;
+            } else {
                 Logger.getInstance().log("ROBOT_EXEC", "Motion for command ID " + command.getId() + " completed successfully.");
-            } catch (CommandInvalidException e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Invalid motion parameters for command ID " + command.getId() + ": " + e.getMessage());
-                Logger.getInstance().error("ROBOT_EXEC", "This usually means unreachable pose, singularity, or joint limits exceeded.");
-                motionSuccess = false;
-            } catch (CancelledException e) {
-                Logger.getInstance().warn("ROBOT_EXEC", "Motion cancelled for command ID " + command.getId() + ": " + e.getMessage());
-                motionSuccess = false;
-            } catch (ExternalStopException e) {
-                Logger.getInstance().warn("ROBOT_EXEC", "Motion stopped externally for command ID " + command.getId() + ": " + e.getMessage());
-                motionSuccess = false;
-            } catch (ExecutionException e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Motion execution failed for command ID " + command.getId() + ": " + e.getMessage());
-                Logger.getInstance().error("ROBOT_EXEC", "This may indicate IK failure or hardware issue.");
-                motionSuccess = false;
-            } catch (Throwable t) {
-                // Catch ALL exceptions including unchecked exceptions and errors
-                // This is the last line of defense to ensure the robot never stops
-                Logger.getInstance().error("ROBOT_EXEC", "Unexpected exception/error during motion for command ID " + command.getId() + ": " + t.getClass().getName() + " - " + t.getMessage());
-                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
-                motionSuccess = false;
-                
-                // Check if interrupted status needs clearing (e.g., ThreadInterruptedException or wrapped InterruptedException)
-                if (t instanceof InterruptedException || (t.getCause() != null && t.getCause() instanceof InterruptedException)) {
-                    Thread.interrupted();
-                }
             }
-
-        } catch (Exception e) {
-            // Catch any errors in motion creation or setup
-            Logger.getInstance().error("ROBOT_EXEC", "Error preparing motion for command ID " + command.getId() + ": " + e.getMessage(), e);
+            
+        } catch (Throwable t) {
+            // This catch block handles exceptions during motion setup or unexpected errors
+            // The IErrorHandler handles failures during moveAsync execution
+            Logger.getInstance().error("ROBOT_EXEC", "Error preparing or executing motion for command ID " + command.getId() + ": " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
             motionSuccess = false;
+        } finally {
+            // Clear current command reference
+            currentCommand = null;
+            currentCommandFailed = false;
         }
 
         return motionSuccess;
