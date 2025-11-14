@@ -586,7 +586,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             toolControlIO.setOutput1(false);
             gimaticIO.setDO_Flange2(true);
             gimaticIO.setDO_Flange1(false);
-            Thread.sleep(300);
+            Thread.sleep(2000);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput3(false);
             Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " opened (blowing air)");
