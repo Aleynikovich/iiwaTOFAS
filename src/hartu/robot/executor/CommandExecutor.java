@@ -391,8 +391,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 case 2:
                 	return closeTool(0);
                 case 3:
-                    toolControlIO.setOutput1(ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
+ 
                     return true;
                 case 10:
                     // Lock Gimatic tool changer
@@ -589,6 +588,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             gimaticIO.setDO_Flange1(false);
             Thread.sleep(300);
             toolControlIO.setOutput2(false);
+            toolControlIO.setOutput3(false);
             Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " opened (blowing air)");
             return true;
         } catch (InterruptedException e) {
