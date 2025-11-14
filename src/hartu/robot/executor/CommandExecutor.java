@@ -387,7 +387,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         try {
             switch (ioPin) {
                 case 1:
-                		return openTool(0);
+            		return openTool(0);
                 case 2:
                 	return closeTool(0);
                 case 3:
@@ -579,7 +579,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private boolean openTool(int toolId) {
         try {
             String toolDesc = (toolId == 0) ? "(global)" : String.valueOf(toolId);
-            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolDesc + " (activating vacuum/suction)");
+            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolDesc + " (blowing air)");
             
             // Same IO sequence for all tools - activates vacuum/suction
             toolControlIO.setOutput3(true);
@@ -588,9 +588,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
             gimaticIO.setDO_Flange2(true);
             gimaticIO.setDO_Flange1(false);
             Thread.sleep(300);
-            toolControlIO.setOutput1(false);
-            gimaticIO.setDO_Flange1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " opened (vacuum activated)");
+            toolControlIO.setOutput2(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " opened (blowing air)");
             return true;
         } catch (InterruptedException e) {
             Logger.getInstance().error("ROBOT_EXEC", "Open tool operation interrupted: " + e.getMessage());
@@ -610,18 +609,17 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private boolean closeTool(int toolId) {
         try {
             String toolDesc = (toolId == 0) ? "(global)" : String.valueOf(toolId);
-            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolDesc + " (blowing air)");
+            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolDesc + " (vacuum on)");
             
             // Same IO sequence for all tools - blows air to release
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
-            toolControlIO.setOutput1(false);
+            toolControlIO.setOutput1(true);
             gimaticIO.setDO_Flange2(false);
-            gimaticIO.setDO_Flange1(false);
+            gimaticIO.setDO_Flange1(true);
             Thread.sleep(300);
-            toolControlIO.setOutput3(false);
-            gimaticIO.setDO_Flange2(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " closed (air blown)");
+            toolControlIO.setOutput1(false);
+            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " closed (vacuum on)");
             return true;
         } catch (InterruptedException e) {
             Logger.getInstance().error("ROBOT_EXEC", "Close tool operation interrupted: " + e.getMessage());
@@ -659,6 +657,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private boolean unlockGimatic() {
         try {
             Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer");
+            toolControlIO.setOutput3(false);
             gimaticIO.setDO_Flange7(true);
             Thread.sleep(300);
             Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer unlocked");
