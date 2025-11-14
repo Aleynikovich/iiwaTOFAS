@@ -387,13 +387,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
         try {
             switch (ioPin) {
                 case 1:
-                    gimaticIO.setDO_Flange7(ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set DO_Flange7 to " + ioState);
-                    return true;
+                		return openTool(0);
                 case 2:
-                    toolControlIO.setOutput2(ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output2 to " + ioState);
-                    return true;
+                	return closeTool(0);
                 case 3:
                     toolControlIO.setOutput1(ioState);
                     Logger.getInstance().log("ROBOT_EXEC", "Set Ethercat_x44 Output1 to " + ioState);
