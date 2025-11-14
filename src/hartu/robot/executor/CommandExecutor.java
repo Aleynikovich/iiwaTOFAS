@@ -121,6 +121,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
                             case UNKNOWN:
                             default:
                                 Logger.getInstance().warn("ROBOT_EXEC", "Unknown or unsupported primary command category for ID " + command.getId() + ": " + command.getCommandCategory().name());
+                                executionSuccess = false;
                                 break;
                         }
                     } catch (Exception e) {
@@ -129,6 +130,15 @@ public class CommandExecutor extends RoboticsAPIApplication {
                         executionSuccess = false;
                         // Continue processing - don't let one command failure stop the system
                     } finally {
+                        // If command failed, flush the command queue to prevent cascading failures
+                        if (!executionSuccess) {
+                            Logger.getInstance().warn("ROBOT_EXEC", "Command ID " + command.getId() + " failed. Flushing command queue to prevent cascading failures.");
+                            int flushedCount = CommandQueue.flushQueue();
+                            if (flushedCount > 0) {
+                                Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after failure.");
+                            }
+                        }
+                        
                         resultHolder.setSuccess(executionSuccess);
                         resultHolder.getLatch().countDown();
                         Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
@@ -203,6 +213,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             
             // Execute motion with comprehensive exception handling
             // This prevents KUKA API exceptions (IK failures, unreachable poses, axis limits) from crashing the program
+            // NO exception should terminate the robot program - all are caught and logged
             try {
                 IMotionContainer container = iiwa.moveAsync(motionToExecute);
                 container.await();
@@ -221,18 +232,16 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 Logger.getInstance().error("ROBOT_EXEC", "Motion execution failed for command ID " + command.getId() + ": " + e.getMessage());
                 Logger.getInstance().error("ROBOT_EXEC", "This may indicate IK failure or hardware issue.");
                 motionSuccess = false;
-            } catch (Exception e) {
-                // Check if this is a wrapped InterruptedException (e.g., ThreadInterruptedException)
-                Throwable cause = e.getCause();
-                if (cause instanceof InterruptedException) {
-                    Logger.getInstance().warn("ROBOT_EXEC", "Motion interrupted (wrapped) for command ID " + command.getId() + ": " + e.getMessage());
-                    Logger.getInstance().warn("ROBOT_EXEC", "Continuing execution - command marked as failed.");
-                    motionSuccess = false;
-                    // Clear the interrupted status to allow continued execution
+            } catch (Throwable t) {
+                // Catch ALL exceptions including unchecked exceptions and errors
+                // This is the last line of defense to ensure the robot never stops
+                Logger.getInstance().error("ROBOT_EXEC", "Unexpected exception/error during motion for command ID " + command.getId() + ": " + t.getClass().getName() + " - " + t.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
+                motionSuccess = false;
+                
+                // Check if interrupted status needs clearing (e.g., ThreadInterruptedException or wrapped InterruptedException)
+                if (t instanceof InterruptedException || (t.getCause() != null && t.getCause() instanceof InterruptedException)) {
                     Thread.interrupted();
-                } else {
-                    Logger.getInstance().error("ROBOT_EXEC", "Unexpected exception during motion for command ID " + command.getId() + ": " + e.getMessage(), e);
-                    motionSuccess = false;
                 }
             }
 
@@ -347,8 +356,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
                     Logger.getInstance().error("ROBOT_EXEC", "Invalid IO pin in parsed command for direct mapping: " + ioPin + " for command ID " + command.getId());
                     return false;
             }
-        } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "IO command ID " + command.getId() + " failed: " + e.getMessage());
+        } catch (Throwable t) {
+            // Catch ALL exceptions to ensure IO failures don't crash the robot
+            Logger.getInstance().error("ROBOT_EXEC", "IO command ID " + command.getId() + " failed with exception: " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
             return false;
         }
     }
@@ -400,8 +411,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 Logger.getInstance().error("ROBOT_EXEC", "Invalid program ID: " + programId + " (supported: 0-3, 101-102) for command ID " + command.getId());
                 return false;
             }
-        } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed: " + e.getMessage());
+        } catch (Throwable t) {
+            // Catch ALL exceptions to ensure program call failures don't crash the robot
+            Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed with exception: " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
             return false;
         }
     }
@@ -480,8 +493,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 IMotionContainer container = iiwa.moveAsync(ptpMotion);
                 container.await();
                 Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + currentToolId + " storage position");
-            } catch (Exception e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + currentToolId + " storage position: " + e.getMessage());
+            } catch (Throwable t) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + currentToolId + " storage position: " + t.getClass().getName() + " - " + t.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
                 return false;
             }
             
@@ -493,8 +507,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
             
             Logger.getInstance().log("ROBOT_EXEC", "Successfully placed tool " + currentToolId);
             return true;
-        } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Place current tool operation failed: " + e.getMessage());
+        } catch (Throwable t) {
+            Logger.getInstance().error("ROBOT_EXEC", "Place current tool operation failed: " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
             return false;
         }
     }
@@ -629,8 +644,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
                 IMotionContainer container = iiwa.moveAsync(ptpMotion);
                 container.await();
                 Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + toolId + " position");
-            } catch (Exception e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " position: " + e.getMessage());
+            } catch (Throwable t) {
+                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " position: " + t.getClass().getName() + " - " + t.getMessage());
+                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
                 return false;
             }
             
@@ -642,8 +658,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
             
             Logger.getInstance().log("ROBOT_EXEC", "Successfully picked tool " + toolId);
             return true;
-        } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation failed: " + e.getMessage());
+        } catch (Throwable t) {
+            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation failed: " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
             return false;
         }
     }
