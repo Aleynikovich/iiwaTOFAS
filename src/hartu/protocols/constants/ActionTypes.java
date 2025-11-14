@@ -5,7 +5,9 @@ public enum ActionTypes {
     // --- Point-to-Point (PTP) Movements ---
     PTP_AXIS(0, true, false, false, MovementType.PTP),
     PTP_FRAME(1, false, true, false, MovementType.PTP),
-    LIN_AXIS(2, true, false, false, MovementType.LIN),
+    //Patch inability of KUKA to perform LIN AXIS movements
+    //LIN_AXIS(2, true, false, false, MovementType.LIN),
+    LIN_AXIS(2, true, false, false, MovementType.PTP),
     LIN_FRAME(3, false, true, false, MovementType.LIN),
     CIRC_AXIS(4, true, false, false, MovementType.CIRC),
     CIRC_FRAME(5, false, true, false, MovementType.CIRC),
