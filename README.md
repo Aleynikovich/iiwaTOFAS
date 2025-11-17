@@ -269,14 +269,83 @@ Linear motion with two waypoints:
 
 ### I/O Commands
 
-Digital output control:
+#### Command 9: ACTIVATE_IO - Set Digital Output
+
+Sets the state of a digital output pin.
+
+**Format:**
 ```
-9|PIN_NUMBER|STATE|ID#
+9|0|0|0|PIN_NUMBER|STATE|0|0|0|ID#
 ```
 
-Reading digital inputs:
+**Parameters:**
+- `PIN_NUMBER`: IO pin index (1-88)
+  - 1-64: Virtual marks (software flags)
+  - 65-72: Ethercat outputs (Output1-Output8)
+  - 73-80: IOFlange outputs (DO_Flange1-DO_Flange8)
+  - 81-88: MediaFlange outputs
+- `STATE`: true or false
+
+**Response:**
 ```
-12|PIN_NUMBER|ID#
+FREE|ID|success#  (on success)
+FREE|ID|failure#  (on failure)
+```
+
+**Example:**
+```
+9|0|0|0|65|true|0|0|0|cmd_io1#    # Set Ethercat Output1 to HIGH
+9|0|0|0|1|false|0|0|0|cmd_io2#    # Set virtual mark 1 to LOW
+```
+
+#### Command 12: DIGITAL_INPUT - Read Digital Input
+
+Reads the state of a digital input pin.
+
+**Format:**
+```
+12|0|0|0|PIN_NUMBER|0|0|0|0|ID#
+```
+
+**Parameters:**
+- `PIN_NUMBER`: Input pin index (1-86)
+  - 1-64: Virtual marks (software flags)
+  - 65-72: Ethercat inputs (Input1-Input8)
+  - 73-80: IOFlange inputs (DI_Flange1-DI_Flange8)
+  - 81-86: MediaFlange inputs
+
+**Response:**
+```
+FREE|ID|1#  (if input is HIGH/true)
+FREE|ID|0#  (if input is LOW/false)
+FREE|ID|failure#  (on error)
+```
+
+**Example:**
+```
+12|0|0|0|65|0|0|0|0|cmd_input1#   # Read Ethercat Input1
+```
+
+#### Command 13: ANALOG_INPUT - Read Analog Input
+
+Reads an analog input value (not yet implemented).
+
+**Format:**
+```
+13|0|0|0|PIN_NUMBER|0|0|0|0|ID#
+```
+
+**Response:**
+```
+FREE|ID|failure#  (not implemented)
+```
+
+**Testing:**
+
+Use the provided test script to test IO commands:
+```bash
+cd pythonUtils
+python3 test_io_commands.py [robot_ip]
 ```
 
 **Note:** The command queue is automatically flushed when the CommandExecutor initializes, clearing any stale commands and moving the robot to home position (all joints at 0 degrees).
