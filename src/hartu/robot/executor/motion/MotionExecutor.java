@@ -4,6 +4,7 @@ import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.*;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
@@ -18,10 +19,12 @@ import java.util.List;
 /**
  * Handles execution of motion commands for the robot.
  * Responsible for creating and executing PTP, LIN, and CIRC motions.
+ * Supports dynamic tool attachment based on command tool ID.
  */
 public class MotionExecutor {
     
     private final LBR robot;
+    private final hartu.robot.executor.CommandExecutor commandExecutor;
     private final IErrorHandler moveAsyncErrorHandler;
     
     // Track the current command being executed for error handling
@@ -32,10 +35,12 @@ public class MotionExecutor {
      * Creates a new MotionExecutor.
      * 
      * @param robot The robot device to execute motions on
+     * @param commandExecutor Reference to CommandExecutor for tool attachment
      * @param errorHandler The error handler for asynchronous motion failures
      */
-    public MotionExecutor(LBR robot, IErrorHandler errorHandler) {
+    public MotionExecutor(LBR robot, hartu.robot.executor.CommandExecutor commandExecutor, IErrorHandler errorHandler) {
         this.robot = robot;
+        this.commandExecutor = commandExecutor;
         this.moveAsyncErrorHandler = errorHandler;
     }
     
@@ -91,11 +96,38 @@ public class MotionExecutor {
             currentCommand = command;
             currentCommandFailed = false;
             
+            // Get tool ID from motion parameters (stored as string, parse to int)
+            String toolString = command.getMotionParameters() != null ? command.getMotionParameters().getTool() : null;
+            int toolId = 0; // Default to flange
+            
+            if (toolString != null && !toolString.isEmpty()) {
+                try {
+                    toolId = Integer.parseInt(toolString);
+                } catch (NumberFormatException e) {
+                    Logger.getInstance().warn("ROBOT_EXEC", "Invalid tool ID '" + toolString + "' in command. Using flange (tool ID 0).");
+                    toolId = 0;
+                }
+            }
+            
+            // Get and attach the appropriate tool based on tool ID
+            // This will handle tool switching if needed
+            Tool selectedTool = commandExecutor.getAndAttachToolForId(toolId);
+            
             // Execute asynchronous motion
             // Failures are handled by the registered IErrorHandler (see registerMoveAsyncErrorHandler)
             // The error handler will flush the queue and return ErrorHandlingAction.Ignore
             // This approach is per KUKA Sunrise.OS manual section 15.29.3
-            IMotionContainer container = robot.moveAsync(motionToExecute);
+            IMotionContainer container;
+            if (selectedTool != null) {
+                // Use tool's default motion frame for execution
+                // This ensures proper TCP (Tool Center Point) control
+                container = selectedTool.moveAsync(motionToExecute);
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool ID " + toolId + " TCP.");
+            } else {
+                // Use robot directly when tool ID is 0 (flange) or tool not available
+                container = robot.moveAsync(motionToExecute);
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + ").");
+            }
             container.await();
             
             // Check if the error handler was triggered
