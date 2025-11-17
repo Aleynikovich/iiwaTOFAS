@@ -19,12 +19,12 @@ import java.util.List;
 /**
  * Handles execution of motion commands for the robot.
  * Responsible for creating and executing PTP, LIN, and CIRC motions.
- * Supports both direct robot control and tool-based motion.
+ * Supports both direct robot control and tool-based motion with dynamic tool selection.
  */
 public class MotionExecutor {
     
     private final LBR robot;
-    private final Tool tool;
+    private final java.util.Map<String, Tool> toolRegistry;
     private final IErrorHandler moveAsyncErrorHandler;
     
     // Track the current command being executed for error handling
@@ -35,12 +35,12 @@ public class MotionExecutor {
      * Creates a new MotionExecutor.
      * 
      * @param robot The robot device to execute motions on
-     * @param tool The tool attached to the robot (can be null)
+     * @param toolRegistry Map of tool names to Tool objects for dynamic selection
      * @param errorHandler The error handler for asynchronous motion failures
      */
-    public MotionExecutor(LBR robot, Tool tool, IErrorHandler errorHandler) {
+    public MotionExecutor(LBR robot, java.util.Map<String, Tool> toolRegistry, IErrorHandler errorHandler) {
         this.robot = robot;
-        this.tool = tool;
+        this.toolRegistry = toolRegistry;
         this.moveAsyncErrorHandler = errorHandler;
     }
     
@@ -96,19 +96,34 @@ public class MotionExecutor {
             currentCommand = command;
             currentCommandFailed = false;
             
+            // Get tool name from motion parameters
+            String toolName = command.getMotionParameters() != null ? command.getMotionParameters().getTool() : null;
+            Tool selectedTool = null;
+            
+            // Look up tool in registry if specified
+            if (toolName != null && !toolName.isEmpty()) {
+                selectedTool = toolRegistry.get(toolName);
+                if (selectedTool == null) {
+                    Logger.getInstance().warn("ROBOT_EXEC", "Tool '" + toolName + "' specified in command but not found in registry. Using robot flange.");
+                }
+            }
+            
             // Execute asynchronous motion
             // Failures are handled by the registered IErrorHandler (see registerMoveAsyncErrorHandler)
             // The error handler will flush the queue and return ErrorHandlingAction.Ignore
             // This approach is per KUKA Sunrise.OS manual section 15.29.3
             IMotionContainer container;
-            if (tool != null) {
+            if (selectedTool != null) {
                 // Use tool's default motion frame for execution
                 // This ensures proper TCP (Tool Center Point) control
-                container = tool.moveAsync(motionToExecute);
-                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool's default motion frame.");
+                container = selectedTool.moveAsync(motionToExecute);
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool '" + toolName + "' TCP.");
             } else {
-                // Use robot directly when no tool is configured
+                // Use robot directly when no tool is specified or tool not found
                 container = robot.moveAsync(motionToExecute);
+                if (toolName != null && !toolName.isEmpty()) {
+                    Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool '" + toolName + "' not available).");
+                }
             }
             container.await();
             

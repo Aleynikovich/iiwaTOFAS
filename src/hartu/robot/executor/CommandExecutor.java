@@ -40,10 +40,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
     @Inject
     private MediaFlangeIOGroup mediaFlangeIO;
     
-    // Tool for proper TCP motion control
-    // To use: Define a tool named "DefaultTool" in Sunrise.Workbench Object Templates
-    // If not defined, system will use robot flange directly (current behavior)
-    private Tool defaultTool = null;
+    // Tool registry for dynamic tool selection based on command parameters
+    // Tools are loaded from Object Templates during initialization
+    private java.util.Map<String, Tool> toolRegistry;
     
     private RobotConsoleClient consoleClient;
     private Thread consoleClientThread;
@@ -63,19 +62,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
         
-        // Try to get tool from application data if configured
-        // Tool must be defined in Sunrise.Workbench Object Templates with name "DefaultTool"
-        try {
-            defaultTool = getApplicationData().createFromTemplate("DefaultTool");
-            if (defaultTool != null) {
-                defaultTool.attachTo(iiwa.getFlange());
-                Logger.getInstance().log("ROBOT_EXEC", "Tool 'DefaultTool' found and attached to robot flange.");
-            }
-        } catch (Exception e) {
-            // Tool not configured or error loading - this is expected if no tool is defined
-            Logger.getInstance().log("ROBOT_EXEC", "No default tool configured (this is normal if not using a tool). Using robot flange for motions.");
-            defaultTool = null;
-        }
+        // Initialize tool registry and load all available tools
+        // Tools must be defined in Sunrise.Workbench Object Templates
+        toolRegistry = new java.util.HashMap<String, Tool>();
+        loadAndRegisterTools();
         
         // Register error handler for asynchronous motion failures
         // This prevents the application from terminating when moveAsync fails
@@ -83,7 +73,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
-        this.motionExecutor = new MotionExecutor(iiwa, defaultTool, moveAsyncErrorHandler);
+        this.motionExecutor = new MotionExecutor(iiwa, toolRegistry, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController);
         this.programExecutor = new ProgramExecutor(toolController);
         
@@ -104,6 +94,48 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
         
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+    
+    /**
+     * Loads and registers all tools defined in Object Templates.
+     * Attempts to load common tool names and attaches them to the robot flange.
+     * Tools are stored in the toolRegistry map for dynamic selection during motion execution.
+     */
+    private void loadAndRegisterTools() {
+        // List of tool names to attempt loading
+        // These should match tool names defined in Sunrise.Workbench Object Templates
+        String[] toolNames = {
+            "DefaultTool",
+            "Gripper",
+            "Gripper1", 
+            "Gripper2",
+            "SuctionCup",
+            "Welder",
+            "Tool1",
+            "Tool2",
+            "Tool3"
+        };
+        
+        int loadedCount = 0;
+        for (String toolName : toolNames) {
+            try {
+                Tool tool = getApplicationData().createFromTemplate(toolName);
+                if (tool != null) {
+                    tool.attachTo(iiwa.getFlange());
+                    toolRegistry.put(toolName, tool);
+                    Logger.getInstance().log("ROBOT_EXEC", "Tool '" + toolName + "' loaded and attached to robot flange.");
+                    loadedCount++;
+                }
+            } catch (Exception e) {
+                // Tool not configured - this is expected, skip silently
+            }
+        }
+        
+        if (loadedCount == 0) {
+            Logger.getInstance().log("ROBOT_EXEC", "No tools configured. Commands will use robot flange for motions.");
+        } else {
+            Logger.getInstance().log("ROBOT_EXEC", "Loaded " + loadedCount + " tool(s). Commands can now specify tool names in motion parameters.");
+        }
     }
     
     /**
