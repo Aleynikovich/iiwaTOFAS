@@ -33,6 +33,213 @@ public class IOList {
         this.ethercat = ethercat;
         this.ioFlange = ioFlange;
         this.mediaFlange = mediaFlange;
+        this.in = new InputAccessor();
+        this.out = new OutputAccessor();
+    }
+    
+    // ========================================
+    // ARRAY-BASED ACCESS
+    // ========================================
+    
+    /**
+     * Array-based input accessor.
+     * Access inputs using simple indexing: ioList.in[index]
+     * 
+     * Index mapping:
+     * 1-64: Virtual marks (Mark1-Mark64)
+     * 65-72: Ethercat inputs (Input1-Input8)
+     * 73-80: IOFlange inputs (DI_Flange1-DI_Flange8)
+     * 81-86: MediaFlange inputs (InputX3Pin3, InputX3Pin4, InputX3Pin10, InputX3Pin13, InputX3Pin16, UserButton)
+     */
+    public final InputAccessor in;
+    
+    /**
+     * Array-based output accessor.
+     * Access outputs using simple indexing: ioList.out[index]
+     * 
+     * Index mapping:
+     * 1-64: Virtual marks (Mark1-Mark64)
+     * 65-72: Ethercat outputs (Output1-Output8)
+     * 73-80: IOFlange outputs (DO_Flange1-DO_Flange8)
+     * 81-88: MediaFlange outputs (LEDBlue, SwitchOffX3Voltage, OutputX3Pin1, OutputX3Pin2, OutputX3Pin11, OutputX3Pin12, LedRed, LedGreen)
+     */
+    public final OutputAccessor out;
+    
+    /**
+     * Input accessor class that provides array-like access to all inputs.
+     */
+    public class InputAccessor {
+        /**
+         * Gets an input value by index.
+         * 
+         * @param index The input index (1-86)
+         * @return The current value of the input
+         */
+        public boolean get(int index) {
+            // Virtual marks: 1-64
+            if (index >= 1 && index <= 64) {
+                return virtualMarks[index - 1];
+            }
+            // Ethercat inputs: 65-72
+            else if (index >= 65 && index <= 72) {
+                int inputNum = index - 64;
+                switch(inputNum) {
+                    case 1: return ethercat.getInput1();
+                    case 2: return ethercat.getInput2();
+                    case 3: return ethercat.getInput3();
+                    case 4: return ethercat.getInput4();
+                    case 5: return ethercat.getInput5();
+                    case 6: return ethercat.getInput6();
+                    case 7: return ethercat.getInput7();
+                    case 8: return ethercat.getInput8();
+                }
+            }
+            // IOFlange inputs: 73-80
+            else if (index >= 73 && index <= 80) {
+                int inputNum = index - 72;
+                switch(inputNum) {
+                    case 1: return ioFlange.getDI_Flange1();
+                    case 2: return ioFlange.getDI_Flange2();
+                    case 3: return ioFlange.getDI_Flange3();
+                    case 4: return ioFlange.getDI_Flange4();
+                    case 5: return ioFlange.getDI_Flange5();
+                    case 6: return ioFlange.getDI_Flange6();
+                    case 7: return ioFlange.getDI_Flange7();
+                    case 8: return ioFlange.getDI_Flange8();
+                }
+            }
+            // MediaFlange inputs: 81-86
+            else if (index >= 81 && index <= 86) {
+                switch(index) {
+                    case 81: return mediaFlange.getInputX3Pin3();
+                    case 82: return mediaFlange.getInputX3Pin4();
+                    case 83: return mediaFlange.getInputX3Pin10();
+                    case 84: return mediaFlange.getInputX3Pin13();
+                    case 85: return mediaFlange.getInputX3Pin16();
+                    case 86: return mediaFlange.getUserButton();
+                }
+            }
+            
+            throw new IllegalArgumentException("Invalid input index: " + index + ". Valid range is 1-86");
+        }
+    }
+    
+    /**
+     * Output accessor class that provides array-like access to all outputs.
+     */
+    public class OutputAccessor {
+        /**
+         * Gets an output value by index.
+         * 
+         * @param index The output index (1-88)
+         * @return The current value of the output
+         */
+        public boolean get(int index) {
+            // Virtual marks: 1-64
+            if (index >= 1 && index <= 64) {
+                return virtualMarks[index - 1];
+            }
+            // Ethercat outputs: 65-72
+            else if (index >= 65 && index <= 72) {
+                int outputNum = index - 64;
+                switch(outputNum) {
+                    case 1: return ethercat.getOutput1();
+                    case 2: return ethercat.getOutput2();
+                    case 3: return ethercat.getOutput3();
+                    case 4: return ethercat.getOutput4();
+                    case 5: return ethercat.getOutput5();
+                    case 6: return ethercat.getOutput6();
+                    case 7: return ethercat.getOutput7();
+                    case 8: return ethercat.getOutput8();
+                }
+            }
+            // IOFlange outputs: 73-80
+            else if (index >= 73 && index <= 80) {
+                int outputNum = index - 72;
+                switch(outputNum) {
+                    case 1: return ioFlange.getDO_Flange1();
+                    case 2: return ioFlange.getDO_Flange2();
+                    case 3: return ioFlange.getDO_Flange3();
+                    case 4: return ioFlange.getDO_Flange4();
+                    case 5: return ioFlange.getDO_Flange5();
+                    case 6: return ioFlange.getDO_Flange6();
+                    case 7: return ioFlange.getDO_Flange7();
+                    case 8: return ioFlange.getDO_Flange8();
+                }
+            }
+            // MediaFlange outputs: 81-88
+            else if (index >= 81 && index <= 88) {
+                switch(index) {
+                    case 81: return mediaFlange.getLEDBlue();
+                    case 82: return mediaFlange.getSwitchOffX3Voltage();
+                    case 83: return mediaFlange.getOutputX3Pin1();
+                    case 84: return mediaFlange.getOutputX3Pin2();
+                    case 85: return mediaFlange.getOutputX3Pin11();
+                    case 86: return mediaFlange.getOutputX3Pin12();
+                    case 87: return mediaFlange.getLedRed();
+                    case 88: return mediaFlange.getLedGreen();
+                }
+            }
+            
+            throw new IllegalArgumentException("Invalid output index: " + index + ". Valid range is 1-88");
+        }
+        
+        /**
+         * Sets an output value by index.
+         * 
+         * @param index The output index (1-88)
+         * @param value The value to set
+         */
+        public void set(int index, boolean value) {
+            // Virtual marks: 1-64
+            if (index >= 1 && index <= 64) {
+                virtualMarks[index - 1] = value;
+            }
+            // Ethercat outputs: 65-72
+            else if (index >= 65 && index <= 72) {
+                int outputNum = index - 64;
+                switch(outputNum) {
+                    case 1: ethercat.setOutput1(value); break;
+                    case 2: ethercat.setOutput2(value); break;
+                    case 3: ethercat.setOutput3(value); break;
+                    case 4: ethercat.setOutput4(value); break;
+                    case 5: ethercat.setOutput5(value); break;
+                    case 6: ethercat.setOutput6(value); break;
+                    case 7: ethercat.setOutput7(value); break;
+                    case 8: ethercat.setOutput8(value); break;
+                }
+            }
+            // IOFlange outputs: 73-80
+            else if (index >= 73 && index <= 80) {
+                int outputNum = index - 72;
+                switch(outputNum) {
+                    case 1: ioFlange.setDO_Flange1(value); break;
+                    case 2: ioFlange.setDO_Flange2(value); break;
+                    case 3: ioFlange.setDO_Flange3(value); break;
+                    case 4: ioFlange.setDO_Flange4(value); break;
+                    case 5: ioFlange.setDO_Flange5(value); break;
+                    case 6: ioFlange.setDO_Flange6(value); break;
+                    case 7: ioFlange.setDO_Flange7(value); break;
+                    case 8: ioFlange.setDO_Flange8(value); break;
+                }
+            }
+            // MediaFlange outputs: 81-88
+            else if (index >= 81 && index <= 88) {
+                switch(index) {
+                    case 81: mediaFlange.setLEDBlue(value); break;
+                    case 82: mediaFlange.setSwitchOffX3Voltage(value); break;
+                    case 83: mediaFlange.setOutputX3Pin1(value); break;
+                    case 84: mediaFlange.setOutputX3Pin2(value); break;
+                    case 85: mediaFlange.setOutputX3Pin11(value); break;
+                    case 86: mediaFlange.setOutputX3Pin12(value); break;
+                    case 87: mediaFlange.setLedRed(value); break;
+                    case 88: mediaFlange.setLedGreen(value); break;
+                }
+            }
+            else {
+                throw new IllegalArgumentException("Invalid output index: " + index + ". Valid range is 1-88");
+            }
+        }
     }
     
     // ========================================
