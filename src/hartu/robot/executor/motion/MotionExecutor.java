@@ -19,12 +19,12 @@ import java.util.List;
 /**
  * Handles execution of motion commands for the robot.
  * Responsible for creating and executing PTP, LIN, and CIRC motions.
- * Supports both direct robot control and tool-based motion with dynamic tool selection.
+ * Supports dynamic tool attachment based on command tool ID.
  */
 public class MotionExecutor {
     
     private final LBR robot;
-    private final java.util.Map<String, Tool> toolRegistry;
+    private final hartu.robot.executor.CommandExecutor commandExecutor;
     private final IErrorHandler moveAsyncErrorHandler;
     
     // Track the current command being executed for error handling
@@ -35,12 +35,12 @@ public class MotionExecutor {
      * Creates a new MotionExecutor.
      * 
      * @param robot The robot device to execute motions on
-     * @param toolRegistry Map of tool names to Tool objects for dynamic selection
+     * @param commandExecutor Reference to CommandExecutor for tool attachment
      * @param errorHandler The error handler for asynchronous motion failures
      */
-    public MotionExecutor(LBR robot, java.util.Map<String, Tool> toolRegistry, IErrorHandler errorHandler) {
+    public MotionExecutor(LBR robot, hartu.robot.executor.CommandExecutor commandExecutor, IErrorHandler errorHandler) {
         this.robot = robot;
-        this.toolRegistry = toolRegistry;
+        this.commandExecutor = commandExecutor;
         this.moveAsyncErrorHandler = errorHandler;
     }
     
@@ -96,17 +96,22 @@ public class MotionExecutor {
             currentCommand = command;
             currentCommandFailed = false;
             
-            // Get tool name from motion parameters
-            String toolName = command.getMotionParameters() != null ? command.getMotionParameters().getTool() : null;
-            Tool selectedTool = null;
+            // Get tool ID from motion parameters (stored as string, parse to int)
+            String toolString = command.getMotionParameters() != null ? command.getMotionParameters().getTool() : null;
+            int toolId = 0; // Default to flange
             
-            // Look up tool in registry if specified
-            if (toolName != null && !toolName.isEmpty()) {
-                selectedTool = toolRegistry.get(toolName);
-                if (selectedTool == null) {
-                    Logger.getInstance().warn("ROBOT_EXEC", "Tool '" + toolName + "' specified in command but not found in registry. Using robot flange.");
+            if (toolString != null && !toolString.isEmpty()) {
+                try {
+                    toolId = Integer.parseInt(toolString);
+                } catch (NumberFormatException e) {
+                    Logger.getInstance().warn("ROBOT_EXEC", "Invalid tool ID '" + toolString + "' in command. Using flange (tool ID 0).");
+                    toolId = 0;
                 }
             }
+            
+            // Get and attach the appropriate tool based on tool ID
+            // This will handle tool switching if needed
+            Tool selectedTool = commandExecutor.getAndAttachToolForId(toolId);
             
             // Execute asynchronous motion
             // Failures are handled by the registered IErrorHandler (see registerMoveAsyncErrorHandler)
@@ -117,13 +122,11 @@ public class MotionExecutor {
                 // Use tool's default motion frame for execution
                 // This ensures proper TCP (Tool Center Point) control
                 container = selectedTool.moveAsync(motionToExecute);
-                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool '" + toolName + "' TCP.");
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool ID " + toolId + " TCP.");
             } else {
-                // Use robot directly when no tool is specified or tool not found
+                // Use robot directly when tool ID is 0 (flange) or tool not available
                 container = robot.moveAsync(motionToExecute);
-                if (toolName != null && !toolName.isEmpty()) {
-                    Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool '" + toolName + "' not available).");
-                }
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + ").");
             }
             container.await();
             
