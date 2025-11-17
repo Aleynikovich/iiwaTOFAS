@@ -7,7 +7,6 @@ import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 
 import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CommandExecutor extends RoboticsAPIApplication {
@@ -40,18 +38,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private Ethercat_x44IOGroup toolControlIO;
     @Inject
     private MediaFlangeIOGroup mediaFlangeIO;
-    
-    // Tool registry: maps tool names to Tool objects
-    // Tools are loaded from Object Templates during initialization
-    private java.util.Map<String, Tool> toolRegistry;
-    
-    // Tool ID mapping: maps tool IDs to tool names
-    // Tool 0 = Flange, Tool 1 = GimaticCamera, Tool 2 = Vacuum1, etc.
-    private ToolMapping toolMapping;
-    
-    // Currently attached tool (null if using flange)
-    private Tool currentlyAttachedTool = null;
-    private String currentlyAttachedToolName = null;
     
     private RobotConsoleClient consoleClient;
     private Thread consoleClientThread;
@@ -71,22 +57,12 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
         
-        // Initialize tool ID to name mapping
-        toolMapping = new ToolMapping();
-        
-        // Initialize tool registry and load all available tools
-        // Tools must be defined in Sunrise.Workbench Object Templates
-        toolRegistry = new java.util.HashMap<String, Tool>();
-        loadAndRegisterTools();
-        
         // Register error handler for asynchronous motion failures
         // This prevents the application from terminating when moveAsync fails
         registerMoveAsyncErrorHandler();
         
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
-        this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
-        this.ioExecutor = new IoExecutor(toolController);
         hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
         this.motionExecutor = new MotionExecutor(iiwa, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
@@ -109,114 +85,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
         
         Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
-    }
-    
-    /**
-     * Loads and registers all tools defined in the tool mapping.
-     * Tools are loaded from Object Templates but NOT attached yet.
-     * Tools will be attached dynamically when commands specify a tool ID.
-     */
-    private void loadAndRegisterTools() {
-        int loadedCount = 0;
-        
-        // Get all tool mappings and try to load each tool
-        for (Map.Entry<Integer, String> entry : toolMapping.getAllMappings().entrySet()) {
-            int toolId = entry.getKey();
-            String toolName = entry.getValue();
-            
-            // Skip tool ID 0 (flange - no tool)
-            if (toolId == 0 || toolName == null) {
-                continue;
-            }
-            
-            try {
-                Tool tool = getApplicationData().createFromTemplate(toolName);
-                if (tool != null) {
-                    // Store in registry but don't attach yet
-                    toolRegistry.put(toolName, tool);
-                    Logger.getInstance().log("ROBOT_EXEC", "Tool ID " + toolId + " ('" + toolName + "') loaded successfully.");
-                    loadedCount++;
-                }
-            } catch (Exception e) {
-                Logger.getInstance().warn("ROBOT_EXEC", "Tool ID " + toolId + " ('" + toolName + "') defined in mapping but not found in Object Templates.");
-            }
-        }
-        
-        if (loadedCount == 0) {
-            Logger.getInstance().log("ROBOT_EXEC", "No tools loaded. Commands with tool ID 0 will use robot flange.");
-        } else {
-            Logger.getInstance().log("ROBOT_EXEC", "Loaded " + loadedCount + " tool(s). Tools will be attached dynamically based on command tool ID.");
-        }
-    }
-    
-    /**
-     * Gets the tool for a given tool ID by looking up the mapping and returning the Tool object.
-     * If tool ID is 0, returns null (flange).
-     * Dynamically attaches the tool if it's different from the currently attached tool.
-     * 
-     * @param toolId The tool ID from the command (0 = flange, 1+ = specific tools)
-     * @return The Tool object, or null if using flange or tool not found
-     */
-    public Tool getAndAttachToolForId(int toolId) {
-        // Tool ID 0 means use flange (no tool)
-        if (toolId == 0) {
-            // Detach current tool if any
-            if (currentlyAttachedTool != null) {
-                try {
-                    currentlyAttachedTool.detach();
-                    Logger.getInstance().log("ROBOT_EXEC", "Detached tool '" + currentlyAttachedToolName + "' to use flange.");
-                    currentlyAttachedTool = null;
-                    currentlyAttachedToolName = null;
-                } catch (Exception e) {
-                    Logger.getInstance().error("ROBOT_EXEC", "Failed to detach tool '" + currentlyAttachedToolName + "': " + e.getMessage());
-                }
-            }
-            return null;
-        }
-        
-        // Get tool name from mapping
-        String toolName = toolMapping.getToolName(toolId);
-        if (toolName == null) {
-            Logger.getInstance().warn("ROBOT_EXEC", "Tool ID " + toolId + " not found in mapping. Using flange.");
-            return null;
-        }
-        
-        // Check if this tool is already attached
-        if (currentlyAttachedToolName != null && currentlyAttachedToolName.equals(toolName)) {
-            Logger.getInstance().log("ROBOT_EXEC", "Tool '" + toolName + "' (ID " + toolId + ") already attached. No change needed.");
-            return currentlyAttachedTool;
-        }
-        
-        // Get tool from registry
-        Tool tool = toolRegistry.get(toolName);
-        if (tool == null) {
-            Logger.getInstance().warn("ROBOT_EXEC", "Tool '" + toolName + "' (ID " + toolId + ") not found in registry. Using flange.");
-            return null;
-        }
-        
-        // Detach current tool if any
-        if (currentlyAttachedTool != null) {
-            try {
-                currentlyAttachedTool.detach();
-                Logger.getInstance().log("ROBOT_EXEC", "Detached previous tool '" + currentlyAttachedToolName + "'.");
-            } catch (Exception e) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to detach previous tool '" + currentlyAttachedToolName + "': " + e.getMessage());
-            }
-        }
-        
-        // Attach new tool
-        try {
-            tool.attachTo(iiwa.getFlange());
-            currentlyAttachedTool = tool;
-            currentlyAttachedToolName = toolName;
-            Logger.getInstance().log("ROBOT_EXEC", "Attached tool '" + toolName + "' (ID " + toolId + ") to robot flange.");
-            return tool;
-        } catch (Exception e) {
-            Logger.getInstance().error("ROBOT_EXEC", "Failed to attach tool '" + toolName + "' (ID " + toolId + "): " + e.getMessage());
-            currentlyAttachedTool = null;
-            currentlyAttachedToolName = null;
-            return null;
-        }
     }
     
     /**
