@@ -168,7 +168,16 @@ public class ClientHandler implements Runnable
                         String responseToClient;
                         if (executionSuccess)
                         {
-                            responseToClient = "FREE|" + commandId + "|success" + ProtocolConstants.MESSAGE_TERMINATOR;
+                            // Check if there's custom response data (e.g., for input reading commands)
+                            String customData = resultHolder.getCustomResponseData();
+                            if (customData != null && !customData.isEmpty())
+                            {
+                                responseToClient = "FREE|" + commandId + "|" + customData + ProtocolConstants.MESSAGE_TERMINATOR;
+                            }
+                            else
+                            {
+                                responseToClient = "FREE|" + commandId + "|success" + ProtocolConstants.MESSAGE_TERMINATOR;
+                            }
                         }
                         else
                         {
