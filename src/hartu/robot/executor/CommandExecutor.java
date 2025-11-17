@@ -63,8 +63,9 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
+        hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
         this.motionExecutor = new MotionExecutor(iiwa, moveAsyncErrorHandler);
-        this.ioExecutor = new IoExecutor(toolController);
+        this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController);
         
         // Flush any stale commands from previous runs
@@ -181,6 +182,11 @@ public class CommandExecutor extends RoboticsAPIApplication {
                                 break;
                             case IO:
                                 executionSuccess = ioExecutor.executeIoCommand(command);
+                                // For input reading commands, set custom response data with the input state
+                                if (executionSuccess && command.isInputReadCommand()) {
+                                    int stateValue = ioExecutor.getLastInputState() ? 1 : 0;
+                                    resultHolder.setCustomResponseData(String.valueOf(stateValue));
+                                }
                                 break;
                             case PROGRAM_CALL:
                                 executionSuccess = programExecutor.executeProgramCall(command);
