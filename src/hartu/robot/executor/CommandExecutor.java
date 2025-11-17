@@ -22,7 +22,6 @@ import hartu.robot.executor.motion.MotionExecutor;
 import hartu.robot.executor.program.ProgramExecutor;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
