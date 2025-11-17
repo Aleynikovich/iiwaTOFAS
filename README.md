@@ -231,11 +231,17 @@ Multiple clients can connect simultaneously to receive joint state updates.
 
 ## Command Protocol
 
-Commands are sent as pipe-delimited strings ending with `#`. Here's the basic format:
+Commands are sent as pipe-delimited strings ending with `#`. Here's the complete format:
 
 ```
-ACTION_TYPE|NUM_POINTS|POINT_DATA|VELOCITY|ACCELERATION|JERK|ID#
+ACTION_TYPE|NUM_POINTS|TARGET_POINTS|IO_POINT|IO_PIN|IO_STATE|TOOL_ID|BASE|SPEED_OVERRIDE|ID#
 ```
+
+**Tool ID Field** (index 6): Specifies which tool to use for the motion
+- 0 = Flange (no tool)
+- 1 = GimaticCamera
+- 2 = Vacuum1
+- 3+ = Other tools (see ToolMapping.java)
 
 ### Supported Motion Types
 
@@ -253,19 +259,19 @@ ACTION_TYPE|NUM_POINTS|POINT_DATA|VELOCITY|ACCELERATION|JERK|ID#
 
 ### Example Commands
 
-Move to joint position (all angles in degrees):
+Move to joint position with flange (all angles in degrees):
 ```
-0|1|0.0;10.0;-5.0;20.0;0.0;-15.0;0.0|0.2|0.1|0.05|cmd_001#
-```
-
-Move to Cartesian position (X,Y,Z in mm, A,B,C in degrees):
-```
-1|1|400.0;0.0;600.0;180.0;0.0;180.0|0.15|0.1|0.05|cmd_002#
+0|1|0.0;10.0;-5.0;20.0;0.0;-15.0;0.0|||0||0.2|cmd_001#
 ```
 
-Linear motion with two waypoints:
+Move to Cartesian position with Vacuum1 (tool ID 2):
 ```
-3|2|350.0;50.0;500.0;180.0;0.0;180.0,400.0;100.0;550.0;180.0;0.0;180.0|0.1|0.08|0.03|cmd_003#
+1|1|400.0;0.0;600.0;180.0;0.0;180.0|||2||0.15|cmd_002#
+```
+
+Linear motion with GimaticCamera (tool ID 1):
+```
+3|1|400.0;100.0;550.0;180.0;0.0;180.0|||1||0.1|cmd_003#
 ```
 
 ### I/O Commands
