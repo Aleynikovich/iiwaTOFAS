@@ -2,9 +2,18 @@
 
 ## Overview
 
-The `IOList` class provides centralized access to all available I/Os on the robot. Instead of working with three separate I/O group files, you can now access all I/Os through a single, unified interface.
+The `IOList` class provides centralized access to all available I/Os on the robot, including 64 virtual marks for custom use. Instead of working with three separate I/O group files, you can now access all I/Os through a single, unified interface.
 
-## Available I/O Groups
+## Available I/Os
+
+### 0. Virtual Marks (Software Flags)
+- **64 Virtual Marks**: Mark1 through Mark64
+- **Purpose**: These are NOT physical I/Os. They are software flags that you can use for any custom purpose (state tracking, flow control, debugging, etc.)
+- **Features**:
+  - Stored in memory only (not connected to hardware)
+  - Can be set/get like any other I/O
+  - Persist for the lifetime of the IOList object
+  - Useful for marking program states, conditions, or custom logic
 
 ### 1. Ethercat_x44 I/O Group
 - **8 Digital Inputs**: Input1 through Input8
@@ -40,7 +49,40 @@ MediaFlangeIOGroup mediaFlange = new MediaFlangeIOGroup(controller);
 IOList ioList = new IOList(ethercat, ioFlange, mediaFlange);
 ```
 
-### Reading Inputs
+### Working with Virtual Marks
+
+Virtual marks are software flags (not physical I/Os) that you can use for custom purposes:
+
+```java
+// Set marks to track program states
+ioList.setMark(1, true);   // Mark that initialization is complete
+ioList.setMark(5, true);   // Mark that calibration was done
+ioList.setMark(10, true);  // Mark a specific condition
+
+// Read marks to check states
+if (ioList.getMark(1)) {
+    // Initialization is complete, proceed
+}
+
+if (ioList.getMark(5) && ioList.getMark(10)) {
+    // Both conditions are met
+}
+
+// Reset all marks
+ioList.resetAllMarks();
+
+// Check how many marks are available
+int totalMarks = ioList.getTotalMarks(); // Returns 64
+```
+
+**Use Cases for Virtual Marks:**
+- Track workflow states (e.g., Mark1 = "initialized", Mark2 = "calibrated")
+- Implement custom interlocks or safety conditions
+- Debug program flow by setting marks at key points
+- Store temporary flags during complex operations
+- Create custom state machines
+
+### Reading Physical Inputs
 
 ```java
 // Read Ethercat inputs
@@ -56,7 +98,7 @@ boolean userButton = ioList.getMediaFlange_UserButton();
 boolean pin3 = ioList.getMediaFlange_InputX3Pin3();
 ```
 
-### Setting Outputs
+### Setting Physical Outputs
 
 ```java
 // Set Ethercat outputs

@@ -6,12 +6,16 @@ import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 
 /**
  * Centralized list of all available I/Os on the robot.
- * Provides easy access to all physical I/O groups and their individual I/Os.
+ * Provides easy access to all physical I/O groups and their individual I/Os,
+ * as well as 64 virtual I/O marks for custom use.
  * 
  * This class serves as a single point of reference for all I/O operations,
  * making it easier to work with the robot's I/O system.
  */
 public class IOList {
+    
+    // Virtual I/O marks (software flags) - 64 marks for custom use
+    private final boolean[] virtualMarks;
     
     private final Ethercat_x44IOGroup ethercat;
     private final IOFlangeIOGroup ioFlange;
@@ -25,9 +29,62 @@ public class IOList {
      * @param mediaFlange The MediaFlange IO group
      */
     public IOList(Ethercat_x44IOGroup ethercat, IOFlangeIOGroup ioFlange, MediaFlangeIOGroup mediaFlange) {
+        this.virtualMarks = new boolean[64];
         this.ethercat = ethercat;
         this.ioFlange = ioFlange;
         this.mediaFlange = mediaFlange;
+    }
+    
+    // ========================================
+    // VIRTUAL MARKS (1-64)
+    // ========================================
+    
+    /**
+     * Gets the state of a virtual mark.
+     * Virtual marks are software flags (not physical I/Os) that can be used for custom purposes.
+     * 
+     * @param markNumber The mark number (1-64)
+     * @return The current state of the mark
+     * @throws IllegalArgumentException if markNumber is not in range 1-64
+     */
+    public boolean getMark(int markNumber) {
+        if (markNumber < 1 || markNumber > 64) {
+            throw new IllegalArgumentException("Mark number must be between 1 and 64, got: " + markNumber);
+        }
+        return virtualMarks[markNumber - 1];
+    }
+    
+    /**
+     * Sets the state of a virtual mark.
+     * Virtual marks are software flags (not physical I/Os) that can be used for custom purposes.
+     * 
+     * @param markNumber The mark number (1-64)
+     * @param value The value to set
+     * @throws IllegalArgumentException if markNumber is not in range 1-64
+     */
+    public void setMark(int markNumber, boolean value) {
+        if (markNumber < 1 || markNumber > 64) {
+            throw new IllegalArgumentException("Mark number must be between 1 and 64, got: " + markNumber);
+        }
+        virtualMarks[markNumber - 1] = value;
+    }
+    
+    /**
+     * Resets all virtual marks to false.
+     */
+    public void resetAllMarks() {
+        for (int i = 0; i < virtualMarks.length; i++) {
+            virtualMarks[i] = false;
+        }
+    }
+    
+    /**
+     * Gets the total number of virtual marks available.
+     * 
+     * @return 64
+     */
+    public int getTotalMarks() {
+        return virtualMarks.length;
     }
     
     // ========================================
@@ -179,6 +236,10 @@ public class IOList {
         StringBuilder summary = new StringBuilder();
         summary.append("=== Available I/Os ===\n\n");
         
+        summary.append("VIRTUAL MARKS (SOFTWARE FLAGS):\n");
+        summary.append("  Marks: Mark1-Mark64 (64 virtual software flags for custom use)\n");
+        summary.append("  Note: These are NOT physical I/Os, but software flags you can use for any purpose\n\n");
+        
         summary.append("ETHERCAT_X44 I/O GROUP:\n");
         summary.append("  Inputs: Input1-Input8 (8 digital inputs)\n");
         summary.append("  Outputs: Output1-Output8 (8 digital outputs)\n\n");
@@ -202,6 +263,23 @@ public class IOList {
     public String getCurrentIOStates() {
         StringBuilder states = new StringBuilder();
         states.append("=== Current I/O States ===\n\n");
+        
+        // Virtual Marks
+        states.append("VIRTUAL MARKS:\n");
+        states.append("  ");
+        int activeMarks = 0;
+        for (int i = 1; i <= 64; i++) {
+            if (virtualMarks[i - 1]) {
+                if (activeMarks > 0) states.append(", ");
+                states.append("Mark").append(i);
+                activeMarks++;
+                if (activeMarks % 8 == 0 && i < 64) states.append("\n  ");
+            }
+        }
+        if (activeMarks == 0) {
+            states.append("(All marks are OFF)");
+        }
+        states.append("\n\n");
         
         states.append("ETHERCAT_X44:\n");
         states.append("  Inputs: ");
