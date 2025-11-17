@@ -417,26 +417,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
         }
     }
 
-    /**
-     * Executes external program call commands by calling appropriate subprograms.
-     * 
-     * Program ID mapping:
-     * - 0: Place current tool (detects tool from digital inputs, places and detaches)
-     * - 1-3: Pick tool 1-3 (moves to tool position and attaches with lock gimatic)
-     * - 101: Open tool (global, activates vacuum/suction)
-     * - 102: Close tool (global, blows air to release)
-     * 
-     * Examples:
-     * - Command 100 → Program 0: Place current tool
-     * - Command 101 → Program 1: Pick tool 1
-     * - Command 102 → Program 2: Pick tool 2
-     * - Command 103 → Program 3: Pick tool 3
-     * - Command 201 → Program 101: Open tool
-     * - Command 202 → Program 102: Close tool
-     *
-     * @param command The ParsedCommand representing an external program call.
-     * @return True if the program call executed successfully, false otherwise.
-     */
     private boolean executeProgramCallCommand(ParsedCommand command) {
         Integer programId = command.getProgramId();
         if (programId == null) {
@@ -447,25 +427,19 @@ public class CommandExecutor extends RoboticsAPIApplication {
         Logger.getInstance().log("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
 
         try {
-            // Route based on program ID
-            if (programId == 0) {
-                // Program 0: Place current tool (detect from inputs)
-                return placeCurrentTool();
-            } else if (programId >= 1 && programId <= 3) {
-                // Programs 1-3: Pick tools 1-3
+        	if (programId >= 1 && programId <= 6) {
                 return pickTool(programId);
+            } else if (programId >= 11 && programId <= 16) {
+                return placeCurrentTool(); 
             } else if (programId == 101) {
-                // Program 101: Open tool (global)
-                return openTool(0); // Pass 0 as toolId since it's global
+                return openTool(0);
             } else if (programId == 102) {
-                // Program 102: Close tool (global)
-                return closeTool(0); // Pass 0 as toolId since it's global
+                return closeTool(0);
             } else {
-                Logger.getInstance().error("ROBOT_EXEC", "Invalid program ID: " + programId + " (supported: 0-3, 101-102) for command ID " + command.getId());
+                Logger.getInstance().error("ROBOT_EXEC", "Invalid program ID: " + programId);
                 return false;
             }
         } catch (Throwable t) {
-            // Catch ALL exceptions to ensure program call failures don't crash the robot
             Logger.getInstance().error("ROBOT_EXEC", "Program call command ID " + command.getId() + " failed with exception: " + t.getClass().getName() + " - " + t.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
             return false;
@@ -519,52 +493,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
      * @return True if the operation executed successfully, false otherwise.
      */
     private boolean placeCurrentTool() {
-        try {
-            // Detect which tool is currently attached
-            int currentToolId = getCurrentToolId();
-            
-            if (currentToolId == 0) {
-                Logger.getInstance().warn("ROBOT_EXEC", "No tool detected to place. Tool ID is 0.");
-                return false;
-            }
-            
-            Logger.getInstance().log("ROBOT_EXEC", "Placing current tool " + currentToolId);
-            
-            // Get tool-specific position
-            Frame toolPosition = getToolPosition(currentToolId);
-            if (toolPosition == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Tool " + currentToolId + " position not configured");
-                return false;
-            }
-            
-            // Move to tool position
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to tool " + currentToolId + " storage position");
-            CartesianPTP ptpMotion = new CartesianPTP(toolPosition);
-            ptpMotion.setJointVelocityRel(0.2); // Conservative speed for tool placement
-            
-            try {
-                IMotionContainer container = iiwa.moveAsync(ptpMotion);
-                container.await();
-                Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + currentToolId + " storage position");
-            } catch (Throwable t) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + currentToolId + " storage position: " + t.getClass().getName() + " - " + t.getMessage());
-                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
-                return false;
-            }
-            
-            // Unlock the Gimatic tool changer to release the tool
-            if (!unlockGimatic()) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic for tool " + currentToolId);
-                return false;
-            }
-            
-            Logger.getInstance().log("ROBOT_EXEC", "Successfully placed tool " + currentToolId);
-            return true;
-        } catch (Throwable t) {
-            Logger.getInstance().error("ROBOT_EXEC", "Place current tool operation failed: " + t.getClass().getName() + " - " + t.getMessage());
-            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
-            return false;
-        }
+    	return false;
     }
 
     /**
@@ -579,14 +508,21 @@ public class CommandExecutor extends RoboticsAPIApplication {
         try {
             String toolDesc = (toolId == 0) ? "(global)" : String.valueOf(toolId);
             Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolDesc + " (blowing air)");
-            
-            // Same IO sequence for all tools - activates vacuum/suction
+
             toolControlIO.setOutput3(true);
-            toolControlIO.setOutput2(true);
-            toolControlIO.setOutput1(false);
+            
+            if (toolId > 3){
+                toolControlIO.setOutput2(true);
+                toolControlIO.setOutput1(false);
+            }
+            else {
+            	toolControlIO.setOutput2(false);
+                toolControlIO.setOutput1(true);
+            }
             gimaticIO.setDO_Flange2(true);
             gimaticIO.setDO_Flange1(false);
-            Thread.sleep(2000);
+            Thread.sleep(200);
+            toolControlIO.setOutput1(false);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput3(false);
             Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " opened (blowing air)");
@@ -610,8 +546,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         try {
             String toolDesc = (toolId == 0) ? "(global)" : String.valueOf(toolId);
             Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolDesc + " (vacuum on)");
-            
-            // Same IO sequence for all tools - blows air to release
+
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput1(true);
@@ -678,67 +613,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
      * @return True if the operation executed successfully, false otherwise.
      */
     private boolean pickTool(int toolId) {
-        try {
-            Logger.getInstance().log("ROBOT_EXEC", "Picking tool " + toolId);
-            
-            // Get tool-specific position (different base frame per tool)
-            Frame toolPosition = getToolPosition(toolId);
-            if (toolPosition == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Tool " + toolId + " position not configured");
-                return false;
-            }
-            
-            // Move to tool position
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to tool " + toolId + " position");
-            CartesianPTP ptpMotion = new CartesianPTP(toolPosition);
-            ptpMotion.setJointVelocityRel(0.2); // Conservative speed for tool pickup
-            
-            try {
-                IMotionContainer container = iiwa.moveAsync(ptpMotion);
-                container.await();
-                Logger.getInstance().log("ROBOT_EXEC", "Reached tool " + toolId + " position");
-            } catch (Throwable t) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to move to tool " + toolId + " position: " + t.getClass().getName() + " - " + t.getMessage());
-                Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
-                return false;
-            }
-            
-            // Lock the Gimatic tool changer
-            if (!lockGimatic()) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to lock Gimatic for tool " + toolId);
-                return false;
-            }
-            
-            Logger.getInstance().log("ROBOT_EXEC", "Successfully picked tool " + toolId);
-            return true;
-        } catch (Throwable t) {
-            Logger.getInstance().error("ROBOT_EXEC", "Pick tool " + toolId + " operation failed: " + t.getClass().getName() + " - " + t.getMessage());
-            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception)t : new Exception("Throwable wrapper", t));
-            return false;
-        }
-    }
-
-
-
-    /**
-     * Gets the position/frame for a specific tool.
-     * Each tool has its own base coordinate system.
-     * 
-     * @param toolId The ID of the tool (1-99)
-     * @return The Frame representing the tool position, or null if not configured
-     */
-    private Frame getToolPosition(int toolId) {
-        // TODO: Implement tool position configuration
-        // This should return tool-specific positions with different base frames
-        // For now, returning null to indicate positions need to be configured
-        
-        // Example implementation could be:
-        // - Load from configuration file
-        // - Use predefined positions based on toolId
-        // - Query from a tool management system
-        
-        Logger.getInstance().warn("ROBOT_EXEC", "Tool " + toolId + " position not yet configured. Please implement getToolPosition().");
-        return null;
+    	return false;
     }
 
     @Override
