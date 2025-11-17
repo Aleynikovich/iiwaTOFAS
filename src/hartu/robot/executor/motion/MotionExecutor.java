@@ -4,6 +4,8 @@ import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
+import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.motionModel.*;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.MovementType;
@@ -18,10 +20,12 @@ import java.util.List;
 /**
  * Handles execution of motion commands for the robot.
  * Responsible for creating and executing PTP, LIN, and CIRC motions.
+ * Supports both direct robot control and tool-based motion.
  */
 public class MotionExecutor {
     
     private final LBR robot;
+    private final Tool tool;
     private final IErrorHandler moveAsyncErrorHandler;
     
     // Track the current command being executed for error handling
@@ -32,10 +36,12 @@ public class MotionExecutor {
      * Creates a new MotionExecutor.
      * 
      * @param robot The robot device to execute motions on
+     * @param tool The tool attached to the robot (can be null)
      * @param errorHandler The error handler for asynchronous motion failures
      */
-    public MotionExecutor(LBR robot, IErrorHandler errorHandler) {
+    public MotionExecutor(LBR robot, Tool tool, IErrorHandler errorHandler) {
         this.robot = robot;
+        this.tool = tool;
         this.moveAsyncErrorHandler = errorHandler;
     }
     
@@ -95,7 +101,16 @@ public class MotionExecutor {
             // Failures are handled by the registered IErrorHandler (see registerMoveAsyncErrorHandler)
             // The error handler will flush the queue and return ErrorHandlingAction.Ignore
             // This approach is per KUKA Sunrise.OS manual section 15.29.3
-            IMotionContainer container = robot.moveAsync(motionToExecute);
+            IMotionContainer container;
+            if (tool != null) {
+                // Use tool's default motion frame for execution
+                // This ensures proper TCP (Tool Center Point) control
+                container = tool.moveAsync(motionToExecute);
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool's default motion frame.");
+            } else {
+                // Use robot directly when no tool is configured
+                container = robot.moveAsync(motionToExecute);
+            }
             container.await();
             
             // Check if the error handler was triggered

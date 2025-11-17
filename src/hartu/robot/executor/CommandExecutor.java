@@ -7,6 +7,7 @@ import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 
 import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
@@ -21,6 +22,7 @@ import hartu.robot.executor.motion.MotionExecutor;
 import hartu.robot.executor.program.ProgramExecutor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,6 +40,11 @@ public class CommandExecutor extends RoboticsAPIApplication {
     private Ethercat_x44IOGroup toolControlIO;
     @Inject
     private MediaFlangeIOGroup mediaFlangeIO;
+    
+    // Tool for proper TCP motion control
+    // To use: Define a tool named "DefaultTool" in Sunrise.Workbench Object Templates
+    // If not defined, system will use robot flange directly (current behavior)
+    private Tool defaultTool = null;
     
     private RobotConsoleClient consoleClient;
     private Thread consoleClientThread;
@@ -57,13 +64,27 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
         
+        // Try to get tool from application data if configured
+        // Tool must be defined in Sunrise.Workbench Object Templates with name "DefaultTool"
+        try {
+            defaultTool = getApplicationData().createFromTemplate("DefaultTool");
+            if (defaultTool != null) {
+                defaultTool.attachTo(iiwa.getFlange());
+                Logger.getInstance().log("ROBOT_EXEC", "Tool 'DefaultTool' found and attached to robot flange.");
+            }
+        } catch (Exception e) {
+            // Tool not configured or error loading - this is expected if no tool is defined
+            Logger.getInstance().log("ROBOT_EXEC", "No default tool configured (this is normal if not using a tool). Using robot flange for motions.");
+            defaultTool = null;
+        }
+        
         // Register error handler for asynchronous motion failures
         // This prevents the application from terminating when moveAsync fails
         registerMoveAsyncErrorHandler();
         
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
-        this.motionExecutor = new MotionExecutor(iiwa, moveAsyncErrorHandler);
+        this.motionExecutor = new MotionExecutor(iiwa, defaultTool, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController);
         this.programExecutor = new ProgramExecutor(toolController);
         
