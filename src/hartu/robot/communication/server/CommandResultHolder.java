@@ -13,7 +13,6 @@ public class CommandResultHolder {
     private final ParsedCommand command;
     private final CountDownLatch latch;
     private volatile boolean success; // volatile to ensure visibility across threads
-    private volatile String customResponseData; // Optional custom response data (e.g., for input reading commands)
 
     /**
      * Creates a new CommandResultHolder.
@@ -23,7 +22,6 @@ public class CommandResultHolder {
         this.command = command;
         this.latch = new CountDownLatch(1); // Latch will count down once when command is executed
         this.success = false; // Default to false
-        this.customResponseData = null;
     }
 
     public ParsedCommand getCommand() {
@@ -40,13 +38,5 @@ public class CommandResultHolder {
 
     public void setSuccess(boolean success) {
         this.success = success;
-    }
-
-    public String getCustomResponseData() {
-        return customResponseData;
-    }
-
-    public void setCustomResponseData(String customResponseData) {
-        this.customResponseData = customResponseData;
     }
 }

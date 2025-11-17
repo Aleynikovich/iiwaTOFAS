@@ -64,6 +64,7 @@ public class ProgramExecutor {
      * @return True if the operation executed successfully, false otherwise.
      */
     private boolean placeCurrentTool() {
+    	Logger.getInstance().log("ROBOT_EXEC", "Placing tool");
         return false;
     }
 
@@ -76,6 +77,7 @@ public class ProgramExecutor {
      * @return True if the operation executed successfully, false otherwise.
      */
     private boolean pickTool(int toolId) {
+    	Logger.getInstance().log("ROBOT_EXEC", "Picking tool " + toolId);
         return false;
     }
 }

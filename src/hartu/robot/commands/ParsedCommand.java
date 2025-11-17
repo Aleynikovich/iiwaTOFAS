@@ -118,11 +118,6 @@ public class ParsedCommand
         return programId;
     }
 
-    public boolean isInputReadCommand()
-    {
-        return this.actionType == ActionTypes.DIGITAL_INPUT || this.actionType == ActionTypes.ANALOG_INPUT;
-    }
-
     @Override
     public String toString()
     {

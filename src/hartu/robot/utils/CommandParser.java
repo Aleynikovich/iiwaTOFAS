@@ -120,32 +120,10 @@ public class CommandParser {
                     int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
                     boolean ioState = Boolean.parseBoolean(parts[MessagePartIndex.IO_STATE.getIndex()]);
                     //TODO: Remove ioPoint hardocde
-                    ioCommandData = new IoCommandData(0, ioPin, ioState, actionType);
+                    ioCommandData = new IoCommandData(0, ioPin, ioState);
                     return ParsedCommand.forIo(actionType, id, ioCommandData);
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     String errorMsg = "Invalid IO command data format for ACTIVATE_IO: " + e.getMessage();
-                    Logger.getInstance().log("PARSER", "Error: " + errorMsg);
-                    throw new IllegalArgumentException(errorMsg, e);
-                }
-            } else if (actionType == ActionTypes.DIGITAL_INPUT) {
-                try {
-                    int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
-                    // For input commands, ioState is not used but we default to false
-                    ioCommandData = new IoCommandData(0, ioPin, false, actionType);
-                    return ParsedCommand.forIo(actionType, id, ioCommandData);
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                    String errorMsg = "Invalid IO command data format for DIGITAL_INPUT: " + e.getMessage();
-                    Logger.getInstance().log("PARSER", "Error: " + errorMsg);
-                    throw new IllegalArgumentException(errorMsg, e);
-                }
-            } else if (actionType == ActionTypes.ANALOG_INPUT) {
-                try {
-                    int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
-                    // For analog input commands, ioState is not used but we default to false
-                    ioCommandData = new IoCommandData(0, ioPin, false, actionType);
-                    return ParsedCommand.forIo(actionType, id, ioCommandData);
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                    String errorMsg = "Invalid IO command data format for ANALOG_INPUT: " + e.getMessage();
                     Logger.getInstance().log("PARSER", "Error: " + errorMsg);
                     throw new IllegalArgumentException(errorMsg, e);
                 }
