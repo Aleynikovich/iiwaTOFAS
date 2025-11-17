@@ -978,9 +978,9 @@
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
-        <toolTemplate class="" defaultMotionFrameRef="/GimaticTCP" name="GimaticCamera">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticCamera">
             <frames>
-                <frame id="_bc1a0aef-760a-4d80-9963-96888d89d033" name="GimaticTCP">
+                <frame id="_bc1a0aef-760a-4d80-9963-96888d89d033" name="TCP">
                     <transformation a="1.471862487799839" b="-1.5674945873561101" c="2.0991933818887087" x="0.0" y="0.0" z="65.0"/>
                     <measurementRotation method="ABCWorld6D" timestamp="1357070202786"/>
                 </frame>
@@ -1019,7 +1019,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac2">
             <frames>
                 <frame id="_09e2e866-2a91-41c7-b6a0-b0a4e8cc462f" name="TCP">
-                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>

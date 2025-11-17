@@ -39,11 +39,9 @@ public class ToolMapping {
         // Tool IDs 1-N map to specific tool names
         // These names must match tools defined in Sunrise.Workbench Object Templates
         toolIdToNameMap.put(1, "GimaticCamera");
-        toolIdToNameMap.put(2, "Vacuum1");
-        toolIdToNameMap.put(3, "Vacuum2");
-        toolIdToNameMap.put(4, "Gripper1");
-        toolIdToNameMap.put(5, "Gripper2");
-        
+        toolIdToNameMap.put(2, "GimaticVac1");
+        toolIdToNameMap.put(3, "GimaticVac2");
+        toolIdToNameMap.put(4, "GimaticVac3");
         Logger.getInstance().log("TOOL_MAPPING", "Initialized tool ID mappings: " + toolIdToNameMap.size() + " entries");
     }
     

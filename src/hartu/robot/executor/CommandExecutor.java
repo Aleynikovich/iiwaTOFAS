@@ -85,8 +85,8 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
-        this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
+        this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController);
         
@@ -204,7 +204,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         // Attach new tool
         try {
-            tool.attachTo(iiwa.getFlange());
+            tool.getFrame("/TCP").attachTo(iiwa.getFlange());
             currentlyAttachedTool = tool;
             currentlyAttachedToolName = toolName;
             Logger.getInstance().log("ROBOT_EXEC", "Attached tool '" + toolName + "' (ID " + toolId + ") to robot flange.");
