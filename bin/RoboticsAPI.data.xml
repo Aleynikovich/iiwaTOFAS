@@ -1008,27 +1008,26 @@
         <toolTemplate class="" name="GimaticGripperR">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-26.124652478763302" cogY="-58.85550589882337" cogZ="68.90749189107193" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.2657827107113295"/>
         </toolTemplate>
-        <toolTemplate class="" name="GimaticVac1">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac1">
             <frames>
                 <frame id="_d94fded7-f74f-40a1-baa2-cb7016ae7ccd" name="TCP">
-                    <transformation a="2.702039107059084" b="-0.06581555328082456" c="0.0019544585721823168" x="0.0" y="0.0" z="450.0"/>
-                    <measurementRotation method="ABC2Point" timestamp="1357012550744"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
-        <toolTemplate class="" name="GimaticVac2">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac2">
             <frames>
                 <frame id="_09e2e866-2a91-41c7-b6a0-b0a4e8cc462f" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </toolTemplate>
-        <toolTemplate class="" name="GimaticVac3">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac3">
             <frames>
                 <frame id="_7e31b2f1-529d-4678-8b26-c5a56f670fbd" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
