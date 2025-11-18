@@ -355,6 +355,86 @@ cd pythonUtils
 python3 test_io_commands.py [robot_ip]
 ```
 
+### Program Call Commands
+
+Program call commands execute predefined subroutines like tool picking and placing operations. The action type for program calls is 100 + program ID.
+
+#### Pick Tool Operations (Program IDs 1-3)
+
+Picks up a tool from its storage base using a standardized motion sequence.
+
+**Format:**
+```
+101|0|0|0|0|0|0|0|0|ID#   # Pick tool from T1Base
+102|0|0|0|0|0|0|0|0|ID#   # Pick tool from T2Base
+103|0|0|0|0|0|0|0|0|ID#   # Pick tool from T3Base
+```
+
+**Motion Sequence:**
+- Move to T#Base/P9 (approach position)
+- Move to T#Base/P8 (contact position)
+- Lock Gimatic tool changer
+- Move to T#Base/P1 (final position)
+
+**Requirements:**
+- Tool base frames (T1Base, T2Base, T3Base) must be defined in KUKA Sunrise.Workbench station setup
+- Each base must have child frames: P1, P8, and P9
+
+**Response:**
+```
+FREE|ID|success#  (on success)
+FREE|ID|failure#  (on failure)
+```
+
+**Example:**
+```
+101|0|0|0|0|0|0|0|0|cmd_pick1#    # Pick tool from T1Base
+```
+
+#### Place Tool Operations (Program IDs 11-13)
+
+Places the currently held tool back to its storage base.
+
+**Format:**
+```
+111|0|0|0|0|0|0|0|0|ID#   # Place tool to T1Base
+112|0|0|0|0|0|0|0|0|ID#   # Place tool to T2Base
+113|0|0|0|0|0|0|0|0|ID#   # Place tool to T3Base
+```
+
+**Motion Sequence:**
+- Move to T#Base/P1 (starting position)
+- Move to T#Base/P8 (contact position)
+- Unlock Gimatic tool changer
+- Move to T#Base/P9 (final position)
+
+**Response:**
+```
+FREE|ID|success#  (on success)
+FREE|ID|failure#  (on failure)
+```
+
+**Example:**
+```
+111|0|0|0|0|0|0|0|0|cmd_place1#   # Place tool to T1Base
+```
+
+#### Tool Gripper Control (Program IDs 101-102)
+
+Controls the tool's pneumatic gripper (open/close).
+
+**Format:**
+```
+201|0|0|0|0|0|0|0|0|ID#   # Open tool (activate vacuum/suction)
+202|0|0|0|0|0|0|0|0|ID#   # Close tool (blow air/release)
+```
+
+**Response:**
+```
+FREE|ID|success#  (on success)
+FREE|ID|failure#  (on failure)
+```
+
 **Note:** The command queue is automatically flushed when the CommandExecutor initializes, clearing any stale commands and moving the robot to home position (all joints at 0 degrees).
 
 ## Project Structure
