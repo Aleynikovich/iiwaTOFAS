@@ -1089,13 +1089,14 @@
                 </redundancy>
             </redundancyData>
         </frame>
-        <frame id="_49f12a90-d87d-4fee-9aff-1f07921217be" name="P2">
+        <frame id="_49f12a90-d87d-4fee-9aff-1f07921217be" name="T2Base">
             <transformation a="-0.4528642483290996" b="1.5500646405956062" c="-2.7544358337815495" x="-169.2951871253122" y="-759.7844290810377" z="157.02157301658195"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1357062053629"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1763461217384"/>
                 <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticCamera/TCP" tool="GimaticCamera" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                     <tcpTransformation a="1.471862487799839" b="-1.5674945873561101" c="2.0991933818887087" x="0.0" y="0.0" z="65.0"/>
                 </info>
+                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <redundancyData>
                 <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
