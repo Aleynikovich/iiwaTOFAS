@@ -88,7 +88,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
         hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
-        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this);
+        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this, currentlyAttachedTool);
         this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController, programSubroutines);

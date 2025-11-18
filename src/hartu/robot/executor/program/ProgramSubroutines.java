@@ -22,12 +22,7 @@ public class ProgramSubroutines
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
-    
-    @Inject
-    @Named("GimaticCamera")
-    private Tool gimatic;
- 
-    
+    private final Tool tool;
     /**
      * Creates a new ProgramSubroutines instance.
      * 
@@ -35,10 +30,11 @@ public class ProgramSubroutines
      * @param toolController The tool controller for Gimatic operations
      * @param application The application instance for accessing frames
      */
-    public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application) {
+    public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application, Tool tool) {
         this.robot = robot;
         this.toolController = toolController;
         this.application = application;
+        this.tool = tool;
     }
     
     /**
@@ -72,8 +68,8 @@ public class ProgramSubroutines
                     Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under '" + baseName + "'.");
                     return false;
                 }
-                gimatic.attachTo(robot.getFlange());
-                gimatic.move(ptp((application.getApplicationData().getFrame("/T1Base/P1"))));
+                tool.attachTo(robot.getFlange());
+                tool.move(ptp((application.getApplicationData().getFrame("/T1Base/P1"))));
                 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8) {
