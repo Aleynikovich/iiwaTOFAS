@@ -33,15 +33,12 @@ public class ToolMapping {
      * Modify this method to match your tool configuration in Sunrise.Workbench.
      */
     private void initializeDefaultMappings() {
-        // Tool 0 = Flange (no tool) - special case
-        toolIdToNameMap.put(0, null);
-        
         // Tool IDs 1-N map to specific tool names
         // These names must match tools defined in Sunrise.Workbench Object Templates
-        toolIdToNameMap.put(1, "GimaticCamera");
-        toolIdToNameMap.put(2, "GimaticVac1");
-        toolIdToNameMap.put(3, "GimaticVac2");
-        toolIdToNameMap.put(4, "GimaticVac3");
+        toolIdToNameMap.put(0, "GimaticCamera");
+        toolIdToNameMap.put(1, "GimaticVac1");
+        toolIdToNameMap.put(2, "GimaticVac2");
+        toolIdToNameMap.put(3, "GimaticVac3");
         Logger.getInstance().log("TOOL_MAPPING", "Initialized tool ID mappings: " + toolIdToNameMap.size() + " entries");
     }
     

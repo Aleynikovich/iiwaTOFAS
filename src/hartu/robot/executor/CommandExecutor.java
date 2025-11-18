@@ -11,6 +11,8 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
@@ -86,9 +88,10 @@ public class CommandExecutor extends RoboticsAPIApplication {
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
         hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
+        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this, currentlyAttachedTool);
         this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
-        this.programExecutor = new ProgramExecutor(toolController);
+        this.programExecutor = new ProgramExecutor(toolController, programSubroutines);
         
         // Flush any stale commands from previous runs
         int flushedCount = CommandQueue.flushQueue();
@@ -101,6 +104,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
             iiwa.move(ptpHome().setJointVelocityRel(0.2));
             Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
+            //iiwa.move(ptp(0.0, 0.0, 0.0, -1.57, 0.0, 1.57, 0.0));
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
@@ -121,11 +125,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
         for (Map.Entry<Integer, String> entry : toolMapping.getAllMappings().entrySet()) {
             int toolId = entry.getKey();
             String toolName = entry.getValue();
-            
-            // Skip tool ID 0 (flange - no tool)
-            if (toolId == 0 || toolName == null) {
-                continue;
-            }
             
             try {
                 Tool tool = getApplicationData().createFromTemplate(toolName);
