@@ -1497,7 +1497,7 @@
                     <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-18.753611494756697" cogY="-56.82265088140402" cogZ="79.1453990860615" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.085435325772466"/>
         </toolTemplate>
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac2">
             <frames>
@@ -1513,7 +1513,7 @@
                     <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
                 </frame>
             </frames>
-            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
+            <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-18.753611494756697" cogY="-56.82265088140402" cogZ="79.1453990860615" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.585435325772466"/>
         </toolTemplate>
         <toolTemplate class="" name="ToolTemplate">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-14.473441866704244" cogY="-44.73514646068471" cogZ="108.7895199799053" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="8.055824150836983"/>
