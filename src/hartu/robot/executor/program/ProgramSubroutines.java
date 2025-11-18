@@ -72,8 +72,8 @@ public class ProgramSubroutines
                     Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under '" + baseName + "'.");
                     return false;
                 }
-                gimatic.getFrame("/TCP").attachTo(robot.getFlange());
-                gimatic.getFrame("/TCP").move(ptp((application.getApplicationData().getFrame("/T"+toolId+"Base/P"+i))).setJointVelocityRel(0.2));
+                gimatic.attachTo(robot.getFlange());
+                gimatic.move(ptp((application.getApplicationData().getFrame("/T1Base/P1"))));
                 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8) {
