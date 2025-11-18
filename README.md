@@ -184,6 +184,23 @@ The log client displays color-coded messages based on severity:
 
 Message format: `[timestamp] [LEVEL] [tag] message`
 
+**Controlling Log Verbosity:**
+
+The robot server supports configurable log levels to reduce log noise. By default, all logs (INFO, WARN, ERROR) are shown. You can change this in your robot application code:
+
+```java
+// Show only warnings and errors (recommended for production)
+Logger.getInstance().setMinimumLogLevel(LogLevel.WARN);
+
+// Show only critical errors
+Logger.getInstance().setMinimumLogLevel(LogLevel.ERROR);
+
+// Show all logs (default, useful for debugging)
+Logger.getInstance().setMinimumLogLevel(LogLevel.INFO);
+```
+
+See [LOG_FORMAT.md](LOG_FORMAT.md) for more details on log verbosity control.
+
 **Task Client** (for testing commands):
 ```bash
 python pythonUtils/task_client.py
