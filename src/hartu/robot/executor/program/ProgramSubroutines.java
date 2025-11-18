@@ -67,6 +67,7 @@ public class ProgramSubroutines
             // Move through points P9 -> P1
             for (int i = 9; i >= 1; i--) {
                 ObjectFrame pointFrame = baseFrame.getChild("P" + i);
+                Logger.getInstance().log("ROBOT_EXEC", "Base frame '" + baseName + "pointFrame: " + pointFrame);
                 if (pointFrame == null) {
                     Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under '" + baseName + "'.");
                     return false;
