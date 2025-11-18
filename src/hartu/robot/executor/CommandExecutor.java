@@ -104,7 +104,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
             iiwa.move(ptpHome().setJointVelocityRel(0.2));
             Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
-            iiwa.move(ptp(0.0, 0.0, 0.0, -1.57, 0.0, 1.57, 0.0));
+            //iiwa.move(ptp(0.0, 0.0, 0.0, -1.57, 0.0, 1.57, 0.0));
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);

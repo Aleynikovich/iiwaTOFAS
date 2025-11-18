@@ -73,7 +73,7 @@ public class ProgramSubroutines
                     return false;
                 }
                 gimatic.attachTo(robot.getFlange());
-                gimatic.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimatic.move(ptp((application.getApplicationData().getFrame("/T"+toolId+"Base/P"+i))).setJointVelocityRel(0.2));
                 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8) {
