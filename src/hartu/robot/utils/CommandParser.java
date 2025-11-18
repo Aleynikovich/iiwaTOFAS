@@ -212,7 +212,7 @@ public class CommandParser {
         for (String pointString : individualPointStrings) {
             String[] values = pointString.split(SECONDARY_DELIMITER);
             if (values.length != 6) {
-                String errorMsg = "Invalid Cartesian position format: Expected 6 values (X;Y;Z;A;B;C), got " + values.length + " in point string: " + pointString;
+                String errorMsg = "Invalid Cartesian position format: Expected 6 values (X;Y;Z;C;B;A), got " + values.length + " in point string: " + pointString;
                 Logger.getInstance().log("PARSER", "Error: " + errorMsg);
                 throw new IllegalArgumentException(errorMsg);
             }
@@ -221,9 +221,10 @@ public class CommandParser {
                 double x = Double.parseDouble(values[0]);
                 double y = Double.parseDouble(values[1]);
                 double z = Double.parseDouble(values[2]);
-                double a = Math.toRadians(Double.parseDouble(values[3]));
+                // Read rotation values in inverted order: C, B, A instead of A, B, C
+                double a = Math.toRadians(Double.parseDouble(values[5]));
                 double b = Math.toRadians(Double.parseDouble(values[4]));
-                double c = Math.toRadians(Double.parseDouble(values[5]));
+                double c = Math.toRadians(Double.parseDouble(values[3]));
                 positions.add(new Frame(x, y, z, a, b, c));
             } catch (NumberFormatException e) {
                 String errorMsg = "Invalid number format in Cartesian positions: " + e.getMessage() + " for point string: " + pointString;

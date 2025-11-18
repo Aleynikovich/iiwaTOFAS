@@ -259,6 +259,8 @@ ACTION_TYPE|NUM_POINTS|TARGET_POINTS|IO_POINT|IO_PIN|IO_STATE|TOOL_ID|BASE|SPEED
 
 ### Example Commands
 
+**Note on Cartesian Positions**: For Cartesian motion commands (PTP_FRAME, LIN_FRAME, CIRC_FRAME), the position format is `X;Y;Z;C;B;A` where X, Y, Z are in millimeters and C, B, A are Euler angles in degrees (rotation order is inverted from the traditional A, B, C order).
+
 Move to joint position with flange (all angles in degrees):
 ```
 0|1|0.0;10.0;-5.0;20.0;0.0;-15.0;0.0|||0||0.2|cmd_001#
