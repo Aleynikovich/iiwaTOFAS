@@ -126,11 +126,6 @@ public class CommandExecutor extends RoboticsAPIApplication {
             int toolId = entry.getKey();
             String toolName = entry.getValue();
             
-            // Skip tool ID 0 (flange - no tool)
-            if (toolId == 0 || toolName == null) {
-                continue;
-            }
-            
             try {
                 Tool tool = getApplicationData().createFromTemplate(toolName);
                 if (tool != null) {
