@@ -520,6 +520,7 @@ Commands are validated before execution, so malformed inputs won't crash the ser
 - **[KUKA Programming Guide](KUKA_PROGRAMMING_GUIDE.md)**: Comprehensive guide for programming KUKA robots using the Sunrise.OS API. Essential reading for AI agents and developers new to KUKA programming.
 - **[Tool Configuration Guide](TOOL_CONFIGURATION.md)**: Step-by-step guide for configuring and using tools with the robot control system
 - **[Log Format](LOG_FORMAT.md)**: Details of the JSON logging format
+- **[Log Verbosity Guide](LOG_VERBOSITY_GUIDE.md)**: How to control log verbosity levels (INFO, WARN, ERROR) to reduce log noise
 - **[Refactoring Guidelines](REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
 
 ## Contributing
