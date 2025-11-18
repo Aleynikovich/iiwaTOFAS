@@ -221,9 +221,9 @@ public class CommandParser {
                 double x = Double.parseDouble(values[0]);
                 double y = Double.parseDouble(values[1]);
                 double z = Double.parseDouble(values[2]);
-                double a = Math.toRadians(Double.parseDouble(values[3]));
+                double c = Math.toRadians(Double.parseDouble(values[3]));
                 double b = Math.toRadians(Double.parseDouble(values[4]));
-                double c = Math.toRadians(Double.parseDouble(values[5]));
+                double a = Math.toRadians(Double.parseDouble(values[5]));
                 positions.add(new Frame(x, y, z, a, b, c));
             } catch (NumberFormatException e) {
                 String errorMsg = "Invalid number format in Cartesian positions: " + e.getMessage() + " for point string: " + pointString;
