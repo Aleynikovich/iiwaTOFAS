@@ -47,10 +47,11 @@ public class CommandParser {
         }
 
         ActionTypes actionType;
-        int numPoints;
+        int numPoints, commandNumber;
         String id;
         try {
             actionType = ActionTypes.fromValue(Integer.parseInt(parts[MessagePartIndex.ACTION_TYPE.getIndex()]));
+            commandNumber = Integer.parseInt(parts[MessagePartIndex.ACTION_TYPE.getIndex()]);
             numPoints = Integer.parseInt(parts[MessagePartIndex.NUM_POINTS.getIndex()]);
             id = parts[MessagePartIndex.ID.getIndex()];
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
@@ -156,8 +157,8 @@ public class CommandParser {
             }
         } else if (commandCategory == CommandCategory.PROGRAM_CALL) {
             try {
-                programId = actionType.getValue() - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
-                Logger.getInstance().log("PARSER", "Parsed: " + actionType.getValue() + "-" +  ActionTypes.PROGRAM_CALL_OFFSET.getValue() + programId);
+                programId = commandNumber - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
+                Logger.getInstance().log("PARSER", "Parsed: " + commandNumber + "-" +  ActionTypes.PROGRAM_CALL_OFFSET.getValue() + programId);
                 return ParsedCommand.forProgramCall(actionType, id, programId);
             } catch (Exception e) {
                 String errorMsg = "Invalid Program Call command data format: " + e.getMessage();
