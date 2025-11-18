@@ -11,6 +11,8 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
@@ -102,6 +104,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
             Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
             iiwa.move(ptpHome().setJointVelocityRel(0.2));
             Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
+            iiwa.move(ptp(0.0, 0.0, 0.0, -90.0, 0.0, 0.0, 0.0));
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
