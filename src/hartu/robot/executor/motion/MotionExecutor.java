@@ -98,13 +98,13 @@ public class MotionExecutor {
             
             // Get tool ID from motion parameters (stored as string, parse to int)
             String toolString = command.getMotionParameters() != null ? command.getMotionParameters().getTool() : null;
-            int toolId = 0; // Default to flange
+            int toolId = 0; // Default to tool 0 (GimaticCamera)
             
             if (toolString != null && !toolString.isEmpty()) {
                 try {
                     toolId = Integer.parseInt(toolString);
                 } catch (NumberFormatException e) {
-                    Logger.getInstance().warn("ROBOT_EXEC", "Invalid tool ID '" + toolString + "' in command. Using flange (tool ID 0).");
+                    Logger.getInstance().warn("ROBOT_EXEC", "Invalid tool ID '" + toolString + "' in command. Using tool ID 0 (GimaticCamera).");
                     toolId = 0;
                 }
             }
@@ -122,11 +122,11 @@ public class MotionExecutor {
                 // Use tool's default motion frame for execution
                 // This ensures proper TCP (Tool Center Point) control
                 container = selectedTool.moveAsync(motionToExecute);
-                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool ID " + toolId + " TCP.");
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool '" + selectedTool.getName() + "' (ID " + toolId + ") TCP.");
             } else {
-                // Use robot directly when tool ID is 0 (flange) or tool not available
+                // Use robot directly when tool not available
                 container = robot.moveAsync(motionToExecute);
-                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + ").");
+                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + " not available).");
             }
             container.await();
             

@@ -33,8 +33,9 @@ public class ToolMapping {
      * Modify this method to match your tool configuration in Sunrise.Workbench.
      */
     private void initializeDefaultMappings() {
-        // Tool IDs 1-N map to specific tool names
+        // Tool IDs 0-N map to specific tool names
         // These names must match tools defined in Sunrise.Workbench Object Templates
+        // Tool 0 is GimaticCamera (used for tool changing operations)
         toolIdToNameMap.put(0, "GimaticCamera");
         toolIdToNameMap.put(1, "GimaticVac1");
         toolIdToNameMap.put(2, "GimaticVac2");
