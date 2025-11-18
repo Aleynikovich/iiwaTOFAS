@@ -88,7 +88,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
         hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
-        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this, currentlyAttachedTool);
+        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this);
         this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController, programSubroutines);
@@ -148,33 +148,16 @@ public class CommandExecutor extends RoboticsAPIApplication {
     
     /**
      * Gets the tool for a given tool ID by looking up the mapping and returning the Tool object.
-     * If tool ID is 0, returns null (flange).
      * Dynamically attaches the tool if it's different from the currently attached tool.
      * 
-     * @param toolId The tool ID from the command (0 = flange, 1+ = specific tools)
-     * @return The Tool object, or null if using flange or tool not found
+     * @param toolId The tool ID from the command (0 = GimaticCamera, 1+ = specific tools)
+     * @return The Tool object, or null if tool not found
      */
     public Tool getAndAttachToolForId(int toolId) {
-        // Tool ID 0 means use flange (no tool)
-        if (toolId == 0) {
-            // Detach current tool if any
-            if (currentlyAttachedTool != null) {
-                try {
-                    currentlyAttachedTool.detach();
-                    Logger.getInstance().log("ROBOT_EXEC", "Detached tool '" + currentlyAttachedToolName + "' to use flange.");
-                    currentlyAttachedTool = null;
-                    currentlyAttachedToolName = null;
-                } catch (Exception e) {
-                    Logger.getInstance().error("ROBOT_EXEC", "Failed to detach tool '" + currentlyAttachedToolName + "': " + e.getMessage());
-                }
-            }
-            return null;
-        }
-        
         // Get tool name from mapping
         String toolName = toolMapping.getToolName(toolId);
         if (toolName == null) {
-            Logger.getInstance().warn("ROBOT_EXEC", "Tool ID " + toolId + " not found in mapping. Using flange.");
+            Logger.getInstance().warn("ROBOT_EXEC", "Tool ID " + toolId + " not found in mapping. Cannot attach tool.");
             return null;
         }
         
@@ -187,7 +170,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         // Get tool from registry
         Tool tool = toolRegistry.get(toolName);
         if (tool == null) {
-            Logger.getInstance().warn("ROBOT_EXEC", "Tool '" + toolName + "' (ID " + toolId + ") not found in registry. Using flange.");
+            Logger.getInstance().warn("ROBOT_EXEC", "Tool '" + toolName + "' (ID " + toolId + ") not found in registry. Cannot attach tool.");
             return null;
         }
         
@@ -203,7 +186,7 @@ public class CommandExecutor extends RoboticsAPIApplication {
         
         // Attach new tool
         try {
-            tool.getFrame("/TCP").attachTo(iiwa.getFlange());
+            tool.attachTo(iiwa.getFlange());
             currentlyAttachedTool = tool;
             currentlyAttachedToolName = toolName;
             Logger.getInstance().log("ROBOT_EXEC", "Attached tool '" + toolName + "' (ID " + toolId + ") to robot flange.");
