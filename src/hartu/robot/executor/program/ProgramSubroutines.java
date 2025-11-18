@@ -68,6 +68,7 @@ public class ProgramSubroutines
                     Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under '" + baseName + "'.");
                     return false;
                 }
+                Logger.getInstance().log("ROBOT_EXEC", "Tool: " + tool);
                 tool.attachTo(robot.getFlange());
                 tool.move(ptp((application.getApplicationData().getFrame("/T1Base/P1"))));
                 
