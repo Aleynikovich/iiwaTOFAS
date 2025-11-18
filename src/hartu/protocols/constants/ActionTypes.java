@@ -80,10 +80,6 @@ public enum ActionTypes {
                 return type;
             }
         }
-        // Handle program calls
-        if (value >= PROGRAM_CALL_OFFSET.value) {
-            return ActionTypes.PROGRAM_CALL_OFFSET;
-        }
         return UNKNOWN;
     }
 }
