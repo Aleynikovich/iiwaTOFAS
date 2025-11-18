@@ -33,7 +33,7 @@ public class ProgramSubroutines
     
     /**
      * Picks up a tool from its storage base using a standardized motion sequence.
-     * Motion sequence: T#Base/P9 → T#Base/P8 → T#Base/P1
+     * Motion sequence: T#Base/P9 → P8 → P7 → P6 → P5 → P4 → P3 → P2 → P1
      * At P8 (contact point), the Gimatic tool changer is locked.
      * 
      * @param toolId The tool ID (1-3 corresponding to T1Base, T2Base, T3Base)
@@ -46,51 +46,31 @@ public class ProgramSubroutines
         }
         
         String baseName = "T" + toolId + "Base";
-        Logger.getInstance().log("ROBOT_EXEC", "Starting pick tool sequence for tool " + toolId + " from " + baseName);
         
         try {
-            // Get the base frame for the tool
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
             if (baseFrame == null) {
                 Logger.getInstance().error("ROBOT_EXEC", "Base frame '" + baseName + "' not found in station setup.");
                 return false;
             }
             
-            // P9: Approach position (safe distance from tool)
-            ObjectFrame p9Frame = baseFrame.getChild("P9");
-            if (p9Frame == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Frame 'P9' not found under '" + baseName + "'.");
-                return false;
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P9 (approach position)");
-            robot.move(ptp(p9Frame).setJointVelocityRel(0.2));
-            
-            // P8: Contact position (where Gimatic locks)
-            ObjectFrame p8Frame = baseFrame.getChild("P8");
-            if (p8Frame == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Frame 'P8' not found under '" + baseName + "'.");
-                return false;
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P8 (contact position)");
-            robot.move(ptp(p8Frame).setJointVelocityRel(0.1));
-            
-            // Lock Gimatic at contact position
-            Logger.getInstance().log("ROBOT_EXEC", "Locking Gimatic tool changer at " + baseName + "/P8");
-            if (!toolController.lockGimatic()) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to lock Gimatic at " + baseName + "/P8");
-                return false;
+            // Move through points P9 -> P1
+            for (int i = 9; i >= 1; i--) {
+                ObjectFrame pointFrame = baseFrame.getChild("P" + i);
+                if (pointFrame == null) {
+                    Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under '" + baseName + "'.");
+                    return false;
+                }
+                robot.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                
+                // Lock Gimatic at P8 (contact point)
+                if (i == 8) {
+                    if (!toolController.lockGimatic()) {
+                        return false;
+                    }
+                }
             }
             
-            // P1: Final position (tool picked)
-            ObjectFrame p1Frame = baseFrame.getChild("P1");
-            if (p1Frame == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Frame 'P1' not found under '" + baseName + "'.");
-                return false;
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P1 (final position)");
-            robot.move(ptp(p1Frame).setJointVelocityRel(0.2));
-            
-            Logger.getInstance().log("ROBOT_EXEC", "Successfully picked tool " + toolId + " from " + baseName);
             return true;
             
         } catch (Exception e) {
@@ -102,7 +82,7 @@ public class ProgramSubroutines
     
     /**
      * Places the currently held tool back to its storage base using a standardized motion sequence.
-     * Motion sequence: T#Base/P1 → T#Base/P8 → T#Base/P9
+     * Motion sequence: T#Base/P1 → P2 → P3 → P4 → P5 → P6 → P7 → P8 → P9
      * At P8 (contact point), the Gimatic tool changer is unlocked.
      * 
      * @param toolId The tool ID (1-3 corresponding to T1Base, T2Base, T3Base)
@@ -115,51 +95,31 @@ public class ProgramSubroutines
         }
         
         String baseName = "T" + toolId + "Base";
-        Logger.getInstance().log("ROBOT_EXEC", "Starting place tool sequence for tool " + toolId + " to " + baseName);
         
         try {
-            // Get the base frame for the tool
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
             if (baseFrame == null) {
                 Logger.getInstance().error("ROBOT_EXEC", "Base frame '" + baseName + "' not found in station setup.");
                 return false;
             }
             
-            // P1: Starting position (tool held)
-            ObjectFrame p1Frame = baseFrame.getChild("P1");
-            if (p1Frame == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Frame 'P1' not found under '" + baseName + "'.");
-                return false;
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P1 (starting position)");
-            robot.move(ptp(p1Frame).setJointVelocityRel(0.2));
-            
-            // P8: Contact position (where Gimatic unlocks)
-            ObjectFrame p8Frame = baseFrame.getChild("P8");
-            if (p8Frame == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Frame 'P8' not found under '" + baseName + "'.");
-                return false;
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P8 (contact position)");
-            robot.move(ptp(p8Frame).setJointVelocityRel(0.1));
-            
-            // Unlock Gimatic at contact position
-            Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer at " + baseName + "/P8");
-            if (!toolController.unlockGimatic()) {
-                Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic at " + baseName + "/P8");
-                return false;
+            // Move through points P1 -> P9
+            for (int i = 1; i <= 9; i++) {
+                ObjectFrame pointFrame = baseFrame.getChild("P" + i);
+                if (pointFrame == null) {
+                    Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under '" + baseName + "'.");
+                    return false;
+                }
+                robot.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                
+                // Unlock Gimatic at P8 (contact point)
+                if (i == 8) {
+                    if (!toolController.unlockGimatic()) {
+                        return false;
+                    }
+                }
             }
             
-            // P9: Final position (safe distance from tool)
-            ObjectFrame p9Frame = baseFrame.getChild("P9");
-            if (p9Frame == null) {
-                Logger.getInstance().error("ROBOT_EXEC", "Frame 'P9' not found under '" + baseName + "'.");
-                return false;
-            }
-            Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P9 (final position)");
-            robot.move(ptp(p9Frame).setJointVelocityRel(0.2));
-            
-            Logger.getInstance().log("ROBOT_EXEC", "Successfully placed tool " + toolId + " at " + baseName);
             return true;
             
         } catch (Exception e) {

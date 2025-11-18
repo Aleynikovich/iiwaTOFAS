@@ -371,14 +371,12 @@ Picks up a tool from its storage base using a standardized motion sequence.
 ```
 
 **Motion Sequence:**
-- Move to T#Base/P9 (approach position)
-- Move to T#Base/P8 (contact position)
-- Lock Gimatic tool changer
-- Move to T#Base/P1 (final position)
+- Move through T#Base/P9 → P8 → P7 → P6 → P5 → P4 → P3 → P2 → P1
+- Lock Gimatic tool changer at P8 (contact point)
 
 **Requirements:**
 - Tool base frames (T1Base, T2Base, T3Base) must be defined in KUKA Sunrise.Workbench station setup
-- Each base must have child frames: P1, P8, and P9
+- Each base must have child frames: P1 through P9
 
 **Response:**
 ```
@@ -403,10 +401,8 @@ Places the currently held tool back to its storage base.
 ```
 
 **Motion Sequence:**
-- Move to T#Base/P1 (starting position)
-- Move to T#Base/P8 (contact position)
-- Unlock Gimatic tool changer
-- Move to T#Base/P9 (final position)
+- Move through T#Base/P1 → P2 → P3 → P4 → P5 → P6 → P7 → P8 → P9
+- Unlock Gimatic tool changer at P8 (contact point)
 
 **Response:**
 ```
