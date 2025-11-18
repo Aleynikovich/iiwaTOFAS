@@ -157,7 +157,7 @@ public class CommandParser {
         } else if (commandCategory == CommandCategory.PROGRAM_CALL) {
             try {
                 programId = actionType.getValue() - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
-                Logger.getInstance().log("PARSER", "Parsed: " + programId);
+                Logger.getInstance().log("PARSER", "Parsed: " + actionType.getValue() + "-" +  ActionTypes.PROGRAM_CALL_OFFSET.getValue() + programId);
                 return ParsedCommand.forProgramCall(actionType, id, programId);
             } catch (Exception e) {
                 String errorMsg = "Invalid Program Call command data format: " + e.getMessage();
