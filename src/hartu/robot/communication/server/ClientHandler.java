@@ -115,7 +115,7 @@ public class ClientHandler implements Runnable
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Waiting for command ID " + commandId + " to execute..."
                                                     );
 
-                            boolean awaited = resultHolder.getLatch().await(30, TimeUnit.SECONDS);
+                            boolean awaited = resultHolder.getLatch().await(120, TimeUnit.SECONDS);
 
                             if (awaited)
                             {
@@ -129,7 +129,7 @@ public class ClientHandler implements Runnable
                             else
                             {
 
-                                Logger.getInstance().log(
+                                Logger.getInstance().error(
                                         "COMM",
                                         "ClientHandler (" + listenerName + " - " + clientAddress + "): Command ID " + commandId + " execution TIMED OUT."
                                                         );

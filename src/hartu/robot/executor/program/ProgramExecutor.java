@@ -47,7 +47,6 @@ public class ProgramExecutor {
         try {
             // Pick tool operations (program IDs 1-3)
             if (programId >= 1 && programId <= 3) {
-            	Thread.sleep(200);
                 int toolId = programId; // Tool ID matches program ID (1-3)
                 return programSubroutines.pickTool(toolId);
             } 
