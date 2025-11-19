@@ -216,7 +216,7 @@ public class ProgramSubroutines
                     return false;
                 }
                 Logger.getInstance().log("ROBOT_EXEC", "Moving to ZebraBase/P" + i);
-                vacTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                vacTool.move(ptp(pointFrame).setJointVelocityRel(0.8));
             }
             
             return true;
