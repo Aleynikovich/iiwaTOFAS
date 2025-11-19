@@ -25,7 +25,7 @@ public class ProgramSubroutines
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
-    private final Tool gimaticCameraTool;
+    private final Tool gimaticCameraTool, vacTool;
     
     /**
      * Creates a new ProgramSubroutines instance.
@@ -43,6 +43,7 @@ public class ProgramSubroutines
         // All taught points were taught with this tool, so it must be used
         try {
             this.gimaticCameraTool = application.getApplicationData().createFromTemplate("GimaticCamera");
+            this.vacTool = application.getApplicationData().createFromTemplate("GimaticVac1");
             if (this.gimaticCameraTool != null) {
                 Logger.getInstance().log("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
             } else {
@@ -134,6 +135,11 @@ public class ProgramSubroutines
      * @return True if the operation executed successfully, false otherwise
      */
     public boolean placeTool(int toolId) {
+    	
+    	if (toolController.getCurrentToolId() == 0){
+    		Logger.getInstance().warn("ROBOT_EXEC", "Called for place tool: " + toolId + ", but there is already no tool! ID: " + toolController.getCurrentToolId() + " !. Ignoring request.");
+            return false;
+    	}
     	if (toolId != toolController.getCurrentToolId()){
     		Logger.getInstance().error("ROBOT_EXEC", "Called for place tool: " + toolId + ", but current Tool ID is" + toolController.getCurrentToolId() + " !. Ignoring request to avoid possible collision.");
             return false;
@@ -185,6 +191,35 @@ public class ProgramSubroutines
             
         } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Exception during place tool operation for tool " + toolId + ": " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+            return false;
+        }
+    }
+    
+    public boolean doParipe() {
+        
+        try {
+        	Logger.getInstance().log("ROBOT_EXEC", "Doing el paripe");
+            ObjectFrame baseFrame = application.getApplicationData().getFrame("/ZebraBase");
+            
+            // Attach GimaticCamera tool for the place operation
+            vacTool.attachTo(robot.getFlange());
+            Logger.getInstance().log("ROBOT_EXEC", "Attached VacTool");
+            
+            // Move through points P1 -> P9
+            for (int i = 1; i <= 2; i++) {
+                ObjectFrame pointFrame = baseFrame.getChild("P" + i);
+                if (pointFrame == null) {
+                    Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under ZebraBase");
+                    return false;
+                }
+                Logger.getInstance().log("ROBOT_EXEC", "Moving to ZebraBase/P" + i);
+                vacTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+            }
+            
+            return true;
+            
+        } catch (Exception e) {
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
             return false;
         }

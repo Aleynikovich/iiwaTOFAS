@@ -61,6 +61,9 @@ public class ProgramExecutor {
             } else if (programId == 102) {
                 return toolController.closeTool(0);
             } 
+            else if (programId == 200) {
+                return programSubroutines.doParipe();
+            }
             // Invalid program ID
             else {
                 Logger.getInstance().error("ROBOT_EXEC", "Invalid program ID: " + programId);
