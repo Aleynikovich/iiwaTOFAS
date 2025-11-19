@@ -68,7 +68,7 @@ public class ProgramSubroutines
      */
     public boolean pickTool(int toolId) {
     	if (toolId == toolController.getCurrentToolId()){
-    		Logger.getInstance().warn("ROBOT_EXEC", "Called for pick: " + toolId + ". Tool ID." + toolController.getCurrentToolId() + " already on robot.");
+    		Logger.getInstance().warn("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but Tool ID " + toolController.getCurrentToolId() + " is already on the robot. Ignoring request.");
             return true;
     	}
         if (toolId < 1 || toolId > 3) {
@@ -134,10 +134,6 @@ public class ProgramSubroutines
      * @return True if the operation executed successfully, false otherwise
      */
     public boolean placeTool(int toolId) {
-    	if (toolId == toolController.getCurrentToolId()){
-    		Logger.getInstance().warn("ROBOT_EXEC", "Called for place: " + toolId + ". Tool ID." + toolController.getCurrentToolId() + " already on robot.");
-            return true;
-    	}
         if (toolId < 1 || toolId > 3) {
             Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-3.");
             return false;
