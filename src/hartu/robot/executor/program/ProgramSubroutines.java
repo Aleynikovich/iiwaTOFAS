@@ -136,7 +136,7 @@ public class ProgramSubroutines
     public boolean placeTool(int toolId) {
     	if (toolId != toolController.getCurrentToolId()){
     		Logger.getInstance().error("ROBOT_EXEC", "Called for place tool: " + toolId + ", but current Tool ID is" + toolController.getCurrentToolId() + " !. Ignoring request to avoid possible collision.");
-            return true;
+            return false;
     	}
     	
         if (toolId < 1 || toolId > 3) {
