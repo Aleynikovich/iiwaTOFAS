@@ -47,19 +47,19 @@ public class ToolController {
     public int getCurrentToolId() {
         int toolId = 0;
         
-        if (mediaFlangeIO.getInputX3Pin3()) {
+        if (mediaFlangeIO.getInputX3Pin10()) {
             toolId += 1;
         }
-        if (mediaFlangeIO.getInputX3Pin4()) {
+        if (mediaFlangeIO.getInputX3Pin13()) {
             toolId += 2;
         }
-        if (mediaFlangeIO.getInputX3Pin10()) {
+        if (mediaFlangeIO.getInputX3Pin16()) {
             toolId += 4;
         }
-        if (mediaFlangeIO.getInputX3Pin13()) {
+        if (mediaFlangeIO.getInputX3Pin3()) {
             toolId += 8;
         }
-        if (mediaFlangeIO.getInputX3Pin16()) {
+        if (mediaFlangeIO.getInputX3Pin4()) {
             toolId += 16;
         }
         
