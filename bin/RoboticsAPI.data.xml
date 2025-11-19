@@ -1375,6 +1375,25 @@
                 </redundancyData>
             </frame>
         </frame>
+        <frame id="_e36282d9-fd3b-4d1e-b5bb-f00ec2761c8d" name="ZebraBase">
+            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1763543779881"/>
+                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
+            </additionalInformation>
+            <frame id="_6317532c-e512-4f6c-8f7f-e9c8ffd86f32" name="P1">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1763543784506"/>
+                </additionalInformation>
+            </frame>
+            <frame id="_869aa8b5-dbc7-4e42-bb78-08597c683353" name="P2">
+                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1763543785730"/>
+                </additionalInformation>
+            </frame>
+        </frame>
     </world>
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="/roll_tcp" name="RollScan">
