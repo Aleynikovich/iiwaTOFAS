@@ -1494,7 +1494,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac1">
             <frames>
                 <frame id="_d94fded7-f74f-40a1-baa2-cb7016ae7ccd" name="TCP">
-                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="430.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-18.753611494756697" cogY="-56.82265088140402" cogZ="79.1453990860615" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.0"/>
@@ -1502,7 +1502,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac2">
             <frames>
                 <frame id="_09e2e866-2a91-41c7-b6a0-b0a4e8cc462f" name="TCP">
-                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="430.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-18.753611494756697" cogY="-56.82265088140402" cogZ="79.1453990860615" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.085435325772466"/>
@@ -1510,7 +1510,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticVac3">
             <frames>
                 <frame id="_7e31b2f1-529d-4678-8b26-c5a56f670fbd" name="TCP">
-                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="450.0"/>
+                    <transformation a="2.705260340591211" b="0.0" c="0.0" x="0.0" y="0.0" z="430.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-18.753611494756697" cogY="-56.82265088140402" cogZ="79.1453990860615" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.3"/>
