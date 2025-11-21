@@ -116,6 +116,16 @@ public class ProgramSubroutines
                 }
             }
             
+            int pickAttempt = 1;
+            while (toolController.getCurrentToolId() != 0) {
+            	Logger.getInstance().error("ROBOT_EXEC", "Pick tool program completed for tool ID: " + toolId + "but current toolID is still" + toolController.getCurrentToolId() + "retrying in 2 seconds.");
+            	Thread.sleep(2000);
+   
+            	if (pickAttempt > 3) {
+            		Logger.getInstance().error("ROBOT_EXEC", "Pick tool program failed after " + pickAttempt + "attempts.");
+            		return false;
+            	}
+            }
             return true;
             
         } catch (Exception e) {
@@ -188,7 +198,16 @@ public class ProgramSubroutines
                     }
                 }
             }
-            
+            int releaseAttempt = 1;
+            while (toolController.getCurrentToolId() != 0) {
+            	Logger.getInstance().error("ROBOT_EXEC", "Release tool program completed for tool ID: " + toolId + "but current toolID is still" + toolController.getCurrentToolId() + "retrying in 2 seconds.");
+            	Thread.sleep(2000);
+   
+            	if (releaseAttempt > 3) {
+            		Logger.getInstance().error("ROBOT_EXEC", "Release tool program failed after " + releaseAttempt + "attempts.");
+            		return false;
+            	}
+            }
             return true;
             
         } catch (Exception e) {
