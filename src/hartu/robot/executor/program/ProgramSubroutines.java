@@ -120,7 +120,7 @@ public class ProgramSubroutines
             while (toolController.getCurrentToolId() != 0) {
             	Logger.getInstance().error("ROBOT_EXEC", "Pick tool program completed for tool ID: " + toolId + "but current toolID is still" + toolController.getCurrentToolId() + "retrying in 2 seconds.");
             	Thread.sleep(2000);
-   
+            	pickAttempt++;
             	if (pickAttempt > 3) {
             		Logger.getInstance().error("ROBOT_EXEC", "Pick tool program failed after " + pickAttempt + "attempts.");
             		return false;
@@ -202,7 +202,7 @@ public class ProgramSubroutines
             while (toolController.getCurrentToolId() != 0) {
             	Logger.getInstance().error("ROBOT_EXEC", "Release tool program completed for tool ID: " + toolId + "but current toolID is still" + toolController.getCurrentToolId() + "retrying in 2 seconds.");
             	Thread.sleep(2000);
-   
+            	releaseAttempt++;
             	if (releaseAttempt > 3) {
             		Logger.getInstance().error("ROBOT_EXEC", "Release tool program failed after " + releaseAttempt + "attempts.");
             		return false;
