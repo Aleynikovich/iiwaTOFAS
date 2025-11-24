@@ -4,6 +4,32 @@
 
 The logging system broadcasts messages in a structured format that makes it easy to parse and color-code in client applications.
 
+## Log Verbosity Control
+
+The logger supports configurable minimum log level filtering to control the amount of log output:
+
+- **LogLevel.INFO** (default): Shows all logs - INFO, WARN, and ERROR messages
+- **LogLevel.WARN**: Shows only WARN and ERROR messages (filters out INFO)
+- **LogLevel.ERROR**: Shows only ERROR messages (filters out INFO and WARN)
+
+You can change the log level at runtime:
+
+```java
+// Show all logs (default)
+Logger.getInstance().setMinimumLogLevel(LogLevel.INFO);
+
+// Reduce verbosity - show only warnings and errors
+Logger.getInstance().setMinimumLogLevel(LogLevel.WARN);
+
+// Show only critical errors
+Logger.getInstance().setMinimumLogLevel(LogLevel.ERROR);
+```
+
+This is useful for:
+- **Development/Debugging**: Use INFO level to see detailed operation logs
+- **Production/Normal Operation**: Use WARN or ERROR level to reduce log noise
+- **Critical Monitoring**: Use ERROR level to see only failures
+
 ## Message Format
 
 ```
