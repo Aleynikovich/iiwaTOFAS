@@ -184,6 +184,23 @@ The log client displays color-coded messages based on severity:
 
 Message format: `[timestamp] [LEVEL] [tag] message`
 
+**Controlling Log Verbosity:**
+
+The robot server supports configurable log levels to reduce log noise. By default, all logs (INFO, WARN, ERROR) are shown. You can change this in your robot application code:
+
+```java
+// Show only warnings and errors (recommended for production)
+Logger.getInstance().setMinimumLogLevel(LogLevel.WARN);
+
+// Show only critical errors
+Logger.getInstance().setMinimumLogLevel(LogLevel.ERROR);
+
+// Show all logs (default, useful for debugging)
+Logger.getInstance().setMinimumLogLevel(LogLevel.INFO);
+```
+
+See [LOG_FORMAT.md](LOG_FORMAT.md) for more details on log verbosity control.
+
 **Task Client** (for testing commands):
 ```bash
 python pythonUtils/task_client.py
@@ -503,6 +520,7 @@ Commands are validated before execution, so malformed inputs won't crash the ser
 - **[KUKA Programming Guide](KUKA_PROGRAMMING_GUIDE.md)**: Comprehensive guide for programming KUKA robots using the Sunrise.OS API. Essential reading for AI agents and developers new to KUKA programming.
 - **[Tool Configuration Guide](TOOL_CONFIGURATION.md)**: Step-by-step guide for configuring and using tools with the robot control system
 - **[Log Format](LOG_FORMAT.md)**: Details of the JSON logging format
+- **[Log Verbosity Guide](LOG_VERBOSITY_GUIDE.md)**: How to control log verbosity levels (INFO, WARN, ERROR) to reduce log noise
 - **[Refactoring Guidelines](REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
 
 ## Contributing

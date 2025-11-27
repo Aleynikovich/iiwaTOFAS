@@ -1,6 +1,6 @@
 package hartu.robot.communication.server;
 
-import hartu.protocols.constants.ProtocolConstants.*;
+import hartu.protocols.constants.ProtocolConstants.ListenerType;
 
 public interface IClientHandlerCallback
 {

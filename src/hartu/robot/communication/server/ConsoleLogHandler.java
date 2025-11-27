@@ -8,7 +8,7 @@ package hartu.robot.communication.server;
 public class ConsoleLogHandler implements LogHandler
 {
     private boolean active = true;
-    
+
     @Override
     public void sendMessage(String formattedMessage)
     {
@@ -19,13 +19,13 @@ public class ConsoleLogHandler implements LogHandler
             System.out.println(formattedMessage.trim());
         }
     }
-    
+
     @Override
     public boolean isActive()
     {
         return active;
     }
-    
+
     @Override
     public void close()
     {

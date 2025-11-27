@@ -63,7 +63,7 @@ public class ClientSession
         Logger.getInstance().log(
                 "COMM",
                 "ClientSession (" + clientName + "): Attempting to close session streams and socket."
-                                );
+        );
         // Close writer first to signal end of stream to client
         if (writer != null)
         {
@@ -71,13 +71,12 @@ public class ClientSession
             {
                 writer.close();
                 Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): PrintWriter closed.");
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 Logger.getInstance().log(
                         "COMM",
                         "ClientSession (" + clientName + "): Error closing PrintWriter: " + e.getMessage()
-                                        );
+                );
             }
         }
         // Close reader next
@@ -87,13 +86,12 @@ public class ClientSession
             {
                 reader.close();
                 Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): BufferedReader closed.");
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 Logger.getInstance().log(
                         "COMM",
                         "ClientSession (" + clientName + "): Error closing BufferedReader: " + e.getMessage()
-                                        );
+                );
             }
         }
         // Close socket last
@@ -103,13 +101,12 @@ public class ClientSession
             {
                 socket.close();
                 Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): Socket closed.");
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 Logger.getInstance().log(
                         "COMM",
                         "ClientSession (" + clientName + "): Error closing Socket: " + e.getMessage()
-                                        );
+                );
             }
         }
         Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): Session closure attempt complete.");
