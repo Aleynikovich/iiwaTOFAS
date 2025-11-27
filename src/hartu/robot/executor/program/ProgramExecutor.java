@@ -73,6 +73,26 @@ public class ProgramExecutor
             {
                 return programSubroutines.doParipe();
             }
+            else if (programId == 21)
+            {
+                return programSubroutines.placeAxisPlaceholder();
+            }
+            else if (programId == 22)
+            {
+                return programSubroutines.pickAxis();
+            }
+            else if (programId == 23)
+            {
+                return programSubroutines.placeAxisBox();
+            }
+            else if (programId == 24)
+            {
+                return programSubroutines.placeDrum();
+            }
+            else if (programId == 25)
+            {
+                return programSubroutines.placeDisk();
+            }
             // Invalid program ID
             else
             {

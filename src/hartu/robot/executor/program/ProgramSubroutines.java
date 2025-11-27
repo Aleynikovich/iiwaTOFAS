@@ -247,7 +247,12 @@ public class ProgramSubroutines
         return true;
     }
 
-    public boolean placeAxis()
+    public boolean placeAxisPlaceholder()
+    {
+        return true;
+    }
+
+    public boolean placeAxisBox()
     {
         return true;
     }
