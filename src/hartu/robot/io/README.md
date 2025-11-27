@@ -2,35 +2,42 @@
 
 ## Overview
 
-The `IOList` class provides centralized access to all available I/Os on the robot, including 64 virtual marks for custom use. Instead of working with three separate I/O group files, you can now access all I/Os through a single, unified interface.
+The `IOList` class provides centralized access to all available I/Os on the robot, including 64 virtual marks for custom
+use. Instead of working with three separate I/O group files, you can now access all I/Os through a single, unified
+interface.
 
 ## Available I/Os
 
 ### 0. Virtual Marks (Software Flags)
+
 - **64 Virtual Marks**: Mark1 through Mark64
-- **Purpose**: These are NOT physical I/Os. They are software flags that you can use for any custom purpose (state tracking, flow control, debugging, etc.)
+- **Purpose**: These are NOT physical I/Os. They are software flags that you can use for any custom purpose (state
+  tracking, flow control, debugging, etc.)
 - **Features**:
-  - Stored in memory only (not connected to hardware)
-  - Can be set/get like any other I/O
-  - Persist for the lifetime of the IOList object
-  - Useful for marking program states, conditions, or custom logic
+    - Stored in memory only (not connected to hardware)
+    - Can be set/get like any other I/O
+    - Persist for the lifetime of the IOList object
+    - Useful for marking program states, conditions, or custom logic
 
 ### 1. Ethercat_x44 I/O Group
+
 - **8 Digital Inputs**: Input1 through Input8
 - **8 Digital Outputs**: Output1 through Output8
 
 ### 2. IO Flange I/O Group
+
 - **8 Digital Inputs**: DI_Flange1 through DI_Flange8
 - **8 Digital Outputs**: DO_Flange1 through DO_Flange8
 
 ### 3. Media Flange I/O Group
-- **6 Digital Inputs**: 
-  - InputX3Pin3, InputX3Pin4, InputX3Pin10, InputX3Pin13, InputX3Pin16
-  - UserButton
-- **8 Digital Outputs**: 
-  - LEDBlue, SwitchOffX3Voltage
-  - OutputX3Pin1, OutputX3Pin2, OutputX3Pin11, OutputX3Pin12
-  - LedRed, LedGreen
+
+- **6 Digital Inputs**:
+    - InputX3Pin3, InputX3Pin4, InputX3Pin10, InputX3Pin13, InputX3Pin16
+    - UserButton
+- **8 Digital Outputs**:
+    - LEDBlue, SwitchOffX3Voltage
+    - OutputX3Pin1, OutputX3Pin2, OutputX3Pin11, OutputX3Pin12
+    - LedRed, LedGreen
 
 ## I/O Index Map
 
@@ -39,16 +46,19 @@ The `IOList` class provides centralized access to all available I/Os on the robo
 The easiest way to access I/Os is using simple array indexing:
 
 **INPUTS:** `ioList.in.get(index)`
+
 - **1-64**: Virtual Marks (Mark1-Mark64)
 - **65-72**: Ethercat Inputs (Input1-Input8)
 - **73-80**: IOFlange Inputs (DI_Flange1-DI_Flange8)
 - **81-86**: MediaFlange Inputs (InputX3Pin3, InputX3Pin4, InputX3Pin10, InputX3Pin13, InputX3Pin16, UserButton)
 
 **OUTPUTS:** `ioList.out.get(index)` / `ioList.out.set(index, value)`
+
 - **1-64**: Virtual Marks (Mark1-Mark64)
 - **65-72**: Ethercat Outputs (Output1-Output8)
 - **73-80**: IOFlange Outputs (DO_Flange1-DO_Flange8)
-- **81-88**: MediaFlange Outputs (LEDBlue, SwitchOffX3Voltage, OutputX3Pin1, OutputX3Pin2, OutputX3Pin11, OutputX3Pin12, LedRed, LedGreen)
+- **81-88**: MediaFlange Outputs (LEDBlue, SwitchOffX3Voltage, OutputX3Pin1, OutputX3Pin2, OutputX3Pin11, OutputX3Pin12,
+  LedRed, LedGreen)
 
 ## Usage Examples
 
@@ -60,11 +70,11 @@ import com.kuka.generated.ioAccess.*;
 
 // Initialize the IO groups (typically done via dependency injection)
 Ethercat_x44IOGroup ethercat = new Ethercat_x44IOGroup(controller);
-IOFlangeIOGroup ioFlange = new IOFlangeIOGroup(controller);
-MediaFlangeIOGroup mediaFlange = new MediaFlangeIOGroup(controller);
+        IOFlangeIOGroup ioFlange = new IOFlangeIOGroup(controller);
+        MediaFlangeIOGroup mediaFlange = new MediaFlangeIOGroup(controller);
 
-// Create the IOList
-IOList ioList = new IOList(ethercat, ioFlange, mediaFlange);
+        // Create the IOList
+        IOList ioList = new IOList(ethercat, ioFlange, mediaFlange);
 ```
 
 ### Array-Based Access (Simplest Method)
@@ -119,6 +129,7 @@ int totalMarks = ioList.getTotalMarks(); // Returns 64
 ```
 
 **Use Cases for Virtual Marks:**
+
 - Track workflow states (e.g., Mark1 = "initialized", Mark2 = "calibrated")
 - Implement custom interlocks or safety conditions
 - Debug program flow by setting marks at key points
@@ -176,9 +187,17 @@ boolean val2 = ioList.getEthercat_Input1();          // Named method
 boolean val3 = ioList.getEthercat().getInput1();     // Direct group access
 
 // Three ways to set Ethercat Output 1 (all equivalent):
-ioList.out.set(65, true);                            // SIMPLEST - Array access
-ioList.setEthercat_Output1(true);                    // Named method
-ioList.getEthercat().setOutput1(true);               // Direct group access
+ioList.out.
+
+set(65,true);                            // SIMPLEST - Array access
+ioList.
+
+setEthercat_Output1(true);                    // Named method
+ioList.
+
+getEthercat().
+
+setOutput1(true);               // Direct group access
 ```
 
 ### Accessing Original IO Groups
@@ -213,15 +232,19 @@ System.out.println(states);
 
 ## Integration with Existing Code
 
-The IOList class is designed to work alongside your existing code. You can continue using the individual IO group classes directly, or you can migrate to using IOList for a more centralized approach.
+The IOList class is designed to work alongside your existing code. You can continue using the individual IO group
+classes directly, or you can migrate to using IOList for a more centralized approach.
 
 For example, in `ToolController`:
+
 ```java
 // Instead of:
 toolControlIO.setOutput3(true);
 
 // You can use:
-ioList.setEthercat_Output3(true);
+ioList.
+
+setEthercat_Output3(true);
 ```
 
 ## Notes

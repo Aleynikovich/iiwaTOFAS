@@ -1,6 +1,7 @@
 package hartu.protocols.constants;
 
-public enum ActionTypes {
+public enum ActionTypes
+{
 
     // --- Point-to-Point (PTP) Movements ---
     PTP_AXIS(0, true, false, false, MovementType.PTP),
@@ -33,7 +34,8 @@ public enum ActionTypes {
     private final boolean isContinuousMovement;
     private final MovementType movementType;
 
-    ActionTypes(int value, boolean isJointMotion, boolean isCartesianMotion, boolean isContinuousMovement, MovementType movementType) {
+    ActionTypes(int value, boolean isJointMotion, boolean isCartesianMotion, boolean isContinuousMovement, MovementType movementType)
+    {
         this.value = value;
         this.isJointMotion = isJointMotion;
         this.isCartesianMotion = isCartesianMotion;
@@ -41,49 +43,62 @@ public enum ActionTypes {
         this.movementType = movementType;
     }
 
-    public int getValue() {
-        return value;
-    }
-
-    public boolean isJointMotion() {
-        return isJointMotion;
-    }
-
-    public boolean isCartesianMotion() {
-        return isCartesianMotion;
-    }
-
-    public boolean isContinuousMovement() {
-        return isContinuousMovement;
-    }
-
-    public MovementType getMovementType() {
-        return movementType;
-    }
-
-    public CommandCategory getCategory() {
-        if (value >= 0 && value <= 8) {
-            return CommandCategory.MOVEMENT;
-        }
-        if (value >= 9 && value <= 13) {
-            return CommandCategory.IO;
-        }
-        if (value >= PROGRAM_CALL_OFFSET.value) {
-            return CommandCategory.PROGRAM_CALL;
-        }
-        return CommandCategory.UNKNOWN;
-    }
-
-    public static ActionTypes fromValue(int value) {
-        for (ActionTypes type : ActionTypes.values()) {
-            if (type.value == value) {
+    public static ActionTypes fromValue(int value)
+    {
+        for (ActionTypes type : ActionTypes.values())
+        {
+            if (type.value == value)
+            {
                 return type;
             }
         }
         // Handle program calls
-        if (value >= PROGRAM_CALL_OFFSET.value) {
+        if (value >= PROGRAM_CALL_OFFSET.value)
+        {
             return ActionTypes.PROGRAM_CALL_OFFSET;
         }
         return UNKNOWN;
+    }
+
+    public int getValue()
+    {
+        return value;
+    }
+
+    public boolean isJointMotion()
+    {
+        return isJointMotion;
+    }
+
+    public boolean isCartesianMotion()
+    {
+        return isCartesianMotion;
+    }
+
+    public boolean isContinuousMovement()
+    {
+        return isContinuousMovement;
+    }
+
+    public MovementType getMovementType()
+    {
+        return movementType;
+    }
+
+    public CommandCategory getCategory()
+    {
+        if (value >= 0 && value <= 8)
+        {
+            return CommandCategory.MOVEMENT;
+        }
+        if (value >= 9 && value <= 13)
+        {
+            return CommandCategory.IO;
+        }
+        if (value >= PROGRAM_CALL_OFFSET.value)
+        {
+            return CommandCategory.PROGRAM_CALL;
+        }
+        return CommandCategory.UNKNOWN;
     }
 }

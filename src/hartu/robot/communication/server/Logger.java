@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Singleton logger that broadcasts messages to multiple handlers.
  * Supports simultaneous logging to robot console and network clients.
  * Thread-safe implementation for use from multiple tasks.
- * 
+ * <p>
  * Log Verbosity:
  * - The logger supports configurable minimum log level filtering
  * - Default level is INFO (shows all logs)
@@ -41,7 +41,7 @@ public class Logger
 
     /**
      * Adds a log handler to receive log messages.
-     * 
+     *
      * @param handler The handler to add
      */
     public void addHandler(LogHandler handler)
@@ -54,7 +54,7 @@ public class Logger
 
     /**
      * Removes a log handler.
-     * 
+     *
      * @param handler The handler to remove
      */
     public void removeHandler(LogHandler handler)
@@ -75,19 +75,28 @@ public class Logger
             try
             {
                 handler.close();
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 // Ignore errors during cleanup
             }
         }
         handlers.clear();
     }
-    
+
+    /**
+     * Gets the current minimum log level.
+     *
+     * @return The minimum log level
+     */
+    public LogLevel getMinimumLogLevel()
+    {
+        return minimumLogLevel;
+    }
+
     /**
      * Sets the minimum log level that will be broadcast to handlers.
      * Messages below this level will be filtered out.
-     * 
+     *
      * @param level The minimum log level (INFO, WARN, or ERROR)
      */
     public void setMinimumLogLevel(LogLevel level)
@@ -96,16 +105,6 @@ public class Logger
         {
             this.minimumLogLevel = level;
         }
-    }
-    
-    /**
-     * Gets the current minimum log level.
-     * 
-     * @return The minimum log level
-     */
-    public LogLevel getMinimumLogLevel()
-    {
-        return minimumLogLevel;
     }
 
     /**
@@ -142,12 +141,12 @@ public class Logger
     {
         logWithLevel(LogLevel.ERROR, tag, message + " - Exception: " + t.toString());
     }
-    
+
     /**
      * Internal method to log a message with level filtering.
-     * 
-     * @param level The log level of this message
-     * @param tag Component identifier
+     *
+     * @param level   The log level of this message
+     * @param tag     Component identifier
      * @param message The log message
      */
     private void logWithLevel(LogLevel level, String tag, String message)
@@ -157,7 +156,7 @@ public class Logger
         {
             return; // Filter out this message
         }
-        
+
         String formattedMessage = formatMessage(tag, message, level.name());
         broadcastToHandlers(formattedMessage);
     }
@@ -178,8 +177,7 @@ public class Logger
                 {
                     handler.sendMessage(formattedMessage);
                 }
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 // Don't let one handler's failure affect others
                 // Can't log this error as it would cause recursion

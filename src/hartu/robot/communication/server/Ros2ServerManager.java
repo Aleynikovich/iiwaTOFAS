@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Background task that manages the ROS2 task command server.
  * Listens on port 30001 for task commands from external clients.
- * 
+ * <p>
  * Note: Logging is now handled by LoggingServerManager on port 30002.
  * This follows the single responsibility principle - one server, one port, one function.
  */

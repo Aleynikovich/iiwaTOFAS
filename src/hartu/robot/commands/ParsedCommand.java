@@ -7,7 +7,6 @@ import hartu.protocols.constants.CommandCategory;
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.communication.server.Logger;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ParsedCommand
@@ -64,7 +63,8 @@ public class ParsedCommand
         return id;
     }
 
-    public CommandCategory getCommandCategory() {
+    public CommandCategory getCommandCategory()
+    {
         return commandCategory;
     }
 
@@ -126,7 +126,8 @@ public class ParsedCommand
     @Override
     public String toString()
     {
-        try {
+        try
+        {
 
             StringBuilder sb = new StringBuilder();
             sb.append("\nParsedCommand {\n");
@@ -148,9 +149,7 @@ public class ParsedCommand
                                 ", J3=").append(pos.get(2)).append(", J4=").append(pos.get(3)).append(", J5=").append(pos.get(4)).append(
                                 ", J6=").append(pos.get(5)).append(", J7=").append(pos.get(6)).append("\n");
                     }
-                }
-
-                else if (cartesianTargetPoints != null)
+                } else if (cartesianTargetPoints != null)
                 {
                     sb.append("  Frame Target Points (").append(cartesianTargetPoints.size()).append("):\n");
                     for (int i = 0; i < cartesianTargetPoints.size(); i++)
@@ -173,8 +172,7 @@ public class ParsedCommand
                     sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
                     sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
                 }
-            }
-            else if (isIoCommand())
+            } else if (isIoCommand())
             {
                 sb.append("  --- IO Command ---\n");
                 if (ioCommandData != null)
@@ -184,21 +182,19 @@ public class ParsedCommand
                     sb.append("    IO Pin: ").append(ioCommandData.getIoPin()).append("\n");
                     sb.append("    IO State: ").append(ioCommandData.getIoState()).append("\n");
                 }
-            }
-            else if (isProgramCall())
+            } else if (isProgramCall())
             {
                 sb.append("  --- Program Call ---\n");
                 sb.append("  Program ID: ").append(programId).append("\n");
-            }
-            else
+            } else
             {
                 sb.append("  --- Unrecognized Command Type ---\n");
             }
 
             sb.append("}");
             return sb.toString();
-        }
-        catch (Exception e) {
+        } catch (Exception e)
+        {
             Logger.getInstance().error("PARSER", "Error parsing command: " + e.getMessage());
         }
         return "Lel";

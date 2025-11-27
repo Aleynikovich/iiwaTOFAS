@@ -2,10 +2,10 @@ package hartu.robot.communication.server;
 
 import hartu.protocols.constants.ProtocolConstants;
 import hartu.protocols.constants.ProtocolConstants.ListenerType;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public class ServerPortListener implements Runnable
 {
@@ -37,8 +37,7 @@ public class ServerPortListener implements Runnable
             {
                 serverSocket.close();
             }
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             Logger.getInstance().log("COMM", listenerType.getName() + ": Error closing server socket during shutdown: " + e.getMessage());
         }
@@ -51,10 +50,10 @@ public class ServerPortListener implements Runnable
 
         // NOTE: Removed try-with-resources to avoid "ServerSocket not AutoCloseable" error
         // The finally block handles socket closing, making this equivalent.
-        try 
+        try
         {
             ServerSocket ss = this.serverSocket;
-            
+
             while (isRunning)
             {
                 Logger.getInstance().log("COMM", listenerType.getName() + ": Waiting for a new client to connect...");
@@ -62,15 +61,13 @@ public class ServerPortListener implements Runnable
                 try
                 {
                     clientSocket = ss.accept();
-                }
-                catch (IOException e)
+                } catch (IOException e)
                 {
                     if (!isRunning)
                     {
                         Logger.getInstance().log("COMM", listenerType.getName() + ": Server socket closed, listener shutting down gracefully.");
                         break;
-                    }
-                    else
+                    } else
                     {
                         Logger.getInstance().log("COMM", listenerType.getName() + ": Listener I/O error (unexpected): " + e.getMessage());
                         continue;
@@ -105,12 +102,10 @@ public class ServerPortListener implements Runnable
                     Logger.getInstance().log("COMM", "Sent '" + ProtocolConstants.INITIAL_TASK_CLIENT_RESPONSE + "' to new task client " + clientName + " (" + clientIp + ")");
                 }
             }
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             Logger.getInstance().log("COMM", listenerType.getName() + ": Listener I/O error (initialization or unexpected): " + e.getMessage());
-        }
-        finally
+        } finally
         {
             // This logic is now explicitly responsible for closing the socket
             if (!serverSocket.isClosed())
@@ -118,8 +113,7 @@ public class ServerPortListener implements Runnable
                 try
                 {
                     serverSocket.close();
-                }
-                catch (IOException e)
+                } catch (IOException e)
                 {
                     Logger.getInstance().log("COMM", listenerType.getName() + ": Error closing server socket in finally block: " + e.getMessage());
                 }
