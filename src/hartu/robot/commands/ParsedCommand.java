@@ -145,9 +145,9 @@ public class ParsedCommand
                     for (int i = 0; i < axisTargetPoints.size(); i++)
                     {
                         JointPosition pos = axisTargetPoints.get(i);
-                        sb.append("    Point ").append(i + 1).append(": J1=").append(pos.get(0)).append(", J2=").append(pos.get(1)).append(
-                                ", J3=").append(pos.get(2)).append(", J4=").append(pos.get(3)).append(", J5=").append(pos.get(4)).append(
-                                ", J6=").append(pos.get(5)).append(", J7=").append(pos.get(6)).append("\n");
+                        sb.append("    Point ").append(i + 1).append(": J1=").append(Math.toDegrees(pos.get(0))).append(", J2=").append(Math.toDegrees(pos.get(1))).append(
+                                ", J3=").append(Math.toDegrees(pos.get(2))).append(", J4=").append(Math.toDegrees(pos.get(3))).append(", J5=").append(Math.toDegrees(pos.get(4))).append(
+                                ", J6=").append(Math.toDegrees(pos.get(5))).append(", J7=").append(Math.toDegrees(pos.get(6))).append("\n");
                     }
                 } else if (cartesianTargetPoints != null)
                 {
