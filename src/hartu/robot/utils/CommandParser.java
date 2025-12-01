@@ -19,10 +19,6 @@ import static hartu.protocols.constants.ProtocolConstants.*;
 
 public class CommandParser
 {
-    // Program ID range boundaries for base data transmission
-    private static final int BASE_DATA_PROGRAM_MIN_ID = 40;
-    private static final int BASE_DATA_PROGRAM_MAX_ID = 100;
-
     private CommandParser()
     {
         // Private constructor
@@ -189,18 +185,15 @@ public class CommandParser
                 programId = commandNumber - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
                 Logger.getInstance().log("PARSER", String.format("Parsed program call: %d - %d = %d", commandNumber, ActionTypes.PROGRAM_CALL_OFFSET.getValue(), programId));
                 
-                // Check if this is a base data transmission command (program IDs 40-99)
-                // Format: 140||100;100;100;90;180;270|||2||||HashID#
+                // Try to parse optional base coordinate data for any program call
+                // Format: ACTION||X;Y;Z;R;P;Y|||WORKPIECE_ID||||HashID#
                 // TARGET_POINTS (index 2) contains FRAME data in xyzRPY format
                 // TOOL (index 6) contains workpiece ID (1=Axis, 2=Drum, 3=Disk)
-                if (programId >= BASE_DATA_PROGRAM_MIN_ID && programId < BASE_DATA_PROGRAM_MAX_ID)
+                BaseCoordinateData baseCoordinateData = parseBaseCoordinateData(parts);
+                if (baseCoordinateData != null)
                 {
-                    BaseCoordinateData baseCoordinateData = parseBaseCoordinateData(parts);
-                    if (baseCoordinateData != null)
-                    {
-                        Logger.getInstance().log("PARSER", "Parsed base coordinate data: " + baseCoordinateData.toString());
-                        return ParsedCommand.forProgramCallWithBaseData(actionType, id, programId, baseCoordinateData);
-                    }
+                    Logger.getInstance().log("PARSER", "Parsed base coordinate data: " + baseCoordinateData.toString());
+                    return ParsedCommand.forProgramCallWithBaseData(actionType, id, programId, baseCoordinateData);
                 }
                 
                 return ParsedCommand.forProgramCall(actionType, id, programId);
@@ -220,7 +213,7 @@ public class CommandParser
 
     /**
      * Parses base coordinate data from program call command parts.
-     * Used for program calls with IDs >= 40 to transmit base data from ROS nodes.
+     * This is optional - if the data is not present or invalid, returns null.
      * 
      * @param parts The message parts array
      * @return BaseCoordinateData containing frame and workpiece type, or null if not valid

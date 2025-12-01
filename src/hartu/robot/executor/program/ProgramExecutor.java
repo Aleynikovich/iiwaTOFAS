@@ -11,10 +11,6 @@ import hartu.robot.executor.io.ToolController;
  */
 public class ProgramExecutor
 {
-    // Program ID range boundaries for base data transmission
-    private static final int BASE_DATA_PROGRAM_MIN_ID = 40;
-    private static final int BASE_DATA_PROGRAM_MAX_ID = 100;
-
     private final ToolController toolController;
     private final ProgramSubroutines programSubroutines;
 
@@ -35,9 +31,12 @@ public class ProgramExecutor
      * Program ID mapping:
      * - 1-3: Pick tool from T1Base-T3Base
      * - 11-13: Place tool to T1Base-T3Base
-     * - 40+: Base data transmission (workpiece coordinates from ROS nodes)
      * - 101: Open tool (global)
      * - 102: Close tool (global)
+     * 
+     * Any program call can optionally include base coordinate data (workpiece position
+     * from ROS computer vision nodes). If present, it will be stored before executing
+     * the program routine.
      *
      * @param command The ParsedCommand containing program ID
      * @return True if execution was successful, false otherwise
@@ -55,6 +54,15 @@ public class ProgramExecutor
 
         try
         {
+            // If base coordinate data is present, store it before executing the program routine
+            if (command.hasBaseCoordinateData())
+            {
+                if (!storeBaseCoordinateData(command))
+                {
+                    return false;
+                }
+            }
+
             // Pick tool operations (program IDs 1-3)
             if (programId >= 1 && programId <= 3)
             {
@@ -66,12 +74,6 @@ public class ProgramExecutor
             {
                 int toolId = programId - 10; // Tool ID is program ID minus 10 (11->1, 12->2, 13->3)
                 return programSubroutines.placeTool(toolId);
-            }
-            // Base data transmission operations (program IDs 40-99)
-            // Used to transmit workpiece coordinates from ROS computer vision nodes
-            else if (programId >= BASE_DATA_PROGRAM_MIN_ID && programId < BASE_DATA_PROGRAM_MAX_ID)
-            {
-                return executeBaseDataTransmission(command);
             }
             // Tool gripper control operations
             else if (programId == 101)
@@ -119,25 +121,16 @@ public class ProgramExecutor
     }
 
     /**
-     * Executes base data transmission from ROS nodes.
+     * Stores base coordinate data from ROS nodes.
      * This stores the workpiece coordinates and type for subsequent kitting operations.
      * 
-     * Program ID mapping for base data:
-     * - 40: Store base data for current workpiece
-     * 
      * @param command The ParsedCommand containing base coordinate data
-     * @return True if execution was successful, false otherwise
+     * @return True if storage was successful, false otherwise
      */
-    private boolean executeBaseDataTransmission(ParsedCommand command)
+    private boolean storeBaseCoordinateData(ParsedCommand command)
     {
-        if (!command.hasBaseCoordinateData())
-        {
-            Logger.getInstance().error("ROBOT_EXEC", "Base data transmission command ID " + command.getId() + " has no base coordinate data.");
-            return false;
-        }
-
         BaseCoordinateData baseData = command.getBaseCoordinateData();
-        Logger.getInstance().log("ROBOT_EXEC", "Received base data transmission: " + baseData.toString());
+        Logger.getInstance().log("ROBOT_EXEC", "Storing base coordinate data: " + baseData.toString());
 
         // Store the base coordinate data in ProgramSubroutines for use in kitting operations
         return programSubroutines.storeBaseCoordinateData(baseData);
