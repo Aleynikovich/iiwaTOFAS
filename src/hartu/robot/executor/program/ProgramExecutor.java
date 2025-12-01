@@ -11,6 +11,9 @@ import hartu.robot.executor.io.ToolController;
  */
 public class ProgramExecutor
 {
+    // Program ID range boundaries for base data transmission
+    private static final int BASE_DATA_PROGRAM_MIN_ID = 40;
+    private static final int BASE_DATA_PROGRAM_MAX_ID = 100;
 
     private final ToolController toolController;
     private final ProgramSubroutines programSubroutines;
@@ -64,9 +67,9 @@ public class ProgramExecutor
                 int toolId = programId - 10; // Tool ID is program ID minus 10 (11->1, 12->2, 13->3)
                 return programSubroutines.placeTool(toolId);
             }
-            // Base data transmission operations (program IDs 40+)
+            // Base data transmission operations (program IDs 40-99)
             // Used to transmit workpiece coordinates from ROS computer vision nodes
-            else if (programId >= 40 && programId < 100)
+            else if (programId >= BASE_DATA_PROGRAM_MIN_ID && programId < BASE_DATA_PROGRAM_MAX_ID)
             {
                 return executeBaseDataTransmission(command);
             }

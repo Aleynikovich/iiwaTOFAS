@@ -10,6 +10,10 @@ import hartu.protocols.constants.WorkpieceType;
  * 
  * Used with program call commands (action >= 140) to transmit base data calculated
  * by computer vision ROS nodes.
+ * 
+ * Note: Position values (X, Y, Z) are in millimeters.
+ * Orientation values (A, B, C) are received in degrees but stored internally as radians
+ * (as per KUKA Frame conventions).
  */
 public class BaseCoordinateData
 {
@@ -19,7 +23,7 @@ public class BaseCoordinateData
     /**
      * Creates a new BaseCoordinateData instance.
      *
-     * @param coordinateFrame The coordinate frame in xyzRPY format (position in mm, orientation in degrees)
+     * @param coordinateFrame The coordinate frame (position in mm, orientation in radians internally)
      * @param workpieceType   The type of workpiece (Axis, Drum, Disk)
      */
     public BaseCoordinateData(Frame coordinateFrame, WorkpieceType workpieceType)
