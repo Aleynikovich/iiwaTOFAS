@@ -1,5 +1,6 @@
 package hartu.robot.executor.program;
 
+import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
@@ -10,7 +11,6 @@ import hartu.robot.executor.io.ToolController;
  */
 public class ProgramExecutor
 {
-
     private final ToolController toolController;
     private final ProgramSubroutines programSubroutines;
 
@@ -33,6 +33,10 @@ public class ProgramExecutor
      * - 11-13: Place tool to T1Base-T3Base
      * - 101: Open tool (global)
      * - 102: Close tool (global)
+     * 
+     * Any program call can optionally include base coordinate data (workpiece position
+     * from ROS computer vision nodes). If present, it will be stored before executing
+     * the program routine.
      *
      * @param command The ParsedCommand containing program ID
      * @return True if execution was successful, false otherwise
@@ -50,6 +54,15 @@ public class ProgramExecutor
 
         try
         {
+            // If base coordinate data is present, store it before executing the program routine
+            if (command.hasBaseCoordinateData())
+            {
+                if (!storeBaseCoordinateData(command))
+                {
+                    return false;
+                }
+            }
+
             // Pick tool operations (program IDs 1-3)
             if (programId >= 1 && programId <= 3)
             {
@@ -105,5 +118,21 @@ public class ProgramExecutor
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception) t : new Exception("Throwable wrapper", t));
             return false;
         }
+    }
+
+    /**
+     * Stores base coordinate data from ROS nodes.
+     * This stores the workpiece coordinates and type for subsequent kitting operations.
+     * 
+     * @param command The ParsedCommand containing base coordinate data
+     * @return True if storage was successful, false otherwise
+     */
+    private boolean storeBaseCoordinateData(ParsedCommand command)
+    {
+        BaseCoordinateData baseData = command.getBaseCoordinateData();
+        Logger.getInstance().log("ROBOT_EXEC", "Storing base coordinate data: " + baseData.toString());
+
+        // Store the base coordinate data in ProgramSubroutines for use in kitting operations
+        return programSubroutines.storeBaseCoordinateData(baseData);
     }
 }
