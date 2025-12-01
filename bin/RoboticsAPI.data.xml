@@ -1453,9 +1453,9 @@
             </additionalInformation>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-9.286296384229951" cogY="-16.509902307272725" cogZ="83.44272938441216" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="2.697908246530612"/>
         </toolTemplate>
-        <toolTemplate class="" defaultMotionFrameRef="/flange2gimatic" name="GimaticIxtur">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticIxtur">
             <frames>
-                <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
+                <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="TCP">
                     <transformation a="1.957119527771724" b="0.016315583333386324" c="0.0" x="0.0" y="0.0" z="230.0"/>
                     <measurementRotation method="ABCWorld5D" timestamp="1356995418712"/>
                 </frame>
@@ -1465,9 +1465,9 @@
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-22.597943344430433" cogY="-58.296554295571" cogZ="78.75686071217353" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="7.122511008263128"/>
         </toolTemplate>
-        <toolTemplate class="" defaultMotionFrameRef="/gripper2flange" name="GimaticGripperV">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticGripperV">
             <frames>
-                <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="gripper2flange">
+                <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="TCP">
                     <transformation a="1.9568672589412817" b="0.016235876914671456" c="0.05006796346082482" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     <measurementTranslation calculationError="12.370181947472895" method="XYZ4Point" timestamp="1361072220163"/>
                     <measurementRotation method="ABCWorld6D" timestamp="1356995442266"/>
@@ -1535,6 +1535,11 @@
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </workpieceTemplate>
         <toolTemplate class="" name="GimaticCircMagnet">
+            <frames>
+                <frame id="_01f139d0-b18a-42d6-87b2-5c43a1430ed8" name="TCP">
+                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                </frame>
+            </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-16.682703136966186" cogY="-64.53579237902936" cogZ="55.50233796614493" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.428565115040336"/>
         </toolTemplate>
         <toolTemplate class="" name="GimaticGripperR">
