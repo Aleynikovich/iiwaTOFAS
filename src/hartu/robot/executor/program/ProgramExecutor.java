@@ -1,5 +1,6 @@
 package hartu.robot.executor.program;
 
+import com.kuka.roboticsAPI.geometricModel.Frame;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
@@ -63,6 +64,10 @@ public class ProgramExecutor
                 }
             }
 
+            // Extract frame and workpiece ID once for subroutines that need them (program IDs 21-25)
+            Frame frame = getFrameFromCommand(command);
+            int workpieceId = getWorkpieceIdFromCommand(command);
+
             // Pick tool operations (program IDs 1-3)
             if (programId >= 1 && programId <= 3)
             {
@@ -88,23 +93,23 @@ public class ProgramExecutor
             }
             else if (programId == 21)
             {
-                return programSubroutines.placeAxisPlaceholder();
+                return programSubroutines.placeAxisPlaceholder(frame, workpieceId);
             }
             else if (programId == 22)
             {
-                return programSubroutines.pickAxis();
+                return programSubroutines.pickAxis(frame, workpieceId);
             }
             else if (programId == 23)
             {
-                return programSubroutines.placeAxisBox();
+                return programSubroutines.placeAxisBox(frame, workpieceId);
             }
             else if (programId == 24)
             {
-                return programSubroutines.placeDrum();
+                return programSubroutines.placeDrum(frame, workpieceId);
             }
             else if (programId == 25)
             {
-                return programSubroutines.placeDisk();
+                return programSubroutines.placeDisk(frame, workpieceId);
             }
             // Invalid program ID
             else
@@ -134,5 +139,37 @@ public class ProgramExecutor
 
         // Store the base coordinate data in ProgramSubroutines for use in kitting operations
         return programSubroutines.storeBaseCoordinateData(baseData);
+    }
+
+    /**
+     * Extracts the Frame from a command's base coordinate data.
+     * 
+     * @param command The ParsedCommand to extract Frame from
+     * @return The Frame from base coordinate data, or null if not present
+     */
+    private Frame getFrameFromCommand(ParsedCommand command)
+    {
+        if (command.hasBaseCoordinateData())
+        {
+            BaseCoordinateData baseData = command.getBaseCoordinateData();
+            return baseData.getCoordinateFrame();
+        }
+        return null;
+    }
+
+    /**
+     * Extracts the workpiece ID from a command's base coordinate data.
+     * 
+     * @param command The ParsedCommand to extract workpiece ID from
+     * @return The workpiece ID, or 0 if not present
+     */
+    private int getWorkpieceIdFromCommand(ParsedCommand command)
+    {
+        if (command.hasBaseCoordinateData())
+        {
+            BaseCoordinateData baseData = command.getBaseCoordinateData();
+            return baseData.getWorkpieceType().getId();
+        }
+        return 0;
     }
 }
