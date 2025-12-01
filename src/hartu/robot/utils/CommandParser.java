@@ -5,6 +5,8 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import hartu.protocols.constants.ActionTypes;
 import hartu.protocols.constants.CommandCategory;
 import hartu.protocols.constants.MessagePartIndex;
+import hartu.protocols.constants.WorkpieceType;
+import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.MotionParameters;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.commands.io.IoCommandData;
@@ -182,7 +184,22 @@ public class CommandParser
             try
             {
                 programId = commandNumber - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
-                Logger.getInstance().log("PARSER", "Parsed: " + commandNumber + "-" + ActionTypes.PROGRAM_CALL_OFFSET.getValue() + programId);
+                Logger.getInstance().log("PARSER", "Parsed program call: " + commandNumber + " - " + ActionTypes.PROGRAM_CALL_OFFSET.getValue() + " = " + programId);
+                
+                // Check if this is a base data transmission command (program IDs >= 40)
+                // Format: 140||100;100;100;90;180;270|||2||||HashID#
+                // TARGET_POINTS (index 2) contains FRAME data in xyzRPY format
+                // TOOL (index 6) contains workpiece ID (1=Axis, 2=Drum, 3=Disk)
+                if (programId >= 40)
+                {
+                    BaseCoordinateData baseCoordinateData = parseBaseCoordinateData(parts);
+                    if (baseCoordinateData != null)
+                    {
+                        Logger.getInstance().log("PARSER", "Parsed base coordinate data: " + baseCoordinateData.toString());
+                        return ParsedCommand.forProgramCallWithBaseData(actionType, id, programId, baseCoordinateData);
+                    }
+                }
+                
                 return ParsedCommand.forProgramCall(actionType, id, programId);
             } catch (Exception e)
             {
@@ -195,6 +212,60 @@ public class CommandParser
             String errorMsg = "Unknown or unsupported CommandCategory: " + commandCategory + " for ActionType: " + actionType.getValue() + " in command: " + commandString;
             Logger.getInstance().log("PARSER", "Error: " + errorMsg);
             throw new IllegalArgumentException(errorMsg);
+        }
+    }
+
+    /**
+     * Parses base coordinate data from program call command parts.
+     * Used for program calls with IDs >= 40 to transmit base data from ROS nodes.
+     * 
+     * @param parts The message parts array
+     * @return BaseCoordinateData containing frame and workpiece type, or null if not valid
+     */
+    private static BaseCoordinateData parseBaseCoordinateData(String[] parts)
+    {
+        try
+        {
+            // Get TARGET_POINTS (index 2) - contains FRAME data in xyzRPY format
+            String targetPointsStr = parts[MessagePartIndex.TARGET_POINTS.getIndex()];
+            if (targetPointsStr == null || targetPointsStr.isEmpty())
+            {
+                Logger.getInstance().warn("PARSER", "No TARGET_POINTS data for base coordinate parsing");
+                return null;
+            }
+            
+            // Parse the frame data (x;y;z;roll;pitch;yaw)
+            String[] values = targetPointsStr.split(SECONDARY_DELIMITER);
+            if (values.length != 6)
+            {
+                Logger.getInstance().warn("PARSER", "Invalid base coordinate format: Expected 6 values (X;Y;Z;R;P;Y), got " + values.length);
+                return null;
+            }
+            
+            double x = Double.parseDouble(values[0]);
+            double y = Double.parseDouble(values[1]);
+            double z = Double.parseDouble(values[2]);
+            // Convert orientation from degrees to radians
+            double c = Math.toRadians(Double.parseDouble(values[3]));
+            double b = Math.toRadians(Double.parseDouble(values[4]));
+            double a = Math.toRadians(Double.parseDouble(values[5]));
+            Frame coordinateFrame = new Frame(x, y, z, a, b, c);
+            
+            // Get TOOL (index 6) - contains workpiece ID
+            String toolStr = parts[MessagePartIndex.TOOL.getIndex()];
+            int workpieceId = 0;
+            if (toolStr != null && !toolStr.isEmpty())
+            {
+                workpieceId = Integer.parseInt(toolStr);
+            }
+            WorkpieceType workpieceType = WorkpieceType.fromId(workpieceId);
+            
+            return new BaseCoordinateData(coordinateFrame, workpieceType);
+            
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+        {
+            Logger.getInstance().warn("PARSER", "Failed to parse base coordinate data: " + e.getMessage());
+            return null;
         }
     }
 

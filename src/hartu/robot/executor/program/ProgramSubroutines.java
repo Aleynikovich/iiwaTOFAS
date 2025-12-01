@@ -2,8 +2,11 @@ package hartu.robot.executor.program;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
+import hartu.protocols.constants.WorkpieceType;
+import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
 
@@ -22,6 +25,9 @@ public class ProgramSubroutines
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
     private final Tool gimaticCameraTool, vacTool;
+
+    // Stored base coordinate data from ROS computer vision nodes
+    private BaseCoordinateData currentBaseCoordinateData;
 
     /**
      * Creates a new ProgramSubroutines instance.
@@ -265,5 +271,68 @@ public class ProgramSubroutines
     public boolean placeDisk()
     {
         return true;
+    }
+
+    /**
+     * Stores base coordinate data received from ROS computer vision nodes.
+     * This data includes the workpiece location (as a Frame) and workpiece type.
+     * The stored data can be used for subsequent kitting operations.
+     *
+     * @param baseData The base coordinate data containing frame and workpiece type
+     * @return True if the data was stored successfully
+     */
+    public boolean storeBaseCoordinateData(BaseCoordinateData baseData)
+    {
+        if (baseData == null)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Cannot store null base coordinate data.");
+            return false;
+        }
+
+        this.currentBaseCoordinateData = baseData;
+        
+        Frame frame = baseData.getCoordinateFrame();
+        WorkpieceType workpieceType = baseData.getWorkpieceType();
+        
+        Logger.getInstance().log("ROBOT_EXEC", "Stored base coordinate data:");
+        Logger.getInstance().log("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
+        if (frame != null)
+        {
+            Logger.getInstance().log("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
+            Logger.getInstance().log("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) + 
+                                     ", B=" + Math.toDegrees(frame.getBetaRad()) + 
+                                     ", C=" + Math.toDegrees(frame.getGammaRad()));
+        }
+        
+        return true;
+    }
+
+    /**
+     * Gets the currently stored base coordinate data.
+     *
+     * @return The stored BaseCoordinateData, or null if none has been stored
+     */
+    public BaseCoordinateData getCurrentBaseCoordinateData()
+    {
+        return currentBaseCoordinateData;
+    }
+
+    /**
+     * Checks if there is stored base coordinate data available.
+     *
+     * @return True if base coordinate data is available
+     */
+    public boolean hasStoredBaseCoordinateData()
+    {
+        return currentBaseCoordinateData != null;
+    }
+
+    /**
+     * Clears the stored base coordinate data.
+     */
+    public void clearBaseCoordinateData()
+    {
+        this.currentBaseCoordinateData = null;
+        Logger.getInstance().log("ROBOT_EXEC", "Cleared stored base coordinate data.");
     }
 }

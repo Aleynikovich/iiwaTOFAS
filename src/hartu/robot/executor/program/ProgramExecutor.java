@@ -1,5 +1,6 @@
 package hartu.robot.executor.program;
 
+import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
@@ -31,6 +32,7 @@ public class ProgramExecutor
      * Program ID mapping:
      * - 1-3: Pick tool from T1Base-T3Base
      * - 11-13: Place tool to T1Base-T3Base
+     * - 40+: Base data transmission (workpiece coordinates from ROS nodes)
      * - 101: Open tool (global)
      * - 102: Close tool (global)
      *
@@ -61,6 +63,12 @@ public class ProgramExecutor
             {
                 int toolId = programId - 10; // Tool ID is program ID minus 10 (11->1, 12->2, 13->3)
                 return programSubroutines.placeTool(toolId);
+            }
+            // Base data transmission operations (program IDs 40+)
+            // Used to transmit workpiece coordinates from ROS computer vision nodes
+            else if (programId >= 40 && programId < 100)
+            {
+                return executeBaseDataTransmission(command);
             }
             // Tool gripper control operations
             else if (programId == 101)
@@ -105,5 +113,30 @@ public class ProgramExecutor
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception) t : new Exception("Throwable wrapper", t));
             return false;
         }
+    }
+
+    /**
+     * Executes base data transmission from ROS nodes.
+     * This stores the workpiece coordinates and type for subsequent kitting operations.
+     * 
+     * Program ID mapping for base data:
+     * - 40: Store base data for current workpiece
+     * 
+     * @param command The ParsedCommand containing base coordinate data
+     * @return True if execution was successful, false otherwise
+     */
+    private boolean executeBaseDataTransmission(ParsedCommand command)
+    {
+        if (!command.hasBaseCoordinateData())
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Base data transmission command ID " + command.getId() + " has no base coordinate data.");
+            return false;
+        }
+
+        BaseCoordinateData baseData = command.getBaseCoordinateData();
+        Logger.getInstance().log("ROBOT_EXEC", "Received base data transmission: " + baseData.toString());
+
+        // Store the base coordinate data in ProgramSubroutines for use in kitting operations
+        return programSubroutines.storeBaseCoordinateData(baseData);
     }
 }

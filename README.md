@@ -432,6 +432,43 @@ FREE|ID|failure#  (on failure)
 111|0|0|0|0|0|0|0|0|cmd_place1#   # Place tool to T1Base
 ```
 
+#### Base Data Transmission (Program IDs 40+)
+
+Transmits workpiece base coordinate data from ROS computer vision nodes to the robot. This allows external systems to send calculated workpiece positions and types for kitting operations.
+
+**Format:**
+```
+ACTION_TYPE||X;Y;Z;R;P;Y|||WORKPIECE_ID||||ID#
+```
+
+Where:
+- `ACTION_TYPE`: 140 (for program ID 40, base data transmission)
+- `X;Y;Z`: Position in millimeters
+- `R;P;Y`: Orientation in degrees (Roll, Pitch, Yaw)
+- `WORKPIECE_ID`: Type of workpiece:
+  - 1 = Axis
+  - 2 = Drum
+  - 3 = Disk
+
+**Example:**
+```
+140||100;100;100;90;180;270|||2||||cmd_base1#
+```
+
+This example:
+- Calls program 40 (base data transmission)
+- Sets position to X=100mm, Y=100mm, Z=100mm
+- Sets orientation to R=90°, P=180°, Y=270°
+- Identifies the workpiece as a Drum (ID 2)
+
+**Response:**
+```
+FREE|ID|success#  (on success)
+FREE|ID|failure#  (on failure)
+```
+
+The robot stores these coordinates as a base and workpiece type for subsequent kitting operations.
+
 #### Tool Gripper Control (Program IDs 101-102)
 
 Controls the tool's pneumatic gripper (open/close).

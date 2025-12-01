@@ -20,8 +20,9 @@ public class ParsedCommand
     private final MotionParameters motionParameters;
     private final IoCommandData ioCommandData;
     private final Integer programId;
+    private final BaseCoordinateData baseCoordinateData;
 
-    private ParsedCommand(ActionTypes actionType, String id, CommandCategory commandCategory, List<JointPosition> axisTargetPoints, List<Frame> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId)
+    private ParsedCommand(ActionTypes actionType, String id, CommandCategory commandCategory, List<JointPosition> axisTargetPoints, List<Frame> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId, BaseCoordinateData baseCoordinateData)
     {
         this.actionType = actionType;
         this.id = id;
@@ -31,26 +32,32 @@ public class ParsedCommand
         this.motionParameters = motionParameters;
         this.ioCommandData = ioCommandData;
         this.programId = programId;
+        this.baseCoordinateData = baseCoordinateData;
     }
 
     public static ParsedCommand forAxisMovement(ActionTypes actionType, String id, List<JointPosition> axisTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), axisTargetPoints, null, motionParameters, null, null);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), axisTargetPoints, null, motionParameters, null, null, null);
     }
 
     public static ParsedCommand forCartesianMovement(ActionTypes actionType, String id, List<Frame> cartesianTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, cartesianTargetPoints, motionParameters, null, null);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, cartesianTargetPoints, motionParameters, null, null, null);
     }
 
     public static ParsedCommand forIo(ActionTypes actionType, String id, IoCommandData ioCommandData)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, ioCommandData, null);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, ioCommandData, null, null);
     }
 
     public static ParsedCommand forProgramCall(ActionTypes actionType, String id, Integer programId)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId, null);
+    }
+
+    public static ParsedCommand forProgramCallWithBaseData(ActionTypes actionType, String id, Integer programId, BaseCoordinateData baseCoordinateData)
+    {
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId, baseCoordinateData);
     }
 
     public ActionTypes getActionType()
@@ -92,6 +99,16 @@ public class ParsedCommand
     public Integer getProgramId()
     {
         return programId;
+    }
+
+    public BaseCoordinateData getBaseCoordinateData()
+    {
+        return baseCoordinateData;
+    }
+
+    public boolean hasBaseCoordinateData()
+    {
+        return baseCoordinateData != null;
     }
 
     public boolean isMovementCommand()
@@ -186,6 +203,10 @@ public class ParsedCommand
             {
                 sb.append("  --- Program Call ---\n");
                 sb.append("  Program ID: ").append(programId).append("\n");
+                if (baseCoordinateData != null)
+                {
+                    sb.append("  Base Coordinate Data: ").append(baseCoordinateData.toString()).append("\n");
+                }
             } else
             {
                 sb.append("  --- Unrecognized Command Type ---\n");
