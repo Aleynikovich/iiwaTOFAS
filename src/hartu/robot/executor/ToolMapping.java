@@ -39,9 +39,12 @@ public class ToolMapping
         // These names must match tools defined in Sunrise.Workbench Object Templates
         // Tool 0 is GimaticCamera (used for tool changing operations)
         toolIdToNameMap.put(0, "GimaticCamera");
-        toolIdToNameMap.put(1, "GimaticVac1");
-        toolIdToNameMap.put(2, "GimaticVac2");
-        toolIdToNameMap.put(3, "GimaticVac3");
+        //toolIdToNameMap.put(1, "GimaticVac1");
+        //toolIdToNameMap.put(2, "GimaticVac2");
+        //toolIdToNameMap.put(3, "GimaticVac3");
+        toolIdToNameMap.put(1, "GimaticGripperV");
+        toolIdToNameMap.put(2, "GimaticIxtur");
+        toolIdToNameMap.put(3, "GimaticCircMagnet");
         Logger.getInstance().log("TOOL_MAPPING", "Initialized tool ID mappings: " + toolIdToNameMap.size() + " entries");
     }
 

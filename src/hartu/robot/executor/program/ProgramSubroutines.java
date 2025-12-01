@@ -257,37 +257,35 @@ public class ProgramSubroutines
      */
     private void logSubroutineCall(String methodName, Frame frame, int workpieceId)
     {
-        Logger.getInstance().log("ROBOT_EXEC", methodName + " called with frame: " + 
+        Logger.getInstance().log("ROBOT_EXEC", methodName + " called with frame: " +
                 (frame != null ? frame.toString() : "null") + ", workpieceId: " + workpieceId);
     }
 
     public boolean pickAxis(Frame frame, int workpieceId)
     {
         logSubroutineCall("pickAxis", frame, workpieceId);
+
         return true;
     }
 
     public boolean placeAxisPlaceholder(Frame frame, int workpieceId)
     {
-        logSubroutineCall("placeAxisPlaceholder", frame, workpieceId);
         return true;
     }
 
     public boolean placeAxisBox(Frame frame, int workpieceId)
     {
-        logSubroutineCall("placeAxisBox", frame, workpieceId);
         return true;
     }
 
     public boolean placeDrum(Frame frame, int workpieceId)
     {
-        logSubroutineCall("placeDrum", frame, workpieceId);
+
         return true;
     }
 
     public boolean placeDisk(Frame frame, int workpieceId)
     {
-        logSubroutineCall("placeDisk", frame, workpieceId);
         return true;
     }
 
