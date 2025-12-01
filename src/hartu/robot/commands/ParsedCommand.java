@@ -7,7 +7,6 @@ import hartu.protocols.constants.CommandCategory;
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.communication.server.Logger;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ParsedCommand
@@ -21,8 +20,9 @@ public class ParsedCommand
     private final MotionParameters motionParameters;
     private final IoCommandData ioCommandData;
     private final Integer programId;
+    private final BaseCoordinateData baseCoordinateData;
 
-    private ParsedCommand(ActionTypes actionType, String id, CommandCategory commandCategory, List<JointPosition> axisTargetPoints, List<Frame> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId)
+    private ParsedCommand(ActionTypes actionType, String id, CommandCategory commandCategory, List<JointPosition> axisTargetPoints, List<Frame> cartesianTargetPoints, MotionParameters motionParameters, IoCommandData ioCommandData, Integer programId, BaseCoordinateData baseCoordinateData)
     {
         this.actionType = actionType;
         this.id = id;
@@ -32,26 +32,32 @@ public class ParsedCommand
         this.motionParameters = motionParameters;
         this.ioCommandData = ioCommandData;
         this.programId = programId;
+        this.baseCoordinateData = baseCoordinateData;
     }
 
     public static ParsedCommand forAxisMovement(ActionTypes actionType, String id, List<JointPosition> axisTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), axisTargetPoints, null, motionParameters, null, null);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), axisTargetPoints, null, motionParameters, null, null, null);
     }
 
     public static ParsedCommand forCartesianMovement(ActionTypes actionType, String id, List<Frame> cartesianTargetPoints, MotionParameters motionParameters)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, cartesianTargetPoints, motionParameters, null, null);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, cartesianTargetPoints, motionParameters, null, null, null);
     }
 
     public static ParsedCommand forIo(ActionTypes actionType, String id, IoCommandData ioCommandData)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, ioCommandData, null);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, ioCommandData, null, null);
     }
 
     public static ParsedCommand forProgramCall(ActionTypes actionType, String id, Integer programId)
     {
-        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId);
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId, null);
+    }
+
+    public static ParsedCommand forProgramCallWithBaseData(ActionTypes actionType, String id, Integer programId, BaseCoordinateData baseCoordinateData)
+    {
+        return new ParsedCommand(actionType, id, actionType.getCategory(), null, null, null, null, programId, baseCoordinateData);
     }
 
     public ActionTypes getActionType()
@@ -64,7 +70,8 @@ public class ParsedCommand
         return id;
     }
 
-    public CommandCategory getCommandCategory() {
+    public CommandCategory getCommandCategory()
+    {
         return commandCategory;
     }
 
@@ -92,6 +99,16 @@ public class ParsedCommand
     public Integer getProgramId()
     {
         return programId;
+    }
+
+    public BaseCoordinateData getBaseCoordinateData()
+    {
+        return baseCoordinateData;
+    }
+
+    public boolean hasBaseCoordinateData()
+    {
+        return baseCoordinateData != null;
     }
 
     public boolean isMovementCommand()
@@ -126,7 +143,8 @@ public class ParsedCommand
     @Override
     public String toString()
     {
-        try {
+        try
+        {
 
             StringBuilder sb = new StringBuilder();
             sb.append("\nParsedCommand {\n");
@@ -144,13 +162,11 @@ public class ParsedCommand
                     for (int i = 0; i < axisTargetPoints.size(); i++)
                     {
                         JointPosition pos = axisTargetPoints.get(i);
-                        sb.append("    Point ").append(i + 1).append(": J1=").append(pos.get(0)).append(", J2=").append(pos.get(1)).append(
-                                ", J3=").append(pos.get(2)).append(", J4=").append(pos.get(3)).append(", J5=").append(pos.get(4)).append(
-                                ", J6=").append(pos.get(5)).append(", J7=").append(pos.get(6)).append("\n");
+                        sb.append("    Point ").append(i + 1).append(": J1=").append(Math.toDegrees(pos.get(0))).append(", J2=").append(Math.toDegrees(pos.get(1))).append(
+                                ", J3=").append(Math.toDegrees(pos.get(2))).append(", J4=").append(Math.toDegrees(pos.get(3))).append(", J5=").append(Math.toDegrees(pos.get(4))).append(
+                                ", J6=").append(Math.toDegrees(pos.get(5))).append(", J7=").append(Math.toDegrees(pos.get(6))).append("\n");
                     }
-                }
-
-                else if (cartesianTargetPoints != null)
+                } else if (cartesianTargetPoints != null)
                 {
                     sb.append("  Frame Target Points (").append(cartesianTargetPoints.size()).append("):\n");
                     for (int i = 0; i < cartesianTargetPoints.size(); i++)
@@ -173,8 +189,7 @@ public class ParsedCommand
                     sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
                     sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
                 }
-            }
-            else if (isIoCommand())
+            } else if (isIoCommand())
             {
                 sb.append("  --- IO Command ---\n");
                 if (ioCommandData != null)
@@ -184,21 +199,23 @@ public class ParsedCommand
                     sb.append("    IO Pin: ").append(ioCommandData.getIoPin()).append("\n");
                     sb.append("    IO State: ").append(ioCommandData.getIoState()).append("\n");
                 }
-            }
-            else if (isProgramCall())
+            } else if (isProgramCall())
             {
                 sb.append("  --- Program Call ---\n");
                 sb.append("  Program ID: ").append(programId).append("\n");
-            }
-            else
+                if (baseCoordinateData != null)
+                {
+                    sb.append("  Base Coordinate Data: ").append(baseCoordinateData.toString()).append("\n");
+                }
+            } else
             {
                 sb.append("  --- Unrecognized Command Type ---\n");
             }
 
             sb.append("}");
             return sb.toString();
-        }
-        catch (Exception e) {
+        } catch (Exception e)
+        {
             Logger.getInstance().error("PARSER", "Error parsing command: " + e.getMessage());
         }
         return "Lel";

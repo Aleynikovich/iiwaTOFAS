@@ -1456,8 +1456,8 @@
         <toolTemplate class="" defaultMotionFrameRef="/flange2gimatic" name="GimaticIxtur">
             <frames>
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="flange2gimatic">
-                    <transformation a="-2.000275053677684" b="0.01392525032669932" c="-0.004958171474898022" x="0.0" y="0.0" z="230.0"/>
-                    <measurementRotation method="ABC2Point" timestamp="1357012931002"/>
+                    <transformation a="1.957119527771724" b="0.016315583333386324" c="0.0" x="0.0" y="0.0" z="230.0"/>
+                    <measurementRotation method="ABCWorld5D" timestamp="1356995418712"/>
                 </frame>
                 <frame id="_d49cdb5c-3a5b-4e0d-b777-fd7506418d1e" name="flange">
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>

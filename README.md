@@ -184,6 +184,23 @@ The log client displays color-coded messages based on severity:
 
 Message format: `[timestamp] [LEVEL] [tag] message`
 
+**Controlling Log Verbosity:**
+
+The robot server supports configurable log levels to reduce log noise. By default, all logs (INFO, WARN, ERROR) are shown. You can change this in your robot application code:
+
+```java
+// Show only warnings and errors (recommended for production)
+Logger.getInstance().setMinimumLogLevel(LogLevel.WARN);
+
+// Show only critical errors
+Logger.getInstance().setMinimumLogLevel(LogLevel.ERROR);
+
+// Show all logs (default, useful for debugging)
+Logger.getInstance().setMinimumLogLevel(LogLevel.INFO);
+```
+
+See [LOG_FORMAT.md](LOG_FORMAT.md) for more details on log verbosity control.
+
 **Task Client** (for testing commands):
 ```bash
 python pythonUtils/task_client.py
@@ -415,6 +432,50 @@ FREE|ID|failure#  (on failure)
 111|0|0|0|0|0|0|0|0|cmd_place1#   # Place tool to T1Base
 ```
 
+#### Base Data Transmission (Optional for Any Program Call)
+
+Any program call can optionally include workpiece base coordinate data from ROS computer vision nodes. If present, the coordinates will be stored before executing the program routine.
+
+**Format:**
+```
+ACTION_TYPE||X;Y;Z;R;P;Y|||WORKPIECE_ID||||ID#
+```
+
+Where:
+- `ACTION_TYPE`: Any program call action (100+)
+- `X;Y;Z`: Position in millimeters (optional)
+- `R;P;Y`: Orientation in degrees (Roll, Pitch, Yaw) (optional)
+- `WORKPIECE_ID`: Type of workpiece (optional):
+  - 1 = Axis
+  - 2 = Drum
+  - 3 = Disk
+
+**Examples:**
+
+Sending base data with a pick tool command:
+```
+101||100;100;100;90;180;270|||2||||cmd_pick1#
+```
+
+This example:
+- Calls program 1 (pick tool from T1Base)
+- Stores position X=100mm, Y=100mm, Z=100mm
+- Stores orientation R=90°, P=180°, Y=270°
+- Identifies the workpiece as a Drum (ID 2)
+
+Standard command without base data still works:
+```
+101|0|0|0|0|0|0|0|0|cmd_pick1#
+```
+
+**Response:**
+```
+FREE|ID|success#  (on success)
+FREE|ID|failure#  (on failure)
+```
+
+The robot stores these coordinates as a base and workpiece type for subsequent kitting operations.
+
 #### Tool Gripper Control (Program IDs 101-102)
 
 Controls the tool's pneumatic gripper (open/close).
@@ -503,6 +564,7 @@ Commands are validated before execution, so malformed inputs won't crash the ser
 - **[KUKA Programming Guide](KUKA_PROGRAMMING_GUIDE.md)**: Comprehensive guide for programming KUKA robots using the Sunrise.OS API. Essential reading for AI agents and developers new to KUKA programming.
 - **[Tool Configuration Guide](TOOL_CONFIGURATION.md)**: Step-by-step guide for configuring and using tools with the robot control system
 - **[Log Format](LOG_FORMAT.md)**: Details of the JSON logging format
+- **[Log Verbosity Guide](LOG_VERBOSITY_GUIDE.md)**: How to control log verbosity levels (INFO, WARN, ERROR) to reduce log noise
 - **[Refactoring Guidelines](REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
 
 ## Contributing

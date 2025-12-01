@@ -16,12 +16,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * Centralized logging server that broadcasts log messages to all connected clients.
  * Runs as a background task and listens on port 30002.
- * 
+ * <p>
  * Architecture:
  * - Logger sends messages to this server via a queue
  * - Server broadcasts to all connected network clients (Python log clients)
  * - CommandExecutor connects as a client to receive logs for robot console output
- * 
+ * <p>
  * This design allows:
  * - All tasks (background and foreground) to log centrally
  * - Robot console to display all logs (via CommandExecutor's println)
@@ -31,22 +31,21 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
 {
     private static final int LOG_PORT = 30002;
     private static final int QUEUE_CAPACITY = 10000; // Large queue to prevent message loss
-    
+    private final Map<String, LogClientConnection> connectedClients = new ConcurrentHashMap<>();
+    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
     private ServerSocket serverSocket;
     private Thread listenerThread;
     private volatile boolean isRunning = false;
-    private final Map<String, LogClientConnection> connectedClients = new ConcurrentHashMap<>();
-    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
     private int clientCounter = 0;
 
     @Override
     public void initialize()
     {
         initializeCyclic(0, 10, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
-        
+
         // Register this server as a log handler so Logger sends messages here
         Logger.getInstance().addHandler(this);
-        
+
         // Start server listener in a separate thread
         listenerThread = new Thread(new Runnable()
         {
@@ -59,7 +58,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                     isRunning = true;
                     // Log via Logger so it goes through the central logging system
                     Logger.getInstance().log("LOG_SRV", "Started on port " + LOG_PORT);
-                    
+
                     while (isRunning)
                     {
                         try
@@ -67,15 +66,14 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                             Socket clientSocket = serverSocket.accept();
                             String clientIp = clientSocket.getInetAddress().getHostAddress();
                             String clientId = "LogClient-" + (++clientCounter);
-                            
+
                             // Log via Logger so it goes through the central logging system
                             Logger.getInstance().log("LOG_SRV", "New client connected: " + clientId + " (" + clientIp + ")");
-                            
+
                             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
                             LogClientConnection connection = new LogClientConnection(clientSocket, writer, clientId);
                             connectedClients.put(clientId, connection);
-                        }
-                        catch (IOException e)
+                        } catch (IOException e)
                         {
                             if (isRunning)
                             {
@@ -84,8 +82,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                             }
                         }
                     }
-                }
-                catch (IOException e)
+                } catch (IOException e)
                 {
                     // Log via Logger so it goes through the central logging system
                     Logger.getInstance().error("LOG_SRV", "Error starting server: " + e.getMessage());
@@ -94,7 +91,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         });
         listenerThread.setDaemon(true);
         listenerThread.start();
-        
+
         // Log via Logger so it goes through the central logging system
         Logger.getInstance().log("LOG_SRV", "Initialized successfully");
     }
@@ -110,19 +107,17 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             {
                 broadcastToClients(message);
             }
-        }
-        catch (InterruptedException e)
+        } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             // Catch any unexpected errors to prevent the cyclic task from stopping
             // Log via Logger so it goes through the central logging system
             Logger.getInstance().error("LOG_SRV", "Error in runCyclic: " + e.getMessage());
         }
     }
-    
+
     /**
      * Broadcasts a message to all connected clients.
      * Removes disconnected clients automatically.
@@ -133,32 +128,30 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         {
             String clientId = entry.getKey();
             LogClientConnection connection = entry.getValue();
-            
+
             if (connection.isConnected())
             {
                 try
                 {
                     connection.getWriter().print(message);
                     connection.getWriter().flush();
-                    
+
                     // Check if write failed
                     if (connection.getWriter().checkError())
                     {
                         closeClientConnection(clientId, connection);
                     }
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     closeClientConnection(clientId, connection);
                 }
-            }
-            else
+            } else
             {
                 closeClientConnection(clientId, connection);
             }
         }
     }
-    
+
     private void closeClientConnection(String clientId, LogClientConnection connection)
     {
         try
@@ -167,8 +160,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             connectedClients.remove(clientId);
             // Log via Logger so it goes through the central logging system
             Logger.getInstance().log("LOG_SRV", "Client disconnected: " + clientId);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             // Log via Logger so it goes through the central logging system
             Logger.getInstance().error("LOG_SRV", "Error closing connection for " + clientId + ": " + e.getMessage());
@@ -179,12 +171,12 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
     public void dispose()
     {
         super.dispose();
-        
+
         isRunning = false;
-        
+
         // Remove this handler from Logger
         Logger.getInstance().removeHandler(this);
-        
+
         // Close all client connections
         for (Map.Entry<String, LogClientConnection> entry : connectedClients.entrySet())
         {
@@ -193,43 +185,40 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             try
             {
                 connection.close();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 // Can't log during dispose as we've removed ourselves from Logger
             }
         }
         connectedClients.clear();
-        
+
         // Close server socket
         if (serverSocket != null && !serverSocket.isClosed())
         {
             try
             {
                 serverSocket.close();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 // Can't log during dispose as we've removed ourselves from Logger
             }
         }
-        
+
         // Wait for listener thread to finish
         if (listenerThread != null && listenerThread.isAlive())
         {
             try
             {
                 listenerThread.join(2000);
-            }
-            catch (InterruptedException e)
+            } catch (InterruptedException e)
             {
                 Thread.currentThread().interrupt();
             }
         }
     }
-    
+
     // LogHandler implementation
-    
+
     @Override
     public void sendMessage(String formattedMessage)
     {
@@ -242,20 +231,20 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             messageQueue.offer(formattedMessage);
         }
     }
-    
+
     @Override
     public boolean isActive()
     {
         return isRunning;
     }
-    
+
     @Override
     public void close()
     {
         // Called when removed from Logger
         isRunning = false;
     }
-    
+
     /**
      * Inner class to represent a log client connection
      */
@@ -264,29 +253,29 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         private final Socket socket;
         private final PrintWriter writer;
         private final String clientId;
-        
+
         public LogClientConnection(Socket socket, PrintWriter writer, String clientId)
         {
             this.socket = socket;
             this.writer = writer;
             this.clientId = clientId;
         }
-        
+
         public PrintWriter getWriter()
         {
             return writer;
         }
-        
+
         public String getClientId()
         {
             return clientId;
         }
-        
+
         public boolean isConnected()
         {
             return socket != null && socket.isConnected() && !socket.isClosed();
         }
-        
+
         public void close() throws IOException
         {
             if (writer != null)

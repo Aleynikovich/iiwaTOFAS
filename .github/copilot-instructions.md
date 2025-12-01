@@ -38,6 +38,7 @@ Background Task → Logger (Singleton) → LoggingServerManager → Network Clie
 - All logs from all tasks (foreground and background) appear on robot console
 - Multiple Python clients can simultaneously receive logs
 - Single responsibility: one server, one port, one function
+- Configurable log verbosity (INFO, WARN, ERROR levels) to control output volume
 
 ## Project Structure
 
@@ -169,6 +170,7 @@ When working on this project, refer to:
 - **[KUKA_PROGRAMMING_GUIDE.md](../KUKA_PROGRAMMING_GUIDE.md)**: Comprehensive guide for KUKA Sunrise.OS API programming
 - **[README.md](../README.md)**: Project overview, getting started, command protocol
 - **[LOG_FORMAT.md](../LOG_FORMAT.md)**: JSON logging format specification
+- **[LOG_VERBOSITY_GUIDE.md](../LOG_VERBOSITY_GUIDE.md)**: How to control log verbosity levels
 - **[REFACTORING_GUIDELINES.md](../REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
 - **[REFACTORING_PLAN.md](../REFACTORING_PLAN.md)**: Current refactoring status and future plans
 
@@ -186,7 +188,12 @@ When working on this project, refer to:
 
 ```java
 // Use Logger singleton for all logging
-Logger.getInstance().log(LogLevel.INFO, "TAG", "Message");
+Logger.getInstance().log("TAG", "Message");  // INFO level
+Logger.getInstance().warn("TAG", "Warning");  // WARN level
+Logger.getInstance().error("TAG", "Error");   // ERROR level
+
+// Control log verbosity (set once during initialization)
+Logger.getInstance().setMinimumLogLevel(LogLevel.WARN);  // Filter out INFO logs
 
 // Log levels: INFO, WARN, ERROR
 // Tags help categorize log messages (e.g., "PARSER", "MOTION", "CONNECTION")

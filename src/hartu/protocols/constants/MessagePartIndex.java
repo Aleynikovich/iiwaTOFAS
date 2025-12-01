@@ -5,7 +5,8 @@ package hartu.protocols.constants;
  * This improves readability and maintainability by replacing "magic numbers"
  * with meaningful enum names.
  */
-public enum MessagePartIndex {
+public enum MessagePartIndex
+{
     ACTION_TYPE(0),
     NUM_POINTS(1),
     TARGET_POINTS(2),
@@ -19,11 +20,13 @@ public enum MessagePartIndex {
 
     private final int index;
 
-    MessagePartIndex(int index) {
+    MessagePartIndex(int index)
+    {
         this.index = index;
     }
 
-    public int getIndex() {
+    public int getIndex()
+    {
         return index;
     }
 
