@@ -30,7 +30,7 @@ public class ClientHandler implements Runnable
             clientSession.getWriter().flush();
         } else
         {
-            Logger.getInstance().warn(
+            Logger.getInstance().error(
                     "COMM",
                     "ClientHandler (" + clientSession.getClientType().getName() + "): Attempted to send message before PrintWriter was initialized."
             );
