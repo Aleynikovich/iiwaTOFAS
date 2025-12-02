@@ -137,7 +137,11 @@ public class ProgramSubroutines
                     }
                 }
             }
-
+            while (toolController.getCurrentToolId() != toolId)
+            {	
+            	Thread.sleep(1000);
+            }
+            
             return true;
 
         } catch (Exception e)
@@ -218,9 +222,11 @@ public class ProgramSubroutines
                     }
                 }
             }
-
+            while (toolController.getCurrentToolId() != 0)
+            {	
+            	Thread.sleep(1000);
+            }
             return true;
-
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Exception during place tool operation for tool " + toolId + ": " + e.getMessage());
