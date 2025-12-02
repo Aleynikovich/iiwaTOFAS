@@ -745,7 +745,7 @@
                 <transformation a="-1.8122463560544853" b="-0.3662987971612569" c="-2.7430458687921555" x="198.33137007649674" y="-48.58452164190778" z="630.4033697720217"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356996048601"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/flange2gimatic" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.957119527771724" b="0.01631558333338632" c="0.0" x="0.0" y="0.0" z="230.0"/>
                     </info>
                 </additionalInformation>
@@ -761,7 +761,7 @@
                 <transformation a="3.0420282010779878" b="-0.014717619310511519" c="3.1414814915833413" x="-369.8354785476897" y="-512.5799340221713" z="283.9611287726268"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356996271527"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/flange2gimatic" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.957119527771724" b="0.01631558333338632" c="0.0" x="0.0" y="0.0" z="230.0"/>
                     </info>
                 </additionalInformation>
@@ -783,7 +783,7 @@
                 <transformation a="3.0420218878992524" b="-0.0149915509549989" c="-3.1413443535072765" x="-369.8425531790964" y="-638.1685615452883" z="282.3254037723005"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356996327127"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/flange2gimatic" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.957119527771724" b="0.01631558333338632" c="0.0" x="0.0" y="0.0" z="230.0"/>
                     </info>
                 </additionalInformation>
@@ -799,7 +799,7 @@
                 <transformation a="3.0462739250570228" b="-0.014947129722393614" c="3.141424768048471" x="-369.7397084379726" y="-457.66650165248905" z="398.7671856326956"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356996350914"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/flange2gimatic" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.957119527771724" b="0.01631558333338632" c="0.0" x="0.0" y="0.0" z="230.0"/>
                     </info>
                 </additionalInformation>
@@ -815,7 +815,7 @@
                 <transformation a="-0.8027157785820673" b="-0.24595892097697294" c="2.4196160218298077" x="-494.63708829877646" y="-432.78497148480136" z="275.6349594989139"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356996767691"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
                 </additionalInformation>
@@ -831,7 +831,7 @@
                 <transformation a="0.30025644630165943" b="0.006888352281655849" c="1.6371204359752476" x="-424.8189601049781" y="-503.5440564069619" z="240.7718435292744"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356996725062"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
                 </additionalInformation>
@@ -847,7 +847,7 @@
                 <transformation a="0.3004026670838395" b="0.02246244691531551" c="1.6418987141703243" x="-380.44908429154316" y="-646.909538067796" z="229.73672083632852"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356997144054"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
                 </additionalInformation>
@@ -863,7 +863,7 @@
                 <transformation a="0.300545632390025" b="0.022233438500134643" c="1.6419940230490149" x="-380.3439183994143" y="-646.9456269572379" z="233.431786496578"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356997837597"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
                 </additionalInformation>
@@ -879,7 +879,7 @@
                 <transformation a="0.3003548790983015" b="0.022518558839785367" c="1.6416374191194971" x="-380.34844115757335" y="-560.262070108485" z="233.68585099545948"/>
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1356997843833"/>
-                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/gripper2flange" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="1.9568672589412817" b="0.016235876914671456" c="0.050067963460824816" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
                     </info>
                 </additionalInformation>
@@ -1456,7 +1456,8 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticIxtur">
             <frames>
                 <frame id="_3b9d10c9-cd03-44a2-808b-b8ca9041f191" name="TCP">
-                    <transformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="230.0"/>
+                    <transformation a="1.957119527771724" b="0.016315583333386324" c="0.0" x="0.0" y="0.0" z="230.0"/>
+                    <measurementRotation method="ABCWorld5D" timestamp="1356995418712"/>
                 </frame>
                 <frame id="_d49cdb5c-3a5b-4e0d-b777-fd7506418d1e" name="flange">
                     <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="40.0"/>
@@ -1534,11 +1535,6 @@
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </workpieceTemplate>
         <toolTemplate class="" name="GimaticCircMagnet">
-            <frames>
-                <frame id="_01f139d0-b18a-42d6-87b2-5c43a1430ed8" name="TCP">
-                    <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
-                </frame>
-            </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-16.682703136966186" cogY="-64.53579237902936" cogZ="55.50233796614493" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.428565115040336"/>
         </toolTemplate>
         <toolTemplate class="" name="GimaticGripperR">

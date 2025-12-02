@@ -270,6 +270,7 @@ public class ProgramSubroutines
 
     public boolean placeAxisPlaceholder(Frame frame, int workpieceId)
     {
+
         return true;
     }
 
