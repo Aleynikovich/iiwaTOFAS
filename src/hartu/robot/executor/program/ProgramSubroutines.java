@@ -289,7 +289,7 @@ public class ProgramSubroutines
         logSubroutineCall("pickAxis", frame, workpieceId);
         Logger.getInstance().log("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
         Logger.getInstance().log("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
-
+        Ixtur.detach();
         Gripper.attachTo(robot.getFlange());
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P2")));
@@ -306,6 +306,7 @@ public class ProgramSubroutines
     {
         Logger.getInstance().log("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
         Logger.getInstance().log("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
+        Gripper.detach();
         Ixtur.attachTo(robot.getFlange());
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));

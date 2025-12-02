@@ -71,7 +71,6 @@ public class ToolController
             toolId += 16;
         }
 
-        Logger.getInstance().log("ROBOT_EXEC", "Current tool ID detected from digital inputs: " + toolId);
         return toolId;
     }
 
@@ -103,7 +102,7 @@ public class ToolController
             }
             gimaticIO.setDO_Flange2(true);
             gimaticIO.setDO_Flange1(false);
-            Thread.sleep(200);
+            Thread.sleep(600);
             toolControlIO.setOutput1(false);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput3(false);
@@ -137,7 +136,7 @@ public class ToolController
             toolControlIO.setOutput1(true);
             gimaticIO.setDO_Flange2(false);
             gimaticIO.setDO_Flange1(true);
-            Thread.sleep(300);
+            Thread.sleep(500);
             toolControlIO.setOutput1(false);
             Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " closed (vacuum on)");
             return true;
