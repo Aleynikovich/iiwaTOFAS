@@ -147,10 +147,9 @@ public class ParsedCommand
         {
 
             StringBuilder sb = new StringBuilder();
-            sb.append("\nParsedCommand {\n");
             sb.append("  ActionType: ").append(actionType).append(" (").append(actionType.getValue()).append(")\n");
-            sb.append("  Category: ").append(commandCategory).append("\n");
-            sb.append("  ID: ").append(id).append("\n");
+            //sb.append("  Category: ").append(commandCategory).append("\n");
+            //sb.append("  ID: ").append(id).append("\n");
 
             if (isMovementCommand())
             {
@@ -162,9 +161,18 @@ public class ParsedCommand
                     for (int i = 0; i < axisTargetPoints.size(); i++)
                     {
                         JointPosition pos = axisTargetPoints.get(i);
-                        sb.append("    Point ").append(i + 1).append(": J1=").append(Math.toDegrees(pos.get(0))).append(", J2=").append(Math.toDegrees(pos.get(1))).append(
-                                ", J3=").append(Math.toDegrees(pos.get(2))).append(", J4=").append(Math.toDegrees(pos.get(3))).append(", J5=").append(Math.toDegrees(pos.get(4))).append(
-                                ", J6=").append(Math.toDegrees(pos.get(5))).append(", J7=").append(Math.toDegrees(pos.get(6))).append("\n");
+                        // %4d means "integer with minimum width of 4"
+                        // %n adds a new line
+                        sb.append(String.format("    Point %2d: J1=%4d, J2=%4d, J3=%4d, J4=%4d, J5=%4d, J6=%4d, J7=%4d%n",
+                                i + 1,
+                                Math.round(Math.toDegrees(pos.get(0))),
+                                Math.round(Math.toDegrees(pos.get(1))),
+                                Math.round(Math.toDegrees(pos.get(2))),
+                                Math.round(Math.toDegrees(pos.get(3))),
+                                Math.round(Math.toDegrees(pos.get(4))),
+                                Math.round(Math.toDegrees(pos.get(5))),
+                                Math.round(Math.toDegrees(pos.get(6)))
+                        ));
                     }
                 } else if (cartesianTargetPoints != null)
                 {
@@ -172,9 +180,16 @@ public class ParsedCommand
                     for (int i = 0; i < cartesianTargetPoints.size(); i++)
                     {
                         Frame pos = cartesianTargetPoints.get(i);
-                        sb.append("    Point ").append(i + 1).append(": X=").append(pos.getX()).append(", Y=").append(pos.getY()).append(
-                                ", Z=").append(pos.getZ()).append(", A=").append(Math.toDegrees(pos.getAlphaRad())).append(", B=").append(Math.toDegrees(pos.getBetaRad())).append(
-                                ", C=").append(Math.toDegrees(pos.getGammaRad())).append("\n");
+                        // XYZ usually need more space (e.g., 1500mm), so using %5d
+                        sb.append(String.format("    Point %2d: X=%5d, Y=%5d, Z=%5d, A=%4d, B=%4d, C=%4d%n",
+                                i + 1,
+                                Math.round(pos.getX()),
+                                Math.round(pos.getY()),
+                                Math.round(pos.getZ()),
+                                Math.round(Math.toDegrees(pos.getAlphaRad())),
+                                Math.round(Math.toDegrees(pos.getBetaRad())),
+                                Math.round(Math.toDegrees(pos.getGammaRad()))
+                        ));
                     }
                 }
 
@@ -186,8 +201,8 @@ public class ParsedCommand
                             "\n");
                     sb.append("    Base: ").append(motionParameters.getBase().isEmpty() ? "[Default]" : motionParameters.getBase()).append(
                             "\n");
-                    sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
-                    sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
+                    //sb.append("    Continuous: ").append(motionParameters.isContinuous()).append("\n");
+                    //sb.append("    Num Points: ").append(motionParameters.getNumPoints()).append("\n");
                 }
             } else if (isIoCommand())
             {
