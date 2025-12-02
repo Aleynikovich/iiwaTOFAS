@@ -10,6 +10,7 @@ import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
 
+import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptp;
 
 /**
@@ -24,7 +25,7 @@ public class ProgramSubroutines
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
-    private final Tool gimaticCameraTool, vacTool;
+    private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
 
     // Stored base coordinate data from ROS computer vision nodes
     private BaseCoordinateData currentBaseCoordinateData;
@@ -48,6 +49,8 @@ public class ProgramSubroutines
         {
             this.gimaticCameraTool = application.getApplicationData().createFromTemplate("GimaticCamera");
             this.vacTool = application.getApplicationData().createFromTemplate("GimaticVac1");
+            this.Ixtur = application.getApplicationData().createFromTemplate("GimaticIxtur");
+            this.Gripper = application.getApplicationData().createFromTemplate("GimaticGripperV");
             if (this.gimaticCameraTool != null)
             {
                 Logger.getInstance().log("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
@@ -264,13 +267,33 @@ public class ProgramSubroutines
     public boolean pickAxis(Frame frame, int workpieceId)
     {
         logSubroutineCall("pickAxis", frame, workpieceId);
+        Logger.getInstance().log("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
+        Logger.getInstance().log("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
+
+        Gripper.attachTo(robot.getFlange());
+        Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
+        Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P2")));
+        Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P3Pick")));
+        toolController.closeTool(4);
+        Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P4")));
+        Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P5")));
+        Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P6")));
 
         return true;
     }
 
     public boolean placeAxisPlaceholder(Frame frame, int workpieceId)
     {
+        Logger.getInstance().log("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
+        Logger.getInstance().log("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
+        Ixtur.attachTo(robot.getFlange());
 
+        Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
+        Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P2")));
+        Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P3")));
+        Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P4Place")));
+        toolController.openTool(5);
+        Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P5")));
         return true;
     }
 
