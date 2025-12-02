@@ -288,7 +288,7 @@ public class ProgramSubroutines
         Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P3Pick")));
         toolController.closeTool(4);
         Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P4")));
-        Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P5")));
+        Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P5")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P6")));
 
         return true;
@@ -301,7 +301,7 @@ public class ProgramSubroutines
         Ixtur.attachTo(robot.getFlange());
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
-        Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P2")));
+        Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P2")));
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P3")));
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P4Place")));
         toolController.openTool(5);
