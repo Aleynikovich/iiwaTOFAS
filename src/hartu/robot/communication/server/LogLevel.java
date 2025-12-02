@@ -1,19 +1,25 @@
 package hartu.robot.communication.server;
 
 /**
- * Enumeration for log severity levels with numeric ordering.
- * Lower ordinal values represent higher verbosity.
+ * Enumeration for log priority levels with numeric ordering.
+ * Lower values represent higher priority (more important logs).
  * <p>
- * Usage:
- * - INFO: Detailed operational messages for debugging and development
- * - WARN: Warning messages for recoverable issues
- * - ERROR: Error messages for failures and critical issues
+ * Priority Levels:
+ * - CRITICAL (0): Must-have logs that should ALWAYS be shown (parsed commands, critical operations)
+ * - HIGH (1): High-priority logs including errors and important status messages
+ * - MEDIUM (2): Medium-priority logs including warnings and important state changes
+ * - LOW (3): Low-priority logs like execution progress and motion operations
+ * - DEBUG (4): Debug/trace logs like queue operations and connection events
+ * <p>
+ * Default minimum level is MEDIUM (2), showing priorities 0, 1, and 2.
  */
 public enum LogLevel
 {
-    INFO(0),    // Most verbose - shows all logs
-    WARN(1),    // Shows warnings and errors only
-    ERROR(2);   // Least verbose - shows only critical errors
+    CRITICAL(0),  // Must-have logs (always shown)
+    HIGH(1),      // High priority (errors, important status)
+    MEDIUM(2),    // Medium priority (warnings, state changes) - DEFAULT
+    LOW(3),       // Low priority (execution progress)
+    DEBUG(4);     // Debug/trace (verbose operations)
 
     private final int value;
 
@@ -23,10 +29,10 @@ public enum LogLevel
     }
 
     /**
-     * Gets the numeric value of this log level.
-     * Lower values indicate higher verbosity.
+     * Gets the numeric priority value of this log level.
+     * Lower values indicate higher priority.
      *
-     * @return The numeric value
+     * @return The numeric priority value (0-4)
      */
     public int getValue()
     {
@@ -35,12 +41,13 @@ public enum LogLevel
 
     /**
      * Checks if this log level should be logged given the minimum configured level.
+     * A log is shown if its priority value is less than or equal to the minimum level.
      *
      * @param minimumLevel The minimum log level configured
      * @return true if this level should be logged, false otherwise
      */
     public boolean shouldLog(LogLevel minimumLevel)
     {
-        return this.value >= minimumLevel.value;
+        return this.value <= minimumLevel.value;
     }
 }

@@ -10,11 +10,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Supports simultaneous logging to robot console and network clients.
  * Thread-safe implementation for use from multiple tasks.
  * <p>
- * Log Verbosity:
- * - The logger supports configurable minimum log level filtering
- * - Default level is INFO (shows all logs)
+ * Log Priority System:
+ * - The logger supports priority-based filtering (0-4, lower = higher priority)
+ * - Default level is MEDIUM (priority 2), showing priorities 0, 1, and 2
  * - Can be changed at runtime via setMinimumLogLevel()
- * - Example: setMinimumLogLevel(LogLevel.WARN) to show only WARN and ERROR
+ * - Priority Levels:
+ *   - CRITICAL (0): Must-have logs (parsed commands, critical operations)
+ *   - HIGH (1): Errors and important status messages
+ *   - MEDIUM (2): Warnings and important state changes [DEFAULT]
+ *   - LOW (3): Execution progress and motion operations
+ *   - DEBUG (4): Verbose debug/trace information
+ * - Example: setMinimumLogLevel(LogLevel.HIGH) to show only priorities 0 and 1
  */
 public class Logger
 {
@@ -27,7 +33,7 @@ public class Logger
     {
         this.timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
         this.handlers = new CopyOnWriteArrayList<>();
-        this.minimumLogLevel = LogLevel.INFO; // Default: show all logs
+        this.minimumLogLevel = LogLevel.MEDIUM; // Default: show priorities 0, 1, 2
     }
 
     public static synchronized Logger getInstance()
@@ -95,9 +101,9 @@ public class Logger
 
     /**
      * Sets the minimum log level that will be broadcast to handlers.
-     * Messages below this level will be filtered out.
+     * Messages with priority higher than this level will be filtered out.
      *
-     * @param level The minimum log level (INFO, WARN, or ERROR)
+     * @param level The minimum log level (CRITICAL=0, HIGH=1, MEDIUM=2, LOW=3, DEBUG=4)
      */
     public void setMinimumLogLevel(LogLevel level)
     {
@@ -122,24 +128,120 @@ public class Logger
         }
     }
 
-    public void log(String tag, String message)
+    /**
+     * Logs a message with the specified priority level.
+     *
+     * @param level   The priority level (CRITICAL, HIGH, MEDIUM, LOW, DEBUG)
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void log(LogLevel level, String tag, String message)
     {
-        logWithLevel(LogLevel.INFO, tag, message);
+        logWithLevel(level, tag, message);
     }
 
-    public void warn(String tag, String message)
+    /**
+     * Logs a message with CRITICAL priority (priority 0).
+     * Use for must-have logs that should always be shown.
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void critical(String tag, String message)
     {
-        logWithLevel(LogLevel.WARN, tag, message);
+        logWithLevel(LogLevel.CRITICAL, tag, message);
     }
 
+    /**
+     * Logs a message with HIGH priority (priority 1).
+     * Use for errors and important status messages.
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void high(String tag, String message)
+    {
+        logWithLevel(LogLevel.HIGH, tag, message);
+    }
+
+    /**
+     * Logs a message with MEDIUM priority (priority 2).
+     * Use for warnings and important state changes.
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void medium(String tag, String message)
+    {
+        logWithLevel(LogLevel.MEDIUM, tag, message);
+    }
+
+    /**
+     * Logs a message with LOW priority (priority 3).
+     * Use for execution progress and motion operations.
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void low(String tag, String message)
+    {
+        logWithLevel(LogLevel.LOW, tag, message);
+    }
+
+    /**
+     * Logs a message with DEBUG priority (priority 4).
+     * Use for verbose debug/trace information.
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void debug(String tag, String message)
+    {
+        logWithLevel(LogLevel.DEBUG, tag, message);
+    }
+
+    /**
+     * Logs an error with HIGH priority (priority 1).
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
     public void error(String tag, String message)
     {
-        logWithLevel(LogLevel.ERROR, tag, message);
+        logWithLevel(LogLevel.HIGH, tag, message);
     }
 
+    /**
+     * Logs an error with HIGH priority (priority 1) and exception details.
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     * @param t       The throwable to log
+     */
     public void error(String tag, String message, Throwable t)
     {
-        logWithLevel(LogLevel.ERROR, tag, message + " - Exception: " + t.toString());
+        logWithLevel(LogLevel.HIGH, tag, message + " - Exception: " + t.toString());
+    }
+
+    /**
+     * Logs a warning with MEDIUM priority (priority 2).
+     *
+     * @param tag     Component identifier
+     * @param message The log message
+     */
+    public void warn(String tag, String message)
+    {
+        logWithLevel(LogLevel.MEDIUM, tag, message);
+    }
+
+    /**
+     * @deprecated Use log(LogLevel, String, String) with explicit priority level instead.
+     * This method defaults to DEBUG priority for backward compatibility.
+     */
+    @Deprecated
+    public void log(String tag, String message)
+    {
+        logWithLevel(LogLevel.DEBUG, tag, message);
     }
 
     /**
