@@ -69,13 +69,13 @@ public class ProgramExecutor
             int workpieceId = getWorkpieceIdFromCommand(command);
 
             // Pick tool operations (program IDs 1-3)
-            if (programId >= 1 && programId <= 3)
+            if (programId >= 1 && programId <= 6)
             {
                 int toolId = programId; // Tool ID matches program ID (1-3)
                 return programSubroutines.pickTool(toolId);
             }
             // Place tool operations (program IDs 11-13)
-            else if (programId >= 11 && programId <= 13)
+            else if (programId >= 11 && programId <= 16)
             {
                 int toolId = programId - 10; // Tool ID is program ID minus 10 (11->1, 12->2, 13->3)
                 return programSubroutines.placeTool(toolId);

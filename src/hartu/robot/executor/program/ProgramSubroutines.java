@@ -79,7 +79,7 @@ public class ProgramSubroutines
             return false;
         }
 
-        if (toolId < 1 || toolId > 3)
+        if (toolId < 1 || toolId > 6)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-3.");
             return false;
@@ -90,7 +90,12 @@ public class ProgramSubroutines
             Logger.getInstance().error("ROBOT_EXEC", "GimaticCamera tool not loaded. Cannot execute pick operation.");
             return false;
         }
-
+        
+        if (toolId > 3)
+		{
+    		toolId = toolId - 3;
+		}
+        
         String baseName = "T" + toolId + "Base";
 
         try
@@ -157,7 +162,7 @@ public class ProgramSubroutines
             return false;
         }
 
-        if (toolId < 1 || toolId > 3)
+        if (toolId < 1 || toolId > 6)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-3.");
             return false;
@@ -168,7 +173,10 @@ public class ProgramSubroutines
             Logger.getInstance().error("ROBOT_EXEC", "GimaticCamera tool not loaded. Cannot execute place operation.");
             return false;
         }
-
+        if (toolId > 3)
+        {
+        	toolId = toolId - 3;
+        }
         String baseName = "T" + toolId + "Base";
 
         try
