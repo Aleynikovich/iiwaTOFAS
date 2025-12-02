@@ -20,11 +20,11 @@ public class CommandQueue
         try
         {
             queue.put(resultHolder);
-            Logger.getInstance().log("QUEUE", "Added command ID " + resultHolder.getCommand().getId() + " to queue. Queue size: " + queue.size());
+            Logger.getInstance().debug("QUEUE", "Added command ID " + resultHolder.getCommand().getId() + " to queue. Queue size: " + queue.size());
         } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-            Logger.getInstance().log("QUEUE", "Error: Interrupted while trying to put command: " + e.getMessage());
+            Logger.getInstance().debug("QUEUE", "Error: Interrupted while trying to put command: " + e.getMessage());
         }
     }
 
@@ -34,11 +34,11 @@ public class CommandQueue
         try
         {
             resultHolder = queue.take();
-            Logger.getInstance().log("QUEUE", "Took command ID " + resultHolder.getCommand().getId() + " from queue. Queue size: " + queue.size());
+            Logger.getInstance().debug("QUEUE", "Took command ID " + resultHolder.getCommand().getId() + " from queue. Queue size: " + queue.size());
         } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-            Logger.getInstance().log("QUEUE", "Error: Interrupted while trying to take command: " + e.getMessage());
+            Logger.getInstance().debug("QUEUE", "Error: Interrupted while trying to take command: " + e.getMessage());
         }
         return resultHolder;
     }
@@ -49,7 +49,7 @@ public class CommandQueue
         // Check if thread is already interrupted before attempting to poll
         if (Thread.currentThread().isInterrupted())
         {
-            Logger.getInstance().log("QUEUE", "Thread is interrupted, skipping poll operation");
+            Logger.getInstance().debug("QUEUE", "Thread is interrupted, skipping poll operation");
             return null;
         }
         try
@@ -57,15 +57,15 @@ public class CommandQueue
             resultHolder = queue.poll(timeout, unit);
             if (resultHolder != null)
             {
-                Logger.getInstance().log("QUEUE", "Polled command ID " + resultHolder.getCommand().getId() + " from queue. Queue size: " + queue.size());
+                Logger.getInstance().debug("QUEUE", "Polled command ID " + resultHolder.getCommand().getId() + " from queue. Queue size: " + queue.size());
             } else
             {
-                // Logger.getInstance().log("QUEUE", "No command available after " + timeout + " " + unit.name().toLowerCase() + "."); // Keep this commented if you want to avoid frequent logs
+                // Logger.getInstance().debug("QUEUE", "No command available after " + timeout + " " + unit.name().toLowerCase() + "."); // Keep this commented if you want to avoid frequent logs
             }
         } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-            Logger.getInstance().log("QUEUE", "Error: Interrupted while trying to poll command: " + e.getMessage());
+            Logger.getInstance().debug("QUEUE", "Error: Interrupted while trying to poll command: " + e.getMessage());
         }
         return resultHolder;
     }
@@ -100,7 +100,7 @@ public class CommandQueue
             holder.getLatch().countDown();
         }
 
-        Logger.getInstance().log("QUEUE", "Flushed queue: removed " + removedCount + " pending command(s)");
+        Logger.getInstance().debug("QUEUE", "Flushed queue: removed " + removedCount + " pending command(s)");
         return removedCount;
     }
 }

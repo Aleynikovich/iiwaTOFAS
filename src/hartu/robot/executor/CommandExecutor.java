@@ -14,6 +14,7 @@ import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
 import hartu.robot.communication.server.CommandResultHolder;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 import hartu.robot.executor.io.IoExecutor;
 import hartu.robot.executor.io.ToolController;
 import hartu.robot.executor.motion.MotionExecutor;
@@ -71,7 +72,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
 
-        Logger.getInstance().log("ROBOT_EXEC", "Initializing CommandExecutor.");
+        Logger.getInstance().debug("ROBOT_EXEC", "Initializing CommandExecutor.");
 
         // Initialize tool ID to name mapping
         toolMapping = new ToolMapping();
@@ -97,22 +98,22 @@ public class CommandExecutor extends RoboticsAPIApplication
         int flushedCount = CommandQueue.flushQueue();
         if (flushedCount > 0)
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Cleared " + flushedCount + " stale command(s) from queue on initialization.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Cleared " + flushedCount + " stale command(s) from queue on initialization.");
         }
 
         // Move robot to home position after flushing queue
         try
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Moving robot to home position...");
+            Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
             iiwa.move(ptpHome().setJointVelocityRel(0.2));
-            Logger.getInstance().log("ROBOT_EXEC", "Robot successfully moved to home position.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
 
-        Logger.getInstance().log("ROBOT_EXEC", "Ready to take commands from queue.");
+        Logger.getInstance().debug("ROBOT_EXEC", "Ready to take commands from queue.");
     }
 
     /**
@@ -137,7 +138,7 @@ public class CommandExecutor extends RoboticsAPIApplication
                 {
                     // Store in registry but don't attach yet
                     toolRegistry.put(toolName, tool);
-                    Logger.getInstance().log("ROBOT_EXEC", "Tool ID " + toolId + " ('" + toolName + "') loaded successfully.");
+                    Logger.getInstance().debug("ROBOT_EXEC", "Tool ID " + toolId + " ('" + toolName + "') loaded successfully.");
                     loadedCount++;
                 }
             } catch (Exception e)
@@ -148,10 +149,10 @@ public class CommandExecutor extends RoboticsAPIApplication
 
         if (loadedCount == 0)
         {
-            Logger.getInstance().log("ROBOT_EXEC", "No tools loaded. Commands with tool ID 0 will use robot flange.");
+            Logger.getInstance().debug("ROBOT_EXEC", "No tools loaded. Commands with tool ID 0 will use robot flange.");
         } else
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Loaded " + loadedCount + " tool(s). Tools will be attached dynamically based on command tool ID.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Loaded " + loadedCount + " tool(s). Tools will be attached dynamically based on command tool ID.");
         }
     }
 
@@ -175,7 +176,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Check if this tool is already attached
         if (currentlyAttachedToolName != null && currentlyAttachedToolName.equals(toolName))
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Tool '" + toolName + "' (ID " + toolId + ") already attached. No change needed.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Tool '" + toolName + "' (ID " + toolId + ") already attached. No change needed.");
             return currentlyAttachedTool;
         }
 
@@ -193,7 +194,7 @@ public class CommandExecutor extends RoboticsAPIApplication
             try
             {
                 currentlyAttachedTool.detach();
-                Logger.getInstance().log("ROBOT_EXEC", "Detached previous tool '" + currentlyAttachedToolName + "'.");
+                Logger.getInstance().debug("ROBOT_EXEC", "Detached previous tool '" + currentlyAttachedToolName + "'.");
             } catch (Exception e)
             {
                 Logger.getInstance().error("ROBOT_EXEC", "Failed to detach previous tool '" + currentlyAttachedToolName + "': " + e.getMessage());
@@ -206,7 +207,7 @@ public class CommandExecutor extends RoboticsAPIApplication
             tool.attachTo(iiwa.getFlange());
             currentlyAttachedTool = tool;
             currentlyAttachedToolName = toolName;
-            Logger.getInstance().log("ROBOT_EXEC", "Attached tool '" + toolName + "' (ID " + toolId + ") to robot flange.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Attached tool '" + toolName + "' (ID " + toolId + ") to robot flange.");
             return tool;
         } catch (Exception e)
         {
@@ -267,7 +268,7 @@ public class CommandExecutor extends RoboticsAPIApplication
                 int flushedCount = CommandQueue.flushQueue();
                 if (flushedCount > 0)
                 {
-                    Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after motion failure.");
+                    Logger.getInstance().debug("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after motion failure.");
                 }
 
                 // Return Ignore to prevent application termination and allow continued operation
@@ -278,7 +279,7 @@ public class CommandExecutor extends RoboticsAPIApplication
 
         // Register the error handler with the application controller
         getApplicationControl().registerMoveAsyncErrorHandler(moveAsyncErrorHandler);
-        Logger.getInstance().log("ROBOT_EXEC", "Registered moveAsync error handler for graceful failure handling.");
+        Logger.getInstance().debug("ROBOT_EXEC", "Registered moveAsync error handler for graceful failure handling.");
     }
 
     /**
@@ -299,13 +300,13 @@ public class CommandExecutor extends RoboticsAPIApplication
     {
         // Main execution loop - runs indefinitely until application is stopped
         // All exceptions are caught and logged without terminating the loop
-        Logger.getInstance().log("ROBOT_EXEC", "Starting main execution loop.");
+        Logger.getInstance().debug("ROBOT_EXEC", "Starting main execution loop.");
         while (true)
         {
             // Check for intentional shutdown signal at the start of each iteration
             if (Thread.currentThread().isInterrupted())
             {
-                Logger.getInstance().log("ROBOT_EXEC", "Shutdown signal received, exiting execution loop gracefully.");
+                Logger.getInstance().debug("ROBOT_EXEC", "Shutdown signal received, exiting execution loop gracefully.");
                 break;
             }
 
@@ -322,7 +323,7 @@ public class CommandExecutor extends RoboticsAPIApplication
                     mediaFlangeIO.setLEDBlue(false);
                     mediaFlangeIO.setLedGreen(true);
                     ParsedCommand command = resultHolder.getCommand();
-                    Logger.getInstance().log("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
+                    Logger.getInstance().debug("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
                     boolean executionSuccess = false;
 
                     try
@@ -367,7 +368,7 @@ public class CommandExecutor extends RoboticsAPIApplication
                             int flushedCount = CommandQueue.flushQueue();
                             if (flushedCount > 0)
                             {
-                                Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after failure.");
+                                Logger.getInstance().debug("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after failure.");
                             }
                             mediaFlangeIO.setLedRed(true);
                             mediaFlangeIO.setLEDBlue(false);
@@ -381,7 +382,7 @@ public class CommandExecutor extends RoboticsAPIApplication
 
                         resultHolder.setSuccess(executionSuccess);
                         resultHolder.getLatch().countDown();
-                        Logger.getInstance().log("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
+                        Logger.getInstance().debug("ROBOT_EXEC", "Signaled completion for command ID " + command.getId() + ". Success: " + executionSuccess);
                     }
                 }
             } catch (Throwable t)
@@ -390,7 +391,7 @@ public class CommandExecutor extends RoboticsAPIApplication
                 // This is the ultimate safety net - prevents the entire run loop from exiting
                 Logger.getInstance().error("ROBOT_EXEC", "Unexpected error in main execution loop: " + t.getClass().getName() + " - " + t.getMessage());
                 Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", t instanceof Exception ? (Exception) t : new Exception("Throwable wrapper", t));
-                Logger.getInstance().log("ROBOT_EXEC", "Recovering from error and continuing execution...");
+                Logger.getInstance().debug("ROBOT_EXEC", "Recovering from error and continuing execution...");
                 // Brief pause to prevent tight error loops
                 try
                 {
@@ -398,19 +399,19 @@ public class CommandExecutor extends RoboticsAPIApplication
                 } catch (InterruptedException ie)
                 {
                     Thread.currentThread().interrupt();
-                    Logger.getInstance().log("ROBOT_EXEC", "Sleep interrupted during error recovery - shutdown signal detected, exiting...");
+                    Logger.getInstance().debug("ROBOT_EXEC", "Sleep interrupted during error recovery - shutdown signal detected, exiting...");
                     break;
                 }
             }
         }
-        Logger.getInstance().log("ROBOT_EXEC", "CommandExecutor run method is exiting.");
+        Logger.getInstance().debug("ROBOT_EXEC", "CommandExecutor run method is exiting.");
     }
 
 
     @Override
     public void dispose()
     {
-        Logger.getInstance().log("ROBOT_EXEC", "Disposing CommandExecutor.");
+        Logger.getInstance().debug("ROBOT_EXEC", "Disposing CommandExecutor.");
 
         // Stop robot console client
         if (consoleClient != null)

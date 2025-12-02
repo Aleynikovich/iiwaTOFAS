@@ -39,14 +39,14 @@ public class ServerPortListener implements Runnable
             }
         } catch (IOException e)
         {
-            Logger.getInstance().log("COMM", listenerType.getName() + ": Error closing server socket during shutdown: " + e.getMessage());
+            Logger.getInstance().debug("COMM", listenerType.getName() + ": Error closing server socket during shutdown: " + e.getMessage());
         }
     }
 
     @Override
     public void run()
     {
-        Logger.getInstance().log("COMM", listenerType.getName() + " started listening on port " + serverSocket.getLocalPort());
+        Logger.getInstance().debug("COMM", listenerType.getName() + " started listening on port " + serverSocket.getLocalPort());
 
         // NOTE: Removed try-with-resources to avoid "ServerSocket not AutoCloseable" error
         // The finally block handles socket closing, making this equivalent.
@@ -56,7 +56,7 @@ public class ServerPortListener implements Runnable
 
             while (isRunning)
             {
-                Logger.getInstance().log("COMM", listenerType.getName() + ": Waiting for a new client to connect...");
+                Logger.getInstance().debug("COMM", listenerType.getName() + ": Waiting for a new client to connect...");
                 Socket clientSocket;
                 try
                 {
@@ -65,11 +65,11 @@ public class ServerPortListener implements Runnable
                 {
                     if (!isRunning)
                     {
-                        Logger.getInstance().log("COMM", listenerType.getName() + ": Server socket closed, listener shutting down gracefully.");
+                        Logger.getInstance().debug("COMM", listenerType.getName() + ": Server socket closed, listener shutting down gracefully.");
                         break;
                     } else
                     {
-                        Logger.getInstance().log("COMM", listenerType.getName() + ": Listener I/O error (unexpected): " + e.getMessage());
+                        Logger.getInstance().debug("COMM", listenerType.getName() + ": Listener I/O error (unexpected): " + e.getMessage());
                         continue;
                     }
                 }
@@ -83,7 +83,7 @@ public class ServerPortListener implements Runnable
                     serverInstance.clientIpToNameMap.put(clientIp, clientName);
                 }
 
-                Logger.getInstance().log("COMM", listenerType.getName() + ": Client " + clientName + " (" + clientIp + ") connected.");
+                Logger.getInstance().debug("COMM", listenerType.getName() + ": Client " + clientName + " (" + clientIp + ") connected.");
 
                 ClientSession session = new ClientSession(clientSocket, listenerType, clientName);
                 ClientHandler handler = new ClientHandler(session);
@@ -99,12 +99,12 @@ public class ServerPortListener implements Runnable
                 if (listenerType == ListenerType.TASK_LISTENER)
                 {
                     handler.sendMessage(ProtocolConstants.INITIAL_TASK_CLIENT_RESPONSE);
-                    Logger.getInstance().log("COMM", "Sent '" + ProtocolConstants.INITIAL_TASK_CLIENT_RESPONSE + "' to new task client " + clientName + " (" + clientIp + ")");
+                    Logger.getInstance().debug("COMM", "Sent '" + ProtocolConstants.INITIAL_TASK_CLIENT_RESPONSE + "' to new task client " + clientName + " (" + clientIp + ")");
                 }
             }
         } catch (IOException e)
         {
-            Logger.getInstance().log("COMM", listenerType.getName() + ": Listener I/O error (initialization or unexpected): " + e.getMessage());
+            Logger.getInstance().debug("COMM", listenerType.getName() + ": Listener I/O error (initialization or unexpected): " + e.getMessage());
         } finally
         {
             // This logic is now explicitly responsible for closing the socket
@@ -115,7 +115,7 @@ public class ServerPortListener implements Runnable
                     serverSocket.close();
                 } catch (IOException e)
                 {
-                    Logger.getInstance().log("COMM", listenerType.getName() + ": Error closing server socket in finally block: " + e.getMessage());
+                    Logger.getInstance().debug("COMM", listenerType.getName() + ": Error closing server socket in finally block: " + e.getMessage());
                 }
             }
         }

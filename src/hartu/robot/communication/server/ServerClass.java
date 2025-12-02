@@ -42,7 +42,7 @@ public class ServerClass implements IClientHandlerCallback
         this.clientIpToNameMap = new ConcurrentHashMap<>();
         this.clientNameCounter = new AtomicInteger(0);
 
-        Logger.getInstance().log("SERVER", "Server initialized on port " + port + " for " + listenerType.getName());
+        Logger.getInstance().debug("SERVER", "Server initialized on port " + port + " for " + listenerType.getName());
     }
 
     public void start()
@@ -50,12 +50,12 @@ public class ServerClass implements IClientHandlerCallback
         listenerThread = new Thread(portListener);
         listenerThread.setDaemon(true);
         listenerThread.start();
-        Logger.getInstance().log("SERVER", "Server listener started for " + listenerType.getName());
+        Logger.getInstance().debug("SERVER", "Server listener started for " + listenerType.getName());
     }
 
     public void stop() throws IOException
     {
-        Logger.getInstance().log("SERVER", "Stopping server listener...");
+        Logger.getInstance().debug("SERVER", "Stopping server listener...");
 
         if (portListener != null)
         {
@@ -84,7 +84,7 @@ public class ServerClass implements IClientHandlerCallback
             clientHandler.close();
         }
 
-        Logger.getInstance().log("SERVER", "Server stopped");
+        Logger.getInstance().debug("SERVER", "Server stopped");
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ServerClass implements IClientHandlerCallback
 
         this.clientHandler = handler;
 
-        Logger.getInstance().log("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
+        Logger.getInstance().debug("SERVER", "Client " + clientName + " (" + clientIp + ") connected to " + listenerType.getName());
     }
 
     public String getClientName(String ipAddress)

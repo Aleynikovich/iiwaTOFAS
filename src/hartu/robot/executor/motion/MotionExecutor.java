@@ -10,6 +10,7 @@ import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class MotionExecutor
     public boolean executeMotion(ParsedCommand command)
     {
         ActionTypes actionType = command.getActionType();
-        Logger.getInstance().log("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId());
+        Logger.getInstance().low("ROBOT_EXEC", "Executing " + actionType.name() + " command ID " + command.getId());
 
         List<IMotion> motions;
 
@@ -138,12 +139,12 @@ public class MotionExecutor
                 // Use tool's default motion frame for execution
                 // This ensures proper TCP (Tool Center Point) control
                 container = selectedTool.moveAsync(motionToExecute);
-                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with tool '" + selectedTool.getName() + "' (ID " + toolId + ") TCP.");
+                Logger.getInstance().debug("ROBOT_EXEC", "Executing motion with tool '" + selectedTool.getName() + "' (ID " + toolId + ") TCP.");
             } else
             {
                 // Use robot directly when tool not available
                 container = robot.moveAsync(motionToExecute);
-                Logger.getInstance().log("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + " not available).");
+                Logger.getInstance().debug("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + " not available).");
             }
             container.await();
 
@@ -154,7 +155,7 @@ public class MotionExecutor
                 motionSuccess = false;
             } else
             {
-                Logger.getInstance().log("ROBOT_EXEC", "Motion for command ID " + command.getId() + " completed successfully.");
+                Logger.getInstance().debug("ROBOT_EXEC", "Motion for command ID " + command.getId() + " completed successfully.");
             }
 
         } catch (Throwable t)
