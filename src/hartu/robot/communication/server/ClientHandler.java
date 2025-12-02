@@ -30,7 +30,7 @@ public class ClientHandler implements Runnable
             clientSession.getWriter().flush();
         } else
         {
-            Logger.getInstance().log(
+            Logger.getInstance().warn(
                     "COMM",
                     "ClientHandler (" + clientSession.getClientType().getName() + "): Attempted to send message before PrintWriter was initialized."
             );
@@ -57,7 +57,7 @@ public class ClientHandler implements Runnable
     {
         clientSession.close();
 
-        Logger.getInstance().log(
+        Logger.getInstance().debug(
                 "COMM",
                 "ClientHandler (" + clientSession.getClientType().getName() + "): Client session closed for " + clientSession.getRemoteAddress()
         );
@@ -69,7 +69,7 @@ public class ClientHandler implements Runnable
         String clientAddress = clientSession.getRemoteAddress();
         String listenerName = clientSession.getClientType().getName();
 
-        Logger.getInstance().log(
+        Logger.getInstance().debug(
                 "COMM",
                 "ClientHandler (" + listenerName + "): Started for client " + clientAddress + " (Session ID: " + clientSession.getSessionId() + ")"
         );
@@ -87,7 +87,7 @@ public class ClientHandler implements Runnable
                     {
                         String receivedMessage = messageBuilder.toString();
 
-                        Logger.getInstance().log(
+                        Logger.getInstance().debug(
                                 "COMM",
                                 "ClientHandler (" + listenerName + " - " + clientAddress + "): Received: " + receivedMessage
                         );
@@ -101,7 +101,7 @@ public class ClientHandler implements Runnable
                             ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + ProtocolConstants.MESSAGE_TERMINATOR);
                             commandId = parsedCommand.getId();
 
-                            Logger.getInstance().log(
+                            Logger.getInstance().debug(
                                     "COMM",
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Successfully parsed command: " + parsedCommand
                             );
@@ -109,7 +109,7 @@ public class ClientHandler implements Runnable
                             resultHolder = new CommandResultHolder(parsedCommand);
                             CommandQueue.putCommand(resultHolder);
 
-                            Logger.getInstance().log(
+                            Logger.getInstance().debug(
                                     "COMM",
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Waiting for command ID " + commandId + " to execute..."
                             );
@@ -120,7 +120,7 @@ public class ClientHandler implements Runnable
                             {
                                 executionSuccess = resultHolder.isSuccess();
 
-                                Logger.getInstance().log(
+                                Logger.getInstance().debug(
                                         "COMM",
                                         "ClientHandler (" + listenerName + " - " + clientAddress + "): Command ID " + commandId + " execution finished. Success: " + executionSuccess
                                 );
@@ -137,7 +137,7 @@ public class ClientHandler implements Runnable
                         } catch (IllegalArgumentException e)
                         {
 
-                            Logger.getInstance().log(
+                            Logger.getInstance().error(
                                     "COMM",
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Parsing Error: " + e.getMessage()
                             );
@@ -146,7 +146,7 @@ public class ClientHandler implements Runnable
                         {
                             Thread.currentThread().interrupt();
 
-                            Logger.getInstance().log(
+                            Logger.getInstance().warn(
                                     "COMM",
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Interrupted while waiting for command execution: " + e.getMessage()
                             );
@@ -154,7 +154,7 @@ public class ClientHandler implements Runnable
                         } catch (Exception e)
                         {
 
-                            Logger.getInstance().log(
+                            Logger.getInstance().error(
                                     "COMM",
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Unexpected error during command processing: " + e.getMessage()
                             );
@@ -179,7 +179,7 @@ public class ClientHandler implements Runnable
                         }
                         sendMessage(responseToClient);
 
-                        Logger.getInstance().log(
+                        Logger.getInstance().high(
                                 "COMM",
                                 "ClientHandler (" + listenerName + " - " + clientAddress + "): Sent response: " + responseToClient
                         );
@@ -196,14 +196,14 @@ public class ClientHandler implements Runnable
                 while ((inputLine = clientSession.getReader().readLine()) != null)
                 {
 
-                    Logger.getInstance().log(
+                    Logger.getInstance().debug(
                             "COMM",
                             "ClientHandler (" + listenerName + " - " + clientAddress + "): Received: " + inputLine
                     );
                     if ("bye".equalsIgnoreCase(inputLine.trim()))
                     {
 
-                        Logger.getInstance().log(
+                        Logger.getInstance().debug(
                                 "COMM",
                                 "ClientHandler (" + listenerName + " - " + clientAddress + "): Client sent 'bye'."
                         );
@@ -214,7 +214,7 @@ public class ClientHandler implements Runnable
         } catch (IOException e)
         {
 
-            Logger.getInstance().log(
+            Logger.getInstance().debug(
                     "COMM",
                     "ClientHandler (" + listenerName + " - " + clientAddress + "): I/O error (client disconnected): " + e.getMessage()
             );
@@ -226,14 +226,14 @@ public class ClientHandler implements Runnable
             } catch (IOException e)
             {
 
-                Logger.getInstance().log(
+                Logger.getInstance().warn(
                         "COMM",
                         "ClientHandler (" + listenerName + " - " + clientAddress + "): Error closing client session: " + e.getMessage()
                 );
             }
         }
 
-        Logger.getInstance().log(
+        Logger.getInstance().debug(
                 "COMM",
                 "ClientHandler (" + listenerName + "): Terminated for client " + clientAddress
         );
