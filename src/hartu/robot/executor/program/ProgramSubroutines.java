@@ -309,7 +309,7 @@ public class ProgramSubroutines
         Ixtur.attachTo(robot.getFlange());
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
-        Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P2")));
+        Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P2")));
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P3")));
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P4Place")));
         toolController.openTool(5);
