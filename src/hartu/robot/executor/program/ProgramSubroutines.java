@@ -95,12 +95,14 @@ public class ProgramSubroutines
             return false;
         }
         
+        int baseId = toolId;
         if (toolId > 3)
 		{
-    		toolId = toolId - 3;
+        	baseId = toolId - 3;
 		}
         
-        String baseName = "T" + toolId + "Base";
+        String baseName = "T" + baseId + "Base";
+        
 
         try
         {
