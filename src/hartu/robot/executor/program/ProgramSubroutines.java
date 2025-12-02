@@ -8,6 +8,7 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 import hartu.robot.executor.io.ToolController;
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
@@ -53,7 +54,7 @@ public class ProgramSubroutines
             this.Gripper = application.getApplicationData().createFromTemplate("GimaticGripperV");
             if (this.gimaticCameraTool != null)
             {
-                Logger.getInstance().log("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
+                Logger.getInstance().debug("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
             } else
             {
                 Logger.getInstance().error("ROBOT_EXEC", "ProgramSubroutines: Failed to load GimaticCamera tool from Object Templates!");
@@ -109,7 +110,7 @@ public class ProgramSubroutines
 
             // Attach GimaticCamera tool for the pick operation
             gimaticCameraTool.attachTo(robot.getFlange());
-            Logger.getInstance().log("ROBOT_EXEC", "Attached GimaticCamera tool for pick operation.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for pick operation.");
 
             // Move through points P9 -> P1
             for (int i = 9; i >= 1; i--)
@@ -121,7 +122,7 @@ public class ProgramSubroutines
                     return false;
                 }
 
-                Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
+                Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
                 gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
 
                 // Lock Gimatic at P8 (contact point)
@@ -190,7 +191,7 @@ public class ProgramSubroutines
 
             // Attach GimaticCamera tool for the place operation
             gimaticCameraTool.attachTo(robot.getFlange());
-            Logger.getInstance().log("ROBOT_EXEC", "Attached GimaticCamera tool for place operation.");
+            Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for place operation.");
 
             // Move through points P1 -> P9
             for (int i = 1; i <= 9; i++)
@@ -202,7 +203,7 @@ public class ProgramSubroutines
                     return false;
                 }
 
-                Logger.getInstance().log("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
+                Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
                 gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
 
                 // Unlock Gimatic at P8 (contact point)
@@ -230,12 +231,12 @@ public class ProgramSubroutines
 
         try
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Doing el paripe");
+            Logger.getInstance().debug("ROBOT_EXEC", "Doing el paripe");
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/ZebraBase");
 
             // Attach GimaticCamera tool for the place operation
             vacTool.attachTo(robot.getFlange());
-            Logger.getInstance().log("ROBOT_EXEC", "Attached VacTool");
+            Logger.getInstance().debug("ROBOT_EXEC", "Attached VacTool");
 
             // Move through points P1 -> P9
             for (int i = 1; i <= 2; i++)
@@ -246,7 +247,7 @@ public class ProgramSubroutines
                     Logger.getInstance().error("ROBOT_EXEC", "Frame 'P" + i + "' not found under ZebraBase");
                     return false;
                 }
-                Logger.getInstance().log("ROBOT_EXEC", "Moving to ZebraBase/P" + i);
+                Logger.getInstance().low("ROBOT_EXEC", "Moving to ZebraBase/P" + i);
                 vacTool.move(ptp(pointFrame).setJointVelocityRel(0.8));
             }
 
@@ -268,15 +269,15 @@ public class ProgramSubroutines
      */
     private void logSubroutineCall(String methodName, Frame frame, int workpieceId)
     {
-        Logger.getInstance().log("ROBOT_EXEC", methodName + " called with frame: " +
+        Logger.getInstance().debug("ROBOT_EXEC", methodName + " called with frame: " +
                 (frame != null ? frame.toString() : "null") + ", workpieceId: " + workpieceId);
     }
 
     public boolean pickAxis(Frame frame, int workpieceId)
     {
         logSubroutineCall("pickAxis", frame, workpieceId);
-        Logger.getInstance().log("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
-        Logger.getInstance().log("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
+        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
+        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
 
         Gripper.attachTo(robot.getFlange());
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
@@ -292,8 +293,8 @@ public class ProgramSubroutines
 
     public boolean placeAxisPlaceholder(Frame frame, int workpieceId)
     {
-        Logger.getInstance().log("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
-        Logger.getInstance().log("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
+        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
+        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
         Ixtur.attachTo(robot.getFlange());
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
@@ -342,12 +343,12 @@ public class ProgramSubroutines
         Frame frame = baseData.getCoordinateFrame();
         WorkpieceType workpieceType = baseData.getWorkpieceType();
         
-        Logger.getInstance().log("ROBOT_EXEC", "Stored base coordinate data:");
-        Logger.getInstance().log("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
+        Logger.getInstance().critical("ROBOT_EXEC", "Stored base coordinate data:");
+        Logger.getInstance().critical("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
         if (frame != null)
         {
-            Logger.getInstance().log("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
-            Logger.getInstance().log("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) + 
+            Logger.getInstance().critical("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
+            Logger.getInstance().critical("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) + 
                                      ", B=" + Math.toDegrees(frame.getBetaRad()) + 
                                      ", C=" + Math.toDegrees(frame.getGammaRad()));
         }
@@ -381,6 +382,6 @@ public class ProgramSubroutines
     public void clearBaseCoordinateData()
     {
         this.currentBaseCoordinateData = null;
-        Logger.getInstance().log("ROBOT_EXEC", "Cleared stored base coordinate data.");
+        Logger.getInstance().debug("ROBOT_EXEC", "Cleared stored base coordinate data.");
     }
 }
