@@ -313,9 +313,15 @@ public class CommandExecutor extends RoboticsAPIApplication
             try
             {
                 CommandResultHolder resultHolder = CommandQueue.pollCommand(100, TimeUnit.MILLISECONDS);
+                mediaFlangeIO.setLedRed(false);
+                mediaFlangeIO.setLEDBlue(true);
+                mediaFlangeIO.setLedGreen(false);
 
                 if (resultHolder != null)
                 {
+                    mediaFlangeIO.setLedRed(false);
+                    mediaFlangeIO.setLEDBlue(false);
+                    mediaFlangeIO.setLedGreen(true);
                     ParsedCommand command = resultHolder.getCommand();
                     Logger.getInstance().log("ROBOT_EXEC", "Received command ID " + command.getId() + " from queue for execution.");
                     boolean executionSuccess = false;
@@ -364,6 +370,14 @@ public class CommandExecutor extends RoboticsAPIApplication
                             {
                                 Logger.getInstance().log("ROBOT_EXEC", "Flushed " + flushedCount + " pending command(s) from queue after failure.");
                             }
+                            mediaFlangeIO.setLedRed(true);
+                            mediaFlangeIO.setLEDBlue(false);
+                            mediaFlangeIO.setLedGreen(false);
+                            Thread.sleep(5000);
+                            mediaFlangeIO.setLedRed(false);
+                            mediaFlangeIO.setLEDBlue(false);
+                            mediaFlangeIO.setLedGreen(true);
+
                         }
 
                         resultHolder.setSuccess(executionSuccess);
