@@ -1560,9 +1560,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticGripperV">
             <frames>
                 <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="TCP">
-                    <transformation a="1.9568672589412817" b="0.016235876914671456" c="0.05006796346082482" x="1.2403819450939766" y="-7.153604295530755" z="264.9064676236168"/>
-                    <measurementTranslation calculationError="12.370181947472895" method="XYZ4Point" timestamp="1361072220163"/>
-                    <measurementRotation method="ABCWorld6D" timestamp="1356995442266"/>
+                    <transformation a="-2.007128639793479" b="0.016235876914671456" c="0.0" x="0.0" y="0.0" z="255.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-21.858750642857075" cogY="-54.62486456248389" cogZ="79.57532888244523" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.49435374530215"/>
@@ -1627,6 +1625,11 @@
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </workpieceTemplate>
         <toolTemplate class="" name="GimaticCircMagnet">
+            <frames>
+                <frame id="_c781cbbb-ca21-48cd-9fa5-d14a33f18d4c" name="TCP">
+                    <transformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="230.0"/>
+                </frame>
+            </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-16.682703136966186" cogY="-64.53579237902936" cogZ="55.50233796614493" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.428565115040336"/>
         </toolTemplate>
         <toolTemplate class="" name="GimaticGripperR">
