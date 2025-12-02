@@ -72,7 +72,11 @@ public class ProgramSubroutines
      */
     public boolean pickTool(int toolId)
     {
-
+    	if (toolController.getCurrentToolId() == toolId)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but Tool ID " + toolController.getCurrentToolId() + " is already on. Ignoring request.");
+            return true;
+        }
         if (toolController.getCurrentToolId() != 0)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request.");
