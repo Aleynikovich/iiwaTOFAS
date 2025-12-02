@@ -1632,6 +1632,13 @@
                 </redundancyData>
             </frame>
         </frame>
+        <frame id="_929cb880-97c0-47f7-9c7e-47977203a2ae" name="basekitting">
+            <transformation a="1.616174887346749" b="0.0029670597283903604" c="0.0" x="651.0" y="83.0" z="-247.0"/>
+            <additionalInformation>
+                <info key="LastModificationTime" type="java.lang.Long" value="1764690795380"/>
+                <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
+            </additionalInformation>
+        </frame>
     </world>
     <objectTemplates>
         <toolTemplate class="" defaultMotionFrameRef="/roll_tcp" name="RollScan">
