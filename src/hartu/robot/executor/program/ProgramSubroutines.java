@@ -162,7 +162,7 @@ public class ProgramSubroutines
         if (toolController.getCurrentToolId() == 0)
         {
             Logger.getInstance().warn("ROBOT_EXEC", "Called for place tool: " + toolId + ", but there is already no tool! ID: " + toolController.getCurrentToolId() + " !. Ignoring request.");
-            return false;
+            return true;
         }
         if (toolId != toolController.getCurrentToolId())
         {
