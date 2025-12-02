@@ -34,7 +34,7 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
                     taskServer = new ServerClass(TASK_PORT, ListenerType.TASK_LISTENER);
                 } catch (IOException e)
                 {
-                    Logger.getInstance().log("APP", "Error initializing ROS2 Task Server: " + e.getMessage());
+                    Logger.getInstance().debug("APP", "Error initializing ROS2 Task Server: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
                 taskServer.start();
@@ -42,7 +42,7 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
         });
         serverThread.setDaemon(true);
         serverThread.start();
-        Logger.getInstance().log("APP", "ROS2 Task Server Manager initialized and server thread started on port " + TASK_PORT);
+        Logger.getInstance().debug("APP", "ROS2 Task Server Manager initialized and server thread started on port " + TASK_PORT);
     }
 
     @Override
@@ -59,14 +59,14 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
             try
             {
                 taskServer.stop();
-                Logger.getInstance().log("APP", "ROS2 Task Server stopped.");
+                Logger.getInstance().debug("APP", "ROS2 Task Server stopped.");
             } catch (IOException e)
             {
-                Logger.getInstance().log("APP", "Error stopping ROS2 Task Server: " + e.getMessage());
+                Logger.getInstance().debug("APP", "Error stopping ROS2 Task Server: " + e.getMessage());
                 throw new RuntimeException("Error stopping robot communication server: " + e.getMessage(), e);
             }
         }
-        Logger.getInstance().log("APP", "ROS2 Task Server Manager disposed.");
+        Logger.getInstance().debug("APP", "ROS2 Task Server Manager disposed.");
         super.dispose();
     }
 }

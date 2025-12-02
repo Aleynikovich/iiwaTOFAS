@@ -4,6 +4,7 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 import hartu.robot.executor.io.ToolController;
 
 /**
@@ -51,7 +52,7 @@ public class ProgramExecutor
             return false;
         }
 
-        Logger.getInstance().log("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
+        Logger.getInstance().low("ROBOT_EXEC", "Executing program call command ID " + command.getId() + " with program ID: " + programId);
 
         try
         {
@@ -135,7 +136,7 @@ public class ProgramExecutor
     private boolean storeBaseCoordinateData(ParsedCommand command)
     {
         BaseCoordinateData baseData = command.getBaseCoordinateData();
-        Logger.getInstance().log("ROBOT_EXEC", "Storing base coordinate data: " + baseData.toString());
+        Logger.getInstance().critical("ROBOT_EXEC", "Storing base coordinate data: " + baseData.toString());
 
         // Store the base coordinate data in ProgramSubroutines for use in kitting operations
         return programSubroutines.storeBaseCoordinateData(baseData);

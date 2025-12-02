@@ -3,6 +3,7 @@ package hartu.robot.executor.io;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 import hartu.robot.io.IOList;
 
 /**
@@ -64,17 +65,17 @@ public class IoExecutor
             {
                 // ACTIVATE_IO (command 9) - Set digital output
                 boolean ioState = ioData.getIoState();
-                Logger.getInstance().log("ROBOT_EXEC", "Executing ACTIVATE_IO command ID " + command.getId() + ". Pin: " + ioPin + ", State: " + ioState);
+                Logger.getInstance().low("ROBOT_EXEC", "Executing ACTIVATE_IO command ID " + command.getId() + ". Pin: " + ioPin + ", State: " + ioState);
                 return executeOutputCommand(ioPin, ioState, command.getId());
             } else if (ioData.isDigitalInputCommand())
             {
                 // DIGITAL_INPUT (command 12) - Read digital input
-                Logger.getInstance().log("ROBOT_EXEC", "Executing DIGITAL_INPUT command ID " + command.getId() + ". Pin: " + ioPin);
+                Logger.getInstance().low("ROBOT_EXEC", "Executing DIGITAL_INPUT command ID " + command.getId() + ". Pin: " + ioPin);
                 return executeDigitalInputCommand(ioPin, command.getId());
             } else if (ioData.isAnalogInputCommand())
             {
                 // ANALOG_INPUT (command 13) - Read analog input (not yet implemented)
-                Logger.getInstance().log("ROBOT_EXEC", "Executing ANALOG_INPUT command ID " + command.getId() + ". Pin: " + ioPin);
+                Logger.getInstance().low("ROBOT_EXEC", "Executing ANALOG_INPUT command ID " + command.getId() + ". Pin: " + ioPin);
                 return executeAnalogInputCommand(ioPin, command.getId());
             } else
             {
@@ -126,7 +127,7 @@ public class IoExecutor
                 default:
                     // Use IOList for all other cases
                     ioList.out.set(ioPin, ioState);
-                    Logger.getInstance().log("ROBOT_EXEC", "Set output pin " + ioPin + " to " + ioState + " for command ID " + commandId);
+                    Logger.getInstance().debug("ROBOT_EXEC", "Set output pin " + ioPin + " to " + ioState + " for command ID " + commandId);
                     return true;
             }
         } catch (IllegalArgumentException e)
@@ -148,7 +149,7 @@ public class IoExecutor
         try
         {
             lastInputState = ioList.in.get(ioPin);
-            Logger.getInstance().log("ROBOT_EXEC", "Read digital input pin " + ioPin + " = " + lastInputState + " for command ID " + commandId);
+            Logger.getInstance().debug("ROBOT_EXEC", "Read digital input pin " + ioPin + " = " + lastInputState + " for command ID " + commandId);
             return true;
         } catch (IllegalArgumentException e)
         {

@@ -1,6 +1,7 @@
 package hartu.robot.executor;
 
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class ToolMapping
         toolIdToNameMap.put(4, "GimaticGripperV");
         toolIdToNameMap.put(5, "GimaticIxtur");
         toolIdToNameMap.put(6, "GimaticCircMagnet");
-        Logger.getInstance().log("TOOL_MAPPING", "Initialized tool ID mappings: " + toolIdToNameMap.size() + " entries");
+        Logger.getInstance().debug("TOOL_MAPPING", "Initialized tool ID mappings: " + toolIdToNameMap.size() + " entries");
     }
 
     /**
@@ -102,7 +103,7 @@ public class ToolMapping
     public void setToolMapping(int toolId, String toolName)
     {
         toolIdToNameMap.put(toolId, toolName);
-        Logger.getInstance().log("TOOL_MAPPING", "Mapped tool ID " + toolId + " to '" + toolName + "'");
+        Logger.getInstance().debug("TOOL_MAPPING", "Mapped tool ID " + toolId + " to '" + toolName + "'");
     }
 
     /**

@@ -57,7 +57,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                     serverSocket = new ServerSocket(LOG_PORT);
                     isRunning = true;
                     // Log via Logger so it goes through the central logging system
-                    Logger.getInstance().log("LOG_SRV", "Started on port " + LOG_PORT);
+                    Logger.getInstance().debug("LOG_SRV", "Started on port " + LOG_PORT);
 
                     while (isRunning)
                     {
@@ -68,7 +68,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
                             String clientId = "LogClient-" + (++clientCounter);
 
                             // Log via Logger so it goes through the central logging system
-                            Logger.getInstance().log("LOG_SRV", "New client connected: " + clientId + " (" + clientIp + ")");
+                            Logger.getInstance().debug("LOG_SRV", "New client connected: " + clientId + " (" + clientIp + ")");
 
                             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
                             LogClientConnection connection = new LogClientConnection(clientSocket, writer, clientId);
@@ -93,7 +93,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         listenerThread.start();
 
         // Log via Logger so it goes through the central logging system
-        Logger.getInstance().log("LOG_SRV", "Initialized successfully");
+        Logger.getInstance().debug("LOG_SRV", "Initialized successfully");
     }
 
     @Override
@@ -159,7 +159,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             connection.close();
             connectedClients.remove(clientId);
             // Log via Logger so it goes through the central logging system
-            Logger.getInstance().log("LOG_SRV", "Client disconnected: " + clientId);
+            Logger.getInstance().debug("LOG_SRV", "Client disconnected: " + clientId);
         } catch (IOException e)
         {
             // Log via Logger so it goes through the central logging system

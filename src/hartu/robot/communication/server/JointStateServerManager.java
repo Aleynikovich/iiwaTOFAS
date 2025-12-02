@@ -46,7 +46,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
                 {
                     serverSocket = new ServerSocket(JOINT_STATE_PORT);
                     isRunning = true;
-                    Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server started on port " + JOINT_STATE_PORT);
+                    Logger.getInstance().debug("JOINT_STATE_SRV", "Joint State Server started on port " + JOINT_STATE_PORT);
 
                     while (isRunning)
                     {
@@ -54,7 +54,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
                         {
                             Socket clientSocket = serverSocket.accept();
                             String clientIp = clientSocket.getInetAddress().getHostAddress();
-                            Logger.getInstance().log("JOINT_STATE_SRV", "New client connected: " + clientIp);
+                            Logger.getInstance().debug("JOINT_STATE_SRV", "New client connected: " + clientIp);
 
                             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
                             ClientConnection connection = new ClientConnection(clientSocket, writer);
@@ -76,7 +76,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
         listenerThread.setDaemon(true);
         listenerThread.start();
 
-        Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server Manager initialized.");
+        Logger.getInstance().debug("JOINT_STATE_SRV", "Joint State Server Manager initialized.");
     }
 
     @Override
@@ -129,7 +129,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
         {
             connection.close();
             connectedClients.remove(clientIp);
-            Logger.getInstance().log("JOINT_STATE_SRV", "Client disconnected: " + clientIp);
+            Logger.getInstance().debug("JOINT_STATE_SRV", "Client disconnected: " + clientIp);
         } catch (IOException e)
         {
             Logger.getInstance().warn("JOINT_STATE_SRV", "Error closing connection for " + clientIp + ": " + e.getMessage());
@@ -164,7 +164,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
             try
             {
                 serverSocket.close();
-                Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server socket closed.");
+                Logger.getInstance().debug("JOINT_STATE_SRV", "Joint State Server socket closed.");
             } catch (IOException e)
             {
                 Logger.getInstance().error("JOINT_STATE_SRV", "Error closing server socket: " + e.getMessage());
@@ -184,7 +184,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
             }
         }
 
-        Logger.getInstance().log("JOINT_STATE_SRV", "Joint State Server Manager disposed.");
+        Logger.getInstance().debug("JOINT_STATE_SRV", "Joint State Server Manager disposed.");
     }
 
     /**

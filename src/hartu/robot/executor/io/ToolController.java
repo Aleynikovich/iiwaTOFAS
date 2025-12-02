@@ -4,6 +4,7 @@ import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
 
 /**
  * Controls tool operations including pneumatic tool open/close,
@@ -71,6 +72,7 @@ public class ToolController
             toolId += 16;
         }
 
+        Logger.getInstance().debug("ROBOT_EXEC", "Current tool ID detected from digital inputs: " + toolId);
         return toolId;
     }
 
@@ -87,7 +89,7 @@ public class ToolController
         try
         {
             String toolDesc = (toolId == 0) ? "(global)" : String.valueOf(toolId);
-            Logger.getInstance().log("ROBOT_EXEC", "Opening tool " + toolDesc + " (blowing air)");
+            Logger.getInstance().debug("ROBOT_EXEC", "Opening tool " + toolDesc + " (blowing air)");
 
             toolControlIO.setOutput3(true);
 
@@ -102,11 +104,11 @@ public class ToolController
             }
             gimaticIO.setDO_Flange2(true);
             gimaticIO.setDO_Flange1(false);
-            Thread.sleep(600);
+            Thread.sleep(200);
             toolControlIO.setOutput1(false);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput3(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " opened (blowing air)");
+            Logger.getInstance().debug("ROBOT_EXEC", "Tool " + toolDesc + " opened (blowing air)");
             return true;
         } catch (InterruptedException e)
         {
@@ -129,16 +131,16 @@ public class ToolController
         try
         {
             String toolDesc = (toolId == 0) ? "(global)" : String.valueOf(toolId);
-            Logger.getInstance().log("ROBOT_EXEC", "Closing tool " + toolDesc + " (vacuum on)");
+            Logger.getInstance().debug("ROBOT_EXEC", "Closing tool " + toolDesc + " (vacuum on)");
 
             toolControlIO.setOutput3(true);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput1(true);
             gimaticIO.setDO_Flange2(false);
             gimaticIO.setDO_Flange1(true);
-            Thread.sleep(500);
+            Thread.sleep(300);
             toolControlIO.setOutput1(false);
-            Logger.getInstance().log("ROBOT_EXEC", "Tool " + toolDesc + " closed (vacuum on)");
+            Logger.getInstance().debug("ROBOT_EXEC", "Tool " + toolDesc + " closed (vacuum on)");
             return true;
         } catch (InterruptedException e)
         {
@@ -158,10 +160,10 @@ public class ToolController
     {
         try
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Locking Gimatic tool changer");
+            Logger.getInstance().debug("ROBOT_EXEC", "Locking Gimatic tool changer");
             gimaticIO.setDO_Flange7(false);
             Thread.sleep(300);
-            Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer locked");
+            Logger.getInstance().debug("ROBOT_EXEC", "Gimatic tool changer locked");
             return true;
         } catch (InterruptedException e)
         {
@@ -181,11 +183,11 @@ public class ToolController
     {
         try
         {
-            Logger.getInstance().log("ROBOT_EXEC", "Unlocking Gimatic tool changer");
+            Logger.getInstance().debug("ROBOT_EXEC", "Unlocking Gimatic tool changer");
             toolControlIO.setOutput3(false);
             gimaticIO.setDO_Flange7(true);
             Thread.sleep(300);
-            Logger.getInstance().log("ROBOT_EXEC", "Gimatic tool changer unlocked");
+            Logger.getInstance().debug("ROBOT_EXEC", "Gimatic tool changer unlocked");
             return true;
         } catch (InterruptedException e)
         {
