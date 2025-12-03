@@ -1,0 +1,341 @@
+package hartu.robot.utils;
+
+import com.kuka.roboticsAPI.deviceModel.JointPosition;
+import com.kuka.roboticsAPI.geometricModel.Frame;
+import hartu.protocols.constants.ActionTypes;
+import hartu.protocols.constants.CommandCategory;
+import hartu.protocols.constants.MessagePartIndex;
+import hartu.protocols.constants.WorkpieceType;
+import hartu.robot.commands.BaseCoordinateData;
+import hartu.robot.commands.MotionParameters;
+import hartu.robot.commands.ParsedCommand;
+import hartu.robot.commands.io.IoCommandData;
+import hartu.robot.communication.server.Logger;
+import hartu.robot.communication.server.LogLevel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static hartu.protocols.constants.ProtocolConstants.*;
+
+public class CommandParser
+{
+    private CommandParser()
+    {
+        // Private constructor
+    }
+
+    public static ParsedCommand parseCommand(String commandString)
+    {
+        Logger.getInstance().debug("PARSER", "Attempting to parse command: " + commandString);
+
+        if (!commandString.endsWith(MESSAGE_TERMINATOR))
+        {
+            String errorMsg = "Command string must end with '" + MESSAGE_TERMINATOR + "'. Received: " + commandString;
+            Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+            throw new IllegalArgumentException(errorMsg);
+        }
+        String cleanCommand = commandString.substring(0, commandString.length() - MESSAGE_TERMINATOR.length());
+        String[] parts = cleanCommand.split(PRIMARY_DELIMITER, -1);
+
+        final int EXPECTED_MIN_PARTS = MessagePartIndex.ID.getIndex() + 1;
+        if (parts.length < EXPECTED_MIN_PARTS)
+        {
+            String errorMsg = "Invalid number of parts. Expected at least " + EXPECTED_MIN_PARTS + ", got " + parts.length + ". Command: " + commandString;
+            Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+            throw new IllegalArgumentException(errorMsg);
+        }
+
+        ActionTypes actionType;
+        int numPoints, commandNumber;
+        String id;
+        try
+        {
+            actionType = ActionTypes.fromValue(Integer.parseInt(parts[MessagePartIndex.ACTION_TYPE.getIndex()]));
+            commandNumber = Integer.parseInt(parts[MessagePartIndex.ACTION_TYPE.getIndex()]);
+            numPoints = Integer.parseInt(parts[MessagePartIndex.NUM_POINTS.getIndex()]);
+            id = parts[MessagePartIndex.ID.getIndex()];
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+        {
+            String errorMsg = "Invalid number format or missing required part: " + e.getMessage();
+            Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+            throw new IllegalArgumentException(errorMsg, e);
+        }
+
+        boolean isContinuous = actionType.isContinuousMovement();
+
+        String tool = "";
+        String base = "";
+        double speedOverride = 0.0;
+        try
+        {
+            tool = parts[MessagePartIndex.TOOL.getIndex()];
+            base = parts[MessagePartIndex.BASE.getIndex()];
+            speedOverride = Double.parseDouble(parts[MessagePartIndex.SPEED_OVERRIDE.getIndex()]);
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e)
+        {
+            Logger.getInstance().warn("PARSER", "Warning: Basic MotionParameters fields (Tool, Base, SpeedOverride) missing or invalid. Using defaults. " + e.getMessage());
+        }
+
+        MotionParameters motionParameters;
+        motionParameters = new MotionParameters(
+                speedOverride, tool, base, isContinuous, numPoints,
+                null, // jointVelocityRel
+                null, // jointAccelerationRel
+                null  // blendingRel
+        );
+
+        CommandCategory commandCategory = actionType.getCategory();
+        List<JointPosition> jointTargetPoints = null;
+        List<Frame> cartesianTargetPoints = null;
+        IoCommandData ioCommandData = null;
+        Integer programId = null;
+
+        if (commandCategory == CommandCategory.MOVEMENT)
+        {
+            if (actionType.isJointMotion())
+            {
+                try
+                {
+                    jointTargetPoints = parseAxisPositions(parts[MessagePartIndex.TARGET_POINTS.getIndex()]);
+                    if (jointTargetPoints.size() != numPoints)
+                    {
+                        Logger.getInstance().warn("PARSER", "Warning: Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed axis points (" + jointTargetPoints.size() + "). Command ID: " + id);
+                    }
+                    return ParsedCommand.forAxisMovement(actionType, id, jointTargetPoints, motionParameters);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    String errorMsg = "Missing TARGET_POINTS part for Axis movement: " + e.getMessage();
+                    Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg, e);
+                }
+            } else
+            { // Cartesian Motion
+                try
+                {
+                    cartesianTargetPoints = parseCartesianPositions(parts[MessagePartIndex.TARGET_POINTS.getIndex()]);
+                    if (cartesianTargetPoints.size() != numPoints)
+                    {
+                        Logger.getInstance().warn("PARSER", "Warning: Parsed NUM_POINTS (" + numPoints + ") does not match actual parsed Cartesian points (" + cartesianTargetPoints.size() + "). Command ID: " + id);
+                    }
+                    return ParsedCommand.forCartesianMovement(actionType, id, cartesianTargetPoints, motionParameters);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    String errorMsg = "Missing TARGET_POINTS part for Cartesian movement: " + e.getMessage();
+                    Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg, e);
+                }
+            }
+        } else if (commandCategory == CommandCategory.IO)
+        {
+            if (actionType == ActionTypes.ACTIVATE_IO)
+            {
+                try
+                {
+                    //TODO: Fix ioPoint?
+                    //int ioPoint = Integer.parseInt(parts[MessagePartIndex.IO_POINT.getIndex()];
+                    int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
+                    boolean ioState = Boolean.parseBoolean(parts[MessagePartIndex.IO_STATE.getIndex()]);
+                    //TODO: Remove ioPoint hardocde
+                    ioCommandData = new IoCommandData(0, ioPin, ioState, actionType);
+                    return ParsedCommand.forIo(actionType, id, ioCommandData);
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+                {
+                    String errorMsg = "Invalid IO command data format for ACTIVATE_IO: " + e.getMessage();
+                    Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg, e);
+                }
+            } else if (actionType == ActionTypes.DIGITAL_INPUT)
+            {
+                try
+                {
+                    int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
+                    // For input commands, ioState is not used but we default to false
+                    ioCommandData = new IoCommandData(0, ioPin, false, actionType);
+                    return ParsedCommand.forIo(actionType, id, ioCommandData);
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+                {
+                    String errorMsg = "Invalid IO command data format for DIGITAL_INPUT: " + e.getMessage();
+                    Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg, e);
+                }
+            } else if (actionType == ActionTypes.ANALOG_INPUT)
+            {
+                try
+                {
+                    int ioPin = Integer.parseInt(parts[MessagePartIndex.IO_PIN.getIndex()]);
+                    // For analog input commands, ioState is not used but we default to false
+                    ioCommandData = new IoCommandData(0, ioPin, false, actionType);
+                    return ParsedCommand.forIo(actionType, id, ioCommandData);
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+                {
+                    String errorMsg = "Invalid IO command data format for ANALOG_INPUT: " + e.getMessage();
+                    Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                    throw new IllegalArgumentException(errorMsg, e);
+                }
+            } else
+            {
+                String errorMsg = "IO CommandCategory but unknown ActionType: " + actionType.getValue();
+                Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+        } else if (commandCategory == CommandCategory.PROGRAM_CALL)
+        {
+            try
+            {
+                programId = commandNumber - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
+                Logger.getInstance().critical("PARSER", String.format("Parsed program call: %d - %d = %d", commandNumber, ActionTypes.PROGRAM_CALL_OFFSET.getValue(), programId));
+                
+                // Try to parse optional base coordinate data for any program call
+                // Format: ACTION||X;Y;Z;R;P;Y|||WORKPIECE_ID||||HashID#
+                // TARGET_POINTS (index 2) contains FRAME data in xyzRPY format
+                // TOOL (index 6) contains workpiece ID (1=Axis, 2=Drum, 3=Disk)
+                BaseCoordinateData baseCoordinateData = parseBaseCoordinateData(parts);
+                if (baseCoordinateData != null)
+                {
+                    Logger.getInstance().critical("PARSER", "Parsed base coordinate data: " + baseCoordinateData.toString());
+                    return ParsedCommand.forProgramCallWithBaseData(actionType, id, programId, baseCoordinateData);
+                }
+                
+                return ParsedCommand.forProgramCall(actionType, id, programId);
+            } catch (Exception e)
+            {
+                String errorMsg = "Invalid Program Call command data format: " + e.getMessage();
+                Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                throw new IllegalArgumentException(errorMsg, e);
+            }
+        } else
+        {
+            String errorMsg = "Unknown or unsupported CommandCategory: " + commandCategory + " for ActionType: " + actionType.getValue() + " in command: " + commandString;
+            Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+            throw new IllegalArgumentException(errorMsg);
+        }
+    }
+
+    /**
+     * Parses base coordinate data from program call command parts.
+     * This is optional - if the data is not present or invalid, returns null.
+     * 
+     * @param parts The message parts array
+     * @return BaseCoordinateData containing frame and workpiece type, or null if not valid
+     */
+    private static BaseCoordinateData parseBaseCoordinateData(String[] parts)
+    {
+        try
+        {
+            // Get TARGET_POINTS (index 2) - contains FRAME data in xyzRPY format
+            String targetPointsStr = parts[MessagePartIndex.TARGET_POINTS.getIndex()];
+            if (targetPointsStr == null || targetPointsStr.isEmpty())
+            {
+                Logger.getInstance().warn("PARSER", "No TARGET_POINTS data for base coordinate parsing");
+                return null;
+            }
+            
+            // Parse the frame data (x;y;z;roll;pitch;yaw)
+            String[] values = targetPointsStr.split(SECONDARY_DELIMITER);
+            if (values.length != 6)
+            {
+                Logger.getInstance().warn("PARSER", "Invalid base coordinate format: Expected 6 values (X;Y;Z;R;P;Y), got " + values.length);
+                return null;
+            }
+            
+            double x = Double.parseDouble(values[0]);
+            double y = Double.parseDouble(values[1]);
+            double z = Double.parseDouble(values[2]);
+            // Convert orientation from degrees to radians
+            double c = Math.toRadians(Double.parseDouble(values[3]));
+            double b = Math.toRadians(Double.parseDouble(values[4]));
+            double a = Math.toRadians(Double.parseDouble(values[5]));
+            Frame coordinateFrame = new Frame(x, y, z, a, b, c);
+            
+            // Get TOOL (index 6) - contains workpiece ID
+            String toolStr = parts[MessagePartIndex.TOOL.getIndex()];
+            int workpieceId = 0;
+            if (toolStr != null && !toolStr.isEmpty())
+            {
+                workpieceId = Integer.parseInt(toolStr);
+            }
+            WorkpieceType workpieceType = WorkpieceType.fromId(workpieceId);
+            
+            return new BaseCoordinateData(coordinateFrame, workpieceType);
+            
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+        {
+            Logger.getInstance().warn("PARSER", "Failed to parse base coordinate data: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private static List<JointPosition> parseAxisPositions(String axisPositionsString)
+    {
+        Logger.getInstance().debug("PARSER", "Attempting to parse AxisPositions from string: " + axisPositionsString);
+        List<JointPosition> positions = new ArrayList<>();
+        String[] individualPointStrings = axisPositionsString.split(MULTI_POINT_DELIMITER);
+
+        for (String pointString : individualPointStrings)
+        {
+            String[] jointValues = pointString.split(SECONDARY_DELIMITER);
+            if (jointValues.length != 7)
+            {
+                String errorMsg = "Invalid axis position format: Expected 7 joint values (J1-J7), got " + jointValues.length + " in point string: " + pointString;
+                Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+            try
+            {
+                double j1 = Math.toRadians(Double.parseDouble(jointValues[0]));
+                double j2 = Math.toRadians(Double.parseDouble(jointValues[1]));
+                double j3 = Math.toRadians(Double.parseDouble(jointValues[2]));
+                double j4 = Math.toRadians(Double.parseDouble(jointValues[3]));
+                double j5 = Math.toRadians(Double.parseDouble(jointValues[4]));
+                double j6 = Math.toRadians(Double.parseDouble(jointValues[5]));
+                double j7 = Math.toRadians(Double.parseDouble(jointValues[6]));
+                positions.add(new JointPosition(j1, j2, j3, j4, j5, j6, j7));
+            } catch (NumberFormatException e)
+            {
+                String errorMsg = "Invalid number format in axis positions: " + e.getMessage() + " for point string: " + pointString;
+                Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                throw new IllegalArgumentException(errorMsg, e);
+            }
+        }
+        Logger.getInstance().debug("PARSER", "Parsed axis positions from string: " + positions.size() + " points.");
+        return positions;
+    }
+
+    private static List<Frame> parseCartesianPositions(String cartesianPositionsString)
+    {
+        Logger.getInstance().debug("PARSER", "Attempting to parse CartesianPositions from string: " + cartesianPositionsString);
+        List<Frame> positions = new ArrayList<>();
+        String[] individualPointStrings = cartesianPositionsString.split(MULTI_POINT_DELIMITER);
+
+        for (String pointString : individualPointStrings)
+        {
+            String[] values = pointString.split(SECONDARY_DELIMITER);
+            if (values.length != 6)
+            {
+                String errorMsg = "Invalid Cartesian position format: Expected 6 values (X;Y;Z;A;B;C), got " + values.length + " in point string: " + pointString;
+                Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+            try
+            {
+                double x = Double.parseDouble(values[0]);
+                double y = Double.parseDouble(values[1]);
+                double z = Double.parseDouble(values[2]);
+                double c = Math.toRadians(Double.parseDouble(values[3]));
+                double b = Math.toRadians(Double.parseDouble(values[4]));
+                double a = Math.toRadians(Double.parseDouble(values[5]));
+                positions.add(new Frame(x, y, z, a, b, c));
+            } catch (NumberFormatException e)
+            {
+                String errorMsg = "Invalid number format in Cartesian positions: " + e.getMessage() + " for point string: " + pointString;
+                Logger.getInstance().error("PARSER", "Error: " + errorMsg);
+                throw new IllegalArgumentException(errorMsg, e);
+            }
+        }
+        Logger.getInstance().debug("PARSER", "Parsed Cartesian positions from string: " + positions.size() + " points.");
+        return positions;
+    }
+}
