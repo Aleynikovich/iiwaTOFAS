@@ -34,7 +34,7 @@ public class MotionParameters
 
         while (speedOverride > 1.0)
         {
-            logger.warn("CMD_PARAM", "Warning: Initial speedOverride (" + speedOverride + ") is outside 0.0-1.0 range. Clamping by 0.01");
+            logger.low("CMD_PARAM", "Warning: Initial speedOverride (" + speedOverride + ") is outside 0.0-1.0 range. Clamping by 0.01");
             speedOverride = speedOverride * 0.01;
         }
 
@@ -42,7 +42,7 @@ public class MotionParameters
 
         if (numPoints < 0)
         {
-            logger.log("CMD_PARAM", "Error: Number of points cannot be negative.");
+            logger.error("CMD_PARAM", "Error: Number of points cannot be negative.");
             throw new IllegalArgumentException("Number of points cannot be negative.");
         }
 

@@ -180,7 +180,6 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         // Close all client connections
         for (Map.Entry<String, LogClientConnection> entry : connectedClients.entrySet())
         {
-            String clientId = entry.getKey();
             LogClientConnection connection = entry.getValue();
             try
             {
@@ -252,13 +251,11 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
     {
         private final Socket socket;
         private final PrintWriter writer;
-        private final String clientId;
 
         public LogClientConnection(Socket socket, PrintWriter writer, String clientId)
         {
             this.socket = socket;
-            this.writer = writer;
-            this.clientId = clientId;
+            this.writer = writer; 
         }
 
         public PrintWriter getWriter()
@@ -266,10 +263,6 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
             return writer;
         }
 
-        public String getClientId()
-        {
-            return clientId;
-        }
 
         public boolean isConnected()
         {
