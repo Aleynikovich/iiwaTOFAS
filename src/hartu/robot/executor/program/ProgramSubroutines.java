@@ -2,9 +2,12 @@ package hartu.robot.executor.program;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.AbstractFrame;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.geometricModel.math.ITransformation;
+
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
@@ -52,7 +55,7 @@ public class ProgramSubroutines
             this.Ixtur = application.getApplicationData().createFromTemplate("GimaticIxtur");
             this.Gripper = application.getApplicationData().createFromTemplate("GimaticGripperV");
             if (this.gimaticCameraTool != null)
-            {
+            {				
                 Logger.getInstance().debug("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
             } else
             {
@@ -301,28 +304,14 @@ public class ProgramSubroutines
 
             // Option 1: Copy the relative transformation and apply to new base
             // Get the transformation of PlaceAxis1_1 relative to its parent (basekitting)
-            Frame relativeP1 = taughtP1.copyWithRedundancy();
-            Frame relativeP2 = taughtP2.copyWithRedundancy();
+            AbstractFrame relativeP1 = taughtP1.copyWithRedundancy();
+            AbstractFrame relativeP2 = taughtP2.copyWithRedundancy();
 
             // Create new target frames by applying the relative offset to the camera's kittingBase
-            Frame targetP1 = kittingBase.copy();
-            targetP1.setX(kittingBase.getX() + relativeP1.getX());
-            targetP1.setY(kittingBase. getY() + relativeP1.getY());
-            targetP1.setZ(kittingBase.getZ() + relativeP1. getZ());
-            targetP1.setAlphaRad(kittingBase.getAlphaRad() + relativeP1.getAlphaRad());
-            targetP1.setBetaRad(kittingBase.getBetaRad() + relativeP1.getBetaRad());
-            targetP1.setGammaRad(kittingBase.getGammaRad() + relativeP1.getGammaRad());
-            Gripper.move(ptp(targetP1). setJointVelocityRel(0.5));
+            ITransformation targetP1 = (ITransformation) kittingBase.copy();
 
-            // Create new target frames by applying the relative offset to the camera's kittingBase
-            Frame targetP2 = kittingBase.copy();
-            targetP2.setX(kittingBase.getX() + relativeP2.getX());
-            targetP2.setY(kittingBase. getY() + relativeP2.getY());
-            targetP2.setZ(kittingBase.getZ() + relativeP2. getZ());
-            targetP2.setAlphaRad(kittingBase.getAlphaRad() + relativeP2.getAlphaRad());
-            targetP2.setBetaRad(kittingBase.getBetaRad() + relativeP2.getBetaRad());
-            targetP2.setGammaRad(kittingBase.getGammaRad() + relativeP2.getGammaRad());
-            Gripper.move(ptp(targetP2).setJointVelocityRel(0.5));
+            Gripper.move(linRel(targetP1,relativeP1));
+
 
 
         return true;
