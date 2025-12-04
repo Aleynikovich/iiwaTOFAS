@@ -2,7 +2,8 @@
 
 ## Overview
 
-The logging system broadcasts messages in a structured format that makes it easy to parse and color-code in client applications.
+The logging system broadcasts messages in a structured format that makes it easy to parse and color-code in client
+applications.
 
 ## Log Verbosity Control
 
@@ -26,6 +27,7 @@ Logger.getInstance().setMinimumLogLevel(LogLevel.ERROR);
 ```
 
 This is useful for:
+
 - **Development/Debugging**: Use INFO level to see detailed operation logs
 - **Production/Normal Operation**: Use WARN or ERROR level to reduce log noise
 - **Critical Monitoring**: Use ERROR level to see only failures
@@ -39,15 +41,15 @@ This is useful for:
 ### Format Components
 
 1. **Timestamp**: `HH:mm:ss.SSS` format (24-hour time with milliseconds)
-   - Example: `14:23:45.123`
+    - Example: `14:23:45.123`
 
 2. **Level**: One of three severity levels
-   - `INFO` - Normal informational messages
-   - `WARN` - Warning messages (recoverable issues)
-   - `ERROR` - Error messages (failures, exceptions)
+    - `INFO` - Normal informational messages
+    - `WARN` - Warning messages (recoverable issues)
+    - `ERROR` - Error messages (failures, exceptions)
 
 3. **Tag**: Component identifier (uppercase)
-   - Examples: `ROBOT_EXEC`, `COMM`, `SERVER`, `JOINT_STATE_SRV`
+    - Examples: `ROBOT_EXEC`, `COMM`, `SERVER`, `JOINT_STATE_SRV`
 
 4. **Message**: The actual log message content
 
@@ -110,21 +112,27 @@ while True:
 ## Log Levels Usage Guide
 
 ### INFO
+
 Use for:
+
 - Normal operation status
 - Successful command execution
 - State transitions
 - Connection events
 
 ### WARN
+
 Use for:
+
 - Recoverable errors
 - Cancelled operations
 - External stop events
 - Timeout warnings
 
 ### ERROR
+
 Use for:
+
 - Command failures
 - Invalid parameters
 - Unreachable poses
@@ -142,4 +150,5 @@ Use for:
 
 ## Console Output
 
-Foreground tasks (like CommandExecutor) also write logs to the robot's SmartPad console using the same format. This allows operators to see logs directly on the robot without needing a network connection.
+Foreground tasks (like CommandExecutor) also write logs to the robot's SmartPad console using the same format. This
+allows operators to see logs directly on the robot without needing a network connection.

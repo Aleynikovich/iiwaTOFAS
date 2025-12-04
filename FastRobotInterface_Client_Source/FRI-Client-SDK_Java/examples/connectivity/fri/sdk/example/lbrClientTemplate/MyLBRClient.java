@@ -16,11 +16,9 @@ public class MyLBRClient extends LBRClient
 
     /**
      * Callback for FRI state changes.
-     * 
-     * @param oldState
-     *            the old state
-     * @param newState
-     *            the new state
+     *
+     * @param oldState the old state
+     * @param newState the new state
      */
     @Override
     public void onStateChange(FRISessionState oldState, FRISessionState newState)
@@ -28,26 +26,26 @@ public class MyLBRClient extends LBRClient
 
         switch (newState)
         {
-        case MONITORING_WAIT:
-        {
-            break;
-        }
-        case MONITORING_READY:
-        {
-            break;
-        }
-        case COMMANDING_WAIT:
-        {
-            break;
-        }
-        case COMMANDING_ACTIVE:
-        {
-            break;
-        }
-        default:
-        {
-            break;
-        }
+            case MONITORING_WAIT:
+            {
+                break;
+            }
+            case MONITORING_READY:
+            {
+                break;
+            }
+            case COMMANDING_WAIT:
+            {
+                break;
+            }
+            case COMMANDING_ACTIVE:
+            {
+                break;
+            }
+            default:
+            {
+                break;
+            }
         }
     }
 

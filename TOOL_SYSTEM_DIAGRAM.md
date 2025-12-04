@@ -210,4 +210,5 @@ Invalid tool ID format (non-int)    │ Warn, default to flange (ID 0)
 
 ---
 
-**Note**: This diagram shows the complete tool attachment flow as implemented in the system. The design supports unlimited tools via the ToolMapping configuration.
+**Note**: This diagram shows the complete tool attachment flow as implemented in the system. The design supports
+unlimited tools via the ToolMapping configuration.

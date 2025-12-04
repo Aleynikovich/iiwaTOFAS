@@ -10,7 +10,6 @@ import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +25,8 @@ public class MotionExecutor
 
     private final LBR robot;
     private final hartu.robot.executor.CommandExecutor commandExecutor;
-    private final IErrorHandler moveAsyncErrorHandler;
+    
+    @SuppressWarnings("unused") private final IErrorHandler moveAsyncErrorHandler;
 
     // Track the current command being executed for error handling
     private volatile ParsedCommand currentCommand = null;

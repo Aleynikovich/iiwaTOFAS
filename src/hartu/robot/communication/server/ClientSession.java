@@ -60,7 +60,7 @@ public class ClientSession
 
     public void close() throws IOException
     {
-        Logger.getInstance().log(
+        Logger.getInstance().medium(
                 "COMM",
                 "ClientSession (" + clientName + "): Attempting to close session streams and socket."
         );
@@ -70,10 +70,10 @@ public class ClientSession
             try
             {
                 writer.close();
-                Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): PrintWriter closed.");
+                Logger.getInstance().medium("COMM", "ClientSession (" + clientName + "): PrintWriter closed.");
             } catch (Exception e)
             {
-                Logger.getInstance().log(
+                Logger.getInstance().medium(
                         "COMM",
                         "ClientSession (" + clientName + "): Error closing PrintWriter: " + e.getMessage()
                 );
@@ -85,10 +85,10 @@ public class ClientSession
             try
             {
                 reader.close();
-                Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): BufferedReader closed.");
+                Logger.getInstance().medium("COMM", "ClientSession (" + clientName + "): BufferedReader closed.");
             } catch (Exception e)
             {
-                Logger.getInstance().log(
+                Logger.getInstance().medium(
                         "COMM",
                         "ClientSession (" + clientName + "): Error closing BufferedReader: " + e.getMessage()
                 );
@@ -100,16 +100,16 @@ public class ClientSession
             try
             {
                 socket.close();
-                Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): Socket closed.");
+                Logger.getInstance().medium("COMM", "ClientSession (" + clientName + "): Socket closed.");
             } catch (Exception e)
             {
-                Logger.getInstance().log(
+                Logger.getInstance().medium(
                         "COMM",
                         "ClientSession (" + clientName + "): Error closing Socket: " + e.getMessage()
                 );
             }
         }
-        Logger.getInstance().log("COMM", "ClientSession (" + clientName + "): Session closure attempt complete.");
+        Logger.getInstance().medium("COMM", "ClientSession (" + clientName + "): Session closure attempt complete.");
     }
 
     public String getRemoteAddress()

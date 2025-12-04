@@ -3,7 +3,6 @@ package hartu.robot.executor.io;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 import hartu.robot.io.IOList;
 
 /**

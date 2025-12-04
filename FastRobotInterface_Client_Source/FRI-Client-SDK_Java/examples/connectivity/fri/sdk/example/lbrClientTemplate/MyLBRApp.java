@@ -8,8 +8,7 @@ import com.kuka.connectivity.fastRobotInterface.clientSDK.connection.UdpConnecti
  * <p>
  * The hartu.application provides a {@link ClientApplication#connect}, a {@link ClientApplication#step()} and a
  * {@link ClientApplication#disconnect} method, which will be called successively in the hartu.application life-cycle.
- * 
- * 
+ *
  * @see ClientApplication#connect
  * @see ClientApplication#step()
  * @see ClientApplication#disconnect
@@ -20,8 +19,7 @@ public class MyLBRApp
     private static final int DEFAULT_PORTID = 30200;
 
     /**
-     * @param argv
-     *            the arguments
+     * @param argv the arguments
      */
     public static void main(String[] argv)
     {

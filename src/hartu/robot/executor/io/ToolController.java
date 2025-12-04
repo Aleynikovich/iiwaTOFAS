@@ -4,7 +4,6 @@ import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 
 /**
  * Controls tool operations including pneumatic tool open/close,

@@ -1,6 +1,7 @@
 # KUKA Sunrise.OS Programming Guide for AI Agents
 
-This guide provides comprehensive programming instructions for developing robot applications using the KUKA Sunrise.OS 1.11 API. It is designed to help AI agents write correct, safe, and efficient robot code following KUKA best practices.
+This guide provides comprehensive programming instructions for developing robot applications using the KUKA Sunrise.OS
+1.11 API. It is designed to help AI agents write correct, safe, and efficient robot code following KUKA best practices.
 
 ## Table of Contents
 
@@ -64,7 +65,8 @@ private Tool myTool;                  // Tool defined in object templates
 private Workpiece myWorkpiece;        // Workpiece defined in object templates
 ```
 
-**Important:** The `@Named` annotation must match exactly the name defined in the Object Templates view in Sunrise.Workbench.
+**Important:** The `@Named` annotation must match exactly the name defined in the Object Templates view in
+Sunrise.Workbench.
 
 ---
 
@@ -72,16 +74,17 @@ private Workpiece myWorkpiece;        // Workpiece defined in object templates
 
 ### Motion Types Overview
 
-| Motion Type | Description | Use Case |
-|------------|-------------|----------|
-| PTP | Point-to-point | Fastest path between points (joint space) |
-| LIN | Linear | Straight line motion (Cartesian space) |
-| CIRC | Circular | Arc motion through auxiliary point |
-| Spline | Smooth curve | Continuous path through multiple points |
+| Motion Type | Description    | Use Case                                  |
+|-------------|----------------|-------------------------------------------|
+| PTP         | Point-to-point | Fastest path between points (joint space) |
+| LIN         | Linear         | Straight line motion (Cartesian space)    |
+| CIRC        | Circular       | Arc motion through auxiliary point        |
+| Spline      | Smooth curve   | Continuous path through multiple points   |
 
 ### PTP (Point-to-Point) Motion
 
-PTP motion moves the robot to a target position via the shortest path in joint space. The path is not necessarily a straight line in Cartesian space.
+PTP motion moves the robot to a target position via the shortest path in joint space. The path is not necessarily a
+straight line in Cartesian space.
 
 #### PTP with Frame
 
@@ -174,7 +177,8 @@ robot.move(
 );
 ```
 
-**Important:** The auxiliary point defines the arc. The robot moves from current position through the auxiliary point to the end point.
+**Important:** The auxiliary point defines the arc. The robot moves from current position through the auxiliary point to
+the end point.
 
 ### Spline Motion
 
@@ -224,12 +228,12 @@ robot.move(mySpline);
 - **Point Distance:** Maintain distances between points > 5 mm to avoid excessive planning time
 - **Process Separation:** Use one spline block per process (e.g., one adhesive seam)
 - **Segment Selection:**
-  - Use LIN and CIRC for straight lines and arcs
-  - Use SPL segments for short distances or when points are close together
+    - Use LIN and CIRC for straight lines and arcs
+    - Use SPL segments for short distances or when points are close together
 - **Path Definition:**
-  1. First teach/calculate characteristic points (e.g., direction changes)
-  2. Add intermediate points as needed
-  3. Optimize by removing unnecessary points
+    1. First teach/calculate characteristic points (e.g., direction changes)
+    2. Add intermediate points as needed
+    3. Optimize by removing unnecessary points
 
 ### Motion Parameters
 
@@ -294,6 +298,7 @@ robot.move(
 ### Defining Tools and Workpieces
 
 Tools and workpieces are defined in the **Object Templates** view in Sunrise.Workbench with:
+
 - Load data (mass, center of mass, moments of inertia)
 - Geometric data (3D model)
 - Frames (TCP for tools, attachment points for workpieces)
@@ -386,7 +391,8 @@ gripper.getFrame("/TCP").move(
 
 ### Accessing I/O Groups
 
-I/O groups are automatically generated when exporting from WorkVisual. Each group has methods for reading inputs and writing outputs.
+I/O groups are automatically generated when exporting from WorkVisual. Each group has methods for reading inputs and
+writing outputs.
 
 ```java
 @Inject
@@ -396,7 +402,8 @@ private MediaFlangeIOGroup mediaFlange;
 private Ethercat_x44IOGroup fieldbus;
 ```
 
-**Warning:** Never manually modify generated I/O classes in `com.kuka.generated.ioAccess`. To extend functionality, create derived classes.
+**Warning:** Never manually modify generated I/O classes in `com.kuka.generated.ioAccess`. To extend functionality,
+create derived classes.
 
 ### Digital Outputs
 
@@ -477,17 +484,20 @@ robot.move(
 ### Safety Controller Integration
 
 The KUKA robot has two controller components:
+
 1. **Motion Controller:** Controls robot movements
 2. **Safety Controller:** Monitors and enforces safety limits
 
 ### Load Data Requirements
 
 **Critical:** Incorrect load data can cause:
+
 - Failed position/torque referencing
 - Collision detection failures
 - Robot damage or safety violations
 
 Always ensure:
+
 - Tool mass and center of mass are correctly configured
 - Workpiece mass and center of mass are correctly configured
 - Load changes are reported to the safety controller when using safety-oriented tools/workpieces
@@ -508,17 +518,18 @@ robot.setSafetyWorkpiece(null);
 
 The robot has different operating modes with different safety requirements:
 
-| Mode | Description | Typical Use |
-|------|-------------|-------------|
-| T1 | Manual mode with reduced speed | Teaching, testing, verification |
-| T2 | Manual mode with higher speed | Testing, debugging |
-| AUT | Automatic mode | Production operation |
+| Mode | Description                    | Typical Use                     |
+|------|--------------------------------|---------------------------------|
+| T1   | Manual mode with reduced speed | Teaching, testing, verification |
+| T2   | Manual mode with higher speed  | Testing, debugging              |
+| AUT  | Automatic mode                 | Production operation            |
 
 **Best Practice:** Always test new programs in T1 mode first.
 
 ### Emergency Stop
 
 Always ensure:
+
 - Emergency stop button is accessible
 - Workspace is clear before running programs
 - Proper safety fencing is in place for automatic operation
@@ -634,12 +645,14 @@ forceCondition.removeListener(listener);
 ### 1. Motion Planning
 
 **Do:**
+
 - Test motions in T1 mode first
 - Use appropriate motion types (PTP for fast positioning, LIN for process paths)
 - Set reasonable velocity and acceleration values
 - Use blending for smooth continuous motion
 
 **Don't:**
+
 - Use maximum velocity for all motions
 - Execute untested motions in automatic mode
 - Ignore collision warnings
@@ -648,12 +661,14 @@ forceCondition.removeListener(listener);
 ### 2. Tool and Workpiece Management
 
 **Do:**
+
 - Attach tools in `initialize()` method
 - Update safety controller for load changes
 - Define accurate load data in Object Templates
 - Use meaningful frame names
 
 **Don't:**
+
 - Forget to detach workpieces after use
 - Modify load data during motion
 - Use undefined or incorrect frame names
@@ -662,12 +677,14 @@ forceCondition.removeListener(listener);
 ### 3. Error Handling
 
 **Do:**
+
 - Wrap motion commands in try-catch blocks
 - Log errors with meaningful messages
 - Check robot state before motions
 - Handle exceptions gracefully
 
 **Don't:**
+
 - Ignore exceptions
 - Use empty catch blocks
 - Continue program after critical errors
@@ -676,12 +693,14 @@ forceCondition.removeListener(listener);
 ### 4. Code Organization
 
 **Do:**
+
 - Use meaningful variable names
 - Comment complex logic
 - Organize code into logical sections
 - Use dependency injection properly
 
 **Don't:**
+
 - Hardcode values (use constants or application data)
 - Create monolithic run() methods
 - Duplicate code
@@ -690,12 +709,14 @@ forceCondition.removeListener(listener);
 ### 5. Performance
 
 **Do:**
+
 - Use spline motions for continuous paths
 - Optimize motion parameters for process
 - Use relative motions when appropriate
 - Profile and test performance
 
 **Don't:**
+
 - Create excessive small motions
 - Use inefficient path planning
 - Ignore planning time warnings

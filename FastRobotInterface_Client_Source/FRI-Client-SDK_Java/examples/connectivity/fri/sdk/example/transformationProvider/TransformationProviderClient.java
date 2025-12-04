@@ -8,9 +8,9 @@ import com.kuka.connectivity.fastRobotInterface.clientSDK.base.TransformationCli
 public class TransformationProviderClient extends TransformationClient
 {
     private double _transformationMatrix[][] = {
-            { 1, 0, 0, 10 },
-            { 0, 1, 0, 10 },
-            { 0, 0, 1, 10 }
+            {1, 0, 0, 10},
+            {0, 1, 0, 10},
+            {0, 0, 1, 10}
     };
 
     @Override
@@ -22,8 +22,7 @@ public class TransformationProviderClient extends TransformationClient
         if (x < 100)
         {
             x++;
-        }
-        else
+        } else
         {
             x = 0;
         }
@@ -33,8 +32,7 @@ public class TransformationProviderClient extends TransformationClient
         if (y < 200)
         {
             y += 5;
-        }
-        else
+        } else
         {
             y = 0;
         }
@@ -44,8 +42,7 @@ public class TransformationProviderClient extends TransformationClient
         if (z < 300)
         {
             z += 10;
-        }
-        else
+        } else
         {
             z = 0;
         }

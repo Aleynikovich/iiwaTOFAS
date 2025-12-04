@@ -4,7 +4,6 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 import hartu.robot.executor.io.ToolController;
 
 /**
@@ -35,7 +34,7 @@ public class ProgramExecutor
      * - 11-13: Place tool to T1Base-T3Base
      * - 101: Open tool (global)
      * - 102: Close tool (global)
-     * 
+     * <p>
      * Any program call can optionally include base coordinate data (workpiece position
      * from ROS computer vision nodes). If present, it will be stored before executing
      * the program routine.
@@ -91,40 +90,32 @@ public class ProgramExecutor
             } else if (programId == 20)
             {
                 return programSubroutines.doParipe();
-            }
-            else if (programId == 21)
+            } else if (programId == 21)
             {
                 return programSubroutines.placeAxisPlaceholder();
-            }
-            else if (programId == 22)
+            } else if (programId == 22)
             {
                 return programSubroutines.pickAxis();
-            }
-            else if (programId == 23)
+            } else if (programId == 23)
             {
                 return programSubroutines.placeAxisBox(frame, workpieceId, 1);
-            }
-            else if (programId == 24)
+            } else if (programId == 24)
             {
-            	return programSubroutines.placeAxisBox(frame, workpieceId, 2);
-            }
-            else if (programId == 25)
+                return programSubroutines.placeAxisBox(frame, workpieceId, 2);
+            } else if (programId == 25)
             {
                 return programSubroutines.placeDisk(frame, workpieceId, 1);
-            }
-            else if (programId == 26)
+            } else if (programId == 26)
+            {
+                return programSubroutines.placeDisk(frame, workpieceId, 2);
+            } else if (programId == 27)
+            {
+                return programSubroutines.placeDisk(frame, workpieceId, 1);
+            } else if (programId == 28)
             {
                 return programSubroutines.placeDisk(frame, workpieceId, 2);
             }
-            else if (programId == 27)
-            {
-                return programSubroutines.placeDisk(frame, workpieceId, 1);
-            }
-            else if (programId == 28)
-            {
-                return programSubroutines.placeDisk(frame, workpieceId, 2);
-            }
-            
+
             // Invalid program ID
             else
             {
@@ -142,7 +133,7 @@ public class ProgramExecutor
     /**
      * Stores base coordinate data from ROS nodes.
      * This stores the workpiece coordinates and type for subsequent kitting operations.
-     * 
+     *
      * @param command The ParsedCommand containing base coordinate data
      * @return True if storage was successful, false otherwise
      */
@@ -157,7 +148,7 @@ public class ProgramExecutor
 
     /**
      * Extracts the Frame from a command's base coordinate data.
-     * 
+     *
      * @param command The ParsedCommand to extract Frame from
      * @return The Frame from base coordinate data, or null if not present
      */
@@ -173,7 +164,7 @@ public class ProgramExecutor
 
     /**
      * Extracts the workpiece ID from a command's base coordinate data.
-     * 
+     *
      * @param command The ParsedCommand to extract workpiece ID from
      * @return The workpiece ID, or 0 if not present
      */
