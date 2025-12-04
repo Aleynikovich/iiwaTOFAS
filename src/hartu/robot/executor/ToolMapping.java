@@ -1,7 +1,6 @@
 package hartu.robot.executor;
 
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 
 import java.util.HashMap;
 import java.util.Map;

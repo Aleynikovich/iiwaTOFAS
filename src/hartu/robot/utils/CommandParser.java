@@ -11,7 +11,6 @@ import hartu.robot.commands.MotionParameters;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.commands.io.IoCommandData;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +184,7 @@ public class CommandParser
             {
                 programId = commandNumber - ActionTypes.PROGRAM_CALL_OFFSET.getValue();
                 Logger.getInstance().critical("PARSER", String.format("Parsed program call: %d - %d = %d", commandNumber, ActionTypes.PROGRAM_CALL_OFFSET.getValue(), programId));
-                
+
                 // Try to parse optional base coordinate data for any program call
                 // Format: ACTION||X;Y;Z;R;P;Y|||WORKPIECE_ID||||HashID#
                 // TARGET_POINTS (index 2) contains FRAME data in xyzRPY format
@@ -196,7 +195,7 @@ public class CommandParser
                     Logger.getInstance().critical("PARSER", "Parsed base coordinate data: " + baseCoordinateData.toString());
                     return ParsedCommand.forProgramCallWithBaseData(actionType, id, programId, baseCoordinateData);
                 }
-                
+
                 return ParsedCommand.forProgramCall(actionType, id, programId);
             } catch (Exception e)
             {
@@ -215,7 +214,7 @@ public class CommandParser
     /**
      * Parses base coordinate data from program call command parts.
      * This is optional - if the data is not present or invalid, returns null.
-     * 
+     *
      * @param parts The message parts array
      * @return BaseCoordinateData containing frame and workpiece type, or null if not valid
      */
@@ -230,7 +229,7 @@ public class CommandParser
                 Logger.getInstance().warn("PARSER", "No TARGET_POINTS data for base coordinate parsing");
                 return null;
             }
-            
+
             // Parse the frame data (x;y;z;roll;pitch;yaw)
             String[] values = targetPointsStr.split(SECONDARY_DELIMITER);
             if (values.length != 6)
@@ -238,7 +237,7 @@ public class CommandParser
                 Logger.getInstance().warn("PARSER", "Invalid base coordinate format: Expected 6 values (X;Y;Z;R;P;Y), got " + values.length);
                 return null;
             }
-            
+
             double x = Double.parseDouble(values[0]);
             double y = Double.parseDouble(values[1]);
             double z = Double.parseDouble(values[2]);
@@ -247,7 +246,7 @@ public class CommandParser
             double b = Math.toRadians(Double.parseDouble(values[4]));
             double a = Math.toRadians(Double.parseDouble(values[5]));
             Frame coordinateFrame = new Frame(x, y, z, a, b, c);
-            
+
             // Get TOOL (index 6) - contains workpiece ID
             String toolStr = parts[MessagePartIndex.TOOL.getIndex()];
             int workpieceId = 0;
@@ -256,9 +255,9 @@ public class CommandParser
                 workpieceId = Integer.parseInt(toolStr);
             }
             WorkpieceType workpieceType = WorkpieceType.fromId(workpieceId);
-            
+
             return new BaseCoordinateData(coordinateFrame, workpieceType);
-            
+
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
         {
             Logger.getInstance().warn("PARSER", "Failed to parse base coordinate data: " + e.getMessage());

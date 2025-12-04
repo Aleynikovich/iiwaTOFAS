@@ -1,9 +1,9 @@
 package connectivity.fri.sdk.example.lbrWrenchSineOverlay;
 
+import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRClient;
+
 import java.util.Arrays;
 import java.util.logging.Logger;
-
-import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRClient;
 
 /**
  * Test client that can add additional forces along the X and Y direction of the
@@ -43,18 +43,14 @@ public class LBRWrenchSineOverlayClient extends LBRClient
 
     /**
      * Constructor.
-     * 
-     * @param freqHzX
-     *            sine frequency in Hertz of force in X-direction
-     * @param freqHzY
-     *            sine frequency in Hertz of force in Y-direction
-     * @param amplRadX
-     *            sine amplitude in radians of force in X-direction
-     * @param amplRadY
-     *            sine amplitude in radians of force in Y-direction
+     *
+     * @param freqHzX  sine frequency in Hertz of force in X-direction
+     * @param freqHzY  sine frequency in Hertz of force in Y-direction
+     * @param amplRadX sine amplitude in radians of force in X-direction
+     * @param amplRadY sine amplitude in radians of force in Y-direction
      */
     public LBRWrenchSineOverlayClient(double freqHzX, double freqHzY,
-            double amplRadX, double amplRadY)
+                                      double amplRadX, double amplRadY)
     {
         _freqHzX = freqHzX;
         _freqHzY = freqHzY;
@@ -73,20 +69,20 @@ public class LBRWrenchSineOverlayClient extends LBRClient
     {
         switch (newState)
         {
-        // (re)initialize sine parameters when entering Monitoring
-        case MONITORING_READY:
-        {
-            Arrays.fill(_wrench, 0.0);
-            _phiX = 0.0;
-            _phiY = 0.0;
-            _deltaPhiX = 2 * Math.PI * _freqHzX * getRobotState().getSampleTime();
-            _deltaPhiY = 2 * Math.PI * _freqHzY * getRobotState().getSampleTime();
-            break;
-        }
-        default:
-        {
-            break;
-        }
+            // (re)initialize sine parameters when entering Monitoring
+            case MONITORING_READY:
+            {
+                Arrays.fill(_wrench, 0.0);
+                _phiX = 0.0;
+                _phiY = 0.0;
+                _deltaPhiX = 2 * Math.PI * _freqHzX * getRobotState().getSampleTime();
+                _deltaPhiY = 2 * Math.PI * _freqHzY * getRobotState().getSampleTime();
+                break;
+            }
+            default:
+            {
+                break;
+            }
         }
     }
 

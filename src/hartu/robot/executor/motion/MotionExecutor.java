@@ -10,7 +10,6 @@ import hartu.protocols.constants.MovementType;
 import hartu.robot.commands.MotionParameters;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;

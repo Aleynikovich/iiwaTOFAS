@@ -7,7 +7,9 @@
 boolean value = ioList.in.get(INDEX);
 
 // Set any output
-ioList.out.set(INDEX, true/false);
+ioList.out.
+
+set(INDEX, true/false);
 ```
 
 ## Complete Index Map
@@ -24,7 +26,9 @@ Software flags for custom use - NOT physical I/Os
 
 ```java
 ioList.in.get(1);        // Read mark 1
-ioList.out.set(1, true); // Set mark 1
+ioList.out.
+
+set(1,true); // Set mark 1
 ```
 
 ---
@@ -66,7 +70,7 @@ boolean val = ioList.in.get(65);  // Read Ethercat Input1
 **Access:**
 
 ```java
-ioList.out.set(65, true);  // Set Ethercat Output1
+ioList.out.set(65,true);  // Set Ethercat Output1
 ```
 
 ---
@@ -108,7 +112,7 @@ boolean val = ioList.in.get(73);  // Read IOFlange DI_Flange1
 **Access:**
 
 ```java
-ioList.out.set(73, true);  // Set IOFlange DO_Flange1
+ioList.out.set(73,true);  // Set IOFlange DO_Flange1
 ```
 
 ---
@@ -149,9 +153,13 @@ boolean btn = ioList.in.get(86);  // Read User Button
 **Access:**
 
 ```java
-ioList.out.set(81, true);   // Set Blue LED
-ioList.out.set(87, true);   // Set Red LED
-ioList.out.set(88, false);  // Turn off Green LED
+ioList.out.set(81,true);   // Set Blue LED
+ioList.out.
+
+set(87,true);   // Set Red LED
+ioList.out.
+
+set(88,false);  // Turn off Green LED
 ```
 
 ---
@@ -177,18 +185,25 @@ ioList.out.set(88, false);  // Turn off Green LED
 ### Loop Through All Ethercat Inputs
 
 ```java
-for (int i = 65; i <= 72; i++) {
-    boolean value = ioList.in.get(i);
-    System.out.println("Input " + (i-64) + ": " + value);
-}
+for(int i = 65;
+i <=72;i++){
+boolean value = ioList.in.get(i);
+    System.out.
+
+println("Input "+(i-64) +": "+value);
+        }
 ```
 
 ### Check Multiple Conditions
 
 ```java
-if (ioList.in.get(65) && ioList.in.get(73)) {
-    // Both Ethercat Input1 and IOFlange Input1 are active
-    ioList.out.set(65, true);  // Activate output
+if(ioList.in.get(65) &&ioList.in.
+
+get(73)){
+        // Both Ethercat Input1 and IOFlange Input1 are active
+        ioList.out.
+
+set(65,true);  // Activate output
 }
 ```
 
@@ -199,11 +214,19 @@ final int STATE_IDLE = 1;
 final int STATE_RUNNING = 2;
 final int STATE_ERROR = 3;
 
-ioList.out.set(STATE_IDLE, true);  // Set to idle state
+ioList.out.
 
-if (ioList.in.get(STATE_IDLE)) {
-    // Start operation
-    ioList.out.set(STATE_IDLE, false);
-    ioList.out.set(STATE_RUNNING, true);
+set(STATE_IDLE, true);  // Set to idle state
+
+if(ioList.in.
+
+get(STATE_IDLE)){
+        // Start operation
+        ioList.out.
+
+set(STATE_IDLE, false);
+    ioList.out.
+
+set(STATE_RUNNING, true);
 }
 ```

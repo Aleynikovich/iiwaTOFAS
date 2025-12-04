@@ -14,7 +14,6 @@ import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
 import hartu.robot.communication.server.CommandResultHolder;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 import hartu.robot.executor.io.IoExecutor;
 import hartu.robot.executor.io.ToolController;
 import hartu.robot.executor.motion.MotionExecutor;

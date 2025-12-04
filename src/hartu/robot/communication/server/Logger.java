@@ -15,11 +15,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * - Default level is MEDIUM (priority 2), showing priorities 0, 1, and 2
  * - Can be changed at runtime via setMinimumLogLevel()
  * - Priority Levels:
- *   - CRITICAL (0): Must-have logs (parsed commands, critical operations)
- *   - HIGH (1): Errors and important status messages
- *   - MEDIUM (2): Warnings and important state changes [DEFAULT]
- *   - LOW (3): Execution progress and motion operations
- *   - DEBUG (4): Verbose debug/trace information
+ * - CRITICAL (0): Must-have logs (parsed commands, critical operations)
+ * - HIGH (1): Errors and important status messages
+ * - MEDIUM (2): Warnings and important state changes [DEFAULT]
+ * - LOW (3): Execution progress and motion operations
+ * - DEBUG (4): Verbose debug/trace information
  * - Example: setMinimumLogLevel(LogLevel.HIGH) to show only priorities 0 and 1
  */
 public class Logger

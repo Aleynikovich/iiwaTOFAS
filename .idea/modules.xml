@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/iiwaTofas.iml" filepath="$PROJECT_DIR$/iiwaTofas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FastRobotInterface_Client_Source/FastRobotInterface_Client_Source.iml" filepath="$PROJECT_DIR$/FastRobotInterface_Client_Source/FastRobotInterface_Client_Source.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iiwaTOFAS.iml" filepath="$PROJECT_DIR$/iiwaTOFAS.iml" />
     </modules>
   </component>
 </project>

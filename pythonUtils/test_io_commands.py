@@ -61,20 +61,20 @@ def test_activate_io(sock, pin, state):
     """
     print(f"\n=== Testing ACTIVATE_IO (Command 9) ===")
     print(f"Setting output pin {pin} to {state}")
-    
+
     cmd_id = generate_command_id()
     # Format: ACTION_TYPE|NUM_POINTS|TARGET_POINTS|IO_POINT|IO_PIN|IO_STATE|TOOL|BASE|SPEED_OVERRIDE|ID
     command = f"9|0|0|0|{pin}|{state}|0|0|0|{cmd_id}"
-    
+
     send_command(sock, command)
     response = receive_response(sock)
-    
+
     # Expected response: FREE|id|success# or FREE|id|failure#
     if "|success#" in response:
         print("✅ Command executed successfully")
     else:
         print("❌ Command failed")
-    
+
     return response
 
 
@@ -92,14 +92,14 @@ def test_digital_input(sock, pin):
     """
     print(f"\n=== Testing DIGITAL_INPUT (Command 12) ===")
     print(f"Reading digital input pin {pin}")
-    
+
     cmd_id = generate_command_id()
     # Format: ACTION_TYPE|NUM_POINTS|TARGET_POINTS|IO_POINT|IO_PIN|IO_STATE|TOOL|BASE|SPEED_OVERRIDE|ID
     command = f"12|0|0|0|{pin}|0|0|0|0|{cmd_id}"
-    
+
     send_command(sock, command)
     response = receive_response(sock)
-    
+
     # Expected response: FREE|id|STATE# where STATE is 0 or 1
     if "|1#" in response:
         print("✅ Input state: HIGH (1)")
@@ -123,92 +123,92 @@ def test_analog_input(sock, pin):
     """
     print(f"\n=== Testing ANALOG_INPUT (Command 13) ===")
     print(f"Reading analog input pin {pin} (NOT IMPLEMENTED YET)")
-    
+
     cmd_id = generate_command_id()
     # Format: ACTION_TYPE|NUM_POINTS|TARGET_POINTS|IO_POINT|IO_PIN|IO_STATE|TOOL|BASE|SPEED_OVERRIDE|ID
     command = f"13|0|0|0|{pin}|0|0|0|0|{cmd_id}"
-    
+
     send_command(sock, command)
     response = receive_response(sock)
-    
+
     # Expected response: FREE|id|failure# (since not implemented)
     if "|failure#" in response:
         print("⚠️  Command returned failure (expected - not implemented)")
     else:
         print(f"Response: {response}")
-    
+
     return response
 
 
 def run_comprehensive_test(sock):
     """Run a comprehensive test of all IO commands"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("COMPREHENSIVE IO COMMAND TEST")
-    print("="*60)
-    
+    print("=" * 60)
+
     # Test 1: Set output
     print("\nTest 1: Set a digital output (pin 65)")
     test_activate_io(sock, 65, "true")
-    
+
     # Test 2: Clear output
     print("\nTest 2: Clear the same digital output (pin 65)")
     test_activate_io(sock, 65, "false")
-    
+
     # Test 3: Read digital input
     print("\nTest 3: Read digital input (pin 65)")
     test_digital_input(sock, 65)
-    
+
     # Test 4: Try analog input (should fail)
     print("\nTest 4: Try reading analog input (pin 1) - should fail")
     test_analog_input(sock, 1)
-    
+
     # Test 5: Virtual marks
     print("\nTest 5: Set a virtual mark (pin 1)")
     test_activate_io(sock, 1, "true")
-    
+
     print("\nTest 6: Read virtual mark (pin 1)")
     test_digital_input(sock, 1)
-    
-    print("\n" + "="*60)
+
+    print("\n" + "=" * 60)
     print("TEST COMPLETE")
-    print("="*60)
+    print("=" * 60)
 
 
 def interactive_mode(sock):
     """Interactive mode for testing specific commands"""
     while True:
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("IO COMMAND TEST MENU")
-        print("="*60)
+        print("=" * 60)
         print("1. Test ACTIVATE_IO (Command 9) - Set digital output")
         print("2. Test DIGITAL_INPUT (Command 12) - Read digital input")
         print("3. Test ANALOG_INPUT (Command 13) - Read analog input")
         print("4. Run comprehensive test")
         print("5. Exit")
         print()
-        
+
         choice = input("Select option: ").strip()
-        
+
         if choice == "1":
             pin = input("Enter output pin (1-88): ").strip()
             state = input("Enter state (true/false): ").strip().lower()
             test_activate_io(sock, pin, state)
-        
+
         elif choice == "2":
             pin = input("Enter input pin (1-86): ").strip()
             test_digital_input(sock, pin)
-        
+
         elif choice == "3":
             pin = input("Enter analog input pin: ").strip()
             test_analog_input(sock, pin)
-        
+
         elif choice == "4":
             run_comprehensive_test(sock)
-        
+
         elif choice == "5":
             print("Goodbye!")
             break
-        
+
         else:
             print("Invalid choice. Please try again.")
 
@@ -217,20 +217,20 @@ def main():
     """Main function"""
     # Get robot IP from command line or use default
     robot_ip = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_ROBOT_IP
-    
+
     print(f"Connecting to robot at {robot_ip}:{TASK_PORT}...")
-    
+
     try:
         with socket.create_connection((robot_ip, TASK_PORT), timeout=10) as sock:
             print("✅ Connected successfully!")
-            
+
             # Receive initial response
             initial = receive_response(sock)
             print(f"Initial response: {initial}")
-            
+
             # Run interactive mode
             interactive_mode(sock)
-            
+
     except socket.timeout:
         print(f"❌ Connection timeout. Make sure robot is reachable at {robot_ip}:{TASK_PORT}")
         sys.exit(1)

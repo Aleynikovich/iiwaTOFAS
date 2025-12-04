@@ -1,9 +1,9 @@
 package connectivity.fri.sdk.example.lbrJointSineOverlay;
 
-import java.util.logging.Logger;
-
 import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRClient;
 import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRState;
+
+import java.util.logging.Logger;
 
 /**
  * Test client that can overlay interpolator joint positions with sine waves.
@@ -33,19 +33,15 @@ public class LBRJointSineOverlayClient extends LBRClient
 
     /**
      * Constructor.
-     * 
-     * @param jointMask
-     *            bit mask that encodes the joint indices to be overlaid by sine
-     *            waves
-     * @param freqHz
-     *            sine frequency in Hertz
-     * @param amplRad
-     *            sine amplitude in radians
-     * @param filterCoeff
-     *            filter coefficient between 0 (filter off) and 1 (max filter)
+     *
+     * @param jointMask   bit mask that encodes the joint indices to be overlaid by sine
+     *                    waves
+     * @param freqHz      sine frequency in Hertz
+     * @param amplRad     sine amplitude in radians
+     * @param filterCoeff filter coefficient between 0 (filter off) and 1 (max filter)
      */
     public LBRJointSineOverlayClient(int jointMask, double freqHz,
-            double amplRad, double filterCoeff)
+                                     double amplRad, double filterCoeff)
     {
         _freqHz = freqHz;
         _amplRad = amplRad;
@@ -66,17 +62,17 @@ public class LBRJointSineOverlayClient extends LBRClient
         // (re)initialize sine parameters when entering Monitoring
         switch (newState)
         {
-        case MONITORING_READY:
-        {
-            _offset = 0.0;
-            _phi = 0.0;
-            _stepWidth = 2 * Math.PI * _freqHz * getRobotState().getSampleTime();
-            break;
-        }
-        default:
-        {
-            break;
-        }
+            case MONITORING_READY:
+            {
+                _offset = 0.0;
+                _phi = 0.0;
+                _stepWidth = 2 * Math.PI * _freqHz * getRobotState().getSampleTime();
+                break;
+            }
+            default:
+            {
+                break;
+            }
         }
     }
 

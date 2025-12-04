@@ -1,18 +1,17 @@
 package connectivity.fri.sdk.example.transformationProvider;
 
-import java.util.logging.Logger;
-
 import com.kuka.connectivity.fastRobotInterface.clientSDK.base.ClientApplication;
 import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRClient;
 import com.kuka.connectivity.fastRobotInterface.clientSDK.connection.UdpConnection;
+
+import java.util.logging.Logger;
 
 /**
  * Implementation of a FRI client hartu.application.
  * <p>
  * The hartu.application provides a {@link ClientApplication#connect}, a {@link ClientApplication#step()} and a
  * {@link ClientApplication#disconnect} method, which will be called successively in the hartu.application life-cycle.
- * 
- * 
+ *
  * @see ClientApplication#connect
  * @see ClientApplication#step()
  * @see ClientApplication#disconnect
@@ -24,9 +23,8 @@ public class TransformationProviderApp
 
     /**
      * Main method.
-     * 
-     * @param argv
-     *            command line arguments
+     *
+     * @param argv command line arguments
      */
     public static void main(String[] argv)
     {

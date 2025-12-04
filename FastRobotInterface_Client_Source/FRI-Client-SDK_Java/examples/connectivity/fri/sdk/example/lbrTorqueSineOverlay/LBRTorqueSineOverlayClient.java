@@ -1,10 +1,10 @@
 package connectivity.fri.sdk.example.lbrTorqueSineOverlay;
 
-import java.util.Arrays;
-import java.util.logging.Logger;
-
 import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRClient;
 import com.kuka.connectivity.fastRobotInterface.clientSDK.clientLBR.LBRState;
+
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Test client that superposes joint torques of the robot with sine waves.
@@ -31,17 +31,14 @@ public class LBRTorqueSineOverlayClient extends LBRClient
 
     /**
      * Constructor.
-     * 
-     * @param jointTorqueMask
-     *            bit mask that encodes the joint torque indices to be overlaid
-     *            by sine waves
-     * @param freqHz
-     *            Sine frequency in Hertz
-     * @param torqueAmplitude
-     *            Sine amplitude in Nm
+     *
+     * @param jointTorqueMask bit mask that encodes the joint torque indices to be overlaid
+     *                        by sine waves
+     * @param freqHz          Sine frequency in Hertz
+     * @param torqueAmplitude Sine amplitude in Nm
      */
     public LBRTorqueSineOverlayClient(int jointTorqueMask, double freqHz,
-            double torqueAmplitude)
+                                      double torqueAmplitude)
     {
         _freqHz = freqHz;
         _torqueAmpl = torqueAmplitude;
@@ -62,17 +59,17 @@ public class LBRTorqueSineOverlayClient extends LBRClient
         // (re)initialize sine parameters when entering Monitoring
         switch (newState)
         {
-        case MONITORING_READY:
-        {
-            Arrays.fill(_torques, 0.0);
-            _phi = 0.0;
-            _stepWidth = 2 * Math.PI * _freqHz * getRobotState().getSampleTime();
-            break;
-        }
-        default:
-        {
-            break;
-        }
+            case MONITORING_READY:
+            {
+                Arrays.fill(_torques, 0.0);
+                _phi = 0.0;
+                _stepWidth = 2 * Math.PI * _freqHz * getRobotState().getSampleTime();
+                break;
+            }
+            default:
+            {
+                break;
+            }
         }
     }
 

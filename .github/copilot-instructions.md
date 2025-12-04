@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-iiwaTOFAS is a TCP/IP-based control system for KUKA iiwa robots running on the KUKA Sunrise controller. This project provides a robust communication framework that allows external clients (like ROS2 drivers) to send motion commands and receive real-time logging and joint state information from the robot.
+iiwaTOFAS is a TCP/IP-based control system for KUKA iiwa robots running on the KUKA Sunrise controller. This project
+provides a robust communication framework that allows external clients (like ROS2 drivers) to send motion commands and
+receive real-time logging and joint state information from the robot.
 
 **Key Purpose**: Bridge between robot control software and KUKA hardware using simple string-based TCP commands.
 
@@ -35,6 +37,7 @@ Background Task → Logger (Singleton) → LoggingServerManager → Network Clie
 ```
 
 **Key Benefits:**
+
 - All logs from all tasks (foreground and background) appear on robot console
 - Multiple Python clients can simultaneously receive logs
 - Single responsibility: one server, one port, one function
@@ -89,14 +92,14 @@ iiwaTOFAS/
    ```
 
 3. **Thread Safety**: Use proper synchronization for shared resources
-   - Logger is a singleton with synchronized methods
-   - ClientHandler instances manage their own state
-   - Use CopyOnWriteArrayList for client collections
+    - Logger is a singleton with synchronized methods
+    - ClientHandler instances manage their own state
+    - Use CopyOnWriteArrayList for client collections
 
 4. **Exception Handling**: Never let exceptions crash the server
-   - Catch and log all exceptions in client handlers
-   - Use try-with-resources for socket operations
-   - Continue operation after recoverable errors
+    - Catch and log all exceptions in client handlers
+    - Use try-with-resources for socket operations
+    - Continue operation after recoverable errors
 
 ### Naming Conventions
 
@@ -158,6 +161,7 @@ ACTION_TYPE|NUM_POINTS|POINT_DATA|VELOCITY|ACCELERATION|JERK|ID#
 ### No Automated Test Infrastructure
 
 This project does not have automated unit tests or CI/CD. Testing is done manually:
+
 - Deploy to KUKA controller via Sunrise.Workbench
 - Test with Python clients in `pythonUtils/`
 - Monitor logs via log client

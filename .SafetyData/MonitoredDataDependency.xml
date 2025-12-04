@@ -18,30 +18,31 @@ KUKA Roboter GmbH, Germany. All Rights Reserved
 *****************************************************************************
 </CL>
 -->
-<MonitoredDataDependency xsi:noNamespaceSchemaLocation="MonitoredDataDependency.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<MonitoredDataDependency xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:noNamespaceSchemaLocation="MonitoredDataDependency.xsd">
 
-  <MadaType KinType="E_SERIAL_KINEMATICS" hasSafePos="true" hasSafeTor="true">
-      <BaseLoad>
-         <CalcUnit Name="BASE_LOAD_LBR5"></CalcUnit>
-      </BaseLoad>
-   </MadaType>
+    <MadaType KinType="E_SERIAL_KINEMATICS" hasSafePos="true" hasSafeTor="true">
+        <BaseLoad>
+            <CalcUnit Name="BASE_LOAD_LBR5"></CalcUnit>
+        </BaseLoad>
+    </MadaType>
 
-   <MadaType KinType="E_SERIAL_KINEMATICS" hasSafePos="true" hasSafeTor="false">
-      <BaseLoad>
-         <CalcUnit Name="BASE_LOAD_AGILUS"></CalcUnit>
-      </BaseLoad>
-   </MadaType>
+    <MadaType KinType="E_SERIAL_KINEMATICS" hasSafePos="true" hasSafeTor="false">
+        <BaseLoad>
+            <CalcUnit Name="BASE_LOAD_AGILUS"></CalcUnit>
+        </BaseLoad>
+    </MadaType>
 
-   <MadaType KinType="E_SERIAL_KINEMATICS" hasSafePos="false" hasSafeTor="false">
-      <BaseLoad>
-         <CalcUnit Name="BASE_LOAD_LBR4"></CalcUnit>
-      </BaseLoad>
-   </MadaType>
+    <MadaType KinType="E_SERIAL_KINEMATICS" hasSafePos="false" hasSafeTor="false">
+        <BaseLoad>
+            <CalcUnit Name="BASE_LOAD_LBR4"></CalcUnit>
+        </BaseLoad>
+    </MadaType>
 
-   <MadaType KinType="E_OMNIDIRECTIONAL_KINEMATICS" hasSafePos="true" hasSafeTor="false">
-      <BaseLoad>
-         <CalcUnit Name="BASE_LOAD_KMP"></CalcUnit>
-      </BaseLoad>
-   </MadaType>
+    <MadaType KinType="E_OMNIDIRECTIONAL_KINEMATICS" hasSafePos="true" hasSafeTor="false">
+        <BaseLoad>
+            <CalcUnit Name="BASE_LOAD_KMP"></CalcUnit>
+        </BaseLoad>
+    </MadaType>
 
 </MonitoredDataDependency>

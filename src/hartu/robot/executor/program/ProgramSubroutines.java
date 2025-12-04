@@ -8,7 +8,6 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
-import hartu.robot.communication.server.LogLevel;
 import hartu.robot.executor.io.ToolController;
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
@@ -91,12 +90,12 @@ public class ProgramSubroutines
             Logger.getInstance().error("ROBOT_EXEC", "GimaticCamera tool not loaded. Cannot execute pick operation.");
             return false;
         }
-        
+
         if (toolId > 3)
-		{
-    		toolId = toolId - 3;
-		}
-        
+        {
+            toolId = toolId - 3;
+        }
+
         String baseName = "T" + toolId + "Base";
 
         try
@@ -176,7 +175,7 @@ public class ProgramSubroutines
         }
         if (toolId > 3)
         {
-        	toolId = toolId - 3;
+            toolId = toolId - 3;
         }
         String baseName = "T" + toolId + "Base";
 
@@ -287,29 +286,29 @@ public class ProgramSubroutines
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P4Place")));
         toolController.openTool(5);
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P5")));
-        
+
         return true;
     }
 
     public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
     {
 
-    	if (workpieceId != 1)
-    	{
-    		Logger.getInstance().error("ROBOT_EXEC", "Program has been called to place Axis (ID 1) , but workpiece ID does not match: " + workpieceId);
-    		return false;
-    	}
-    	Ixtur.detach();
-    	Gripper.attachTo(robot.getFlange());
-    	
+        if (workpieceId != 1)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Program has been called to place Axis (ID 1) , but workpiece ID does not match: " + workpieceId);
+            return false;
+        }
+        Ixtur.detach();
+        Gripper.attachTo(robot.getFlange());
 
-    	if (positionId == 1)
-    	{
-        	ObjectFrame P1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
-        	ObjectFrame P2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
-        	
-    		//Gripper.move(ptp(kittingBase/P1));
-    	}
+
+        if (positionId == 1)
+        {
+            ObjectFrame P1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
+            ObjectFrame P2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
+
+            //Gripper.move(ptp(kittingBase/P1));
+        }
         return true;
     }
 
@@ -341,20 +340,20 @@ public class ProgramSubroutines
         }
 
         this.currentBaseCoordinateData = baseData;
-        
+
         Frame frame = baseData.getCoordinateFrame();
         WorkpieceType workpieceType = baseData.getWorkpieceType();
-        
+
         Logger.getInstance().critical("ROBOT_EXEC", "Stored base coordinate data:");
         Logger.getInstance().critical("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
         if (frame != null)
         {
             Logger.getInstance().critical("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
-            Logger.getInstance().critical("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) + 
-                                     ", B=" + Math.toDegrees(frame.getBetaRad()) + 
-                                     ", C=" + Math.toDegrees(frame.getGammaRad()));
+            Logger.getInstance().critical("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) +
+                    ", B=" + Math.toDegrees(frame.getBetaRad()) +
+                    ", C=" + Math.toDegrees(frame.getGammaRad()));
         }
-        
+
         return true;
     }
 
