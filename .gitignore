@@ -3,3 +3,4 @@
 # This line ensures the bin directory is ignored
 bin/
 #!bin/
+*.iml
