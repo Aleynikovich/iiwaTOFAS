@@ -332,6 +332,8 @@ public class ProgramSubroutines
             Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
             Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
 
+            toolController.openTool(toolController.getCurrentToolId());
+            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
 
 
         return true;
