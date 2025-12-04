@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="KUKAJavaLib">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/KUKAJavaLib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/KUKAJavaLib" recursive="false" />
+  </library>
+</component>
