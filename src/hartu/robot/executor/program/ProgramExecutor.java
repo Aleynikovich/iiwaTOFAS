@@ -94,24 +94,37 @@ public class ProgramExecutor
             }
             else if (programId == 21)
             {
-                return programSubroutines.placeAxisPlaceholder(frame, workpieceId);
+                return programSubroutines.placeAxisPlaceholder();
             }
             else if (programId == 22)
             {
-                return programSubroutines.pickAxis(frame, workpieceId);
+                return programSubroutines.pickAxis();
             }
             else if (programId == 23)
             {
-                return programSubroutines.placeAxisBox(frame, workpieceId);
+                return programSubroutines.placeAxisBox(frame, workpieceId, 1);
             }
             else if (programId == 24)
             {
-                return programSubroutines.placeDrum(frame, workpieceId);
+            	return programSubroutines.placeAxisBox(frame, workpieceId, 2);
             }
             else if (programId == 25)
             {
-                return programSubroutines.placeDisk(frame, workpieceId);
+                return programSubroutines.placeDisk(frame, workpieceId, 1);
             }
+            else if (programId == 26)
+            {
+                return programSubroutines.placeDisk(frame, workpieceId, 2);
+            }
+            else if (programId == 27)
+            {
+                return programSubroutines.placeDisk(frame, workpieceId, 1);
+            }
+            else if (programId == 28)
+            {
+                return programSubroutines.placeDisk(frame, workpieceId, 2);
+            }
+            
             // Invalid program ID
             else
             {

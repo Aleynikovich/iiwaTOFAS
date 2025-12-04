@@ -101,7 +101,7 @@ public class ClientHandler implements Runnable
                             ParsedCommand parsedCommand = CommandParser.parseCommand(receivedMessage + ProtocolConstants.MESSAGE_TERMINATOR);
                             commandId = parsedCommand.getId();
 
-                            Logger.getInstance().debug(
+                            Logger.getInstance().high(
                                     "COMM",
                                     "ClientHandler (" + listenerName + " - " + clientAddress + "): Successfully parsed command: " + parsedCommand
                             );

@@ -260,25 +260,10 @@ public class ProgramSubroutines
         }
     }
 
-    /**
-     * Logs the subroutine call with frame and workpiece information.
-     *
-     * @param methodName  The name of the subroutine being called
-     * @param frame       The Frame parameter
-     * @param workpieceId The workpiece ID parameter
-     */
-    private void logSubroutineCall(String methodName, Frame frame, int workpieceId)
-    {
-        Logger.getInstance().debug("ROBOT_EXEC", methodName + " called with frame: " +
-                (frame != null ? frame.toString() : "null") + ", workpieceId: " + workpieceId);
-    }
 
-    public boolean pickAxis(Frame frame, int workpieceId)
+    public boolean pickAxis()
     {
-        logSubroutineCall("pickAxis", frame, workpieceId);
-        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
-        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
-
+        Ixtur.detach();
         Gripper.attachTo(robot.getFlange());
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P2")));
@@ -291,10 +276,9 @@ public class ProgramSubroutines
         return true;
     }
 
-    public boolean placeAxisPlaceholder(Frame frame, int workpieceId)
+    public boolean placeAxisPlaceholder()
     {
-        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis workID: " + workpieceId);
-        Logger.getInstance().critical("ROBOT_EXEC", "Picking axis frame: " + frame.toString());
+        Gripper.detach();
         Ixtur.attachTo(robot.getFlange());
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
@@ -303,21 +287,39 @@ public class ProgramSubroutines
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P4Place")));
         toolController.openTool(5);
         Ixtur.move(lin(application.getApplicationData().getFrame("/PlaceAxis/P5")));
+        
         return true;
     }
 
-    public boolean placeAxisBox(Frame frame, int workpieceId)
-    {
-        return true;
-    }
-
-    public boolean placeDrum(Frame frame, int workpieceId)
+    public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
     {
 
+    	if (workpieceId != 1)
+    	{
+    		Logger.getInstance().error("ROBOT_EXEC", "Program has been called to place Axis (ID 1) , but workpiece ID does not match: " + workpieceId);
+    		return false;
+    	}
+    	Ixtur.detach();
+    	Gripper.attachTo(robot.getFlange());
+    	
+
+    	if (positionId == 1)
+    	{
+        	ObjectFrame P1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
+        	ObjectFrame P2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
+        	
+    		//Gripper.move(ptp(kittingBase/P1));
+    	}
         return true;
     }
 
-    public boolean placeDisk(Frame frame, int workpieceId)
+    public boolean placeDrum(Frame kittingBase, int workpieceId, int positionId)
+    {
+
+        return true;
+    }
+
+    public boolean placeDisk(Frame kittingBase, int workpieceId, int positionId)
     {
         return true;
     }

@@ -24,7 +24,7 @@ public class CommandQueue
         } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-            Logger.getInstance().debug("QUEUE", "Error: Interrupted while trying to put command: " + e.getMessage());
+            Logger.getInstance().error("QUEUE", "Error: Interrupted while trying to put command: " + e.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class CommandQueue
         } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-            Logger.getInstance().debug("QUEUE", "Error: Interrupted while trying to take command: " + e.getMessage());
+            Logger.getInstance().error("QUEUE", "Error: Interrupted while trying to take command: " + e.getMessage());
         }
         return resultHolder;
     }
@@ -49,7 +49,7 @@ public class CommandQueue
         // Check if thread is already interrupted before attempting to poll
         if (Thread.currentThread().isInterrupted())
         {
-            Logger.getInstance().debug("QUEUE", "Thread is interrupted, skipping poll operation");
+            Logger.getInstance().warn("QUEUE", "Thread is interrupted, skipping poll operation");
             return null;
         }
         try
@@ -65,7 +65,7 @@ public class CommandQueue
         } catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
-            Logger.getInstance().debug("QUEUE", "Error: Interrupted while trying to poll command: " + e.getMessage());
+            Logger.getInstance().error("QUEUE", "Error: Interrupted while trying to poll command: " + e.getMessage());
         }
         return resultHolder;
     }
