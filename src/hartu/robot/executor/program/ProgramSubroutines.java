@@ -6,8 +6,10 @@ import com.kuka.roboticsAPI.geometricModel.AbstractFrame;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.geometricModel.math.AbstractTransformation;
 import com.kuka.roboticsAPI.geometricModel.math.ITransformation;
 
+import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
@@ -299,18 +301,36 @@ public class ProgramSubroutines
         Gripper.attachTo(robot.getFlange());
 
             // Get the taught frames (these contain the RELATIVE transformation from basekitting)
+            ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
             ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
             ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
+            Logger.getInstance().critical("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Basekitting: " + refBase.toString());
 
-            // Option 1: Copy the relative transformation and apply to new base
-            // Get the transformation of PlaceAxis1_1 relative to its parent (basekitting)
-            AbstractFrame relativeP1 = taughtP1.copyWithRedundancy();
-            AbstractFrame relativeP2 = taughtP2.copyWithRedundancy();
+            Frame newBase =  refBase.copyWithRedundancy();
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
 
-            // Create new target frames by applying the relative offset to the camera's kittingBase
-            ITransformation targetP1 = (ITransformation) kittingBase.copy();
+            newBase.setX(kittingBase.getX());
+            newBase.setY(kittingBase.getY());
+            newBase.setZ(kittingBase.getZ());
+            newBase.setAlphaRad(kittingBase.getAlphaRad());
+            newBase.setBetaRad(kittingBase.getBetaRad());
+            newBase.setGammaRad(kittingBase.getGammaRad());
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase.toString());
 
-            Gripper.move(linRel(targetP1,relativeP1));
+            Frame relativeP1 = taughtP1.copyWithRedundancy();
+            Frame relativeP2 = taughtP2.copyWithRedundancy();
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
+
+            relativeP1.setParent(newBase);
+            relativeP2.setParent(newBase);
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1.toString());
+
+            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
+            Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
 
 
 
