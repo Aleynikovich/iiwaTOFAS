@@ -104,7 +104,7 @@ public class ToolController
             }
             gimaticIO.setDO_Flange2(true);
             gimaticIO.setDO_Flange1(false);
-            Thread.sleep(200);
+            Thread.sleep(600);
             toolControlIO.setOutput1(false);
             toolControlIO.setOutput2(false);
             toolControlIO.setOutput3(false);
