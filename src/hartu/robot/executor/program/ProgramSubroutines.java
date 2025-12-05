@@ -397,17 +397,15 @@ public class ProgramSubroutines
             relativePlace.setParent(newBase);
 
             Logger.getInstance().debug("ROBOT_EXEC", "Moving to approach position: " + position.getFrameNameApproach());
-            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
+            toolToUse.move(ptp(relativeApproach).setJointVelocityRel(0.5));
 
             Logger.getInstance().debug("ROBOT_EXEC", "Moving to place position: " + position.getFrameNamePlace());
             toolToUse.move(lin(relativePlace).setJointVelocityRel(0.1));
 
             // Open the tool to release the workpiece
             toolController.openTool(toolController.getCurrentToolId());
-
-            // Retract from the placement position
-            robot.move(linRel(0, 0, 500).setJointVelocityRel(0.5).setBlendingCart(50));
-            robot.move(linRel(-200, -200, 200).setJointVelocityRel(0.5));
+            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
+            gimaticCameraTool.move(lin(application.getApplicationData().getFrame("/P1")));
 
             return true;
 
