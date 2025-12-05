@@ -192,7 +192,7 @@ public class CommandParser
                 BaseCoordinateData baseCoordinateData = parseBaseCoordinateData(parts);
                 if (baseCoordinateData != null)
                 {
-                    Logger.getInstance().critical("PARSER", "Parsed base coordinate data: " + baseCoordinateData.toString());
+                    Logger.getInstance().critical("PARSER", "Parsed base coordinate data: " + baseCoordinateData);
                     return ParsedCommand.forProgramCallWithBaseData(actionType, id, programId, baseCoordinateData);
                 }
 

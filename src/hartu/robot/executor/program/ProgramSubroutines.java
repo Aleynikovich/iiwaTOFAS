@@ -5,12 +5,10 @@ import com.kuka.roboticsAPI.deviceModel.LBR;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
-
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
-
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
@@ -51,7 +49,7 @@ public class ProgramSubroutines
             this.Ixtur = application.getApplicationData().createFromTemplate("GimaticIxtur");
             this.Gripper = application.getApplicationData().createFromTemplate("GimaticGripperV");
             if (this.gimaticCameraTool != null)
-            {				
+            {
                 Logger.getInstance().debug("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
             } else
             {
@@ -297,49 +295,48 @@ public class ProgramSubroutines
 
         return true;
     }
+
     @SuppressWarnings("unused")
     public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
     {
         Ixtur.detach();
         Gripper.attachTo(robot.getFlange());
 
-            // Get the taught frames (these contain the RELATIVE transformation from basekitting)
-            ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
-            ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
-            ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
-            Logger.getInstance().critical("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Basekitting: " + refBase.toString());
+        // Get the taught frames (these contain the RELATIVE transformation from basekitting)
+        ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
+        ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
+        ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
+        Logger.getInstance().debug("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
+        Logger.getInstance().debug("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
+        Logger.getInstance().debug("ROBOT_EXEC", "Basekitting: " + refBase.toString());
 
-            Frame newBase =  refBase.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
+        Frame newBase = refBase.copyWithRedundancy();
+        Logger.getInstance().debug("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
 
-            newBase.setX(kittingBase.getX());
-            newBase.setY(kittingBase.getY());
-            newBase.setZ(kittingBase.getZ());
-            newBase.setAlphaRad(kittingBase.getAlphaRad());
-            newBase.setBetaRad(kittingBase.getBetaRad());
-            newBase.setGammaRad(kittingBase.getGammaRad());
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase);
+        newBase.setX(kittingBase.getX());
+        newBase.setY(kittingBase.getY());
+        newBase.setZ(kittingBase.getZ());
+        newBase.setAlphaRad(kittingBase.getAlphaRad());
+        newBase.setBetaRad(kittingBase.getBetaRad());
+        newBase.setGammaRad(kittingBase.getGammaRad());
+        Logger.getInstance().debug("ROBOT_EXEC", "New Base after setter: " + newBase);
 
-            Frame relativeP1 = taughtP1.copyWithRedundancy();
-            Frame relativeP2 = taughtP2.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase);
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
+        Frame relativeP1 = taughtP1.copyWithRedundancy();
+        Frame relativeP2 = taughtP2.copyWithRedundancy();
+        Logger.getInstance().debug("ROBOT_EXEC", "New Base: " + newBase);
+        Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
+        Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
 
-            relativeP1.setParent(newBase);
-            relativeP2.setParent(newBase);
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1);
+        relativeP1.setParent(newBase);
+        relativeP2.setParent(newBase);
+        Logger.getInstance().debug("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1);
 
-            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
-            Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
+        Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
+        Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
 
-            toolController.openTool(toolController.getCurrentToolId());
-            robot.move(linRel(0,0,500).setJointVelocityRel(0.5).setBlendingCart(50));
-            robot.move(linRel(-200,-200,200).setJointVelocityRel(0.5));
-
-
+        toolController.openTool(toolController.getCurrentToolId());
+        robot.move(linRel(0, 0, 500).setJointVelocityRel(0.5).setBlendingCart(50));
+        robot.move(linRel(-200, -200, 200).setJointVelocityRel(0.5));
 
 
         return true;
@@ -351,6 +348,7 @@ public class ProgramSubroutines
 
         return true;
     }
+
     @SuppressWarnings("unused")
     public boolean placeDisk(Frame kittingBase, int workpieceId, int positionId)
     {
@@ -378,12 +376,12 @@ public class ProgramSubroutines
         Frame frame = baseData.getCoordinateFrame();
         WorkpieceType workpieceType = baseData.getWorkpieceType();
 
-        Logger.getInstance().critical("ROBOT_EXEC", "Stored base coordinate data:");
-        Logger.getInstance().critical("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
+        Logger.getInstance().debug("ROBOT_EXEC", "Stored base coordinate data:");
+        Logger.getInstance().debug("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
         if (frame != null)
         {
-            Logger.getInstance().critical("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
-            Logger.getInstance().critical("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) +
+            Logger.getInstance().debug("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
+            Logger.getInstance().debug("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) +
                     ", B=" + Math.toDegrees(frame.getBetaRad()) +
                     ", C=" + Math.toDegrees(frame.getGammaRad()));
         }
