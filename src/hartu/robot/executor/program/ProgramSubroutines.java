@@ -324,8 +324,8 @@ public class ProgramSubroutines
         Frame relativeP1 = taughtP1.copyWithRedundancy();
         Frame relativeP2 = taughtP2.copyWithRedundancy();
         Logger.getInstance().debug("ROBOT_EXEC", "New Base: " + newBase);
-        Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
-        Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
+        Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1);
+        Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2);
 
         relativeP1.setParent(newBase);
         relativeP2.setParent(newBase);
