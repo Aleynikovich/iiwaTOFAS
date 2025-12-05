@@ -409,7 +409,7 @@ public class ProgramSubroutines
             toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
             detachAllTools();
             gimaticCameraTool.attachTo(robot.getFlange());
-            gimaticCameraTool.move(lin(application.getApplicationData().getFrame("/P1")));
+            gimaticCameraTool.move(ptp(application.getApplicationData().getFrame("/P1")));
 
             return true;
 
