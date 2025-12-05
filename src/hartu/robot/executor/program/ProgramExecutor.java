@@ -1,6 +1,7 @@
 package hartu.robot.executor.program;
 
 import com.kuka.roboticsAPI.geometricModel.Frame;
+import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.Logger;
@@ -98,21 +99,28 @@ public class ProgramExecutor
                 return programSubroutines.pickAxis();
             } else if (programId == 23)
             {
-                return programSubroutines.placeAxisBox(frame, workpieceId, 1);
+                // Program 23: Place workpiece in box (auto-selects next free position)
+                WorkpieceType workpieceType = WorkpieceType.fromId(workpieceId);
+                return programSubroutines.placeWorkpieceInBox(frame, workpieceType);
             } else if (programId == 24)
             {
+                // Legacy support for specific position placement
                 return programSubroutines.placeAxisBox(frame, workpieceId, 2);
             } else if (programId == 25)
             {
-                return programSubroutines.placeDisk(frame, workpieceId, 1);
+                // Legacy support for drum placement at position 1
+                return programSubroutines.placeDrum(frame, workpieceId, 1);
             } else if (programId == 26)
             {
-                return programSubroutines.placeDisk(frame, workpieceId, 2);
+                // Legacy support for drum placement at position 2
+                return programSubroutines.placeDrum(frame, workpieceId, 2);
             } else if (programId == 27)
             {
+                // Legacy support for disk placement at position 1
                 return programSubroutines.placeDisk(frame, workpieceId, 1);
             } else if (programId == 28)
             {
+                // Legacy support for disk placement at position 2
                 return programSubroutines.placeDisk(frame, workpieceId, 2);
             }
 

@@ -1,5 +1,8 @@
 package hartu.protocols.constants;
 
+import com.kuka.roboticsAPI.geometricModel.Workpiece;
+import com.kuka.roboticsAPI.persistenceModel.templateModel.WorkpieceTemplate;
+
 /**
  * Defines workpiece types that can be transmitted from ROS nodes to the robot.
  * Used with program call commands (action >= 140) to identify what type of workpiece
@@ -20,6 +23,7 @@ public enum WorkpieceType
         this.id = id;
         this.name = name;
     }
+
 
     /**
      * Gets the workpiece type from its ID value.
