@@ -304,12 +304,12 @@ public class ProgramSubroutines
             ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
             ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
             ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
-            Logger.getInstance().critical("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Basekitting: " + refBase.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Basekitting: " + refBase.toString());
 
             Frame newBase =  refBase.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
 
             newBase.setX(kittingBase.getX());
             newBase.setY(kittingBase.getY());
@@ -321,13 +321,13 @@ public class ProgramSubroutines
 
             Frame relativeP1 = taughtP1.copyWithRedundancy();
             Frame relativeP2 = taughtP2.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "New Base: " + newBase.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
 
             relativeP1.setParent(newBase);
             relativeP2.setParent(newBase);
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1.toString());
 
             Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
             Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
