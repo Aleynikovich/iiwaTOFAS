@@ -7,6 +7,7 @@ import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
+import hartu.robot.communication.server.LogLevel;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
 import hartu.robot.executor.kitting.BoxType;
@@ -346,6 +347,7 @@ public class ProgramSubroutines
      */
     private boolean placeWorkpieceAtPosition(Frame kittingBase, KittingPosition position, WorkpieceType workpieceType)
     {
+        Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         try
         {
             // Attach the appropriate tool for the workpiece type
@@ -405,6 +407,8 @@ public class ProgramSubroutines
             // Open the tool to release the workpiece
             toolController.openTool(toolController.getCurrentToolId());
             toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
+            detachAllTools();
+            gimaticCameraTool.attachTo(robot.getFlange());
             gimaticCameraTool.move(lin(application.getApplicationData().getFrame("/P1")));
 
             return true;
