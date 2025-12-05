@@ -134,7 +134,7 @@ public class ProgramSubroutines
                 gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
 
                 // Lock Gimatic at P8 (contact point)
-                if (i == 8)
+                if (i == 8 && gimaticCameraTool.getFrame("/TCP") == pointFrame)
                 {
                     if (!toolController.lockGimatic())
                     {
@@ -218,7 +218,7 @@ public class ProgramSubroutines
                 gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
 
                 // Unlock Gimatic at P8 (contact point)
-                if (i == 8)
+                if (i == 8 && gimaticCameraTool.getFrame("/TCP") == pointFrame)
                 {
                     if (!toolController.unlockGimatic())
                     {
