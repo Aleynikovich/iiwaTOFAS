@@ -141,6 +141,10 @@ public class ProgramSubroutines
                         return false;
                     }
                 }
+                else
+                {
+                	Logger.getInstance().warn("EXEC", "Not in pick position " + pointFrame + " current position: " + gimaticCameraTool.getFrame("/TCP"));
+                }
             }
             while (toolController.getCurrentToolId() == 0)
             {
@@ -225,6 +229,10 @@ public class ProgramSubroutines
                         Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic!");
                         return false;
                     }
+                }
+                else
+                {
+                	Logger.getInstance().warn("EXEC", "Not in release position " + pointFrame + " current position: " + gimaticCameraTool.getFrame("/TCP"));
                 }
             }
 
