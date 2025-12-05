@@ -333,7 +333,10 @@ public class ProgramSubroutines
             Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
 
             toolController.openTool(toolController.getCurrentToolId());
-            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
+            robot.move(linRel(0,0,500).setJointVelocityRel(0.5).setBlendingCart(50));
+            robot.move(linRel(-200,-200,200).setJointVelocityRel(0.5));
+
+
 
 
         return true;
