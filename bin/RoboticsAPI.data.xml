@@ -1633,9 +1633,9 @@
             </frame>
         </frame>
         <frame id="_929cb880-97c0-47f7-9c7e-47977203a2ae" name="basekitting">
-            <transformation a="1.413716694115407" b="0.0" c="0.0" x="607.0" y="6.0" z="-247.0"/>
+            <transformation a="1.5722449500740519" b="-0.0054105206811824215" c="-0.002286381320112572" x="582.0" y="100.0" z="-246.0"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1764692225905"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1764929232178"/>
                 <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <frame id="_d3402bad-2080-483d-a425-fa8f6d19b2f8" name="PlaceAxis1_1">
