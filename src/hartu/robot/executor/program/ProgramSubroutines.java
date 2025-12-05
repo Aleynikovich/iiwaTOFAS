@@ -100,9 +100,19 @@ public class ProgramSubroutines
             return false;
         }
 
-        if (toolId > 3)
+        int baseId = toolId;
+        if (baseId > 3)
         {
-            toolId = toolId - 3;
+            baseId = baseId - 3;
+        }
+        String baseName = "T" + baseId + "Base";
+
+        //Move to safe pos if we are on right side of plane to avoid collisions
+        if ((robot.getFlange().getY() < 0 && baseId == 3) || (robot.getFlange().getY() > 0 && baseId != 3))
+        {
+            Logger.getInstance().debug("ROBOT_EXEC", "Moving to safe position to avoid collision with tool " + toolId);
+            robot.move(ptp(robot.getCurrentJointPosition().get(0),0,0,0,0,0,0));
+            robot.move(ptpHome());
         }
         if (!toolController.unlockGimatic())
         {
@@ -110,7 +120,11 @@ public class ProgramSubroutines
             return false;
         }
 
-        String baseName = "T" + toolId + "Base";
+        if (!toolController.unlockGimatic())
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Unable to unlock gimatic, not picking to avoid collision");
+            return false;
+        }
 
         try
         {
