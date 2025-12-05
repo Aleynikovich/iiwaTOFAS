@@ -220,7 +220,7 @@ public class ParsedCommand
                 sb.append("  Program ID: ").append(programId).append("\n");
                 if (baseCoordinateData != null)
                 {
-                    sb.append("  Base Coordinate Data: ").append(baseCoordinateData.toString()).append("\n");
+                    sb.append("  Base Coordinate Data: ").append(baseCoordinateData).append("\n");
                 }
             } else
             {

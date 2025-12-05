@@ -85,10 +85,14 @@ public class CommandExecutor extends RoboticsAPIApplication
         // This prevents the application from terminating when moveAsync fails
         registerMoveAsyncErrorHandler();
 
+        // Initialize kitting box (reset on each CommandExecutor restart)
+        hartu.robot.executor.kitting.KittingBox kittingBox = new hartu.robot.executor.kitting.KittingBox(hartu.robot.executor.kitting.BoxType.STANDARD);
+        Logger.getInstance().debug("ROBOT_EXEC", "Initialized kitting box: " + kittingBox.toString());
+
         // Initialize executors
         ToolController toolController = new ToolController(gimaticIO, toolControlIO, mediaFlangeIO);
         hartu.robot.io.IOList ioList = new hartu.robot.io.IOList(toolControlIO, gimaticIO, mediaFlangeIO);
-        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this);
+        hartu.robot.executor.program.ProgramSubroutines programSubroutines = new hartu.robot.executor.program.ProgramSubroutines(iiwa, toolController, this, kittingBox);
         this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController, programSubroutines);

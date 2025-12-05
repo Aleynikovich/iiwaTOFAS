@@ -25,8 +25,9 @@ public class MotionExecutor
 
     private final LBR robot;
     private final hartu.robot.executor.CommandExecutor commandExecutor;
-    
-    @SuppressWarnings("unused") private final IErrorHandler moveAsyncErrorHandler;
+
+    @SuppressWarnings("unused")
+    private final IErrorHandler moveAsyncErrorHandler;
 
     // Track the current command being executed for error handling
     private volatile ParsedCommand currentCommand = null;

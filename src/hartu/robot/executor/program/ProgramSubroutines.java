@@ -2,19 +2,16 @@ package hartu.robot.executor.program;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.geometricModel.AbstractFrame;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
-import com.kuka.roboticsAPI.geometricModel.math.AbstractTransformation;
-import com.kuka.roboticsAPI.geometricModel.math.ITransformation;
-
-import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
-
+import hartu.robot.executor.kitting.BoxType;
+import hartu.robot.executor.kitting.KittingBox;
+import hartu.robot.executor.kitting.KittingPosition;
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
@@ -25,15 +22,14 @@ import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
  * IMPORTANT: All tool change movements must be done with the GimaticCamera tool,
  * as all taught points (P1-P9) were taught with this tool attached.
  */
+@SuppressWarnings("BusyWait")
 public class ProgramSubroutines
 {
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
     private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
-
-    // Stored base coordinate data from ROS computer vision nodes
-    private BaseCoordinateData currentBaseCoordinateData;
+    private final KittingBox kittingBox;
 
     /**
      * Creates a new ProgramSubroutines instance.
@@ -41,12 +37,14 @@ public class ProgramSubroutines
      * @param robot          The robot to execute motions on
      * @param toolController The tool controller for Gimatic operations
      * @param application    The application instance for accessing frames
+     * @param kittingBox     The kitting box for tracking workpiece positions
      */
-    public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application)
+    public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application, KittingBox kittingBox)
     {
         this.robot = robot;
         this.toolController = toolController;
         this.application = application;
+        this.kittingBox = kittingBox;
 
         // Load the GimaticCamera tool for tool changing operations
         // All taught points were taught with this tool, so it must be used
@@ -57,7 +55,7 @@ public class ProgramSubroutines
             this.Ixtur = application.getApplicationData().createFromTemplate("GimaticIxtur");
             this.Gripper = application.getApplicationData().createFromTemplate("GimaticGripperV");
             if (this.gimaticCameraTool != null)
-            {				
+            {
                 Logger.getInstance().debug("ROBOT_EXEC", "ProgramSubroutines: Loaded GimaticCamera tool for tool changing operations.");
             } else
             {
@@ -77,16 +75,15 @@ public class ProgramSubroutines
      */
     public boolean pickTool(int toolId)
     {
-
         if (toolController.getCurrentToolId() != 0)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request.");
+            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but current Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request to avoid possible collision.");
             return false;
         }
 
         if (toolId < 1 || toolId > 6)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-3.");
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-6.");
             return false;
         }
 
@@ -127,7 +124,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(20));
 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -137,6 +134,12 @@ public class ProgramSubroutines
                         return false;
                     }
                 }
+            }
+            while (toolController.getCurrentToolId() == 0)
+            {
+                Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be picked...");
+                //noinspection BusyWait
+                Thread.sleep(2000);
             }
 
             return true;
@@ -159,20 +162,18 @@ public class ProgramSubroutines
         if (toolController.getCurrentToolId() == 0)
         {
             Logger.getInstance().warn("ROBOT_EXEC", "Called for place tool: " + toolId + ", but there is already no tool! ID: " + toolController.getCurrentToolId() + " !. Ignoring request.");
-            return false;
+            return true;
         }
         if (toolId != toolController.getCurrentToolId())
         {
             Logger.getInstance().error("ROBOT_EXEC", "Called for place tool: " + toolId + ", but current Tool ID is" + toolController.getCurrentToolId() + " !. Ignoring request to avoid possible collision.");
             return false;
         }
-
         if (toolId < 1 || toolId > 6)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-3.");
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-6.");
             return false;
         }
-
         if (gimaticCameraTool == null)
         {
             Logger.getInstance().error("ROBOT_EXEC", "GimaticCamera tool not loaded. Cannot execute place operation.");
@@ -183,7 +184,6 @@ public class ProgramSubroutines
             toolId = toolId - 3;
         }
         String baseName = "T" + toolId + "Base";
-
         try
         {
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
@@ -208,16 +208,23 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(10));
 
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
                 {
                     if (!toolController.unlockGimatic())
                     {
+                        Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic!");
                         return false;
                     }
                 }
+            }
+
+            while (toolController.getCurrentToolId() != 0)
+            {
+                Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be released...");
+                Thread.sleep(2000);
             }
 
             return true;
@@ -295,59 +302,205 @@ public class ProgramSubroutines
         return true;
     }
 
-    public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
+    /**
+     * Places a workpiece in the kitting box at the next available position.
+     * This method automatically finds the next free position for the given workpiece type.
+     *
+     * @param kittingBase   The base frame of the kitting box from camera
+     * @param workpieceType The type of workpiece being placed
+     * @return True if placement was successful, false otherwise
+     */
+    public boolean placeWorkpieceInBox(Frame kittingBase, WorkpieceType workpieceType)
     {
-        Ixtur.detach();
-        Gripper.attachTo(robot.getFlange());
+        Logger.getInstance().debug("ROBOT_EXEC", "Placing " + workpieceType.getName() + " in kitting box");
 
-            // Get the taught frames (these contain the RELATIVE transformation from basekitting)
+        // Find the next available position for this workpiece type
+        KittingPosition position = kittingBox.findAvailablePosition(workpieceType);
+        if (position == null)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "No available position in kitting box for " + workpieceType.getName());
+            return false;
+        }
+
+        // Execute the placement motion
+        boolean success = placeWorkpieceAtPosition(kittingBase, position, workpieceType);
+
+        // Mark position as occupied if placement was successful
+        if (success)
+        {
+            kittingBox.markPositionOccupied(position);
+            Logger.getInstance().debug("ROBOT_EXEC", "Successfully placed " + workpieceType.getName() + " at position: " + position.getFrameNameApproach());
+        }
+
+        return success;
+    }
+
+    /**
+     * Places a workpiece at a specific position in the kitting box.
+     * This is a lower-level method that performs the actual robot motion.
+     *
+     * @param kittingBase   The base frame of the kitting box from camera
+     * @param position      The specific position to place the workpiece
+     * @param workpieceType The type of workpiece being placed
+     * @return True if placement was successful, false otherwise
+     */
+    private boolean placeWorkpieceAtPosition(Frame kittingBase, KittingPosition position, WorkpieceType workpieceType)
+    {
+        try
+        {
+            // Attach the appropriate tool for the workpiece type
+            Tool toolToUse = getToolForWorkpiece(workpieceType);
+            if (toolToUse == null)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "No tool available for workpiece type: " + workpieceType.getName());
+                return false;
+            }
+
+            // Detach other tools and attach the correct one
+            detachAllTools();
+            toolToUse.attachTo(robot.getFlange());
+
+            // Get the base frame from the station setup
             ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
-            ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
-            ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
-            Logger.getInstance().critical("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Basekitting: " + refBase.toString());
+            if (refBase == null)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "Base frame '/basekitting' not found");
+                return false;
+            }
 
-            Frame newBase =  refBase.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
+            // Get the taught frames for this position
+            ObjectFrame taughtApproach = application.getApplicationData().getFrame("/basekitting/" + position.getFrameNameApproach());
+            ObjectFrame taughtPlace = application.getApplicationData().getFrame("/basekitting/" + position.getFrameNamePlace());
 
+            if (taughtApproach == null || taughtPlace == null)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "Taught frames not found for position: " + position.getFrameNameApproach());
+                return false;
+            }
+
+            Logger.getInstance().debug("ROBOT_EXEC", "Taught approach: " + taughtApproach.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Taught place: " + taughtPlace.toString());
+
+            // Create a new base frame from the camera data
+            Frame newBase = refBase.copyWithRedundancy();
             newBase.setX(kittingBase.getX());
             newBase.setY(kittingBase.getY());
             newBase.setZ(kittingBase.getZ());
             newBase.setAlphaRad(kittingBase.getAlphaRad());
             newBase.setBetaRad(kittingBase.getBetaRad());
             newBase.setGammaRad(kittingBase.getGammaRad());
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase.toString());
 
-            Frame relativeP1 = taughtP1.copyWithRedundancy();
-            Frame relativeP2 = taughtP2.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
+            // Create relative frames and set their parent to the new base
+            Frame relativeApproach = taughtApproach.copyWithRedundancy();
+            Frame relativePlace = taughtPlace.copyWithRedundancy();
+            relativeApproach.setParent(newBase);
+            relativePlace.setParent(newBase);
 
-            relativeP1.setParent(newBase);
-            relativeP2.setParent(newBase);
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Moving to approach position: " + position.getFrameNameApproach());
+            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
 
-            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
-            Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
+            Logger.getInstance().debug("ROBOT_EXEC", "Moving to place position: " + position.getFrameNamePlace());
+            toolToUse.move(lin(relativePlace).setJointVelocityRel(0.1));
 
+            // Open the tool to release the workpiece
             toolController.openTool(toolController.getCurrentToolId());
-            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
 
+            // Retract from the placement position
+            robot.move(linRel(0, 0, 500).setJointVelocityRel(0.5).setBlendingCart(50));
+            robot.move(linRel(-200, -200, 200).setJointVelocityRel(0.5));
 
-        return true;
+            return true;
+
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Exception during workpiece placement: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+            return false;
+        }
     }
 
+    /**
+     * Gets the appropriate tool for the given workpiece type.
+     *
+     * @param workpieceType The workpiece type
+     * @return The Tool to use, or null if not found
+     */
+    private Tool getToolForWorkpiece(WorkpieceType workpieceType)
+    {
+        switch (workpieceType)
+        {
+            case AXIS:
+                return Gripper; // Axis uses GimaticGripperV
+            case DRUM:
+            case DISK:
+                return Ixtur; // Drum and Disk use GimaticIxtur (CircMagnet)
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Detaches all tools from the robot flange.
+     */
+    private void detachAllTools()
+    {
+        if (Gripper != null) Gripper.detach();
+        if (Ixtur != null) Ixtur.detach();
+        if (vacTool != null) vacTool.detach();
+    }
+
+    /**
+     * Legacy method for placing an axis in the box at a specific position.
+     * This method is kept for backward compatibility but delegates to the new abstraction.
+     *
+     * @param kittingBase The base frame of the kitting box from camera
+     * @param workpieceId The workpiece ID (should be 1 for AXIS)
+     * @param positionId  The position ID (1 or 2) - deprecated, position is now auto-selected
+     * @return True if placement was successful, false otherwise
+     * @deprecated Use placeWorkpieceInBox instead
+     */
+    @Deprecated
+    @SuppressWarnings("unused")
+    public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
+    {
+        Logger.getInstance().warn("ROBOT_EXEC", "Using deprecated placeAxisBox method. Consider using placeWorkpieceInBox instead.");
+        return placeWorkpieceInBox(kittingBase, WorkpieceType.AXIS);
+    }
+
+    /**
+     * Legacy method for placing a drum in the box at a specific position.
+     * This method is kept for backward compatibility but delegates to the new abstraction.
+     *
+     * @param kittingBase The base frame of the kitting box from camera
+     * @param workpieceId The workpiece ID (should be 2 for DRUM)
+     * @param positionId  The position ID (1 or 2) - deprecated, position is now auto-selected
+     * @return True if placement was successful, false otherwise
+     * @deprecated Use placeWorkpieceInBox instead
+     */
+    @Deprecated
+    @SuppressWarnings("unused")
     public boolean placeDrum(Frame kittingBase, int workpieceId, int positionId)
     {
-
-        return true;
+        Logger.getInstance().warn("ROBOT_EXEC", "Using deprecated placeDrum method. Consider using placeWorkpieceInBox instead.");
+        return placeWorkpieceInBox(kittingBase, WorkpieceType.DRUM);
     }
 
+    /**
+     * Legacy method for placing a disk in the box at a specific position.
+     * This method is kept for backward compatibility but delegates to the new abstraction.
+     *
+     * @param kittingBase The base frame of the kitting box from camera
+     * @param workpieceId The workpiece ID (should be 3 for DISK)
+     * @param positionId  The position ID (1 or 2) - deprecated, position is now auto-selected
+     * @return True if placement was successful, false otherwise
+     * @deprecated Use placeWorkpieceInBox instead
+     */
+    @Deprecated
+    @SuppressWarnings("unused")
     public boolean placeDisk(Frame kittingBase, int workpieceId, int positionId)
     {
-        return true;
+        Logger.getInstance().warn("ROBOT_EXEC", "Using deprecated placeDisk method. Consider using placeWorkpieceInBox instead.");
+        return placeWorkpieceInBox(kittingBase, WorkpieceType.DISK);
     }
 
     /**
@@ -366,50 +519,21 @@ public class ProgramSubroutines
             return false;
         }
 
-        this.currentBaseCoordinateData = baseData;
+        // Stored base coordinate data from ROS computer vision nodes
 
         Frame frame = baseData.getCoordinateFrame();
         WorkpieceType workpieceType = baseData.getWorkpieceType();
 
-        Logger.getInstance().critical("ROBOT_EXEC", "Stored base coordinate data:");
-        Logger.getInstance().critical("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
+        Logger.getInstance().debug("ROBOT_EXEC", "Stored base coordinate data:");
+        Logger.getInstance().debug("ROBOT_EXEC", "  Workpiece Type: " + workpieceType.getName() + " (ID: " + workpieceType.getId() + ")");
         if (frame != null)
         {
-            Logger.getInstance().critical("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
-            Logger.getInstance().critical("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) +
+            Logger.getInstance().debug("ROBOT_EXEC", "  Position: X=" + frame.getX() + ", Y=" + frame.getY() + ", Z=" + frame.getZ());
+            Logger.getInstance().debug("ROBOT_EXEC", "  Orientation: A=" + Math.toDegrees(frame.getAlphaRad()) +
                     ", B=" + Math.toDegrees(frame.getBetaRad()) +
                     ", C=" + Math.toDegrees(frame.getGammaRad()));
         }
 
         return true;
-    }
-
-    /**
-     * Gets the currently stored base coordinate data.
-     *
-     * @return The stored BaseCoordinateData, or null if none has been stored
-     */
-    public BaseCoordinateData getCurrentBaseCoordinateData()
-    {
-        return currentBaseCoordinateData;
-    }
-
-    /**
-     * Checks if there is stored base coordinate data available.
-     *
-     * @return True if base coordinate data is available
-     */
-    public boolean hasStoredBaseCoordinateData()
-    {
-        return currentBaseCoordinateData != null;
-    }
-
-    /**
-     * Clears the stored base coordinate data.
-     */
-    public void clearBaseCoordinateData()
-    {
-        this.currentBaseCoordinateData = null;
-        Logger.getInstance().debug("ROBOT_EXEC", "Cleared stored base coordinate data.");
     }
 }

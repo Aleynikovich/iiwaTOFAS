@@ -255,7 +255,7 @@ public class LoggingServerManager extends RoboticsAPICyclicBackgroundTask implem
         public LogClientConnection(Socket socket, PrintWriter writer, String clientId)
         {
             this.socket = socket;
-            this.writer = writer; 
+            this.writer = writer;
         }
 
         public PrintWriter getWriter()
