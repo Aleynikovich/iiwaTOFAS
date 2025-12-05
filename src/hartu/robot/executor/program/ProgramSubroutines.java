@@ -104,6 +104,11 @@ public class ProgramSubroutines
         {
             toolId = toolId - 3;
         }
+        if (!toolController.unlockGimatic())
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Unable to unlock gimatic, not picking to avoid collision");
+            return false;
+        }
 
         String baseName = "T" + toolId + "Base";
 
@@ -119,7 +124,7 @@ public class ProgramSubroutines
             // Attach GimaticCamera tool for the pick operation
             gimaticCameraTool.attachTo(robot.getFlange());
             Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for pick operation.");
-
+            
             // Move through points P9 -> P1
             for (int i = 9; i >= 1; i--)
             {
