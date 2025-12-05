@@ -77,16 +77,15 @@ public class ProgramSubroutines
      */
     public boolean pickTool(int toolId)
     {
-
         if (toolController.getCurrentToolId() != 0)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request.");
+            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but current Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request to avoid possible collision.");
             return false;
         }
 
         if (toolId < 1 || toolId > 6)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-3.");
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-6.");
             return false;
         }
 
@@ -127,7 +126,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(20));
 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -137,6 +136,11 @@ public class ProgramSubroutines
                         return false;
                     }
                 }
+            }
+            while (toolController.getCurrentToolId() == 0)
+            {
+                Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be picked...");
+                Thread.sleep(2000);
             }
 
             return true;
@@ -159,20 +163,18 @@ public class ProgramSubroutines
         if (toolController.getCurrentToolId() == 0)
         {
             Logger.getInstance().warn("ROBOT_EXEC", "Called for place tool: " + toolId + ", but there is already no tool! ID: " + toolController.getCurrentToolId() + " !. Ignoring request.");
-            return false;
+            return true;
         }
         if (toolId != toolController.getCurrentToolId())
         {
             Logger.getInstance().error("ROBOT_EXEC", "Called for place tool: " + toolId + ", but current Tool ID is" + toolController.getCurrentToolId() + " !. Ignoring request to avoid possible collision.");
             return false;
         }
-
         if (toolId < 1 || toolId > 6)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-3.");
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-6.");
             return false;
         }
-
         if (gimaticCameraTool == null)
         {
             Logger.getInstance().error("ROBOT_EXEC", "GimaticCamera tool not loaded. Cannot execute place operation.");
@@ -183,7 +185,6 @@ public class ProgramSubroutines
             toolId = toolId - 3;
         }
         String baseName = "T" + toolId + "Base";
-
         try
         {
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
@@ -208,16 +209,23 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(10));
 
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
                 {
                     if (!toolController.unlockGimatic())
                     {
+                        Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic!");
                         return false;
                     }
                 }
+            }
+
+            while (toolController.getCurrentToolId() != 0)
+            {
+                Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be released...");
+                Thread.sleep(2000);
             }
 
             return true;
