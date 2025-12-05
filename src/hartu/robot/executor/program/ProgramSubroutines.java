@@ -131,7 +131,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(lin(pointFrame).setJointVelocityRel(0.2).setBlendingCart(20));
+                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -215,7 +215,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(lin(pointFrame).setJointVelocityRel(0.2).setBlendingCart(10));
+                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
 
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
