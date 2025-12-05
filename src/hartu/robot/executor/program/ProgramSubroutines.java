@@ -120,12 +120,6 @@ public class ProgramSubroutines
             return false;
         }
 
-        if (!toolController.unlockGimatic())
-        {
-            Logger.getInstance().error("ROBOT_EXEC", "Unable to unlock gimatic, not picking to avoid collision");
-            return false;
-        }
-
         try
         {
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
