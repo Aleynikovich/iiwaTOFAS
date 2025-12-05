@@ -76,6 +76,12 @@ public class ProgramSubroutines
      */
     public boolean pickTool(int toolId)
     {
+    	
+    	if (toolController.getCurrentToolId() == toolId)
+        {
+            Logger.getInstance().warn("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but current Tool ID " + toolController.getCurrentToolId() + " already picked.");
+            return true;
+        }
         if (toolController.getCurrentToolId() != 0)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but current Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request to avoid possible collision.");
@@ -125,7 +131,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(20));
+                gimaticCameraTool.move(lin(pointFrame).setJointVelocityRel(0.2).setBlendingCart(20));
 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -209,7 +215,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(10));
+                gimaticCameraTool.move(lin(pointFrame).setJointVelocityRel(0.2).setBlendingCart(10));
 
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
