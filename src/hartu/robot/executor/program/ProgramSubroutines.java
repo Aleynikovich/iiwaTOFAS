@@ -2,14 +2,10 @@ package hartu.robot.executor.program;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.geometricModel.AbstractFrame;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
-import com.kuka.roboticsAPI.geometricModel.math.AbstractTransformation;
-import com.kuka.roboticsAPI.geometricModel.math.ITransformation;
 
-import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
@@ -25,15 +21,13 @@ import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
  * IMPORTANT: All tool change movements must be done with the GimaticCamera tool,
  * as all taught points (P1-P9) were taught with this tool attached.
  */
+@SuppressWarnings("BusyWait")
 public class ProgramSubroutines
 {
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
     private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
-
-    // Stored base coordinate data from ROS computer vision nodes
-    private BaseCoordinateData currentBaseCoordinateData;
 
     /**
      * Creates a new ProgramSubroutines instance.
@@ -140,6 +134,7 @@ public class ProgramSubroutines
             while (toolController.getCurrentToolId() == 0)
             {
                 Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be picked...");
+                //noinspection BusyWait
                 Thread.sleep(2000);
             }
 
@@ -325,17 +320,17 @@ public class ProgramSubroutines
             newBase.setAlphaRad(kittingBase.getAlphaRad());
             newBase.setBetaRad(kittingBase.getBetaRad());
             newBase.setGammaRad(kittingBase.getGammaRad());
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase);
 
             Frame relativeP1 = taughtP1.copyWithRedundancy();
             Frame relativeP2 = taughtP2.copyWithRedundancy();
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase);
             Logger.getInstance().critical("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
             Logger.getInstance().critical("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
 
             relativeP1.setParent(newBase);
             relativeP2.setParent(newBase);
-            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1);
 
             Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
             Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
@@ -377,7 +372,7 @@ public class ProgramSubroutines
             return false;
         }
 
-        this.currentBaseCoordinateData = baseData;
+        // Stored base coordinate data from ROS computer vision nodes
 
         Frame frame = baseData.getCoordinateFrame();
         WorkpieceType workpieceType = baseData.getWorkpieceType();
@@ -393,34 +388,5 @@ public class ProgramSubroutines
         }
 
         return true;
-    }
-
-    /**
-     * Gets the currently stored base coordinate data.
-     *
-     * @return The stored BaseCoordinateData, or null if none has been stored
-     */
-    public BaseCoordinateData getCurrentBaseCoordinateData()
-    {
-        return currentBaseCoordinateData;
-    }
-
-    /**
-     * Checks if there is stored base coordinate data available.
-     *
-     * @return True if base coordinate data is available
-     */
-    public boolean hasStoredBaseCoordinateData()
-    {
-        return currentBaseCoordinateData != null;
-    }
-
-    /**
-     * Clears the stored base coordinate data.
-     */
-    public void clearBaseCoordinateData()
-    {
-        this.currentBaseCoordinateData = null;
-        Logger.getInstance().debug("ROBOT_EXEC", "Cleared stored base coordinate data.");
     }
 }
