@@ -297,7 +297,7 @@ public class ProgramSubroutines
 
         return true;
     }
-
+    @SuppressWarnings("unused")
     public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
     {
         Ixtur.detach();
@@ -345,12 +345,13 @@ public class ProgramSubroutines
         return true;
     }
 
+    @SuppressWarnings("unused")
     public boolean placeDrum(Frame kittingBase, int workpieceId, int positionId)
     {
 
         return true;
     }
-
+    @SuppressWarnings("unused")
     public boolean placeDisk(Frame kittingBase, int workpieceId, int positionId)
     {
         return true;
