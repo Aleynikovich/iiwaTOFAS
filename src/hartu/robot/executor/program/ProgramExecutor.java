@@ -108,16 +108,20 @@ public class ProgramExecutor
                 return programSubroutines.placeAxisBox(frame, workpieceId, 2);
             } else if (programId == 25)
             {
-                return programSubroutines.placeDisk(frame, workpieceId, 1);
+                // Legacy support for drum placement at position 1
+                return programSubroutines.placeDrum(frame, workpieceId, 1);
             } else if (programId == 26)
             {
-                return programSubroutines.placeDisk(frame, workpieceId, 2);
+                // Legacy support for drum placement at position 2
+                return programSubroutines.placeDrum(frame, workpieceId, 2);
             } else if (programId == 27)
             {
-                return programSubroutines.placeDrum(frame, workpieceId, 1);
+                // Legacy support for disk placement at position 1
+                return programSubroutines.placeDisk(frame, workpieceId, 1);
             } else if (programId == 28)
             {
-                return programSubroutines.placeDrum(frame, workpieceId, 2);
+                // Legacy support for disk placement at position 2
+                return programSubroutines.placeDisk(frame, workpieceId, 2);
             }
 
             // Invalid program ID
