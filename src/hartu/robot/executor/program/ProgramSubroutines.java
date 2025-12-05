@@ -2,14 +2,10 @@ package hartu.robot.executor.program;
 
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.geometricModel.AbstractFrame;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
-import com.kuka.roboticsAPI.geometricModel.math.AbstractTransformation;
-import com.kuka.roboticsAPI.geometricModel.math.ITransformation;
 
-import com.kuka.roboticsAPI.geometricModel.math.Transformation;
 import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
@@ -25,15 +21,13 @@ import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
  * IMPORTANT: All tool change movements must be done with the GimaticCamera tool,
  * as all taught points (P1-P9) were taught with this tool attached.
  */
+@SuppressWarnings("BusyWait")
 public class ProgramSubroutines
 {
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
     private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
-
-    // Stored base coordinate data from ROS computer vision nodes
-    private BaseCoordinateData currentBaseCoordinateData;
 
     /**
      * Creates a new ProgramSubroutines instance.
@@ -77,16 +71,15 @@ public class ProgramSubroutines
      */
     public boolean pickTool(int toolId)
     {
-
         if (toolController.getCurrentToolId() != 0)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request.");
+            Logger.getInstance().error("ROBOT_EXEC", "Called for pick tool: " + toolId + ", but current Tool ID " + toolController.getCurrentToolId() + " is not 0! Ignoring request to avoid possible collision.");
             return false;
         }
 
         if (toolId < 1 || toolId > 6)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-3.");
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for pick operation: " + toolId + ". Must be 1-6.");
             return false;
         }
 
@@ -127,7 +120,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(20));
 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -137,6 +130,12 @@ public class ProgramSubroutines
                         return false;
                     }
                 }
+            }
+            while (toolController.getCurrentToolId() == 0)
+            {
+                Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be picked...");
+                //noinspection BusyWait
+                Thread.sleep(2000);
             }
 
             return true;
@@ -159,20 +158,18 @@ public class ProgramSubroutines
         if (toolController.getCurrentToolId() == 0)
         {
             Logger.getInstance().warn("ROBOT_EXEC", "Called for place tool: " + toolId + ", but there is already no tool! ID: " + toolController.getCurrentToolId() + " !. Ignoring request.");
-            return false;
+            return true;
         }
         if (toolId != toolController.getCurrentToolId())
         {
             Logger.getInstance().error("ROBOT_EXEC", "Called for place tool: " + toolId + ", but current Tool ID is" + toolController.getCurrentToolId() + " !. Ignoring request to avoid possible collision.");
             return false;
         }
-
         if (toolId < 1 || toolId > 6)
         {
-            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-3.");
+            Logger.getInstance().error("ROBOT_EXEC", "Invalid tool ID for place operation: " + toolId + ". Must be 1-6.");
             return false;
         }
-
         if (gimaticCameraTool == null)
         {
             Logger.getInstance().error("ROBOT_EXEC", "GimaticCamera tool not loaded. Cannot execute place operation.");
@@ -183,7 +180,6 @@ public class ProgramSubroutines
             toolId = toolId - 3;
         }
         String baseName = "T" + toolId + "Base";
-
         try
         {
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
@@ -208,16 +204,23 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.moveAsync(ptp(pointFrame).setJointVelocityRel(0.2).setBlendingCart(10));
 
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
                 {
                     if (!toolController.unlockGimatic())
                     {
+                        Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic!");
                         return false;
                     }
                 }
+            }
+
+            while (toolController.getCurrentToolId() != 0)
+            {
+                Logger.getInstance().low("ROBOT_EXEC", "Waiting for tool to be released...");
+                Thread.sleep(2000);
             }
 
             return true;
@@ -294,7 +297,7 @@ public class ProgramSubroutines
 
         return true;
     }
-
+    @SuppressWarnings("unused")
     public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
     {
         Ixtur.detach();
@@ -304,12 +307,12 @@ public class ProgramSubroutines
             ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
             ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
             ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
-            Logger.getInstance().debug("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
-            Logger.getInstance().debug("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
-            Logger.getInstance().debug("ROBOT_EXEC", "Basekitting: " + refBase.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Basekitting: " + refBase.toString());
 
             Frame newBase =  refBase.copyWithRedundancy();
-            Logger.getInstance().debug("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
 
             newBase.setX(kittingBase.getX());
             newBase.setY(kittingBase.getY());
@@ -317,34 +320,38 @@ public class ProgramSubroutines
             newBase.setAlphaRad(kittingBase.getAlphaRad());
             newBase.setBetaRad(kittingBase.getBetaRad());
             newBase.setGammaRad(kittingBase.getGammaRad());
-            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base after setter: " + newBase);
 
             Frame relativeP1 = taughtP1.copyWithRedundancy();
             Frame relativeP2 = taughtP2.copyWithRedundancy();
-            Logger.getInstance().debug("ROBOT_EXEC", "New Base: " + newBase.toString());
-            Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
-            Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "New Base: " + newBase);
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1: " + relativeP1.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P2: " + relativeP2.toString());
 
             relativeP1.setParent(newBase);
             relativeP2.setParent(newBase);
-            Logger.getInstance().debug("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1.toString());
+            Logger.getInstance().critical("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1);
 
             Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
             Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
 
             toolController.openTool(toolController.getCurrentToolId());
-            Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
+            robot.move(linRel(0,0,500).setJointVelocityRel(0.5).setBlendingCart(50));
+            robot.move(linRel(-200,-200,200).setJointVelocityRel(0.5));
+
+
 
 
         return true;
     }
 
+    @SuppressWarnings("unused")
     public boolean placeDrum(Frame kittingBase, int workpieceId, int positionId)
     {
 
         return true;
     }
-
+    @SuppressWarnings("unused")
     public boolean placeDisk(Frame kittingBase, int workpieceId, int positionId)
     {
         return true;
@@ -366,7 +373,7 @@ public class ProgramSubroutines
             return false;
         }
 
-        this.currentBaseCoordinateData = baseData;
+        // Stored base coordinate data from ROS computer vision nodes
 
         Frame frame = baseData.getCoordinateFrame();
         WorkpieceType workpieceType = baseData.getWorkpieceType();
@@ -382,34 +389,5 @@ public class ProgramSubroutines
         }
 
         return true;
-    }
-
-    /**
-     * Gets the currently stored base coordinate data.
-     *
-     * @return The stored BaseCoordinateData, or null if none has been stored
-     */
-    public BaseCoordinateData getCurrentBaseCoordinateData()
-    {
-        return currentBaseCoordinateData;
-    }
-
-    /**
-     * Checks if there is stored base coordinate data available.
-     *
-     * @return True if base coordinate data is available
-     */
-    public boolean hasStoredBaseCoordinateData()
-    {
-        return currentBaseCoordinateData != null;
-    }
-
-    /**
-     * Clears the stored base coordinate data.
-     */
-    public void clearBaseCoordinateData()
-    {
-        this.currentBaseCoordinateData = null;
-        Logger.getInstance().debug("ROBOT_EXEC", "Cleared stored base coordinate data.");
     }
 }
