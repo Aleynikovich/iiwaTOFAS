@@ -9,6 +9,9 @@ import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.ToolController;
+import hartu.robot.executor.kitting.BoxType;
+import hartu.robot.executor.kitting.KittingBox;
+import hartu.robot.executor.kitting.KittingPosition;
 
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
@@ -26,6 +29,7 @@ public class ProgramSubroutines
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
     private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
+    private final KittingBox kittingBox;
 
     /**
      * Creates a new ProgramSubroutines instance.
@@ -33,12 +37,14 @@ public class ProgramSubroutines
      * @param robot          The robot to execute motions on
      * @param toolController The tool controller for Gimatic operations
      * @param application    The application instance for accessing frames
+     * @param kittingBox     The kitting box for tracking workpiece positions
      */
-    public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application)
+    public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application, KittingBox kittingBox)
     {
         this.robot = robot;
         this.toolController = toolController;
         this.application = application;
+        this.kittingBox = kittingBox;
 
         // Load the GimaticCamera tool for tool changing operations
         // All taught points were taught with this tool, so it must be used
@@ -296,64 +302,205 @@ public class ProgramSubroutines
         return true;
     }
 
+    /**
+     * Places a workpiece in the kitting box at the next available position.
+     * This method automatically finds the next free position for the given workpiece type.
+     *
+     * @param kittingBase   The base frame of the kitting box from camera
+     * @param workpieceType The type of workpiece being placed
+     * @return True if placement was successful, false otherwise
+     */
+    public boolean placeWorkpieceInBox(Frame kittingBase, WorkpieceType workpieceType)
+    {
+        Logger.getInstance().debug("ROBOT_EXEC", "Placing " + workpieceType.getName() + " in kitting box");
+
+        // Find the next available position for this workpiece type
+        KittingPosition position = kittingBox.findAvailablePosition(workpieceType);
+        if (position == null)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "No available position in kitting box for " + workpieceType.getName());
+            return false;
+        }
+
+        // Execute the placement motion
+        boolean success = placeWorkpieceAtPosition(kittingBase, position, workpieceType);
+
+        // Mark position as occupied if placement was successful
+        if (success)
+        {
+            kittingBox.markPositionOccupied(position);
+            Logger.getInstance().debug("ROBOT_EXEC", "Successfully placed " + workpieceType.getName() + " at position: " + position.getFrameNameApproach());
+        }
+
+        return success;
+    }
+
+    /**
+     * Places a workpiece at a specific position in the kitting box.
+     * This is a lower-level method that performs the actual robot motion.
+     *
+     * @param kittingBase   The base frame of the kitting box from camera
+     * @param position      The specific position to place the workpiece
+     * @param workpieceType The type of workpiece being placed
+     * @return True if placement was successful, false otherwise
+     */
+    private boolean placeWorkpieceAtPosition(Frame kittingBase, KittingPosition position, WorkpieceType workpieceType)
+    {
+        try
+        {
+            // Attach the appropriate tool for the workpiece type
+            Tool toolToUse = getToolForWorkpiece(workpieceType);
+            if (toolToUse == null)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "No tool available for workpiece type: " + workpieceType.getName());
+                return false;
+            }
+
+            // Detach other tools and attach the correct one
+            detachAllTools();
+            toolToUse.attachTo(robot.getFlange());
+
+            // Get the base frame from the station setup
+            ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
+            if (refBase == null)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "Base frame '/basekitting' not found");
+                return false;
+            }
+
+            // Get the taught frames for this position
+            ObjectFrame taughtApproach = application.getApplicationData().getFrame("/basekitting/" + position.getFrameNameApproach());
+            ObjectFrame taughtPlace = application.getApplicationData().getFrame("/basekitting/" + position.getFrameNamePlace());
+
+            if (taughtApproach == null || taughtPlace == null)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "Taught frames not found for position: " + position.getFrameNameApproach());
+                return false;
+            }
+
+            Logger.getInstance().debug("ROBOT_EXEC", "Taught approach: " + taughtApproach.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Taught place: " + taughtPlace.toString());
+
+            // Create a new base frame from the camera data
+            Frame newBase = refBase.copyWithRedundancy();
+            newBase.setX(kittingBase.getX());
+            newBase.setY(kittingBase.getY());
+            newBase.setZ(kittingBase.getZ());
+            newBase.setAlphaRad(kittingBase.getAlphaRad());
+            newBase.setBetaRad(kittingBase.getBetaRad());
+            newBase.setGammaRad(kittingBase.getGammaRad());
+
+            // Create relative frames and set their parent to the new base
+            Frame relativeApproach = taughtApproach.copyWithRedundancy();
+            Frame relativePlace = taughtPlace.copyWithRedundancy();
+            relativeApproach.setParent(newBase);
+            relativePlace.setParent(newBase);
+
+            Logger.getInstance().debug("ROBOT_EXEC", "Moving to approach position: " + position.getFrameNameApproach());
+            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
+
+            Logger.getInstance().debug("ROBOT_EXEC", "Moving to place position: " + position.getFrameNamePlace());
+            toolToUse.move(lin(relativePlace).setJointVelocityRel(0.1));
+
+            // Open the tool to release the workpiece
+            toolController.openTool(toolController.getCurrentToolId());
+
+            // Retract from the placement position
+            robot.move(linRel(0, 0, 500).setJointVelocityRel(0.5).setBlendingCart(50));
+            robot.move(linRel(-200, -200, 200).setJointVelocityRel(0.5));
+
+            return true;
+
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Exception during workpiece placement: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+            return false;
+        }
+    }
+
+    /**
+     * Gets the appropriate tool for the given workpiece type.
+     *
+     * @param workpieceType The workpiece type
+     * @return The Tool to use, or null if not found
+     */
+    private Tool getToolForWorkpiece(WorkpieceType workpieceType)
+    {
+        switch (workpieceType)
+        {
+            case AXIS:
+                return Gripper; // Axis uses GimaticGripperV
+            case DRUM:
+            case DISK:
+                return Ixtur; // Drum and Disk use GimaticIxtur (CircMagnet)
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Detaches all tools from the robot flange.
+     */
+    private void detachAllTools()
+    {
+        if (Gripper != null) Gripper.detach();
+        if (Ixtur != null) Ixtur.detach();
+        if (vacTool != null) vacTool.detach();
+    }
+
+    /**
+     * Legacy method for placing an axis in the box at a specific position.
+     * This method is kept for backward compatibility but delegates to the new abstraction.
+     *
+     * @param kittingBase The base frame of the kitting box from camera
+     * @param workpieceId The workpiece ID (should be 1 for AXIS)
+     * @param positionId  The position ID (1 or 2) - deprecated, position is now auto-selected
+     * @return True if placement was successful, false otherwise
+     * @deprecated Use placeWorkpieceInBox instead
+     */
+    @Deprecated
     @SuppressWarnings("unused")
     public boolean placeAxisBox(Frame kittingBase, int workpieceId, int positionId)
     {
-        Ixtur.detach();
-        Gripper.attachTo(robot.getFlange());
-
-        // Get the base frame (parent)
-        ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
-        //Get the child frames (relative to parent)
-        ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
-        ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
-        Logger.getInstance().debug("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
-        Logger.getInstance().debug("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
-        Logger.getInstance().debug("ROBOT_EXEC", "Basekitting: " + refBase.toString());
-        //Create a new base frame
-        Frame newBase = refBase.copyWithRedundancy();
-        Logger.getInstance().debug("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
-        //Set the new base frame values with the data from the camera
-        newBase.setX(kittingBase.getX());
-        newBase.setY(kittingBase.getY());
-        newBase.setZ(kittingBase.getZ());
-        newBase.setAlphaRad(kittingBase.getAlphaRad());
-        newBase.setBetaRad(kittingBase.getBetaRad());
-        newBase.setGammaRad(kittingBase.getGammaRad());
-        Logger.getInstance().debug("ROBOT_EXEC", "New Base after setter: " + newBase);
-        //Create relative frames
-        Frame relativeP1 = taughtP1.copyWithRedundancy();
-        Frame relativeP2 = taughtP2.copyWithRedundancy();
-        Logger.getInstance().debug("ROBOT_EXEC", "New Base: " + newBase);
-        Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1);
-        Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2);
-        //Make the new frames children of the new base
-        relativeP1.setParent(newBase);
-        relativeP2.setParent(newBase);
-        Logger.getInstance().debug("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1);
-        //Move the gripper to the relative frames with the new base
-        Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
-        Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
-
-        toolController.openTool(toolController.getCurrentToolId());
-        robot.move(linRel(0, 0, 500).setJointVelocityRel(0.5).setBlendingCart(50));
-        robot.move(linRel(-200, -200, 200).setJointVelocityRel(0.5));
-
-
-        return true;
+        Logger.getInstance().warn("ROBOT_EXEC", "Using deprecated placeAxisBox method. Consider using placeWorkpieceInBox instead.");
+        return placeWorkpieceInBox(kittingBase, WorkpieceType.AXIS);
     }
 
+    /**
+     * Legacy method for placing a drum in the box at a specific position.
+     * This method is kept for backward compatibility but delegates to the new abstraction.
+     *
+     * @param kittingBase The base frame of the kitting box from camera
+     * @param workpieceId The workpiece ID (should be 2 for DRUM)
+     * @param positionId  The position ID (1 or 2) - deprecated, position is now auto-selected
+     * @return True if placement was successful, false otherwise
+     * @deprecated Use placeWorkpieceInBox instead
+     */
+    @Deprecated
     @SuppressWarnings("unused")
     public boolean placeDrum(Frame kittingBase, int workpieceId, int positionId)
     {
-
-        return true;
+        Logger.getInstance().warn("ROBOT_EXEC", "Using deprecated placeDrum method. Consider using placeWorkpieceInBox instead.");
+        return placeWorkpieceInBox(kittingBase, WorkpieceType.DRUM);
     }
 
+    /**
+     * Legacy method for placing a disk in the box at a specific position.
+     * This method is kept for backward compatibility but delegates to the new abstraction.
+     *
+     * @param kittingBase The base frame of the kitting box from camera
+     * @param workpieceId The workpiece ID (should be 3 for DISK)
+     * @param positionId  The position ID (1 or 2) - deprecated, position is now auto-selected
+     * @return True if placement was successful, false otherwise
+     * @deprecated Use placeWorkpieceInBox instead
+     */
+    @Deprecated
     @SuppressWarnings("unused")
     public boolean placeDisk(Frame kittingBase, int workpieceId, int positionId)
     {
-        return true;
+        Logger.getInstance().warn("ROBOT_EXEC", "Using deprecated placeDisk method. Consider using placeWorkpieceInBox instead.");
+        return placeWorkpieceInBox(kittingBase, WorkpieceType.DISK);
     }
 
     /**
