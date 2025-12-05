@@ -302,17 +302,18 @@ public class ProgramSubroutines
         Ixtur.detach();
         Gripper.attachTo(robot.getFlange());
 
-        // Get the taught frames (these contain the RELATIVE transformation from basekitting)
+        // Get the base frame (parent)
         ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
+        //Get the child frames (relative to parent)
         ObjectFrame taughtP1 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_1");
         ObjectFrame taughtP2 = application.getApplicationData().getFrame("/basekitting/PlaceAxis1_2");
         Logger.getInstance().debug("ROBOT_EXEC", "Taught P1: " + taughtP1.toString());
         Logger.getInstance().debug("ROBOT_EXEC", "Taught P2: " + taughtP2.toString());
         Logger.getInstance().debug("ROBOT_EXEC", "Basekitting: " + refBase.toString());
-
+        //Create a new base frame
         Frame newBase = refBase.copyWithRedundancy();
         Logger.getInstance().debug("ROBOT_EXEC", "New Base copied from ref: " + newBase.toString());
-
+        //Set the new base frame values with the data from the camera
         newBase.setX(kittingBase.getX());
         newBase.setY(kittingBase.getY());
         newBase.setZ(kittingBase.getZ());
@@ -320,17 +321,17 @@ public class ProgramSubroutines
         newBase.setBetaRad(kittingBase.getBetaRad());
         newBase.setGammaRad(kittingBase.getGammaRad());
         Logger.getInstance().debug("ROBOT_EXEC", "New Base after setter: " + newBase);
-
+        //Create relative frames
         Frame relativeP1 = taughtP1.copyWithRedundancy();
         Frame relativeP2 = taughtP2.copyWithRedundancy();
         Logger.getInstance().debug("ROBOT_EXEC", "New Base: " + newBase);
         Logger.getInstance().debug("ROBOT_EXEC", "Relative P1: " + relativeP1);
         Logger.getInstance().debug("ROBOT_EXEC", "Relative P2: " + relativeP2);
-
+        //Make the new frames children of the new base
         relativeP1.setParent(newBase);
         relativeP2.setParent(newBase);
         Logger.getInstance().debug("ROBOT_EXEC", "Relative P1 after parent: " + relativeP1);
-
+        //Move the gripper to the relative frames with the new base
         Gripper.move(lin(relativeP1).setJointVelocityRel(0.5));
         Gripper.move(lin(relativeP2).setJointVelocityRel(0.1));
 
