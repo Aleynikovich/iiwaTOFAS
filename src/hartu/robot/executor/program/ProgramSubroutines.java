@@ -144,7 +144,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.5));
 
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -215,8 +215,8 @@ public class ProgramSubroutines
             if ((robot.getFlange().getY() < 0 && baseId == 3) || (robot.getFlange().getY() > 0 && baseId != 3))
             {
                 Logger.getInstance().debug("ROBOT_EXEC", "Moving to safe position to avoid collision with tool " + toolId);
-                robot.move(ptp(robot.getCurrentJointPosition().get(0),0,0,0,0,0,0));
-                robot.move(ptpHome());
+                robot.move(ptp(robot.getCurrentJointPosition().get(0),0,0,0,0,0,0).setJointVelocityRel(0.5));
+                robot.move(ptp(-robot.getCurrentJointPosition().get(0),0,0,0,0,0,0).setJointVelocityRel(0.5));
             }
 
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/" + baseName);
@@ -241,7 +241,7 @@ public class ProgramSubroutines
                 }
 
                 Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.2));
+                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.5));
 
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
@@ -435,14 +435,14 @@ public class ProgramSubroutines
             relativePlace.setParent(newBase);
 
             Logger.getInstance().debug("ROBOT_EXEC", "Moving to approach position: " + position.getFrameNameApproach());
-            toolToUse.move(ptp(relativeApproach).setJointVelocityRel(0.5));
+            toolToUse.move(ptp(relativeApproach).setJointVelocityRel(0.7));
 
             Logger.getInstance().debug("ROBOT_EXEC", "Moving to place position: " + position.getFrameNamePlace());
-            toolToUse.move(lin(relativePlace).setJointVelocityRel(0.1));
+            toolToUse.move(lin(relativePlace).setJointVelocityRel(0.2));
 
             // Open the tool to release the workpiece
             toolController.openTool(toolController.getCurrentToolId());
-            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.5));
+            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.7));
             detachAllTools();
             gimaticCameraTool.attachTo(robot.getFlange());
             gimaticCameraTool.move(ptp(application.getApplicationData().getFrame("/P1")));

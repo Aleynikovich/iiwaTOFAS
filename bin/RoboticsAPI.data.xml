@@ -1425,9 +1425,9 @@
             </frame>
         </frame>
         <frame id="_8af7cf8a-e530-4dea-a69f-40e8c066ddce" name="PlaceAxis">
-            <transformation a="0.11924328803382354" b="-0.03856211673921855" c="3.1296122892200473" x="591.1970596866191" y="62.311832679263595" z="154.65748459582167"/>
+            <transformation a="0.11924328803382354" b="-0.03856211673921855" c="3.1296122892200473" x="591.1970596866191" y="62.311832679263595" z="159.7"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1764668609314"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1765275534313"/>
                 <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                     <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="230.0"/>
                 </info>
