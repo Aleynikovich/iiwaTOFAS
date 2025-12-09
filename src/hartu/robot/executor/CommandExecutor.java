@@ -108,7 +108,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         try
         {
             Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
-            iiwa.move(ptpHome().setJointVelocityRel(0.2));
+            iiwa.move(ptpHome().setJointVelocityRel(0.5));
             Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
         } catch (Exception e)
         {
