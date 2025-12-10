@@ -512,6 +512,7 @@ public class CommandExecutor extends RoboticsAPIApplication
             running = false;
             // Close socket first to interrupt blocking readLine()
             // This is critical: closing socket before reader unblocks the read operation
+            // The reader will be closed by closeConnection() in the finally block after readLine() throws IOException
             try
             {
                 if (socket != null && !socket.isClosed())
