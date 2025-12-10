@@ -425,6 +425,9 @@ public class CommandExecutor extends RoboticsAPIApplication
         {
             try
             {
+                // Interrupt the thread to break out of blocking operations
+                consoleClientThread.interrupt();
+                // Wait briefly for graceful shutdown
                 consoleClientThread.join(2000);
             } catch (InterruptedException e)
             {
@@ -507,27 +510,41 @@ public class CommandExecutor extends RoboticsAPIApplication
         public void stop()
         {
             running = false;
-            closeConnection();
+            // Close socket first to interrupt blocking readLine()
+            // This is critical: closing socket before reader unblocks the read operation
+            // The reader will be closed by closeConnection() in the finally block after readLine() throws IOException
+            try
+            {
+                if (socket != null && !socket.isClosed())
+                {
+                    socket.close();
+                }
+            } catch (IOException e)
+            {
+                // Ignore - we're shutting down anyway
+            }
         }
 
         private void closeConnection()
         {
+            // Close socket first to interrupt blocking read
             try
             {
-                if (reader != null)
+                if (socket != null && !socket.isClosed())
                 {
-                    reader.close();
+                    socket.close();
                 }
             } catch (IOException e)
             {
                 // Ignore
             }
 
+            // Then close reader (this should be non-blocking now)
             try
             {
-                if (socket != null && !socket.isClosed())
+                if (reader != null)
                 {
-                    socket.close();
+                    reader.close();
                 }
             } catch (IOException e)
             {
