@@ -1890,7 +1890,7 @@
         <workpieceTemplate class="" name="Disco">
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="0.0" cogY="0.0" cogZ="0.0" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="0.0"/>
         </workpieceTemplate>
-        <toolTemplate class="" name="GimaticCircMagnet">
+        <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticCircMagnet">
             <frames>
                 <frame id="_c781cbbb-ca21-48cd-9fa5-d14a33f18d4c" name="TCP">
                     <transformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
