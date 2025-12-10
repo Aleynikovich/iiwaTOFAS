@@ -13,6 +13,7 @@ import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
 import hartu.robot.communication.server.CommandResultHolder;
+import hartu.robot.communication.server.LogLevel;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.executor.io.IoExecutor;
 import hartu.robot.executor.io.ToolController;
@@ -70,7 +71,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Start robot console client to receive logs from LoggingServerManager
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
-
+        Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         Logger.getInstance().debug("ROBOT_EXEC", "Initializing CommandExecutor.");
 
         // Initialize tool ID to name mapping
