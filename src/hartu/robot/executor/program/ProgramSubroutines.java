@@ -413,7 +413,7 @@ public class ProgramSubroutines
             List<String> frameNames = position.getFrameNames();
             if (frameNames.isEmpty())
             {
-                Logger.getInstance().error("ROBOT_EXEC", "No frames defined for position");
+                Logger.getInstance().error("ROBOT_EXEC", "No frames defined for position (workpiece type: " + workpieceType.getName() + ")");
                 return false;
             }
 
@@ -449,7 +449,8 @@ public class ProgramSubroutines
             }
 
             // Execute the trajectory: first frame with PTP, rest with LIN
-            for (int i = 0; i < relativeFrames.size(); i++)
+            int frameCount = relativeFrames.size();
+            for (int i = 0; i < frameCount; i++)
             {
                 Frame targetFrame = relativeFrames.get(i);
                 String frameName = frameNames.get(i);
@@ -463,7 +464,7 @@ public class ProgramSubroutines
                 else
                 {
                     // Subsequent frames: use LIN (linear) motion
-                    Logger.getInstance().debug("ROBOT_EXEC", "Moving to position " + (i + 1) + "/" + relativeFrames.size() + ": " + frameName);
+                    Logger.getInstance().debug("ROBOT_EXEC", "Moving to position " + (i + 1) + "/" + frameCount + ": " + frameName);
                     toolToUse.move(lin(targetFrame).setJointVelocityRel(0.2));
                 }
             }

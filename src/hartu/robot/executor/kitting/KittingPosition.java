@@ -63,6 +63,8 @@ public class KittingPosition
 
     /**
      * Gets the approach frame name (first frame in trajectory).
+     * 
+     * Note: This method assumes frameNames is non-empty, which is guaranteed by the constructor.
      *
      * @return The approach frame name
      * @deprecated Use getFrameNames() for flexible trajectories
@@ -70,11 +72,14 @@ public class KittingPosition
     @Deprecated
     public String getFrameNameApproach()
     {
+        // Constructor guarantees frameNames is non-empty, so this is safe
         return frameNames.get(0);
     }
 
     /**
      * Gets the place/drop frame name (last frame in trajectory).
+     * 
+     * Note: This method assumes frameNames is non-empty, which is guaranteed by the constructor.
      *
      * @return The place frame name
      * @deprecated Use getFrameNames() for flexible trajectories
@@ -82,6 +87,7 @@ public class KittingPosition
     @Deprecated
     public String getFrameNamePlace()
     {
+        // Constructor guarantees frameNames is non-empty, so this is safe
         return frameNames.get(frameNames.size() - 1);
     }
 
