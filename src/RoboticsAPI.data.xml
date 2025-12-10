@@ -1768,9 +1768,9 @@
             </redundancyData>
         </frame>
         <frame id="_2715e8ca-f646-4c13-af6c-6b3e604f83b8" name="CamBaseDynamic">
-            <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+            <transformation a="1.564513141487717" b="-0.023736477827122883" c="-0.0015707963267948967" x="565.0" y="30.0" z="67.0"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1764936911281"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1765376104893"/>
                 <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <frame id="_8b986106-72b3-4d7b-9412-861cb1a2ce91" name="Drum">
