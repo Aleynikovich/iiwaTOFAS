@@ -111,8 +111,8 @@ public class ProgramSubroutines
         if ((robot.getFlange().getY() < 0 && baseId == 3) || (robot.getFlange().getY() > 0 && baseId != 3))
         {
             Logger.getInstance().debug("ROBOT_EXEC", "Moving to safe position to avoid collision with tool " + toolId);
-            robot.move(ptp(robot.getCurrentJointPosition().get(0),0,0,0,0,0,0));
-            robot.move(ptpHome());
+            robot.move(ptp(robot.getCurrentJointPosition().get(0),0,0,0,0,0,0).setJointVelocityRel(0.5));
+            robot.move(ptp(-robot.getCurrentJointPosition().get(0),0,0,0,0,0,0).setJointVelocityRel(0.5));
         }
         if (!toolController.unlockGimatic())
         {
