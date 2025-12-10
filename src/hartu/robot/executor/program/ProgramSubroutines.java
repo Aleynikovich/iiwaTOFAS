@@ -386,7 +386,6 @@ public class ProgramSubroutines
      */
     private boolean placeWorkpieceAtPosition(Frame kittingBase, KittingPosition position, WorkpieceType workpieceType)
     {
-        Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         try
         {
             // Attach the appropriate tool for the workpiece type
