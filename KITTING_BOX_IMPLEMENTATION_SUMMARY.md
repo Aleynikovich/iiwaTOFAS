@@ -11,20 +11,22 @@ This implementation adds a robust abstraction layer for managing workpiece place
 - Prevents collisions by refusing placement when positions are full
 - Resets on CommandExecutor restart (assumes physical box is emptied)
 
-### 2. Workpiece Type Support
-- **Axis**: Uses GimaticGripperV tool, 2 positions (PlaceAxis1_1/1_2, PlaceAxis2_1/2_2)
-- **Drum**: Uses GimaticIxtur tool, 2 positions (PlaceDrum1_1/1_2, PlaceDrum2_1/2_2)
-- **Disk**: Uses GimaticIxtur tool, 2 positions (PlaceDisk1_1/1_2, PlaceDisk2_1/2_2)
+### 2. Workpiece Type Support with Flexible Trajectories
+- **Axis**: Uses GimaticGripperV tool, 2 positions with 2-frame trajectory (approach, place)
+- **Drum**: Uses GimaticIxtur tool, 2 positions with 3-frame trajectory (approach, intermediate, place)
+- **Disk**: Uses GimaticIxtur tool, 2 positions with 2-frame trajectory (approach, place)
 
 ### 3. Automatic Position Selection
 - Program ID 23 now automatically selects the next available position
 - No need to manually specify position ID
 - System refuses placement if no positions are available
 
-### 4. Frame-Based Configuration
+### 4. Frame-Based Configuration with Flexible Trajectories
 - Uses taught frames from RoboticsAPI.data.xml
-- Each position has approach and place frames
+- Each position can have a variable number of frames (2-3+ frames)
+- Frames define the complete placement trajectory
 - Camera-detected base frame transforms all positions
+- First frame executed with PTP, remaining frames with LIN motion
 
 ## Architecture
 
@@ -40,7 +42,7 @@ hartu.robot.executor.kitting/
 ### Class Responsibilities
 
 - **KittingBox**: Position management, occupancy tracking, position search
-- **KittingPosition**: Frame names, workpiece type, occupied state
+- **KittingPosition**: Flexible list of frame names, workpiece type, occupied state
 - **BoxType**: Box type identification for future extensibility
 
 ## Integration Points

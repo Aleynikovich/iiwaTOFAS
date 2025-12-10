@@ -16,14 +16,21 @@ The kitting box system automatically manages workpiece placement positions to av
 
 ### Position Configuration
 
-The standard kitting box has 6 positions:
-- **2 positions for Axis workpieces**: PlaceAxis1_1/1_2, PlaceAxis2_1/2_2
-- **2 positions for Drum workpieces**: PlaceDrum1_1/1_2, PlaceDrum2_1/2_2
-- **2 positions for Disk workpieces**: PlaceDisk1_1/1_2, PlaceDisk2_1/2_2
+The standard kitting box has 6 positions with flexible trajectories:
+- **2 positions for Axis workpieces**: 2-frame trajectory (approach, place)
+  - Position 1: PlaceAxis1_1, PlaceAxis1_2
+  - Position 2: PlaceAxis2_1, PlaceAxis2_2
+- **2 positions for Drum workpieces**: 3-frame trajectory (approach, intermediate, place)
+  - Position 1: PlaceDrum1_1, PlaceDrum1_2, PlaceDrum1_3
+  - Position 2: PlaceDrum2_1, PlaceDrum2_2, PlaceDrum2_3
+- **2 positions for Disk workpieces**: 2-frame trajectory (approach, place)
+  - Position 1: PlaceDisk1_1, PlaceDisk1_2
+  - Position 2: PlaceDisk2_1, PlaceDisk2_2
 
-Each position has two frames:
-- **Approach frame** (e.g., PlaceAxis1_1): Safe approach position above the placement location
-- **Place frame** (e.g., PlaceAxis1_2): Final drop position where the workpiece is released
+Each position can have a flexible number of frames defining the placement trajectory:
+- **First frame**: Approach position (executed with PTP motion)
+- **Middle frames** (if any): Intermediate positions (executed with LIN motion)
+- **Last frame**: Final drop position where the workpiece is released
 
 ## Using Program ID 23
 
@@ -119,7 +126,7 @@ The system is designed to be scalable for:
 
 ## Frame Structure in RoboticsAPI.data.xml
 
-The system expects the following frame hierarchy:
+The system expects the following frame hierarchy with flexible trajectories:
 
 ```
 /basekitting (base frame)
@@ -128,9 +135,11 @@ The system expects the following frame hierarchy:
 ├── PlaceAxis2_1 (approach)
 ├── PlaceAxis2_2 (place)
 ├── PlaceDrum1_1 (approach)
-├── PlaceDrum1_2 (place)
+├── PlaceDrum1_2 (intermediate)
+├── PlaceDrum1_3 (place)
 ├── PlaceDrum2_1 (approach)
-├── PlaceDrum2_2 (place)
+├── PlaceDrum2_2 (intermediate)
+├── PlaceDrum2_3 (place)
 ├── PlaceDisk1_1 (approach)
 ├── PlaceDisk1_2 (place)
 ├── PlaceDisk2_1 (approach)
@@ -138,3 +147,5 @@ The system expects the following frame hierarchy:
 ```
 
 All frames must be taught relative to the `/basekitting` base frame with the appropriate tool attached (GimaticGripperV for Axis, GimaticIxtur for Drum/Disk).
+
+**Note**: Each workpiece type can have a different number of frames. Drums use 3 frames for more precise placement control, while Axis and Disk use 2 frames.
