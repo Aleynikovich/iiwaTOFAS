@@ -14,6 +14,9 @@ import hartu.robot.executor.kitting.BoxType;
 import hartu.robot.executor.kitting.KittingBox;
 import hartu.robot.executor.kitting.KittingPosition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 
 /**
@@ -406,18 +409,29 @@ public class ProgramSubroutines
                 return false;
             }
 
-            // Get the taught frames for this position
-            ObjectFrame taughtApproach = application.getApplicationData().getFrame("/basekitting/" + position.getFrameNameApproach());
-            ObjectFrame taughtPlace = application.getApplicationData().getFrame("/basekitting/" + position.getFrameNamePlace());
-
-            if (taughtApproach == null || taughtPlace == null)
+            // Get all frame names for this position's trajectory
+            List<String> frameNames = position.getFrameNames();
+            if (frameNames.isEmpty())
             {
-                Logger.getInstance().error("ROBOT_EXEC", "Taught frames not found for position: " + position.getFrameNameApproach());
+                Logger.getInstance().error("ROBOT_EXEC", "No frames defined for position");
                 return false;
             }
 
-            Logger.getInstance().debug("ROBOT_EXEC", "Taught approach: " + taughtApproach.toString());
-            Logger.getInstance().debug("ROBOT_EXEC", "Taught place: " + taughtPlace.toString());
+            Logger.getInstance().debug("ROBOT_EXEC", "Executing " + frameNames.size() + "-frame trajectory for " + workpieceType.getName());
+
+            // Load all taught frames and create relative frames
+            List<Frame> relativeFrames = new ArrayList<>();
+            for (String frameName : frameNames)
+            {
+                ObjectFrame taughtFrame = application.getApplicationData().getFrame("/basekitting/" + frameName);
+                if (taughtFrame == null)
+                {
+                    Logger.getInstance().error("ROBOT_EXEC", "Taught frame not found: /basekitting/" + frameName);
+                    return false;
+                }
+                Logger.getInstance().debug("ROBOT_EXEC", "Loaded frame: " + frameName);
+                relativeFrames.add(taughtFrame.copyWithRedundancy());
+            }
 
             // Create a new base frame from the camera data
             Frame newBase = refBase.copyWithRedundancy();
@@ -428,21 +442,40 @@ public class ProgramSubroutines
             newBase.setBetaRad(kittingBase.getBetaRad());
             newBase.setGammaRad(kittingBase.getGammaRad());
 
-            // Create relative frames and set their parent to the new base
-            Frame relativeApproach = taughtApproach.copyWithRedundancy();
-            Frame relativePlace = taughtPlace.copyWithRedundancy();
-            relativeApproach.setParent(newBase);
-            relativePlace.setParent(newBase);
+            // Set parent for all relative frames
+            for (Frame frame : relativeFrames)
+            {
+                frame.setParent(newBase);
+            }
 
-            Logger.getInstance().debug("ROBOT_EXEC", "Moving to approach position: " + position.getFrameNameApproach());
-            toolToUse.move(ptp(relativeApproach).setJointVelocityRel(0.7));
+            // Execute the trajectory: first frame with PTP, rest with LIN
+            for (int i = 0; i < relativeFrames.size(); i++)
+            {
+                Frame targetFrame = relativeFrames.get(i);
+                String frameName = frameNames.get(i);
+                
+                if (i == 0)
+                {
+                    // First frame: use PTP (point-to-point) for approach
+                    Logger.getInstance().debug("ROBOT_EXEC", "Moving to approach position: " + frameName);
+                    toolToUse.move(ptp(targetFrame).setJointVelocityRel(0.7));
+                }
+                else
+                {
+                    // Subsequent frames: use LIN (linear) motion
+                    Logger.getInstance().debug("ROBOT_EXEC", "Moving to position " + (i + 1) + "/" + relativeFrames.size() + ": " + frameName);
+                    toolToUse.move(lin(targetFrame).setJointVelocityRel(0.2));
+                }
+            }
 
-            Logger.getInstance().debug("ROBOT_EXEC", "Moving to place position: " + position.getFrameNamePlace());
-            toolToUse.move(lin(relativePlace).setJointVelocityRel(0.2));
-
-            // Open the tool to release the workpiece
+            // Open the tool to release the workpiece at the final position
             toolController.openTool(toolController.getCurrentToolId());
-            toolToUse.move(lin(relativeApproach).setJointVelocityRel(0.7));
+            
+            // Return to the first frame (approach position) to clear the area
+            Logger.getInstance().debug("ROBOT_EXEC", "Returning to approach position");
+            toolToUse.move(lin(relativeFrames.get(0)).setJointVelocityRel(0.7));
+            
+            // Return to home position with camera tool
             detachAllTools();
             gimaticCameraTool.attachTo(robot.getFlange());
             gimaticCameraTool.move(ptp(application.getApplicationData().getFrame("/P1")));
