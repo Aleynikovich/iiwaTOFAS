@@ -35,20 +35,21 @@ public class KittingBox
     /**
      * Initializes the standard box configuration.
      * Creates positions based on the taught frames in RoboticsAPI.data.xml.
+     * Each workpiece type can have a different number of frames in its trajectory.
      */
     private void initializeStandardBox()
     {
-        // Two positions for Axis workpieces
-        positions.add(new KittingPosition("PlaceAxis1_1", "PlaceAxis1_2", WorkpieceType.AXIS));
-        positions.add(new KittingPosition("PlaceAxis2_1", "PlaceAxis2_2", WorkpieceType.AXIS));
+        // Two positions for Axis workpieces (2 frames each: approach, place)
+        positions.add(new KittingPosition(WorkpieceType.AXIS, "PlaceAxis1_1", "PlaceAxis1_2"));
+        positions.add(new KittingPosition(WorkpieceType.AXIS, "PlaceAxis2_1", "PlaceAxis2_2"));
 
-        // Two positions for Drum workpieces
-        positions.add(new KittingPosition("PlaceDrum1_1", "PlaceDrum1_2", WorkpieceType.DRUM));
-        positions.add(new KittingPosition("PlaceDrum2_1", "PlaceDrum2_2", WorkpieceType.DRUM));
+        // Two positions for Drum workpieces (3 frames each: approach, intermediate, place)
+        positions.add(new KittingPosition(WorkpieceType.DRUM, "PlaceDrum1_1", "PlaceDrum1_2", "PlaceDrum1_3"));
+        positions.add(new KittingPosition(WorkpieceType.DRUM, "PlaceDrum2_1", "PlaceDrum2_2", "PlaceDrum2_3"));
 
-        // Two positions for Disk workpieces
-        positions.add(new KittingPosition("PlaceDisk1_1", "PlaceDisk1_2", WorkpieceType.DISK));
-        positions.add(new KittingPosition("PlaceDisk2_1", "PlaceDisk2_2", WorkpieceType.DISK));
+        // Two positions for Disk workpieces (2 frames each: approach, place)
+        positions.add(new KittingPosition(WorkpieceType.DISK, "PlaceDisk1_1", "PlaceDisk1_2"));
+        positions.add(new KittingPosition(WorkpieceType.DISK, "PlaceDisk2_1", "PlaceDisk2_2"));
 
         Logger.getInstance().debug("KITTING", "Initialized standard kitting box with " + positions.size() + " positions");
     }

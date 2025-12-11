@@ -1727,16 +1727,36 @@
                 </additionalInformation>
             </frame>
             <frame id="_a7853193-7670-49a5-85b4-e0fd6740d7ba" name="PlaceDrum1_1">
-                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <transformation a="-0.4445058686846458" b="0.0138629240092204" c="3.11217767179678" x="-309.3341743025273" y="80.45355253298885" z="330.9795110005357"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1764840947330"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765377279955"/>
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticCircMagnet/TCP" tool="GimaticCircMagnet" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                        <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
+                    </info>
                 </additionalInformation>
+                <redundancyData>
+                    <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="89" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="1.4146445727777064" valueType="java.lang.Double"/>
+                    </redundancy>
+                </redundancyData>
             </frame>
             <frame id="_c166023c-0c49-4996-8e22-b97a55d0373e" name="PlaceDrum1_2">
-                <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
+                <transformation a="0.07116388000349835" b="-1.5121669796807948" c="3.0849021285551497" x="-152.01084645730037" y="24.360775172269314" z="246.39818147182223"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1764840958565"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765377253747"/>
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticCircMagnet/TCP" tool="GimaticCircMagnet" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                        <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
+                    </info>
                 </additionalInformation>
+                <redundancyData>
+                    <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="89" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="1.497320145093088" valueType="java.lang.Double"/>
+                    </redundancy>
+                </redundancyData>
             </frame>
             <frame id="_c4bb2859-78aa-4ac6-8b5d-1412fc4c20f0" name="PlaceDrum2_1">
                 <transformation a="0.0" b="0.0" c="0.0" x="0.0" y="0.0" z="0.0"/>
@@ -1749,6 +1769,22 @@
                 <additionalInformation>
                     <info key="LastModificationTime" type="java.lang.Long" value="1764840978816"/>
                 </additionalInformation>
+            </frame>
+            <frame id="_ff84e547-2f57-4184-bc00-c65432ca83ab" name="PlaceDrum1_3">
+                <transformation a="0.0719184298223157" b="-1.5122686998430226" c="3.0842921192615744" x="-155.77917717265757" y="24.61249831675434" z="83.83701086526708"/>
+                <additionalInformation>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765377289810"/>
+                    <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticCircMagnet/TCP" tool="GimaticCircMagnet" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
+                        <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
+                    </info>
+                </additionalInformation>
+                <redundancyData>
+                    <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="89" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="1.4972548909411805" valueType="java.lang.Double"/>
+                    </redundancy>
+                </redundancyData>
             </frame>
         </frame>
         <frame id="_900c4c56-e3cf-4af9-bdf9-0bdb5ba0a52f" name="P1">
