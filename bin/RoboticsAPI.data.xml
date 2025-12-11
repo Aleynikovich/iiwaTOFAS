@@ -1506,7 +1506,7 @@
             <frame id="_cfcd62a8-1f42-4517-b74d-4b1c98d19938" name="P4Place">
                 <transformation a="1.7333840409978893" b="-0.002031925512356253" c="-0.027359398015231726" x="-1130.5" y="367.9873123790003" z="-160.64566043660506"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1765448962976"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765448962981"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
                     </info>
@@ -1804,9 +1804,9 @@
             </redundancyData>
         </frame>
         <frame id="_2715e8ca-f646-4c13-af6c-6b3e604f83b8" name="CamBaseDynamic">
-            <transformation a="1.564513141487717" b="-0.023736477827122883" c="-0.0015707963267948967" x="565.0" y="30.0" z="67.0"/>
+            <transformation a="1.5837117632596545" b="-0.019198621771937624" c="-8.726646259971648E-4" x="543.0" y="74.0" z="48.0"/>
             <additionalInformation>
-                <info key="LastModificationTime" type="java.lang.Long" value="1765376104893"/>
+                <info key="LastModificationTime" type="java.lang.Long" value="1765452802674"/>
                 <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <frame id="_3a95fab4-c51e-4e7a-a16c-eb72879fc9e4" name="PlaceDrum1_2">
