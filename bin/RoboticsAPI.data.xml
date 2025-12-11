@@ -1639,9 +1639,9 @@
                 <info key="UseAsBaseForJogging" type="java.lang.Boolean" value="true"/>
             </additionalInformation>
             <frame id="_d3402bad-2080-483d-a425-fa8f6d19b2f8" name="PlaceAxis1_1">
-                <transformation a="1.5920801298270617" b="0.001954896106634411" c="3.1235648861072307" x="36.29171260371689" y="63.78437945277415" z="117.51029880477873"/>
+                <transformation a="1.6196861970841139" b="-0.013893765105727223" c="-3.119387798478233" x="43.693109135140446" y="63.79011290524522" z="115.3921213456511"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1356998627756"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765453044565"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="255.0"/>
                     </info>
@@ -1649,15 +1649,15 @@
                 <redundancyData>
                     <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="25" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.39630914973964804" valueType="java.lang.Double"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="24" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.26544003553573137" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
             </frame>
             <frame id="_e0d33dc6-9ee6-477f-a841-3f9493dd45f5" name="PlaceAxis1_2">
-                <transformation a="1.5919035283934457" b="0.002050475327610161" c="3.1235179365017345" x="39.48454842909365" y="63.44084513251096" z="-58.53991048172131"/>
+               <transformation a="1.6196939230770273" b="-0.014071108311332991" c="-3.1193631347817754" x="40.38968383097557" y="64.03609712394905" z="-56.36876457478215"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1356998621024"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765453036441"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="255.0"/>
                     </info>
@@ -1665,15 +1665,15 @@
                 <redundancyData>
                     <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="25" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.3962299939311654" valueType="java.lang.Double"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="24" valueType="java.lang.Integer"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.26545681349491385" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
             </frame>
             <frame id="_15012ec8-0b47-4de5-8fe7-3fd6191b7268" name="PlaceAxis2_1">
-                <transformation a="-1.5160872232917533" b="0.018642007991486725" c="3.114803936270716" x="-25.28611926422657" y="-62.37108395901225" z="134.4632075941472"/>
+                <transformation a="-1.5198148381120935" b="-0.01063987626371142" c="3.125688144092803" x="-24.797838142745192" y="-49.32799307933044" z="72.81154652326752"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1356998726706"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765453121289"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="255.0"/>
                     </info>
@@ -1682,14 +1682,14 @@
                     <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="89" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.3962903344358131" valueType="java.lang.Double"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.2653381696121049" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
             </frame>
             <frame id="_0cacf51e-df6d-44ea-b53c-a8b117581d83" name="PlaceAxis2_2">
-                <transformation a="-1.5159458010263556" b="0.01865550462280751" c="3.114738755032159" x="-30.557483895969952" y="-59.06575975090027" z="-58.409607668860446"/>
+                                <transformation a="-1.5196803695385248" b="-0.010643778535015247" c="3.1255936517731993" x="-27.338787492089132" y="-49.236178345873896" z="-58.042185096278246"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1356998720956"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765453114936"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticGripperV/TCP" tool="GimaticGripperV" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="255.0"/>
                     </info>
@@ -1698,7 +1698,7 @@
                     <redundancy transformationProviderName="KUKA_Sunrise_Cabinet_1/LBR_iiwa_14_R820_1" type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy">
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$StatusParameter" value="2" valueType="java.lang.Integer"/>
                         <info type="com.kuka.roboticsAPI.deviceModel.StatusTurnRedundancy$TurnParameter" value="89" valueType="java.lang.Integer"/>
-                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.3963188569336984" valueType="java.lang.Double"/>
+                        <info type="com.kuka.roboticsAPI.deviceModel.LBRE1Redundancy$E1Parameter" value="0.26545106099878235" valueType="java.lang.Double"/>
                     </redundancy>
                 </redundancyData>
             </frame>
