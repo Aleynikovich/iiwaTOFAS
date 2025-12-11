@@ -1743,9 +1743,9 @@
                 </redundancyData>
             </frame>
             <frame id="_c166023c-0c49-4996-8e22-b97a55d0373e" name="PlaceDrum1_2">
-                <transformation a="0.07116388000349835" b="-1.5121669796807948" c="3.0849021285551497" x="-152.01084645730037" y="24.360775172269314" z="246.39818147182223"/>
+                <transformation a="0.07116388000349835" b="-1.5121669796807948" c="3.0849021285551497" x="-152.01084645730037" y="12.0" z="246.39818147182223"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1765377253747"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765447437863"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticCircMagnet/TCP" tool="GimaticCircMagnet" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
                     </info>
@@ -1771,9 +1771,9 @@
                 </additionalInformation>
             </frame>
             <frame id="_ff84e547-2f57-4184-bc00-c65432ca83ab" name="PlaceDrum1_3">
-                <transformation a="0.0719184298223157" b="-1.5122686998430226" c="3.0842921192615744" x="-155.77917717265757" y="24.61249831675434" z="83.83701086526708"/>
+                <transformation a="0.0719184298223157" b="-1.5122686998430226" c="3.0842921192615744" x="-155.77917717265757" y="12.0" z="83.83701086526708"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1765377289810"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765447446182"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticCircMagnet/TCP" tool="GimaticCircMagnet" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
                     </info>
