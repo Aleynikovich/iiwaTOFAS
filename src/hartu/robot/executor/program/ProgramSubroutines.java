@@ -9,6 +9,7 @@ import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.LogLevel;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.executor.CommandExecutor;
 import hartu.robot.executor.io.ToolController;
 import hartu.robot.executor.kitting.BoxType;
 import hartu.robot.executor.kitting.KittingBox;
@@ -32,7 +33,7 @@ public class ProgramSubroutines
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
-    private final hartu.robot.executor.CommandExecutor commandExecutor;
+    private final CommandExecutor commandExecutor;
     private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
     private final KittingBox kittingBox;
 
@@ -52,9 +53,9 @@ public class ProgramSubroutines
         this.kittingBox = kittingBox;
         
         // Store CommandExecutor reference if application is a CommandExecutor instance
-        if (application instanceof hartu.robot.executor.CommandExecutor)
+        if (application instanceof CommandExecutor)
         {
-            this.commandExecutor = (hartu.robot.executor.CommandExecutor) application;
+            this.commandExecutor = (CommandExecutor) application;
         } else
         {
             this.commandExecutor = null;

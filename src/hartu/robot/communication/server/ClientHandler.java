@@ -3,6 +3,7 @@ package hartu.robot.communication.server;
 import hartu.protocols.constants.ProtocolConstants;
 import hartu.protocols.constants.ProtocolConstants.ListenerType;
 import hartu.robot.commands.ParsedCommand;
+import hartu.robot.executor.CommandExecutor;
 import hartu.robot.utils.CommandParser;
 
 import java.io.IOException;
@@ -135,7 +136,7 @@ public class ClientHandler implements Runnable
                                 resultHolder.setTimedOut(true);
                                 
                                 // Cancel the current motion immediately to stop the robot
-                                hartu.robot.executor.CommandExecutor executor = hartu.robot.executor.CommandExecutor.getInstance();
+                                CommandExecutor executor = CommandExecutor.getInstance();
                                 if (executor != null && executor.getMotionExecutor() != null)
                                 {
                                     Logger.getInstance().warn(
