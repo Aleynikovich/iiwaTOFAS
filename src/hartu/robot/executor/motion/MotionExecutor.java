@@ -188,15 +188,19 @@ public class MotionExecutor
     /**
      * Cancels the currently executing motion (if any).
      * This is called when a command times out to stop the robot's current task.
+     * Thread-safe: uses a local copy of the volatile field to avoid race conditions.
      */
     public void cancelCurrentMotion()
     {
+        // Make a local copy of the volatile field for thread safety
         IMotionContainer container = currentMotionContainer;
         if (container != null)
         {
             try
             {
                 Logger.getInstance().warn("ROBOT_EXEC", "Canceling current motion due to timeout.");
+                // Even if container becomes null between check and cancel,
+                // calling cancel() on a completed motion is safe (no-op)
                 container.cancel();
                 Logger.getInstance().debug("ROBOT_EXEC", "Motion successfully canceled.");
             } catch (Exception e)

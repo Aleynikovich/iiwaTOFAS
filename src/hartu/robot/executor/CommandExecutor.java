@@ -67,7 +67,8 @@ public class CommandExecutor extends RoboticsAPIApplication
     
     // Static reference to the singleton CommandExecutor instance
     // This allows timeout handling from ClientHandler to access the motion executor
-    private static CommandExecutor instance = null;
+    // Volatile ensures visibility across threads
+    private static volatile CommandExecutor instance = null;
 
     @Override
     public void initialize()

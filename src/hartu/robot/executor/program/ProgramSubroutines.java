@@ -42,7 +42,8 @@ public class ProgramSubroutines
      *
      * @param robot          The robot to execute motions on
      * @param toolController The tool controller for Gimatic operations
-     * @param application    The application instance for accessing frames (typically CommandExecutor)
+     * @param application    The application instance for accessing frames.
+     *                       CommandExecutor (which extends RoboticsAPIApplication) provides enhanced tool switching.
      * @param kittingBox     The kitting box for tracking workpiece positions
      */
     public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application, KittingBox kittingBox)
