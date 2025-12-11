@@ -131,6 +131,20 @@ public class ClientHandler implements Runnable
                                         "COMM",
                                         "ClientHandler (" + listenerName + " - " + clientAddress + "): Command ID " + commandId + " execution TIMED OUT."
                                 );
+                                // Signal timeout to stop robot motion
+                                resultHolder.setTimedOut(true);
+                                
+                                // Cancel the current motion immediately to stop the robot
+                                hartu.robot.executor.CommandExecutor executor = hartu.robot.executor.CommandExecutor.getInstance();
+                                if (executor != null && executor.getMotionExecutor() != null)
+                                {
+                                    Logger.getInstance().warn(
+                                            "COMM",
+                                            "ClientHandler (" + listenerName + " - " + clientAddress + "): Canceling robot motion due to timeout."
+                                    );
+                                    executor.getMotionExecutor().cancelCurrentMotion();
+                                }
+                                
                                 executionSuccess = false;
                             }
 
