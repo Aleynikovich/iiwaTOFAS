@@ -1472,9 +1472,9 @@
                 </redundancyData>
             </frame>
             <frame id="_abf42ecf-e91a-4ce6-a8ad-75b23a7a5025" name="P3">
-                <transformation a="1.7333923441258616" b="-0.0022677743526322565" c="-0.027268419126977472" x="-1126.3596151507927" y="367.94519517227775" z="-163.34648185941467"/>
+                <transformation a="1.7333923441258616" b="-0.0022677743526322565" c="-0.027268419126977472" x="-1130.4" y="367.94519517227775" z="-163.34648185941467"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1765444488886"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765448953179"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
                     </info>
@@ -1504,9 +1504,9 @@
                 </redundancyData>
             </frame>
             <frame id="_cfcd62a8-1f42-4517-b74d-4b1c98d19938" name="P4Place">
-                <transformation a="1.7333840409978893" b="-0.002031925512356253" c="-0.027359398015231726" x="-1126.4670493082017" y="367.9873123790003" z="-160.64566043660506"/>
+                <transformation a="1.7333840409978893" b="-0.002031925512356253" c="-0.027359398015231726" x="-1130.5" y="367.9873123790003" z="-160.64566043660506"/>
                 <additionalInformation>
-                    <info key="LastModificationTime" type="java.lang.Long" value="1765444496629"/>
+                    <info key="LastModificationTime" type="java.lang.Long" value="1765448962976"/>
                     <info base="LBR_iiwa_14_R820_1" controller="KUKA_Sunrise_Cabinet_1" device="LBR_iiwa_14_R820_1" tcpName="GimaticIxtur/TCP" tool="GimaticIxtur" type="com.kuka.roboticsAPI.deviceModel.TeachInformation">
                         <tcpTransformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="225.0"/>
                     </info>

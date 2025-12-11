@@ -147,16 +147,20 @@ public class ProgramSubroutines
                     return false;
                 }
 
-                Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.5));
-
                 // Lock Gimatic at P8 (contact point)
                 if (i == 8)
                 {
+                   	Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
+                    gimaticCameraTool.move(lin(pointFrame).setJointVelocityRel(0.2));
                     if (!toolController.lockGimatic())
                     {
                         return false;
                     }
+                }
+                else
+                {
+                	Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
+                    gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.5));
                 }
             }
             while (toolController.getCurrentToolId() == 0)
@@ -241,17 +245,21 @@ public class ProgramSubroutines
                     return false;
                 }
 
-                Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
-                gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.5));
-
                 // Unlock Gimatic at P8 (contact point)
                 if (i == 8)
                 {
+                    Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
+                    gimaticCameraTool.move(lin(pointFrame).setJointVelocityRel(0.2));
                     if (!toolController.unlockGimatic())
                     {
                         Logger.getInstance().error("ROBOT_EXEC", "Failed to unlock Gimatic!");
                         return false;
                     }
+                }
+                else
+                {
+                    Logger.getInstance().low("ROBOT_EXEC", "Moving to " + baseName + "/P" + i);
+                    gimaticCameraTool.move(ptp(pointFrame).setJointVelocityRel(0.5));
                 }
             }
 
@@ -313,6 +321,8 @@ public class ProgramSubroutines
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P2")));
         Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P3Pick")));
+        toolController.closeTool(4);
+        toolController.openTool(4);
         toolController.closeTool(4);
         Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P4")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P5")));
