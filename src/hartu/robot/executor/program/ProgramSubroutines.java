@@ -133,6 +133,7 @@ public class ProgramSubroutines
             }
 
             // Attach GimaticCamera tool for the pick operation
+            detachAllTools();
             gimaticCameraTool.attachTo(robot.getFlange());
             Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for pick operation.");
             
@@ -226,6 +227,7 @@ public class ProgramSubroutines
             }
 
             // Attach GimaticCamera tool for the place operation
+            detachAllTools();
             gimaticCameraTool.attachTo(robot.getFlange());
             Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for place operation.");
 
@@ -306,7 +308,7 @@ public class ProgramSubroutines
 
     public boolean pickAxis()
     {
-        Ixtur.detach();
+        detachAllTools();
         Gripper.attachTo(robot.getFlange());
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P2")));
@@ -321,7 +323,7 @@ public class ProgramSubroutines
 
     public boolean placeAxisPlaceholder()
     {
-        Gripper.detach();
+        detachAllTools();
         Ixtur.attachTo(robot.getFlange());
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
@@ -510,6 +512,7 @@ public class ProgramSubroutines
         if (Gripper != null) Gripper.detach();
         if (Ixtur != null) Ixtur.detach();
         if (vacTool != null) vacTool.detach();
+        if (gimaticCameraTool != null) gimaticCameraTool.detach();
     }
 
     /**
