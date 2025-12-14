@@ -634,13 +634,6 @@ get logged and the connection stays open.
   log noise
 - **[Refactoring Guidelines](REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
 
-## Contributing
-
-Feel free to open issues or submit pull requests. When adding new command types, make sure to:
-
-- Add the enum to `ActionTypes.java`
-- Update the parser logic in `CommandParser.java`
-- Test thoroughly on actual hardware (or simulator if available)
 
 ## License
 
