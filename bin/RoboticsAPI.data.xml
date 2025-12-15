@@ -2083,7 +2083,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticCircMagnet">
             <frames>
                 <frame id="_c781cbbb-ca21-48cd-9fa5-d14a33f18d4c" name="TCP">
-                    <transformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="217.0"/>
+                    <transformation a="-2.007128639793479" b="0.0" c="0.0" x="0.0" y="0.0" z="210.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-16.682703136966186" cogY="-64.53579237902936" cogZ="55.50233796614493" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.428565115040336"/>
