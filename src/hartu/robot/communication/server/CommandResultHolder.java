@@ -16,6 +16,7 @@ public class CommandResultHolder
     private final CountDownLatch latch;
     private volatile boolean success; // volatile to ensure visibility across threads
     private volatile String customResponseData; // Optional custom response data (e.g., for input reading commands)
+    private volatile boolean timedOut; // Flag to signal that command execution timed out
 
     /**
      * Creates a new CommandResultHolder.
@@ -28,6 +29,7 @@ public class CommandResultHolder
         this.latch = new CountDownLatch(1); // Latch will count down once when command is executed
         this.success = false; // Default to false
         this.customResponseData = null;
+        this.timedOut = false;
     }
 
     public ParsedCommand getCommand()
@@ -58,5 +60,15 @@ public class CommandResultHolder
     public void setCustomResponseData(String customResponseData)
     {
         this.customResponseData = customResponseData;
+    }
+
+    public boolean isTimedOut()
+    {
+        return timedOut;
+    }
+
+    public void setTimedOut(boolean timedOut)
+    {
+        this.timedOut = timedOut;
     }
 }

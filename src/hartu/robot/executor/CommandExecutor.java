@@ -64,10 +64,18 @@ public class CommandExecutor extends RoboticsAPIApplication
     private ProgramExecutor programExecutor;
 
     private IErrorHandler moveAsyncErrorHandler;
+    
+    // Static reference to the singleton CommandExecutor instance
+    // This allows timeout handling from ClientHandler to access the motion executor
+    // Volatile ensures visibility across threads
+    private static volatile CommandExecutor instance = null;
 
     @Override
     public void initialize()
     {
+        // Set singleton instance
+        instance = this;
+        
         // Start robot console client to receive logs from LoggingServerManager
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
@@ -117,7 +125,40 @@ public class CommandExecutor extends RoboticsAPIApplication
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
 
+        // Initialize HMI programmable buttons
+        initializeHmiButtons();
+        
         Logger.getInstance().debug("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+    
+    /**
+     * Initializes the HMI programmable buttons on the SmartPad.
+     * Creates and registers the button handler for the 4 side buttons.
+     */
+    private void initializeHmiButtons()
+    {
+        try
+        {
+            Logger.getInstance().debug("ROBOT_EXEC", "Initializing HMI programmable buttons...");
+            
+            // Create position publisher for button 3
+            hartu.robot.hmi.RobotPositionPublisher positionPublisher = 
+                new hartu.robot.hmi.RobotPositionPublisher(iiwa, this);
+            
+            // Create button handler
+            hartu.robot.hmi.HmiButtonHandler buttonHandler = 
+                new hartu.robot.hmi.HmiButtonHandler(this, positionPublisher);
+            
+            // Register buttons with HMI
+            com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar keyBar = getApplicationUI().createUserKeyBar("HMI_Buttons");
+            buttonHandler.registerUserKeys(keyBar);
+            
+            Logger.getInstance().low("ROBOT_EXEC", "HMI programmable buttons initialized successfully");
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to initialize HMI buttons: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+        }
     }
 
     /**
@@ -220,6 +261,90 @@ public class CommandExecutor extends RoboticsAPIApplication
             currentlyAttachedToolName = null;
             return null;
         }
+    }
+    
+    /**
+     * Helper method to switch tools in one call.
+     * Detaches all currently attached tools and attaches the specified tool to the robot flange.
+     * This is a convenience method for tool switching operations in program subroutines.
+     *
+     * @param tool The tool to attach
+     * @return The attached tool, or null if attachment failed
+     */
+    public Tool switchToTool(Tool tool)
+    {
+        if (tool == null)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Cannot switch to null tool.");
+            return null;
+        }
+
+        try
+        {
+            // Detach current tool if any
+            if (currentlyAttachedTool != null)
+            {
+                currentlyAttachedTool.detach();
+                Logger.getInstance().debug("ROBOT_EXEC", "Detached previous tool '" + currentlyAttachedToolName + "' for tool switch.");
+            }
+
+            // Attach the new tool
+            tool.attachTo(iiwa.getFlange());
+            currentlyAttachedTool = tool;
+            currentlyAttachedToolName = tool.getName();
+            Logger.getInstance().debug("ROBOT_EXEC", "Switched to tool '" + tool.getName() + "'.");
+            return tool;
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to switch to tool '" + tool.getName() + "': " + e.getMessage());
+            currentlyAttachedTool = null;
+            currentlyAttachedToolName = null;
+            return null;
+        }
+    }
+
+    /**
+     * Gets the motion executor instance.
+     * This allows external components (like ClientHandler on timeout) to cancel ongoing motions.
+     *
+     * @return The MotionExecutor instance
+     */
+    public MotionExecutor getMotionExecutor()
+    {
+        return motionExecutor;
+    }
+    
+    /**
+     * Gets the IO executor instance.
+     * This allows HMI buttons to access tool control functions.
+     *
+     * @return The IoExecutor instance
+     */
+    public IoExecutor getIoExecutor()
+    {
+        return ioExecutor;
+    }
+    
+    /**
+     * Gets the currently attached tool.
+     * Used by HMI button handler to report tool position.
+     *
+     * @return The currently attached Tool, or null if no tool is attached
+     */
+    public Tool getCurrentlyAttachedTool()
+    {
+        return currentlyAttachedTool;
+    }
+    
+    /**
+     * Gets the singleton CommandExecutor instance.
+     * This allows external components to access the motion executor for timeout handling.
+     *
+     * @return The CommandExecutor instance, or null if not initialized
+     */
+    public static CommandExecutor getInstance()
+    {
+        return instance;
     }
 
     /**
@@ -416,6 +541,9 @@ public class CommandExecutor extends RoboticsAPIApplication
     public void dispose()
     {
         Logger.getInstance().debug("ROBOT_EXEC", "Disposing CommandExecutor.");
+
+        // Clear singleton instance
+        instance = null;
 
         // Stop robot console client
         if (consoleClient != null)

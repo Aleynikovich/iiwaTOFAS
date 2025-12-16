@@ -30,6 +30,11 @@ continuously broadcast to all connected clients for monitoring and control feedb
     - Robot console output via RobotConsoleClient (all logs from all tasks appear on SmartPad)
     - Background tasks can log to robot console through the centralized architecture
 - **Real-time joint state broadcasting to multiple clients (port 30003)**
+- **HMI programmable buttons on SmartPad:**
+    - Button 1: Toggle tool open/close (uses current tool ID from digital inputs)
+    - Button 2: Lock/unlock Gimatic tool changer (2-second hold to unlock for safety)
+    - Button 3: Send current robot position to ROS2 client (all angles in degrees)
+    - Button 4: Cancel current task and send success message (for debugging)
 - Command validation and error handling
 - Session management with unique client IDs
 - Automatic command history saved to `parsedData/parsedCommand.json`
@@ -270,6 +275,68 @@ while True:
 ```
 
 Multiple clients can connect simultaneously to receive joint state updates.
+
+## HMI Programmable Buttons
+
+The four side buttons on the KUKA SmartPad are programmed to provide quick manual control of common robot operations:
+
+### Button 1: Toggle Tool Open/Close
+
+Press to toggle the tool state between open and closed:
+- **Open**: Activates air blow (releases grip/vacuum)
+- **Closed**: Activates suction/grip
+- Button displays current state: "Tool: Open" or "Tool: Closed"
+
+### Button 2: Lock/Unlock Gimatic Tool Changer
+
+Controls the Gimatic tool changer with safety protection:
+- **Lock**: Press once to lock the tool changer (instant action)
+- **Unlock**: Hold for 2 seconds to unlock (safety feature prevents accidental unlocking)
+- Button text changes to "Hold 2s to unlock" when pressed
+- Shows "Gimatic: Locked" or "Gimatic: Unlocked" status
+- The 2-second hold requirement prevents accidentally dropping the current tool
+
+### Button 3: Send Robot Position
+
+Press to send the current robot position to the connected ROS2 task client:
+
+**Position Data Format:**
+```
+POSITION|j1;j2;...;j7|fx;fy;fz;fa;fb;fc|tx;ty;tz;ta;tb;tc#
+```
+
+Where:
+- **Joint positions** (j1-j7): Joint angles in degrees
+- **Flange position** (fx,fy,fz,fa,fb,fc): X,Y,Z in mm and A,B,C in degrees relative to robot base
+- **Tool position** (tx,ty,tz,ta,tb,tc): X,Y,Z in mm and A,B,C in degrees at tool TCP (if tool attached)
+
+**Example:**
+```
+POSITION|7.050;26.145;-13.410;45.201;0.687;-19.764;32.508|450.5;120.3;680.2;180.0;0.0;90.0|480.2;125.8;720.5;180.0;0.0;90.0#
+```
+
+Button displays "Position Sent!" briefly after sending, then returns to "Send Position".
+
+### Button 4: Cancel Task
+
+Press to cancel the current task and send a success message back to the ROS2 client:
+
+**Functionality:**
+- Cancels any ongoing robot motion
+- Flushes all pending commands from the queue
+- Sends success message to ROS2 client: `FREE|HMI_CANCEL|success#`
+- Button displays "Task Canceled!" briefly after canceling
+
+**Use Cases:**
+- Quick debugging to skip unnecessary steps
+- Emergency cancellation of current operation
+- Clearing command queue without restart
+
+### Implementation Details
+
+The HMI buttons are implemented using the KUKA Sunrise.OS `IUserKeyBar` and `IUserKeyListener` APIs (section 15.25 of the KUKA Sunrise manual). The buttons are automatically initialized during CommandExecutor startup and do not require any external configuration.
+
+All button actions are logged to the robot console and sent to connected log clients for monitoring.
 
 ## Command Protocol
 
@@ -634,13 +701,6 @@ get logged and the connection stays open.
   log noise
 - **[Refactoring Guidelines](REFACTORING_GUIDELINES.md)**: Code organization and refactoring best practices
 
-## Contributing
-
-Feel free to open issues or submit pull requests. When adding new command types, make sure to:
-
-- Add the enum to `ActionTypes.java`
-- Update the parser logic in `CommandParser.java`
-- Test thoroughly on actual hardware (or simulator if available)
 
 ## License
 

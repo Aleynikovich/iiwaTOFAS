@@ -102,4 +102,15 @@ public class ServerClass implements IClientHandlerCallback
     {
         return clientIpToNameMap.get(ipAddress);
     }
+
+    /**
+     * Gets the currently connected client handler.
+     * Used for sending position data to task clients via HMI buttons.
+     *
+     * @return The client handler, or null if no client is connected
+     */
+    public ClientHandler getClientHandler()
+    {
+        return clientHandler;
+    }
 }

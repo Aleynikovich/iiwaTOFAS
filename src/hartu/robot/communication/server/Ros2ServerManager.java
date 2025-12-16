@@ -18,10 +18,12 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
 {
     private static final int TASK_PORT = 30001;
     private ServerClass taskServer;
+    private static volatile Ros2ServerManager instance = null;
 
     @Override
     public void initialize()
     {
+        instance = this;
         initializeCyclic(0, 1000, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         Thread serverThread = new Thread(new Runnable()
         {
@@ -54,6 +56,7 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
     @Override
     public void dispose()
     {
+        instance = null;
         if (taskServer != null)
         {
             try
@@ -68,5 +71,27 @@ public class Ros2ServerManager extends RoboticsAPICyclicBackgroundTask
         }
         Logger.getInstance().debug("APP", "ROS2 Task Server Manager disposed.");
         super.dispose();
+    }
+
+    /**
+     * Gets the singleton instance of Ros2ServerManager.
+     * Used for accessing the task server client from other components.
+     *
+     * @return The Ros2ServerManager instance, or null if not initialized
+     */
+    public static Ros2ServerManager getInstance()
+    {
+        return instance;
+    }
+
+    /**
+     * Gets the task server instance.
+     * Used for accessing connected task clients.
+     *
+     * @return The task server, or null if not initialized
+     */
+    public ServerClass getTaskServer()
+    {
+        return taskServer;
     }
 }

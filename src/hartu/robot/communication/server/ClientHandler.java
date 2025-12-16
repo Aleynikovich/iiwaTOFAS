@@ -3,6 +3,7 @@ package hartu.robot.communication.server;
 import hartu.protocols.constants.ProtocolConstants;
 import hartu.protocols.constants.ProtocolConstants.ListenerType;
 import hartu.robot.commands.ParsedCommand;
+import hartu.robot.executor.CommandExecutor;
 import hartu.robot.utils.CommandParser;
 
 import java.io.IOException;
@@ -131,6 +132,20 @@ public class ClientHandler implements Runnable
                                         "COMM",
                                         "ClientHandler (" + listenerName + " - " + clientAddress + "): Command ID " + commandId + " execution TIMED OUT."
                                 );
+                                // Signal timeout to stop robot motion
+                                resultHolder.setTimedOut(true);
+                                
+                                // Cancel the current motion immediately to stop the robot
+                                CommandExecutor executor = CommandExecutor.getInstance();
+                                if (executor != null && executor.getMotionExecutor() != null)
+                                {
+                                    Logger.getInstance().warn(
+                                            "COMM",
+                                            "ClientHandler (" + listenerName + " - " + clientAddress + "): Canceling robot motion due to timeout."
+                                    );
+                                    executor.getMotionExecutor().cancelCurrentMotion();
+                                }
+                                
                                 executionSuccess = false;
                             }
 
