@@ -125,7 +125,40 @@ public class CommandExecutor extends RoboticsAPIApplication
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
 
+        // Initialize HMI programmable buttons
+        initializeHmiButtons();
+        
         Logger.getInstance().debug("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+    
+    /**
+     * Initializes the HMI programmable buttons on the SmartPad.
+     * Creates and registers the button handler for the 4 side buttons.
+     */
+    private void initializeHmiButtons()
+    {
+        try
+        {
+            Logger.getInstance().debug("ROBOT_EXEC", "Initializing HMI programmable buttons...");
+            
+            // Create position publisher for button 3
+            hartu.robot.hmi.RobotPositionPublisher positionPublisher = 
+                new hartu.robot.hmi.RobotPositionPublisher(iiwa, this);
+            
+            // Create button handler
+            hartu.robot.hmi.HmiButtonHandler buttonHandler = 
+                new hartu.robot.hmi.HmiButtonHandler(this, positionPublisher);
+            
+            // Register buttons with HMI
+            com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar keyBar = getApplicationUI().createUserKeyBar("HMI_Buttons");
+            buttonHandler.registerUserKeys(keyBar);
+            
+            Logger.getInstance().info("ROBOT_EXEC", "HMI programmable buttons initialized successfully");
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to initialize HMI buttons: " + e.getMessage());
+            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
+        }
     }
 
     /**
@@ -279,6 +312,28 @@ public class CommandExecutor extends RoboticsAPIApplication
     public MotionExecutor getMotionExecutor()
     {
         return motionExecutor;
+    }
+    
+    /**
+     * Gets the IO executor instance.
+     * This allows HMI buttons to access tool control functions.
+     *
+     * @return The IoExecutor instance
+     */
+    public IoExecutor getIoExecutor()
+    {
+        return ioExecutor;
+    }
+    
+    /**
+     * Gets the currently attached tool.
+     * Used by HMI button handler to report tool position.
+     *
+     * @return The currently attached Tool, or null if no tool is attached
+     */
+    public Tool getCurrentlyAttachedTool()
+    {
+        return currentlyAttachedTool;
     }
     
     /**
