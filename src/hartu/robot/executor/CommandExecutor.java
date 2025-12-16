@@ -79,7 +79,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Start robot console client to receive logs from LoggingServerManager
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
-        Logger.getInstance().setMinimumLogLevel(LogLevel.MEDIUM);
+        Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         Logger.getInstance().debug("ROBOT_EXEC", "Initializing CommandExecutor.");
 
         // Initialize tool ID to name mapping
@@ -116,9 +116,9 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Move robot to home position after flushing queue
         try
         {
-            Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
-            iiwa.move(ptpHome().setJointVelocityRel(0.5));
-            Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
+            //Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
+            //iiwa.move(ptpHome().setJointVelocityRel(0.5));
+            //Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
