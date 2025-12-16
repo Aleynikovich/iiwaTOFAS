@@ -29,7 +29,8 @@ public class HmiButtonHandler implements IUserKeyListener
     private boolean gimaticLocked = true;
     
     // Track button 2 press time for 2-second hold requirement
-    private long button2PressStartTime = 0;
+    // Volatile ensures visibility across HMI event handler threads
+    private volatile long button2PressStartTime = 0;
     private static final long GIMATIC_UNLOCK_HOLD_TIME_MS = 2000;
     
     // User key references
