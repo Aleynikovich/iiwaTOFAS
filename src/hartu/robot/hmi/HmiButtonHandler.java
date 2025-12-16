@@ -78,9 +78,9 @@ public class HmiButtonHandler implements IUserKeyListener
             Logger.getInstance().debug("HMI", "Registered Button 3: Send Position");
 
             button4 = keyBar.addUserKey(3, this, false);
-            button4.setText(UserKeyAlignment.TopMiddle, "Reserved");
-            button4.setEnabled(false);  // Disabled for now
-            Logger.getInstance().debug("HMI", "Registered Button 4: Reserved");
+            button4.setText(UserKeyAlignment.TopMiddle, "Cancel Task");
+            button4.setEnabled(true);
+            Logger.getInstance().debug("HMI", "Registered Button 4: Cancel Task");
 
             keyBar.publish();
             Logger.getInstance().info("HMI", "HMI programmable buttons initialized successfully");
@@ -124,6 +124,9 @@ public class HmiButtonHandler implements IUserKeyListener
         } else if (key == button3)
         {
             handleButton3Press();
+        } else if (key == button4)
+        {
+            handleButton4Press();
         }
     }
 
@@ -140,7 +143,7 @@ public class HmiButtonHandler implements IUserKeyListener
 
     /**
      * Button 1: Toggle open/close tools.
-     * Toggles the tool state between open and closed using global tool control.
+     * Uses the current tool ID detected from MediaFlange digital inputs.
      */
     private void handleButton1Press()
     {
@@ -148,31 +151,35 @@ public class HmiButtonHandler implements IUserKeyListener
         
         try
         {
+            // Get the current tool ID from MediaFlange digital inputs
+            int currentToolId = commandExecutor.getIoExecutor().getToolController().getCurrentToolId();
+            Logger.getInstance().debug("HMI", "Using tool ID " + currentToolId + " for open/close operation");
+            
             if (toolOpen)
             {
                 // Close the tool (activate suction/grip)
-                boolean success = commandExecutor.getIoExecutor().getToolController().closeTool(0);
+                boolean success = commandExecutor.getIoExecutor().getToolController().closeTool(currentToolId);
                 if (success)
                 {
                     toolOpen = false;
-                    button1.setText(UserKeyAlignment.TopMiddle, "Tool: Closed");
-                    Logger.getInstance().info("HMI", "Tool closed successfully via Button 1");
+                    button1.setText(UserKeyAlignment.TopMiddle, "Tool " + currentToolId + ": Closed");
+                    Logger.getInstance().info("HMI", "Tool " + currentToolId + " closed successfully via Button 1");
                 } else
                 {
-                    Logger.getInstance().warn("HMI", "Failed to close tool via Button 1");
+                    Logger.getInstance().warn("HMI", "Failed to close tool " + currentToolId + " via Button 1");
                 }
             } else
             {
                 // Open the tool (blow air/release)
-                boolean success = commandExecutor.getIoExecutor().getToolController().openTool(0);
+                boolean success = commandExecutor.getIoExecutor().getToolController().openTool(currentToolId);
                 if (success)
                 {
                     toolOpen = true;
-                    button1.setText(UserKeyAlignment.TopMiddle, "Tool: Open");
-                    Logger.getInstance().info("HMI", "Tool opened successfully via Button 1");
+                    button1.setText(UserKeyAlignment.TopMiddle, "Tool " + currentToolId + ": Open");
+                    Logger.getInstance().info("HMI", "Tool " + currentToolId + " opened successfully via Button 1");
                 } else
                 {
-                    Logger.getInstance().warn("HMI", "Failed to open tool via Button 1");
+                    Logger.getInstance().warn("HMI", "Failed to open tool " + currentToolId + " via Button 1");
                 }
             }
         } catch (Exception e)
@@ -285,6 +292,77 @@ public class HmiButtonHandler implements IUserKeyListener
         {
             Logger.getInstance().error("HMI", "Error sending robot position: " + e.getMessage());
             button3.setText(UserKeyAlignment.TopMiddle, "Send Failed");
+        }
+    }
+
+    /**
+     * Button 4: Cancel current task and send success message to ROS2 client.
+     * Cancels any ongoing motion, flushes the command queue, and sends a success response.
+     * Useful for quick debugging and skipping unnecessary steps.
+     */
+    private void handleButton4Press()
+    {
+        Logger.getInstance().info("HMI", "Button 4 pressed: Canceling current task");
+        
+        try
+        {
+            // Cancel any ongoing motion
+            commandExecutor.getMotionExecutor().cancelCurrentMotion();
+            Logger.getInstance().debug("HMI", "Canceled ongoing motion");
+            
+            // Flush the command queue to clear any pending commands
+            int flushedCount = hartu.robot.communication.server.CommandQueue.flushQueue();
+            Logger.getInstance().debug("HMI", "Flushed " + flushedCount + " pending command(s) from queue");
+            
+            // Send success message back to ROS2 client
+            hartu.robot.communication.server.Ros2ServerManager serverManager = 
+                hartu.robot.communication.server.Ros2ServerManager.getInstance();
+            
+            if (serverManager != null && serverManager.getTaskServer() != null)
+            {
+                hartu.robot.communication.server.ClientHandler taskClient = 
+                    serverManager.getTaskServer().getClientHandler();
+                
+                if (taskClient != null && taskClient.isConnected())
+                {
+                    String successMessage = "FREE|HMI_CANCEL|success" + 
+                        hartu.protocols.constants.ProtocolConstants.MESSAGE_TERMINATOR;
+                    taskClient.sendMessage(successMessage);
+                    Logger.getInstance().info("HMI", "Sent task cancellation success message to ROS2 client");
+                    
+                    button4.setText(UserKeyAlignment.TopMiddle, "Task Canceled!");
+                    
+                    // Reset text after brief delay
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Thread.sleep(1500);
+                                button4.setText(UserKeyAlignment.TopMiddle, "Cancel Task");
+                            } catch (InterruptedException e)
+                            {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                    }).start();
+                } else
+                {
+                    Logger.getInstance().warn("HMI", "No task client connected to send cancellation message");
+                    button4.setText(UserKeyAlignment.TopMiddle, "No Client");
+                }
+            } else
+            {
+                Logger.getInstance().warn("HMI", "ROS2 server manager not initialized");
+                button4.setText(UserKeyAlignment.TopMiddle, "Server Error");
+            }
+            
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("HMI", "Error canceling task: " + e.getMessage());
+            button4.setText(UserKeyAlignment.TopMiddle, "Cancel Failed");
         }
     }
 }

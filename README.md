@@ -31,10 +31,10 @@ continuously broadcast to all connected clients for monitoring and control feedb
     - Background tasks can log to robot console through the centralized architecture
 - **Real-time joint state broadcasting to multiple clients (port 30003)**
 - **HMI programmable buttons on SmartPad:**
-    - Button 1: Toggle tool open/close (vacuum/grip control)
+    - Button 1: Toggle tool open/close (uses current tool ID from digital inputs)
     - Button 2: Lock/unlock Gimatic tool changer (2-second hold to unlock for safety)
-    - Button 3: Send current robot position to ROS2 client (joints + Cartesian)
-    - Button 4: Reserved for future use
+    - Button 3: Send current robot position to ROS2 client (all angles in degrees)
+    - Button 4: Cancel current task and send success message (for debugging)
 - Command validation and error handling
 - Session management with unique client IDs
 - Automatic command history saved to `parsedData/parsedCommand.json`
@@ -306,20 +306,31 @@ POSITION|j1;j2;...;j7|fx;fy;fz;fa;fb;fc|tx;ty;tz;ta;tb;tc#
 ```
 
 Where:
-- **Joint positions** (j1-j7): Joint angles in radians
+- **Joint positions** (j1-j7): Joint angles in degrees
 - **Flange position** (fx,fy,fz,fa,fb,fc): X,Y,Z in mm and A,B,C in degrees relative to robot base
 - **Tool position** (tx,ty,tz,ta,tb,tc): X,Y,Z in mm and A,B,C in degrees at tool TCP (if tool attached)
 
 **Example:**
 ```
-POSITION|0.123;0.456;-0.234;0.789;0.012;-0.345;0.567|450.5;120.3;680.2;180.0;0.0;90.0|480.2;125.8;720.5;180.0;0.0;90.0#
+POSITION|7.050;26.145;-13.410;45.201;0.687;-19.764;32.508|450.5;120.3;680.2;180.0;0.0;90.0|480.2;125.8;720.5;180.0;0.0;90.0#
 ```
 
 Button displays "Position Sent!" briefly after sending, then returns to "Send Position".
 
-### Button 4: Reserved
+### Button 4: Cancel Task
 
-This button is currently disabled and reserved for future functionality.
+Press to cancel the current task and send a success message back to the ROS2 client:
+
+**Functionality:**
+- Cancels any ongoing robot motion
+- Flushes all pending commands from the queue
+- Sends success message to ROS2 client: `FREE|HMI_CANCEL|success#`
+- Button displays "Task Canceled!" briefly after canceling
+
+**Use Cases:**
+- Quick debugging to skip unnecessary steps
+- Emergency cancellation of current operation
+- Clearing command queue without restart
 
 ### Implementation Details
 

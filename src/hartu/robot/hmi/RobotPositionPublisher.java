@@ -38,7 +38,7 @@ public class RobotPositionPublisher
      * Format: POSITION|joint1;joint2;...;joint7|flange_x;y;z;a;b;c|tool_x;y;z;a;b;c#
      * 
      * Where:
-     * - joint1-joint7: Joint angles in radians
+     * - joint1-joint7: Joint angles in degrees
      * - flange position: X,Y,Z in mm and A,B,C in degrees (relative to robot base)
      * - tool position: X,Y,Z in mm and A,B,C in degrees (relative to robot base, at tool TCP)
      */
@@ -51,10 +51,11 @@ public class RobotPositionPublisher
             StringBuilder message = new StringBuilder("POSITION");
             message.append(ProtocolConstants.PRIMARY_DELIMITER);
             
-            // Add joint positions (in radians)
+            // Add joint positions (convert from radians to degrees)
             for (int i = 0; i < jointPos.getAxisCount(); i++)
             {
-                message.append(String.format("%.6f", jointPos.get(i)));
+                double angleInDegrees = Math.toDegrees(jointPos.get(i));
+                message.append(String.format("%.6f", angleInDegrees));
                 if (i < jointPos.getAxisCount() - 1)
                 {
                     message.append(ProtocolConstants.SECONDARY_DELIMITER);
