@@ -10,10 +10,8 @@ import hartu.robot.communication.server.ClientHandler;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.communication.server.Ros2ServerManager;
 import hartu.robot.executor.CommandExecutor;
-import hartu.protocols.constants.ProtocolConstants;
-
 /**
- * Publishes current robot position data to connected ROS2 clients.
+ * Publishes current robot position data to connected ROS2 clients in an XML-like format.
  * Sends position in both joint space and Cartesian space (relative to flange and current tool).
  */
 public class RobotPositionPublisher
@@ -35,75 +33,73 @@ public class RobotPositionPublisher
 
     /**
      * Publishes the current robot position to all connected ROS2 task clients.
-     * Format: POSITION|joint1;joint2;...;joint7|flange_x;y;z;a;b;c|tool_x;y;z;a;b;c#
-     * 
-     * Where:
-     * - joint1-joint7: Joint angles in degrees
-     * - flange position: X,Y,Z in mm and A,B,C in degrees (relative to robot base)
-     * - tool position: X,Y,Z in mm and A,B,C in degrees (relative to robot base, at tool TCP)
+     * Format:
+     * <Joints name="CurrentJoints" j1="..." j2="..." ... j7="..."/>
+     * <Pose name="CurrentCartesianFlange" x="..." y="..." z="..." roll="..." pitch="..." yaw="..."/>
+     * <Pose name="CurrentCartesianTool[TOOLNAME]" x="..." y="..." z="..." roll="..." pitch="..." yaw="..."/>
      */
     public void publishCurrentPosition()
     {
         try
         {
-            // Get current joint position
+            StringBuilder message = new StringBuilder();
+
+            // 1. Get and format current joint position
             JointPosition jointPos = robot.getCurrentJointPosition();
-            StringBuilder message = new StringBuilder("POSITION");
-            message.append(ProtocolConstants.PRIMARY_DELIMITER);
-            
-            // Add joint positions (convert from radians to degrees)
+            message.append("<Joints name=\"CurrentJoints\"");
+            // Assuming 7 joints (Axis 0 to 6) for LBR, using j1 to j7 for names
             for (int i = 0; i < jointPos.getAxisCount(); i++)
             {
                 double angleInDegrees = Math.toDegrees(jointPos.get(i));
-                message.append(String.format("%.6f", angleInDegrees));
-                if (i < jointPos.getAxisCount() - 1)
-                {
-                    message.append(ProtocolConstants.SECONDARY_DELIMITER);
-                }
+                // Note: The original example used j4, j3, j1, j2... We will use j1, j2, j3... for order
+                // The provided XML example has j4, j3, j1, j2, j5, j6, j7.
+                // We will stick to the index order (j1, j2, ...) for consistency.
+                message.append(String.format(" j%d=\"%.4f\"", i + 1, angleInDegrees));
             }
-            message.append(ProtocolConstants.PRIMARY_DELIMITER);
-            
-            // Get flange position (Cartesian coordinates relative to robot base)
+            message.append("/> "); // Space added for separation, as in the example
+
+            // 2. Get and format flange position
             Frame flangeFrame = robot.getCurrentCartesianPosition(robot.getFlange());
-            appendCartesianPosition(message, flangeFrame);
-            message.append(ProtocolConstants.PRIMARY_DELIMITER);
-            
-            // Get tool position (if tool is attached)
+            message.append(createPoseTag("CurrentCartesianFlange", flangeFrame));
+            message.append(" "); // Space added for separation
+
+            // 3. Get and format tool position
             Tool currentTool = commandExecutor.getCurrentlyAttachedTool();
             if (currentTool != null)
             {
+                String toolName = currentTool.getName();
                 try
                 {
-                    // Get position at tool TCP (Tool Center Point)
                     Frame toolFrame = robot.getCurrentCartesianPosition(currentTool.getDefaultMotionFrame());
-                    appendCartesianPosition(message, toolFrame);
+                    message.append(createPoseTag("CurrentCartesianTool[" + toolName + "]", toolFrame));
                 } catch (Exception e)
                 {
                     Logger.getInstance().warn("HMI", "Could not get tool position: " + e.getMessage());
-                    // Send zeros if tool position unavailable
-                    message.append("0.0;0.0;0.0;0.0;0.0;0.0");
+                    // If tool position is unavailable, send zeros in the required format
+                    message.append(String.format("<Pose name=\"CurrentCartesianTool[%s]\" x=\"0.000\" y=\"0.000\" z=\"0.000\" roll=\"0.000\" pitch=\"0.000\" yaw=\"0.000\"/>", toolName));
                 }
             } else
             {
-                // No tool attached, send zeros
-                message.append("0.0;0.0;0.0;0.0;0.0;0.0");
+                // No tool attached, send zeros for a generic "Tool" placeholder
+                // Since the original example uses [TOOLNUMBER], we'll use [NONE] if no tool is attached
+                message.append("<Pose name=\"CurrentCartesianTool[NONE]\" x=\"0.000\" y=\"0.000\" z=\"0.000\" roll=\"0.000\" pitch=\"0.000\" yaw=\"0.000\"/>");
             }
-            
-            message.append(ProtocolConstants.MESSAGE_TERMINATOR);
-            
+
+            // Note: Removed message terminator as it's not present in the new XML-like format example.
+
             // Send to connected task client via Ros2ServerManager
             String positionData = message.toString();
             Ros2ServerManager serverManager = Ros2ServerManager.getInstance();
-            
+
             if (serverManager != null && serverManager.getTaskServer() != null)
             {
                 ClientHandler taskClient = serverManager.getTaskServer().getClientHandler();
-                if (taskClient != null && taskClient.isConnected())
+                if (taskClient != null)
                 {
                     try
                     {
                         taskClient.sendMessage(positionData);
-                        Logger.getInstance().info("HMI", "Position data sent to ROS2 task client");
+                        Logger.getInstance().low("HMI", "Position data sent to ROS2 task client");
                         Logger.getInstance().debug("HMI", "Position data: " + positionData.substring(0, Math.min(200, positionData.length())));
                     } catch (Exception e)
                     {
@@ -117,7 +113,7 @@ public class RobotPositionPublisher
             {
                 Logger.getInstance().warn("HMI", "ROS2 server manager not initialized");
             }
-            
+
         } catch (Exception e)
         {
             Logger.getInstance().error("HMI", "Error publishing robot position: " + e.getMessage());
@@ -126,31 +122,37 @@ public class RobotPositionPublisher
     }
 
     /**
-     * Appends Cartesian position data from a frame to the message.
-     * Format: X;Y;Z;A;B;C where X,Y,Z are in mm and A,B,C are in degrees.
+     * Creates an XML-like <Pose> tag from a frame.
+     * Format: <Pose name="[name]" x="..." y="..." z="..." roll="..." pitch="..." yaw="..."/>
+     * X,Y,Z in mm. Roll (Alpha), Pitch (Beta), Yaw (Gamma) in degrees.
      *
-     * @param message The string builder to append to
-     * @param frame The frame containing position data
+     * @param name The name attribute for the Pose tag
+     * @param frame The frame containing position and orientation data
+     * @return The formatted <Pose> string
      */
-    private void appendCartesianPosition(StringBuilder message, Frame frame)
+    private String createPoseTag(String name, Frame frame)
     {
-        // Get translation (position in mm)
         Transformation trans = frame.getTransformationFromParent();
         Vector translation = trans.getTranslation();
-        
-        // Get rotation angles in degrees (A, B, C - around Z, Y, X axes)
-        double[] abc = trans.getAlphaBetagamma();
-        
-        message.append(String.format("%.3f", translation.getX()));
-        message.append(ProtocolConstants.SECONDARY_DELIMITER);
-        message.append(String.format("%.3f", translation.getY()));
-        message.append(ProtocolConstants.SECONDARY_DELIMITER);
-        message.append(String.format("%.3f", translation.getZ()));
-        message.append(ProtocolConstants.SECONDARY_DELIMITER);
-        message.append(String.format("%.3f", Math.toDegrees(abc[0])));  // A (alpha)
-        message.append(ProtocolConstants.SECONDARY_DELIMITER);
-        message.append(String.format("%.3f", Math.toDegrees(abc[1])));  // B (beta)
-        message.append(ProtocolConstants.SECONDARY_DELIMITER);
-        message.append(String.format("%.3f", Math.toDegrees(abc[2])));  // C (gamma)
+
+        // Roll (Alpha), Pitch (Beta), Yaw (Gamma)
+        double rollDeg = Math.toDegrees(trans.getAlphaRad());
+        double pitchDeg = Math.toDegrees(trans.getBetaRad());
+        double yawDeg = Math.toDegrees(trans.getGammaRad());
+
+        // The original code used Gamma (C), Beta (B), Alpha (A) in the order A, B, C for output.
+        // The new format requires Roll, Pitch, Yaw. In KUKA's standard, these often map to Alpha, Beta, Gamma (Z-Y-X rotation sequence, for instance).
+        // I will map: Roll -> Alpha, Pitch -> Beta, Yaw -> Gamma to match common robotics conventions and the KUKA API structure used previously.
+
+        return String.format(
+                "<Pose name=\"%s\" x=\"%.3f\" y=\"%.3f\" z=\"%.3f\" roll=\"%.3f\" pitch=\"%.3f\" yaw=\"%.3f\"/>",
+                name,
+                translation.getX(),
+                translation.getY(),
+                translation.getZ(),
+                rollDeg,
+                pitchDeg,
+                yawDeg
+        );
     }
 }

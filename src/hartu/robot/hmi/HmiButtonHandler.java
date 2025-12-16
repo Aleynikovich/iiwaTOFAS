@@ -2,7 +2,6 @@ package hartu.robot.hmi;
 
 import com.kuka.roboticsAPI.uiModel.userKeys.IUserKey;
 import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar;
-import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyEvent;
 import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyListener;
 import com.kuka.roboticsAPI.uiModel.userKeys.UserKeyAlignment;
 import com.kuka.roboticsAPI.uiModel.userKeys.UserKeyEvent;
@@ -83,7 +82,7 @@ public class HmiButtonHandler implements IUserKeyListener
             Logger.getInstance().debug("HMI", "Registered Button 4: Cancel Task");
 
             keyBar.publish();
-            Logger.getInstance().info("HMI", "HMI programmable buttons initialized successfully");
+            Logger.getInstance().low("HMI", "HMI programmable buttons initialized successfully");
         } catch (Exception e)
         {
             Logger.getInstance().error("HMI", "Failed to register user keys: " + e.getMessage());
@@ -92,14 +91,14 @@ public class HmiButtonHandler implements IUserKeyListener
     }
 
     @Override
-    public void onKeyEvent(IUserKey key, IUserKeyEvent event)
+    public void onKeyEvent(IUserKey key, UserKeyEvent event)
     {
         try
         {
-            if (event.getEventType() == UserKeyEvent.KeyDown)
+            if (event == UserKeyEvent.KeyDown)
             {
                 handleKeyDown(key);
-            } else if (event.getEventType() == UserKeyEvent.KeyUp)
+            } else if (event == UserKeyEvent.KeyUp)
             {
                 handleKeyUp(key);
             }
@@ -147,7 +146,7 @@ public class HmiButtonHandler implements IUserKeyListener
      */
     private void handleButton1Press()
     {
-        Logger.getInstance().info("HMI", "Button 1 pressed: " + (toolOpen ? "Closing" : "Opening") + " tool");
+        Logger.getInstance().low("HMI", "Button 1 pressed: " + (toolOpen ? "Closing" : "Opening") + " tool");
         
         try
         {
@@ -163,7 +162,7 @@ public class HmiButtonHandler implements IUserKeyListener
                 {
                     toolOpen = false;
                     button1.setText(UserKeyAlignment.TopMiddle, "Tool " + currentToolId + ": Closed");
-                    Logger.getInstance().info("HMI", "Tool " + currentToolId + " closed successfully via Button 1");
+                    Logger.getInstance().low("HMI", "Tool " + currentToolId + " closed successfully via Button 1");
                 } else
                 {
                     Logger.getInstance().warn("HMI", "Failed to close tool " + currentToolId + " via Button 1");
@@ -176,7 +175,7 @@ public class HmiButtonHandler implements IUserKeyListener
                 {
                     toolOpen = true;
                     button1.setText(UserKeyAlignment.TopMiddle, "Tool " + currentToolId + ": Open");
-                    Logger.getInstance().info("HMI", "Tool " + currentToolId + " opened successfully via Button 1");
+                    Logger.getInstance().low("HMI", "Tool " + currentToolId + " opened successfully via Button 1");
                 } else
                 {
                     Logger.getInstance().warn("HMI", "Failed to open tool " + currentToolId + " via Button 1");
@@ -224,7 +223,7 @@ public class HmiButtonHandler implements IUserKeyListener
                     {
                         gimaticLocked = false;
                         button2.setText(UserKeyAlignment.TopMiddle, "Gimatic: Unlocked");
-                        Logger.getInstance().info("HMI", "Gimatic unlocked via Button 2 (held " + holdDuration + "ms)");
+                        Logger.getInstance().low("HMI", "Gimatic unlocked via Button 2 (held " + holdDuration + "ms)");
                     } else
                     {
                         button2.setText(UserKeyAlignment.TopMiddle, "Unlock Failed");
@@ -243,7 +242,7 @@ public class HmiButtonHandler implements IUserKeyListener
                 {
                     gimaticLocked = true;
                     button2.setText(UserKeyAlignment.TopMiddle, "Gimatic: Locked");
-                    Logger.getInstance().info("HMI", "Gimatic locked via Button 2");
+                    Logger.getInstance().low("HMI", "Gimatic locked via Button 2");
                 } else
                 {
                     button2.setText(UserKeyAlignment.TopMiddle, "Lock Failed");
@@ -264,7 +263,7 @@ public class HmiButtonHandler implements IUserKeyListener
      */
     private void handleButton3Press()
     {
-        Logger.getInstance().info("HMI", "Button 3 pressed: Sending robot position to ROS2 clients");
+        Logger.getInstance().low("HMI", "Button 3 pressed: Sending robot position to ROS2 clients");
         
         try
         {
@@ -302,14 +301,14 @@ public class HmiButtonHandler implements IUserKeyListener
      */
     private void handleButton4Press()
     {
-        Logger.getInstance().info("HMI", "Button 4 pressed: Canceling current task");
+        Logger.getInstance().low("HMI", "Button 4 pressed: Canceling current task");
         
         try
         {
             // Cancel any ongoing motion
             commandExecutor.getMotionExecutor().cancelCurrentMotion();
             Logger.getInstance().debug("HMI", "Canceled ongoing motion");
-            
+            String commandId = commandExecutor.getMotionExecutor().getCurrentCommand().getId();
             // Flush the command queue to clear any pending commands
             int flushedCount = hartu.robot.communication.server.CommandQueue.flushQueue();
             Logger.getInstance().debug("HMI", "Flushed " + flushedCount + " pending command(s) from queue");
@@ -323,12 +322,12 @@ public class HmiButtonHandler implements IUserKeyListener
                 hartu.robot.communication.server.ClientHandler taskClient = 
                     serverManager.getTaskServer().getClientHandler();
                 
-                if (taskClient != null && taskClient.isConnected())
+                if (taskClient != null)
                 {
-                    String successMessage = "FREE|HMI_CANCEL|success" + 
+                    String successMessage = "FREE|" + commandId + "|success" +
                         hartu.protocols.constants.ProtocolConstants.MESSAGE_TERMINATOR;
                     taskClient.sendMessage(successMessage);
-                    Logger.getInstance().info("HMI", "Sent task cancellation success message to ROS2 client");
+                    Logger.getInstance().low("HMI", "Sent task cancellation success message to ROS2 client");
                     
                     button4.setText(UserKeyAlignment.TopMiddle, "Task Canceled!");
                     

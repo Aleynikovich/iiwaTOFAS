@@ -153,7 +153,7 @@ public class CommandExecutor extends RoboticsAPIApplication
             com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar keyBar = getApplicationUI().createUserKeyBar("HMI_Buttons");
             buttonHandler.registerUserKeys(keyBar);
             
-            Logger.getInstance().info("ROBOT_EXEC", "HMI programmable buttons initialized successfully");
+            Logger.getInstance().low("ROBOT_EXEC", "HMI programmable buttons initialized successfully");
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to initialize HMI buttons: " + e.getMessage());
