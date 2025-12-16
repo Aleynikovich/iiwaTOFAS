@@ -79,7 +79,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Start robot console client to receive logs from LoggingServerManager
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
-        Logger.getInstance().setMinimumLogLevel(LogLevel.MEDIUM);
+        Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         Logger.getInstance().debug("ROBOT_EXEC", "Initializing CommandExecutor.");
 
         // Initialize tool ID to name mapping
