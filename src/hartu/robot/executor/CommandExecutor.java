@@ -116,9 +116,9 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Move robot to home position after flushing queue
         try
         {
-            Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
-            iiwa.move(ptpHome().setJointVelocityRel(0.5));
-            Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
+            //Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
+            //iiwa.move(ptpHome().setJointVelocityRel(0.5));
+            //Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
