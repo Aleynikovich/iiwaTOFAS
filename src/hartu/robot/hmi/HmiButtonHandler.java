@@ -22,7 +22,7 @@ public class HmiButtonHandler implements IUserKeyListener
     private final RobotPositionPublisher positionPublisher;
     
     // Track tool state for button 1
-    private boolean toolOpen = false;
+    private boolean toolOpen = true;
     
     // Track Gimatic lock state for button 2
     private boolean gimaticLocked = true;
@@ -61,22 +61,22 @@ public class HmiButtonHandler implements IUserKeyListener
         try
         {
             // Create user keys aligned to the right side of the SmartPad
-            button1 = keyBar.addUserKey(0, this, false);
+            button1 = keyBar.addUserKey(0, this, true);
             button1.setText(UserKeyAlignment.TopMiddle, "Tool Open/Close");
             button1.setEnabled(true);
             Logger.getInstance().debug("HMI", "Registered Button 1: Tool Open/Close");
 
-            button2 = keyBar.addUserKey(1, this, false);
+            button2 = keyBar.addUserKey(1, this, true);
             button2.setText(UserKeyAlignment.TopMiddle, "Gimatic Lock/Unlock");
             button2.setEnabled(true);
             Logger.getInstance().debug("HMI", "Registered Button 2: Gimatic Lock/Unlock (2s hold)");
 
-            button3 = keyBar.addUserKey(2, this, false);
+            button3 = keyBar.addUserKey(2, this, true);
             button3.setText(UserKeyAlignment.TopMiddle, "Send Position");
             button3.setEnabled(true);
             Logger.getInstance().debug("HMI", "Registered Button 3: Send Position");
 
-            button4 = keyBar.addUserKey(3, this, false);
+            button4 = keyBar.addUserKey(3, this, true);
             button4.setText(UserKeyAlignment.TopMiddle, "Cancel Task");
             button4.setEnabled(true);
             Logger.getInstance().debug("HMI", "Registered Button 4: Cancel Task");
