@@ -9,6 +9,7 @@ import hartu.protocols.constants.WorkpieceType;
 import hartu.robot.commands.BaseCoordinateData;
 import hartu.robot.communication.server.LogLevel;
 import hartu.robot.communication.server.Logger;
+import hartu.robot.executor.CommandExecutor;
 import hartu.robot.executor.io.ToolController;
 import hartu.robot.executor.kitting.BoxType;
 import hartu.robot.executor.kitting.KittingBox;
@@ -32,6 +33,7 @@ public class ProgramSubroutines
     private final LBR robot;
     private final ToolController toolController;
     private final RoboticsAPIApplication application;
+    private final CommandExecutor commandExecutor;
     private final Tool gimaticCameraTool, vacTool, Ixtur, Gripper;
     private final KittingBox kittingBox;
 
@@ -40,7 +42,8 @@ public class ProgramSubroutines
      *
      * @param robot          The robot to execute motions on
      * @param toolController The tool controller for Gimatic operations
-     * @param application    The application instance for accessing frames
+     * @param application    The application instance for accessing frames.
+     *                       CommandExecutor (which extends RoboticsAPIApplication) provides enhanced tool switching.
      * @param kittingBox     The kitting box for tracking workpiece positions
      */
     public ProgramSubroutines(LBR robot, ToolController toolController, RoboticsAPIApplication application, KittingBox kittingBox)
@@ -49,6 +52,15 @@ public class ProgramSubroutines
         this.toolController = toolController;
         this.application = application;
         this.kittingBox = kittingBox;
+        
+        // Store CommandExecutor reference if application is a CommandExecutor instance
+        if (application instanceof CommandExecutor)
+        {
+            this.commandExecutor = (CommandExecutor) application;
+        } else
+        {
+            this.commandExecutor = null;
+        }
 
         // Load the GimaticCamera tool for tool changing operations
         // All taught points were taught with this tool, so it must be used
@@ -133,8 +145,7 @@ public class ProgramSubroutines
             }
 
             // Attach GimaticCamera tool for the pick operation
-            detachAllTools();
-            gimaticCameraTool.attachTo(robot.getFlange());
+            switchToTool(gimaticCameraTool);
             Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for pick operation.");
             
             // Move through points P9 -> P1
@@ -231,8 +242,7 @@ public class ProgramSubroutines
             }
 
             // Attach GimaticCamera tool for the place operation
-            detachAllTools();
-            gimaticCameraTool.attachTo(robot.getFlange());
+            switchToTool(gimaticCameraTool);
             Logger.getInstance().debug("ROBOT_EXEC", "Attached GimaticCamera tool for place operation.");
 
             // Move through points P1 -> P9
@@ -287,8 +297,8 @@ public class ProgramSubroutines
             Logger.getInstance().debug("ROBOT_EXEC", "Doing el paripe");
             ObjectFrame baseFrame = application.getApplicationData().getFrame("/ZebraBase");
 
-            // Attach GimaticCamera tool for the place operation
-            vacTool.attachTo(robot.getFlange());
+            // Attach VacTool for the operation
+            switchToTool(vacTool);
             Logger.getInstance().debug("ROBOT_EXEC", "Attached VacTool");
 
             // Move through points P1 -> P9
@@ -316,8 +326,7 @@ public class ProgramSubroutines
 
     public boolean pickAxis()
     {
-        detachAllTools();
-        Gripper.attachTo(robot.getFlange());
+        switchToTool(Gripper);
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P1")));
         Gripper.move(ptp(application.getApplicationData().getFrame("/PickAxisGripper/P2")));
         Gripper.move(lin(application.getApplicationData().getFrame("/PickAxisGripper/P3Pick")));
@@ -333,8 +342,7 @@ public class ProgramSubroutines
 
     public boolean placeAxisPlaceholder()
     {
-        detachAllTools();
-        Ixtur.attachTo(robot.getFlange());
+        switchToTool(Ixtur);
 
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P1")));
         Ixtur.move(ptp(application.getApplicationData().getFrame("/PlaceAxis/P2")));
@@ -401,8 +409,7 @@ public class ProgramSubroutines
             }
 
             // Detach other tools and attach the correct one
-            detachAllTools();
-            toolToUse.attachTo(robot.getFlange());
+            switchToTool(toolToUse);
 
             // Get the base frame from the station setup
             ObjectFrame refBase = application.getApplicationData().getFrame("/basekitting");
@@ -480,8 +487,7 @@ public class ProgramSubroutines
             toolToUse.move(lin(relativeFrames.get(0)).setJointVelocityRel(0.7));
             
             // Return to home position with camera tool
-            detachAllTools();
-            gimaticCameraTool.attachTo(robot.getFlange());
+            switchToTool(gimaticCameraTool);
             gimaticCameraTool.move(ptp(application.getApplicationData().getFrame("/P1")));
 
             return true;
@@ -523,6 +529,32 @@ public class ProgramSubroutines
         if (Ixtur != null) Ixtur.detach();
         if (vacTool != null) vacTool.detach();
         if (gimaticCameraTool != null) gimaticCameraTool.detach();
+    }
+    
+    /**
+     * Helper method to switch tools in one call.
+     * Detaches all currently attached tools and attaches the specified tool to the robot flange.
+     * This is a convenience method that replaces the pattern:
+     *   detachAllTools();
+     *   tool.attachTo(robot.getFlange());
+     *
+     * @param tool The tool to attach
+     */
+    private void switchToTool(Tool tool)
+    {
+        if (commandExecutor != null)
+        {
+            // Use CommandExecutor's centralized tool switching if available
+            commandExecutor.switchToTool(tool);
+        } else
+        {
+            // Fallback to manual detach/attach
+            detachAllTools();
+            if (tool != null)
+            {
+                tool.attachTo(robot.getFlange());
+            }
+        }
     }
 
     /**

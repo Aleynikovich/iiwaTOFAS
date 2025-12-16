@@ -64,10 +64,18 @@ public class CommandExecutor extends RoboticsAPIApplication
     private ProgramExecutor programExecutor;
 
     private IErrorHandler moveAsyncErrorHandler;
+    
+    // Static reference to the singleton CommandExecutor instance
+    // This allows timeout handling from ClientHandler to access the motion executor
+    // Volatile ensures visibility across threads
+    private static volatile CommandExecutor instance = null;
 
     @Override
     public void initialize()
     {
+        // Set singleton instance
+        instance = this;
+        
         // Start robot console client to receive logs from LoggingServerManager
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
@@ -220,6 +228,68 @@ public class CommandExecutor extends RoboticsAPIApplication
             currentlyAttachedToolName = null;
             return null;
         }
+    }
+    
+    /**
+     * Helper method to switch tools in one call.
+     * Detaches all currently attached tools and attaches the specified tool to the robot flange.
+     * This is a convenience method for tool switching operations in program subroutines.
+     *
+     * @param tool The tool to attach
+     * @return The attached tool, or null if attachment failed
+     */
+    public Tool switchToTool(Tool tool)
+    {
+        if (tool == null)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Cannot switch to null tool.");
+            return null;
+        }
+
+        try
+        {
+            // Detach current tool if any
+            if (currentlyAttachedTool != null)
+            {
+                currentlyAttachedTool.detach();
+                Logger.getInstance().debug("ROBOT_EXEC", "Detached previous tool '" + currentlyAttachedToolName + "' for tool switch.");
+            }
+
+            // Attach the new tool
+            tool.attachTo(iiwa.getFlange());
+            currentlyAttachedTool = tool;
+            currentlyAttachedToolName = tool.getName();
+            Logger.getInstance().debug("ROBOT_EXEC", "Switched to tool '" + tool.getName() + "'.");
+            return tool;
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to switch to tool '" + tool.getName() + "': " + e.getMessage());
+            currentlyAttachedTool = null;
+            currentlyAttachedToolName = null;
+            return null;
+        }
+    }
+
+    /**
+     * Gets the motion executor instance.
+     * This allows external components (like ClientHandler on timeout) to cancel ongoing motions.
+     *
+     * @return The MotionExecutor instance
+     */
+    public MotionExecutor getMotionExecutor()
+    {
+        return motionExecutor;
+    }
+    
+    /**
+     * Gets the singleton CommandExecutor instance.
+     * This allows external components to access the motion executor for timeout handling.
+     *
+     * @return The CommandExecutor instance, or null if not initialized
+     */
+    public static CommandExecutor getInstance()
+    {
+        return instance;
     }
 
     /**
@@ -416,6 +486,9 @@ public class CommandExecutor extends RoboticsAPIApplication
     public void dispose()
     {
         Logger.getInstance().debug("ROBOT_EXEC", "Disposing CommandExecutor.");
+
+        // Clear singleton instance
+        instance = null;
 
         // Stop robot console client
         if (consoleClient != null)

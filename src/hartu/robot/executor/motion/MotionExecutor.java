@@ -32,6 +32,9 @@ public class MotionExecutor
     // Track the current command being executed for error handling
     private volatile ParsedCommand currentCommand = null;
     private volatile boolean currentCommandFailed = false;
+    
+    // Track the current motion container to allow cancellation on timeout
+    private volatile IMotionContainer currentMotionContainer = null;
 
     /**
      * Creates a new MotionExecutor.
@@ -109,6 +112,7 @@ public class MotionExecutor
             // Set the current command so the error handler can access it
             currentCommand = command;
             currentCommandFailed = false;
+            currentMotionContainer = null;
 
             // Get tool ID from motion parameters (stored as string, parse to int)
             String toolString = command.getMotionParameters() != null ? command.getMotionParameters().getTool() : null;
@@ -147,6 +151,10 @@ public class MotionExecutor
                 container = robot.moveAsync(motionToExecute);
                 Logger.getInstance().debug("ROBOT_EXEC", "Executing motion with robot flange (tool ID " + toolId + " not available).");
             }
+            
+            // Store the motion container for potential cancellation on timeout
+            currentMotionContainer = container;
+            
             container.await();
 
             // Check if the error handler was triggered
@@ -171,9 +179,35 @@ public class MotionExecutor
             // Clear current command reference
             currentCommand = null;
             currentCommandFailed = false;
+            currentMotionContainer = null;
         }
 
         return motionSuccess;
+    }
+    
+    /**
+     * Cancels the currently executing motion (if any).
+     * This is called when a command times out to stop the robot's current task.
+     * Thread-safe: uses a local copy of the volatile field to avoid race conditions.
+     */
+    public void cancelCurrentMotion()
+    {
+        // Make a local copy of the volatile field for thread safety
+        IMotionContainer container = currentMotionContainer;
+        if (container != null)
+        {
+            try
+            {
+                Logger.getInstance().warn("ROBOT_EXEC", "Canceling current motion due to timeout.");
+                // Even if container becomes null between check and cancel,
+                // calling cancel() on a completed motion is safe (no-op)
+                container.cancel();
+                Logger.getInstance().debug("ROBOT_EXEC", "Motion successfully canceled.");
+            } catch (Exception e)
+            {
+                Logger.getInstance().error("ROBOT_EXEC", "Error canceling motion: " + e.getMessage());
+            }
+        }
     }
 
     /**
