@@ -30,6 +30,11 @@ continuously broadcast to all connected clients for monitoring and control feedb
     - Robot console output via RobotConsoleClient (all logs from all tasks appear on SmartPad)
     - Background tasks can log to robot console through the centralized architecture
 - **Real-time joint state broadcasting to multiple clients (port 30003)**
+- **HMI programmable buttons on SmartPad:**
+    - Button 1: Toggle tool open/close (vacuum/grip control)
+    - Button 2: Lock/unlock Gimatic tool changer (2-second hold to unlock for safety)
+    - Button 3: Send current robot position to ROS2 client (joints + Cartesian)
+    - Button 4: Reserved for future use
 - Command validation and error handling
 - Session management with unique client IDs
 - Automatic command history saved to `parsedData/parsedCommand.json`
@@ -270,6 +275,57 @@ while True:
 ```
 
 Multiple clients can connect simultaneously to receive joint state updates.
+
+## HMI Programmable Buttons
+
+The four side buttons on the KUKA SmartPad are programmed to provide quick manual control of common robot operations:
+
+### Button 1: Toggle Tool Open/Close
+
+Press to toggle the tool state between open and closed:
+- **Open**: Activates air blow (releases grip/vacuum)
+- **Closed**: Activates suction/grip
+- Button displays current state: "Tool: Open" or "Tool: Closed"
+
+### Button 2: Lock/Unlock Gimatic Tool Changer
+
+Controls the Gimatic tool changer with safety protection:
+- **Lock**: Press once to lock the tool changer (instant action)
+- **Unlock**: Hold for 2 seconds to unlock (safety feature prevents accidental unlocking)
+- Button text changes to "Hold 2s to unlock" when pressed
+- Shows "Gimatic: Locked" or "Gimatic: Unlocked" status
+- The 2-second hold requirement prevents accidentally dropping the current tool
+
+### Button 3: Send Robot Position
+
+Press to send the current robot position to the connected ROS2 task client:
+
+**Position Data Format:**
+```
+POSITION|j1;j2;...;j7|fx;fy;fz;fa;fb;fc|tx;ty;tz;ta;tb;tc#
+```
+
+Where:
+- **Joint positions** (j1-j7): Joint angles in radians
+- **Flange position** (fx,fy,fz,fa,fb,fc): X,Y,Z in mm and A,B,C in degrees relative to robot base
+- **Tool position** (tx,ty,tz,ta,tb,tc): X,Y,Z in mm and A,B,C in degrees at tool TCP (if tool attached)
+
+**Example:**
+```
+POSITION|0.123;0.456;-0.234;0.789;0.012;-0.345;0.567|450.5;120.3;680.2;180.0;0.0;90.0|480.2;125.8;720.5;180.0;0.0;90.0#
+```
+
+Button displays "Position Sent!" briefly after sending, then returns to "Send Position".
+
+### Button 4: Reserved
+
+This button is currently disabled and reserved for future functionality.
+
+### Implementation Details
+
+The HMI buttons are implemented using the KUKA Sunrise.OS `IUserKeyBar` and `IUserKeyListener` APIs (section 15.25 of the KUKA Sunrise manual). The buttons are automatically initialized during CommandExecutor startup and do not require any external configuration.
+
+All button actions are logged to the robot console and sent to connected log clients for monitoring.
 
 ## Command Protocol
 
