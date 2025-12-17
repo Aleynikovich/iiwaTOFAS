@@ -10,6 +10,7 @@ import com.kuka.roboticsAPI.geometricModel.Tool;
 import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
 import hartu.robot.communication.server.CommandResultHolder;
@@ -64,6 +65,7 @@ public class CommandExecutor extends RoboticsAPIApplication
     private ProgramExecutor programExecutor;
 
     private IErrorHandler moveAsyncErrorHandler;
+    private IUserKeyBar hmiKeyBar;
     
     // Static reference to the singleton CommandExecutor instance
     // This allows timeout handling from ClientHandler to access the motion executor
@@ -81,6 +83,9 @@ public class CommandExecutor extends RoboticsAPIApplication
         startRobotConsoleClient();
         Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         Logger.getInstance().debug("ROBOT_EXEC", "Initializing CommandExecutor.");
+
+        // Initialize HMI programmable buttons
+        initializeHmiButtons();
 
         // Initialize tool ID to name mapping
         toolMapping = new ToolMapping();
@@ -125,8 +130,7 @@ public class CommandExecutor extends RoboticsAPIApplication
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
 
-        // Initialize HMI programmable buttons
-        initializeHmiButtons();
+
         
         Logger.getInstance().debug("ROBOT_EXEC", "Ready to take commands from queue.");
     }
@@ -140,24 +144,19 @@ public class CommandExecutor extends RoboticsAPIApplication
         try
         {
             Logger.getInstance().debug("ROBOT_EXEC", "Initializing HMI programmable buttons...");
-            
-            // Create position publisher for button 3
-            hartu.robot.hmi.RobotPositionPublisher positionPublisher = 
-                new hartu.robot.hmi.RobotPositionPublisher(iiwa, this);
-            
-            // Create button handler
-            hartu.robot.hmi.HmiButtonHandler buttonHandler = 
-                new hartu.robot.hmi.HmiButtonHandler(this, positionPublisher);
-            
-            // Register buttons with HMI
-            com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar keyBar = getApplicationUI().createUserKeyBar("HMI_Buttons");
-            buttonHandler.registerUserKeys(keyBar);
-            
+            this.hmiKeyBar = getApplicationUI().createUserKeyBar("Hartu_HMI");
+
+            hartu.robot.hmi.RobotPositionPublisher positionPublisher =
+                    new hartu.robot.hmi.RobotPositionPublisher(iiwa, this);
+
+            hartu.robot.hmi.HmiButtonHandler buttonHandler =
+                    new hartu.robot.hmi.HmiButtonHandler(this, positionPublisher);
+
+            buttonHandler.registerUserKeys(this.hmiKeyBar);
             Logger.getInstance().low("ROBOT_EXEC", "HMI programmable buttons initialized successfully");
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to initialize HMI buttons: " + e.getMessage());
-            Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
     }
 
