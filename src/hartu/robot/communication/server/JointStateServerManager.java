@@ -33,7 +33,7 @@ public class JointStateServerManager extends RoboticsAPICyclicBackgroundTask
     @Override
     public void initialize()
     {
-        initializeCyclic(0, 500, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
+        initializeCyclic(0, 250, TimeUnit.MILLISECONDS, CycleBehavior.BestEffort);
         lbr = getContext().getDeviceFromType(LBR.class);
 
         // Start server listener in a separate thread
