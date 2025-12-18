@@ -114,7 +114,7 @@ public class RobotPositionPublisher
                 {
                     // Send the individual message
                     taskClient.sendMessage(positionData);
-                    Logger.getInstance().debug("HMI", "Sent position component: " + positionData.substring(0, Math.min(60, positionData.length())) + "...");
+                    Logger.getInstance().debug("HMI", "Sent position component: " + positionData);
                 } catch (Exception e)
                 {
                     Logger.getInstance().warn("HMI", "Failed to send position component to task client: " + e.getMessage());
