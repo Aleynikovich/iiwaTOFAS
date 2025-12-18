@@ -2016,7 +2016,7 @@
         <toolTemplate class="" defaultMotionFrameRef="/TCP" name="GimaticGripperV">
             <frames>
                 <frame id="_16f87f98-a944-4cae-881d-9fb840abb2b1" name="TCP">
-                    <transformation a="-0.4363323129985824" b="0.0" c="0.0" x="0.0" y="0.0" z="265.0"/>
+                    <transformation a="-0.4363323129985824" b="0.0" c="0.0" x="0.0" y="0.0" z="270.0"/>
                 </frame>
             </frames>
             <loadData cogA="0.0" cogB="0.0" cogC="0.0" cogX="-21.858750642857075" cogY="-54.62486456248389" cogZ="79.57532888244523" inertiaX="0.0" inertiaY="0.0" inertiaZ="0.0" mass="6.49435374530215"/>
