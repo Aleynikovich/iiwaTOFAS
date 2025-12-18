@@ -4,6 +4,9 @@ import hartu.robot.communication.server.ClientHandler;
 import hartu.robot.communication.server.Logger;
 import hartu.robot.communication.server.Ros2ServerManager;
 import hartu.robot.executor.CommandExecutor;
+import hartu.robot.executor.io.ToolController;
+
+import javax.inject.Inject;
 
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -19,7 +22,8 @@ public class RobotPositionPublisher
 {
     private final LBR robot;
     private final CommandExecutor commandExecutor;
-
+    @Inject
+    private  ToolController toolController;
     /**
      * Creates a new robot position publisher.
      *
@@ -65,14 +69,15 @@ public class RobotPositionPublisher
 
             // 3. Get and format tool position
             Tool currentTool = commandExecutor.getCurrentlyAttachedTool();
+            int toolId = toolController.getCurrentToolId();
             String toolMessage;
-            if (currentTool != null)
+            if (toolId != 0)
             {
                 String toolName = currentTool.getName();
                 try
                 {
                     Frame toolFrame = robot.getCurrentCartesianPosition(currentTool.getDefaultMotionFrame());
-                    toolMessage = createPoseTag("CurrentCartesianTool[" + toolName + "]", toolFrame);
+                    toolMessage = createPoseTag("CurrentCartesianTool[" + toolId + "]", toolFrame);
                 } catch (Exception e)
                 {
                     Logger.getInstance().warn("HMI", "Could not get tool position: " + e.getMessage());

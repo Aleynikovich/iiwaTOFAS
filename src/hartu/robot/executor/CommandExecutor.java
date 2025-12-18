@@ -1,5 +1,25 @@
 package hartu.robot.executor;
 
+import hartu.robot.commands.ParsedCommand;
+import hartu.robot.communication.server.CommandQueue;
+import hartu.robot.communication.server.CommandResultHolder;
+import hartu.robot.communication.server.LogLevel;
+import hartu.robot.communication.server.Logger;
+import hartu.robot.executor.io.IoExecutor;
+import hartu.robot.executor.io.ToolController;
+import hartu.robot.executor.motion.MotionExecutor;
+import hartu.robot.executor.program.ProgramExecutor;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
 import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
 import com.kuka.generated.ioAccess.IOFlangeIOGroup;
 import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
@@ -11,26 +31,6 @@ import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar;
-import hartu.robot.commands.ParsedCommand;
-import hartu.robot.communication.server.CommandQueue;
-import hartu.robot.communication.server.CommandResultHolder;
-import hartu.robot.communication.server.LogLevel;
-import hartu.robot.communication.server.Logger;
-import hartu.robot.executor.io.IoExecutor;
-import hartu.robot.executor.io.ToolController;
-import hartu.robot.executor.motion.MotionExecutor;
-import hartu.robot.executor.program.ProgramExecutor;
-
-import javax.inject.Inject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
 
 public class CommandExecutor extends RoboticsAPIApplication
 {
