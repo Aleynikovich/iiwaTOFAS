@@ -40,6 +40,17 @@ public class IoExecutor
     {
         return lastInputState;
     }
+    
+    /**
+     * Gets the tool controller.
+     * Used by HMI buttons to access tool control functions.
+     *
+     * @return The ToolController instance
+     */
+    public ToolController getToolController()
+    {
+        return toolController;
+    }
 
     /**
      * Executes an IO command.

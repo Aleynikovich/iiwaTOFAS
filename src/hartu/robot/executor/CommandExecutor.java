@@ -1,15 +1,5 @@
 package hartu.robot.executor;
 
-import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
-import com.kuka.generated.ioAccess.IOFlangeIOGroup;
-import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
-import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
-import com.kuka.roboticsAPI.deviceModel.Device;
-import com.kuka.roboticsAPI.deviceModel.LBR;
-import com.kuka.roboticsAPI.geometricModel.Tool;
-import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
-import com.kuka.roboticsAPI.motionModel.IErrorHandler;
-import com.kuka.roboticsAPI.motionModel.IMotionContainer;
 import hartu.robot.commands.ParsedCommand;
 import hartu.robot.communication.server.CommandQueue;
 import hartu.robot.communication.server.CommandResultHolder;
@@ -20,7 +10,6 @@ import hartu.robot.executor.io.ToolController;
 import hartu.robot.executor.motion.MotionExecutor;
 import hartu.robot.executor.program.ProgramExecutor;
 
-import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,7 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
+import javax.inject.Inject;
+
+import com.kuka.generated.ioAccess.Ethercat_x44IOGroup;
+import com.kuka.generated.ioAccess.IOFlangeIOGroup;
+import com.kuka.generated.ioAccess.MediaFlangeIOGroup;
+import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
+import com.kuka.roboticsAPI.deviceModel.Device;
+import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
+import com.kuka.roboticsAPI.motionModel.IErrorHandler;
+import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar;
 
 public class CommandExecutor extends RoboticsAPIApplication
 {
@@ -64,6 +65,7 @@ public class CommandExecutor extends RoboticsAPIApplication
     private ProgramExecutor programExecutor;
 
     private IErrorHandler moveAsyncErrorHandler;
+    private IUserKeyBar hmiKeyBar;
     
     // Static reference to the singleton CommandExecutor instance
     // This allows timeout handling from ClientHandler to access the motion executor
@@ -79,8 +81,11 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Start robot console client to receive logs from LoggingServerManager
         // and broadcast them via println (only foreground tasks can println to robot console)
         startRobotConsoleClient();
-        Logger.getInstance().setMinimumLogLevel(LogLevel.MEDIUM);
+        Logger.getInstance().setMinimumLogLevel(LogLevel.DEBUG);
         Logger.getInstance().debug("ROBOT_EXEC", "Initializing CommandExecutor.");
+
+        // Initialize HMI programmable buttons
+        initializeHmiButtons();
 
         // Initialize tool ID to name mapping
         toolMapping = new ToolMapping();
@@ -105,7 +110,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController, programSubroutines);
-
+        
         // Flush any stale commands from previous runs
         int flushedCount = CommandQueue.flushQueue();
         if (flushedCount > 0)
@@ -116,16 +121,52 @@ public class CommandExecutor extends RoboticsAPIApplication
         // Move robot to home position after flushing queue
         try
         {
-            Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
-            iiwa.move(ptpHome().setJointVelocityRel(0.5));
-            Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
+            //Logger.getInstance().debug("ROBOT_EXEC", "Moving robot to home position...");
+            //iiwa.move(ptpHome().setJointVelocityRel(0.5));
+            //Logger.getInstance().debug("ROBOT_EXEC", "Robot successfully moved to home position.");
         } catch (Exception e)
         {
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
+        // Attempt to attach currently mounted tool
+        try
+        {
+        	getAndAttachToolForId(toolController.getCurrentToolId());
+        	Logger.getInstance().debug("ROBOT_EXEC", "Attached tool " + toolController.getCurrentToolId()+ " on startup." );
+        }
+        catch (Exception e)
+        {
+        	Logger.getInstance().error("ROBOT_EXEC", "Failed to attach current tool on startup" + e.getMessage());
+        }
 
+        
         Logger.getInstance().debug("ROBOT_EXEC", "Ready to take commands from queue.");
+    }
+    
+    /**
+     * Initializes the HMI programmable buttons on the SmartPad.
+     * Creates and registers the button handler for the 4 side buttons.
+     */
+    private void initializeHmiButtons()
+    {
+        try
+        {
+            Logger.getInstance().debug("ROBOT_EXEC", "Initializing HMI programmable buttons...");
+            this.hmiKeyBar = getApplicationUI().createUserKeyBar("Hartu_HMI");
+
+            hartu.robot.hmi.RobotPositionPublisher positionPublisher =
+                    new hartu.robot.hmi.RobotPositionPublisher(iiwa, this);
+
+            hartu.robot.hmi.HmiButtonHandler buttonHandler =
+                    new hartu.robot.hmi.HmiButtonHandler(this, positionPublisher);
+
+            buttonHandler.registerUserKeys(this.hmiKeyBar);
+            Logger.getInstance().low("ROBOT_EXEC", "HMI programmable buttons initialized successfully");
+        } catch (Exception e)
+        {
+            Logger.getInstance().error("ROBOT_EXEC", "Failed to initialize HMI buttons: " + e.getMessage());
+        }
     }
 
     /**
@@ -279,6 +320,28 @@ public class CommandExecutor extends RoboticsAPIApplication
     public MotionExecutor getMotionExecutor()
     {
         return motionExecutor;
+    }
+    
+    /**
+     * Gets the IO executor instance.
+     * This allows HMI buttons to access tool control functions.
+     *
+     * @return The IoExecutor instance
+     */
+    public IoExecutor getIoExecutor()
+    {
+        return ioExecutor;
+    }
+    
+    /**
+     * Gets the currently attached tool.
+     * Used by HMI button handler to report tool position.
+     *
+     * @return The currently attached Tool, or null if no tool is attached
+     */
+    public Tool getCurrentlyAttachedTool()
+    {
+        return currentlyAttachedTool;
     }
     
     /**

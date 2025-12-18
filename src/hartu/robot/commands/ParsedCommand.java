@@ -226,8 +226,6 @@ public class ParsedCommand
             {
                 sb.append("  --- Unrecognized Command Type ---\n");
             }
-
-            sb.append("}");
             return sb.toString();
         } catch (Exception e)
         {
