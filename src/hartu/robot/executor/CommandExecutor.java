@@ -110,7 +110,7 @@ public class CommandExecutor extends RoboticsAPIApplication
         this.motionExecutor = new MotionExecutor(iiwa, this, moveAsyncErrorHandler);
         this.ioExecutor = new IoExecutor(toolController, ioList);
         this.programExecutor = new ProgramExecutor(toolController, programSubroutines);
-
+        
         // Flush any stale commands from previous runs
         int flushedCount = CommandQueue.flushQueue();
         if (flushedCount > 0)
@@ -129,7 +129,16 @@ public class CommandExecutor extends RoboticsAPIApplication
             Logger.getInstance().error("ROBOT_EXEC", "Failed to move robot to home position: " + e.getMessage());
             Logger.getInstance().error("ROBOT_EXEC", "Stack trace:", e);
         }
-
+        // Attempt to attach currently mounted tool
+        try
+        {
+        	getAndAttachToolForId(toolController.getCurrentToolId());
+        	Logger.getInstance().debug("ROBOT_EXEC", "Attached tool " + toolController.getCurrentToolId()+ " on startup." );
+        }
+        catch (Exception e)
+        {
+        	Logger.getInstance().error("ROBOT_EXEC", "Failed to attach current tool on startup" + e.getMessage());
+        }
 
         
         Logger.getInstance().debug("ROBOT_EXEC", "Ready to take commands from queue.");

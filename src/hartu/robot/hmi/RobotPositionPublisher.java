@@ -69,15 +69,14 @@ public class RobotPositionPublisher
 
             // 3. Get and format tool position
             Tool currentTool = commandExecutor.getCurrentlyAttachedTool();
-            int toolId = toolController.getCurrentToolId();
             String toolMessage;
-            if (toolId != 0)
+            if (currentTool != null)
             {
                 String toolName = currentTool.getName();
                 try
                 {
                     Frame toolFrame = robot.getCurrentCartesianPosition(currentTool.getDefaultMotionFrame());
-                    toolMessage = createPoseTag("CurrentCartesianTool[" + toolId + "]", toolFrame);
+                    toolMessage = createPoseTag("CurrentCartesianTool[" + toolName + "]", toolFrame);
                 } catch (Exception e)
                 {
                     Logger.getInstance().warn("HMI", "Could not get tool position: " + e.getMessage());
